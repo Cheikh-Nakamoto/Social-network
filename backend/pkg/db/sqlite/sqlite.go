@@ -1,7 +1,7 @@
 package sqlite
 
 import (
-	"backend/pkg"
+	"backend/pkg/entity"
 	"database/sql"
 	"log"
 	"os"
@@ -24,7 +24,7 @@ func (d *Database) Close() {
 }
 
 func Connect() (*Database, error) {
-	err1 := pkg.Environment()
+	err1 := entity.Environment()
 	db, err := sql.Open(os.Getenv("DB_DRIVER"), os.Getenv("DB_CONNECTION"))
 	if err != nil || err1 != nil {
 		return nil, err
