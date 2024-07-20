@@ -10,6 +10,23 @@ import (
 	"os"
 )
 
+// Route defines a single route, e.g. a human readable name, HTTP method and the pattern the function to execute
+type Route struct {
+	Name    string
+	Method  string
+	Pattern string
+	Handler http.HandlerFunc
+}
+
+// Routes is a slice of Route
+type Routes []Route
+
+// routes contains the list of routes and methods
+var routes = Routes{
+	Route{"Index", "GET", "/", indexHandler},
+	Route{"Posts", "GET", "/posts", postsHandler},
+}
+
 func main() {
 	// Start the server
 	err := StartServer(os.Args[1:])
@@ -19,9 +36,9 @@ func main() {
 	}
 }
 
-func StartServer(tab []string) error {
+func StartServer(args []string) error {
 	// Check arguments
-	if len(tab) != 0 {
+	if len(args) != 0 {
 		return errors.New("too many arguments")
 	}
 
@@ -44,35 +61,14 @@ func StartServer(tab []string) error {
 	// Create a new ServerMux
 	mux := http.NewServeMux()
 
-	// Create a new handler
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/" {
-			http.NotFound(w, r)
-			return
-		}
-
-		_, err := w.Write([]byte("Hello Janel"))
-		if err != nil {
-			return
-		}
-	})
-
-	mux.HandleFunc("/posts", func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/posts" {
-			http.NotFound(w, r)
-			return
-		}
-
-		_, err := w.Write([]byte("Posts here"))
-		if err != nil {
-			return
-		}
-	})
+	// Register routes
+	for _, route := range routes {
+		mux.HandleFunc(route.Pattern, route.Handler)
+	}
 
 	// Add the middleware
 	wrappedMux := pkg.LoggingMiddleware(mux)
 	wrappedMux = pkg.CORSMiddleware(wrappedMux)
-	// wrappedMux = pkg.AuthMiddleware(wrappedMux)
 	wrappedMux = pkg.ErrorMiddleware(wrappedMux)
 
 	// Set the server structure
@@ -85,4 +81,28 @@ func StartServer(tab []string) error {
 	log.Println("The server is listening at http://localhost:" + os.Getenv("PORT"))
 	err = server.ListenAndServe()
 	return err
+}
+
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" {
+		http.NotFound(w, r)
+		return
+	}
+
+	_, err := w.Write([]byte("Hello Janel"))
+	if err != nil {
+		return
+	}
+}
+
+func postsHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/posts" {
+		http.NotFound(w, r)
+		return
+	}
+
+	_, err := w.Write([]byte("Posts here"))
+	if err != nil {
+		return
+	}
 }
