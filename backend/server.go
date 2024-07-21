@@ -1,33 +1,18 @@
 package main
 
 import (
-	"backend/pkg"
-	"backend/pkg/contollers"
 	"backend/pkg/db/sqlite"
+	"backend/pkg/middleware"
+	"backend/pkg/repository"
+	"backend/pkg/service/impl"
+	"backend/pkg/utils"
+	"backend/pkg/web"
 	"errors"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"net/http"
 	"os"
 )
-
-// Route defines a single route, e.g. a human readable name, HTTP method and the pattern the function to execute
-type Route struct {
-	Name    string
-	Method  string
-	Pattern string
-	Handler http.HandlerFunc
-}
-
-// Routes is a slice of Route
-type Routes []Route
-
-// routes contains the list of routes and methods
-var routes = Routes{
-	Route{"Index", "GET", "/", indexHandler},
-	Route{"Posts", "GET", "/posts", postsHandler},
-	Route{"Create_groupe", "POST", "/create_post", create_group},
-}
 
 func main() {
 	// Start the server
@@ -38,7 +23,11 @@ func main() {
 	}
 }
 
-func StartServer(args []string) error {
+func StartServer(tab []string) error {
+	// Check arguments
+	if len(tab) != 0 {
+		return errors.New("too many arguments")
+	}
 
 	// Check if the .env file exists
 	if _, err := os.Stat(".env"); os.IsNotExist(err) {
@@ -46,28 +35,58 @@ func StartServer(args []string) error {
 	}
 
 	// Read the .env file
-	err := pkg.Environment()
+	err := utils.Environment()
 	if err != nil {
 		return err
 	}
 
-	_, err = sqlite.Connect()
+	db, err := sqlite.Connect()
 	if err != nil {
+		return err
+	}
+	defer db.Close()
+
+	if err := sqlite.Migrate(db.GetDB()); err != nil {
 		return err
 	}
 
 	// Create a new ServerMux
 	mux := http.NewServeMux()
 
-	// Register routes
-	for _, route := range routes {
-		mux.HandleFunc(route.Pattern, route.Handler)
+	// Initializing repositories
+	userRepo := repository.NewUserRepoImpl(*db)
+
+	// Initializing services
+	userService := impl.UserServiceImpl{
+		Repository: userRepo,
 	}
 
+	// Initializing controllers
+	userController := web.UserController{
+		UserService: userService,
+	}
+
+	// Routes
+	mux = userController.RegisterRoutes(mux)
+
+	// Create a new handler
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/" {
+			http.NotFound(w, r)
+			return
+		}
+
+		_, err := w.Write([]byte("Hello Janel"))
+		if err != nil {
+			return
+		}
+	})
+
 	// Add the middleware
-	wrappedMux := pkg.LoggingMiddleware(mux)
-	wrappedMux = pkg.CORSMiddleware(wrappedMux)
-	wrappedMux = pkg.ErrorMiddleware(wrappedMux)
+	wrappedMux := middleware.LoggingMiddleware(mux)
+	wrappedMux = middleware.CORSMiddleware(wrappedMux)
+	// wrappedMux = pkg.AuthMiddleware(wrappedMux)
+	wrappedMux = middleware.ErrorMiddleware(wrappedMux)
 
 	// Set the server structure
 	server := &http.Server{
@@ -79,32 +98,4 @@ func StartServer(args []string) error {
 	log.Println("The server is listening at http://localhost:" + os.Getenv("PORT"))
 	err = server.ListenAndServe()
 	return err
-}
-
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/" {
-		http.NotFound(w, r)
-		return
-	}
-
-	_, err := w.Write([]byte("Hello Janel"))
-	if err != nil {
-		return
-	}
-}
-
-func postsHandler(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/posts" {
-		http.NotFound(w, r)
-		return
-	}
-
-	_, err := w.Write([]byte("Posts here"))
-	if err != nil {
-		return
-	}
-}
-
-func create_group(w http.ResponseWriter, r *http.Request) {
-	contollers.CreateGroup(w, r)
 }
