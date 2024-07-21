@@ -1,2 +1,2 @@
 -- Supprime la table comments
-DROP TABLE comments;
+DROP TABLE IF EXISTS comments;

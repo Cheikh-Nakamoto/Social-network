@@ -1,5 +1,5 @@
 -- Crée la table chats avec les colonnes nécessaires
-CREATE TABLE chats (
+CREATE TABLE IF NOT EXISTS chats (
     id TEXT PRIMARY KEY,             -- Identifiant unique du chat
     user1_id TEXT NOT NULL,          -- Identifiant du premier utilisateur
     user2_id TEXT NOT NULL,          -- Identifiant du second utilisateur

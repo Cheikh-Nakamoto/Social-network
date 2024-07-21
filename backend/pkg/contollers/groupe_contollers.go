@@ -24,8 +24,8 @@ func CreateGroup(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetGroup(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	id, _ := strconv.Atoi(params["id"])
+	params := "12"
+	id, _ := strconv.Atoi(params)
 	var group models.Group
 	DB, _ := sqlite.Connect()
 	err := DB.GetDB().QueryRow(db.GetGroupByID, id).Scan(
@@ -38,8 +38,8 @@ func GetGroup(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateGroup(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	id, _ := strconv.Atoi(params["id"])
+	params := "12"
+	id, _ := strconv.Atoi(params)
 	var group models.Group
 	_ = json.NewDecoder(r.Body).Decode(&group)
 	DB, _ := sqlite.Connect()
@@ -53,8 +53,8 @@ func UpdateGroup(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteGroup(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	id, _ := strconv.Atoi(params["id"])
+	params := "12"
+	id, _ := strconv.Atoi(params)
 	DB, _ := sqlite.Connect()
 	_, err := DB.GetDB().Exec(db.DeleteGroup, id)
 	if err != nil {

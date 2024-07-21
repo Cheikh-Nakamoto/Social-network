@@ -1,2 +1,2 @@
 -- Supprime la table groups
-DROP TABLE groups;
+DROP TABLE IF EXISTS groups;

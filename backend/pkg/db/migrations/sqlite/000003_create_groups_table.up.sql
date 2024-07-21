@@ -1,5 +1,5 @@
 -- Crée la table groups avec les colonnes nécessaires
-CREATE TABLE groups (
+CREATE TABLE IF NOT EXISTS groups (
     id TEXT PRIMARY KEY,             -- Identifiant unique du groupe
     name TEXT NOT NULL,              -- Nom du groupe
     description TEXT,                -- Description du groupe

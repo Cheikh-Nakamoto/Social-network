@@ -1,5 +1,5 @@
 -- Crée la table comments avec les colonnes nécessaires
-CREATE TABLE comments (
+CREATE TABLE IF NOT EXISTS comments (
     id TEXT PRIMARY KEY,             -- Identifiant unique du commentaire
     post_id TEXT NOT NULL,           -- Identifiant du post commenté
     user_id TEXT NOT NULL,           -- Identifiant de l'utilisateur ayant commenté

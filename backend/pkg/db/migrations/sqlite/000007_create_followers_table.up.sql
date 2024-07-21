@@ -1,5 +1,5 @@
 -- Crée la table followers avec les colonnes nécessaires
-CREATE TABLE followers (
+CREATE TABLE IF NOT EXISTS followers (
     id TEXT PRIMARY KEY,             -- Identifiant unique de la relation de suivi
     follower_id TEXT NOT NULL,       -- Identifiant de l'utilisateur suivant
     followed_id TEXT NOT NULL,       -- Identifiant de l'utilisateur suivi

@@ -1,2 +1,2 @@
 -- Supprime la table dislikes
-DROP TABLE dislikes;
+DROP TABLE IF EXISTS dislikes;

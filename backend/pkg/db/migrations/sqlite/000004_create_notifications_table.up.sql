@@ -1,5 +1,5 @@
 -- Crée la table notifications avec les colonnes nécessaires
-CREATE TABLE notifications (
+CREATE TABLE IF NOT EXISTS notifications (
     id TEXT PRIMARY KEY,             -- Identifiant unique de la notification
     user_id TEXT NOT NULL,           -- Identifiant de l'utilisateur recevant la notification
     type TEXT NOT NULL,              -- Type de la notification (ex: "comment", "like", "follow")

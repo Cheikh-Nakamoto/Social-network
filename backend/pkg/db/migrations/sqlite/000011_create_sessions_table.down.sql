@@ -1,2 +1,2 @@
 -- Supprime la table sessions
-DROP TABLE sessions;
+DROP TABLE IF EXISTS sessions;

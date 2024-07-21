@@ -1,2 +1,2 @@
 -- Supprime la table chats
-DROP TABLE chats;
+DROP TABLE IF EXISTS chats;

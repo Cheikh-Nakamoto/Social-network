@@ -1,2 +1,2 @@
 -- Supprime la table followers
-DROP TABLE followers;
+DROP TABLE IF EXISTS followers;

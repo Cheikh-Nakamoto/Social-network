@@ -1,5 +1,5 @@
 -- Crée la table dislikes avec les colonnes nécessaires
-CREATE TABLE dislikes (
+CREATE TABLE IF NOT EXISTS dislikes (
     id TEXT PRIMARY KEY,             -- Identifiant unique du dislike
     user_id TEXT NOT NULL,           -- Identifiant de l'utilisateur ayant disliké
     post_id TEXT NOT NULL,           -- Identifiant du post disliké

@@ -1,2 +1,2 @@
 -- Supprime la table notifications
-DROP TABLE notifications;
+DROP TABLE IF EXISTS notifications;

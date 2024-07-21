@@ -1,2 +1,2 @@
 -- Supprime la table likes
-DROP TABLE likes;
+DROP TABLE IF EXISTS likes;

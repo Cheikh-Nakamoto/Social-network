@@ -2,6 +2,7 @@ package main
 
 import (
 	"backend/pkg"
+	"backend/pkg/contollers"
 	"backend/pkg/db/sqlite"
 	"errors"
 	_ "github.com/mattn/go-sqlite3"
@@ -25,6 +26,7 @@ type Routes []Route
 var routes = Routes{
 	Route{"Index", "GET", "/", indexHandler},
 	Route{"Posts", "GET", "/posts", postsHandler},
+	Route{"Create_groupe", "POST", "/create_post", create_group},
 }
 
 func main() {
@@ -37,10 +39,6 @@ func main() {
 }
 
 func StartServer(args []string) error {
-	// Check arguments
-	if len(args) != 0 {
-		return errors.New("too many arguments")
-	}
 
 	// Check if the .env file exists
 	if _, err := os.Stat(".env"); os.IsNotExist(err) {
@@ -105,4 +103,8 @@ func postsHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
+}
+
+func create_group(w http.ResponseWriter, r *http.Request) {
+	contollers.CreateGroup(w, r)
 }

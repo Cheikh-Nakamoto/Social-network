@@ -1,5 +1,5 @@
 -- Crée la table likes avec les colonnes nécessaires
-CREATE TABLE likes (
+CREATE TABLE IF NOT EXISTS likes (
     id TEXT PRIMARY KEY,             -- Identifiant unique du like
     user_id TEXT NOT NULL,           -- Identifiant de l'utilisateur ayant aimé
     post_id TEXT NOT NULL,           -- Identifiant du post aimé
