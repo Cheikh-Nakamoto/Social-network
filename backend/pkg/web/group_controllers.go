@@ -2,6 +2,7 @@ package web
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -38,6 +39,7 @@ func (gc *GroupController) CreateGroupHandler(w http.ResponseWriter, r *http.Req
 	var group dto.GroupDTO
 
 	if err := json.NewDecoder(r.Body).Decode(&group); err != nil {
+		fmt.Println("error: ", err,r.Body)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
