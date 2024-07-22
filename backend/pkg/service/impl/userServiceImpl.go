@@ -52,7 +52,7 @@ func (s *UserServiceImpl) Connection(email, password string) (*dto.UserDTO, erro
 	return mapper.UserToDTO(user), nil
 }
 
-func (s *UserServiceImpl) UpdateProfile(id uint, userDTO *dto.UserDTO) error {
+ func (s *UserServiceImpl) UpdateProfile(id uint, userDTO *dto.UserDTO) error {
 	user := mapper.DTOToUser(userDTO)
 	user.ID = id
 	return s.Repository.Update(user)

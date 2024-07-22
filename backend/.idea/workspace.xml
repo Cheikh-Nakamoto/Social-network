@@ -5,51 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0bd87296-a04b-4e94-b55f-9e089d12cb90" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/backend.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dbnavigator.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/contollers/groupe_contollers.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/0000012_create_subscription_table.up.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/0000013_create_subscription_table.down.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/0000014_create_group_members_table.up.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/0000015_create_group_members_table.down.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000001_create_users_table.down.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000001_create_users_table.up.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000002_create_posts_table.down.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000002_create_posts_table.up.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000003_create_groups_table.down.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000003_create_groups_table.up.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000004_create_notifications_table.down.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000004_create_notifications_table.up.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000005_create_chats_table.down.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000005_create_chats_table.up.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000006_create_messages_table.down.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000006_create_messages_table.up.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000007_create_followers_table.down.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000007_create_followers_table.up.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000008_create_likes_table.down.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000008_create_likes_table.up.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000009_create_comments_table.down.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000009_create_comments_table.up.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000010_create_dislikes_table.down.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000010_create_dislikes_table.up.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000011_create_sessions_table.down.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000011_create_sessions_table.up.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/mydb.db" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/db/mydb.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/query.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/db/sqlite/sqlite.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/db/sqlite/sqlite.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/entity/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/entity/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/environment.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/middleware.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/models/groupe_models.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/service/groupe.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/script.sh" beforeDir="false" afterPath="$PROJECT_DIR$/script.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/serve.sh" beforeDir="false" afterPath="$PROJECT_DIR$/serve.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000006_create_group_table.down.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000006_create_group_table.up.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000007_create_group_members_table.down.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/db/migrations/sqlite/000007_create_group_members_table.up.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/dto/groupsDTO.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/repository/groupRepo.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/repository/groupRepoimpl.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/web/group_controllers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/server.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -84,28 +48,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.modules.automatic.dependencies.download&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
-    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/cheikhmodiouf/social-network-/backend/pkg/db/migrations/sqlite&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultGoTemplateProperty": "Go File",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "git-widget-placeholder": "master",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "last_opened_file_path": "/home/cheikhmodiouf/social-network-/backend/pkg/db/migrations/sqlite",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;sqlite&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "sqlite"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/pkg/db/migrations/sqlite" />
@@ -125,6 +90,17 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

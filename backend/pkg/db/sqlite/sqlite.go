@@ -4,10 +4,12 @@ import (
 	"backend/pkg/utils"
 	"database/sql"
 	"errors"
-	"github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database/sqlite3"
+	"fmt"
 	"log"
 	"os"
+
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/sqlite3"
 
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
@@ -57,7 +59,7 @@ func Migrate(db *sql.DB) error {
 		return err
 	}
 
-	//
+	fmt.Println("migration ditrectory :", os.Getenv("DB_MIGRATION_PATH"))
 	m, err := migrate.NewWithDatabaseInstance("file://"+os.Getenv("DB_MIGRATION_PATH"), "sqlite3", driver)
 	if err != nil {
 		return err

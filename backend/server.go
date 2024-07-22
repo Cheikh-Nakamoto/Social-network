@@ -8,10 +8,11 @@ import (
 	"backend/pkg/utils"
 	"backend/pkg/web"
 	"errors"
-	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"net/http"
 	"os"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
@@ -55,19 +56,27 @@ func StartServer(tab []string) error {
 
 	// Initializing repositories
 	userRepo := repository.NewUserRepoImpl(*db)
+	groupRepo := repository.NewGroupRepoImpl(*db)
 
 	// Initializing services
 	userService := impl.UserServiceImpl{
 		Repository: userRepo,
+	}
+	groupService := impl.GroupServiceImpl{
+		Repository: groupRepo,
 	}
 
 	// Initializing controllers
 	userController := web.UserController{
 		UserService: userService,
 	}
+	groupController := web.GroupController{
+		GroupService: groupService,
+	}
 
 	// Routes
 	mux = userController.RegisterRoutes(mux)
+	mux = groupController.RegisterRoutes(mux)
 
 	// Create a new handler
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
