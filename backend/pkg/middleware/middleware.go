@@ -67,3 +67,18 @@ func CORSMiddleware(next http.Handler) http.Handler {
 func isAuthenticated(r *http.Request) bool {
 	return r.Header.Get("Authorization") == "Bearer token"
 }
+
+func PostMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Recover from panics
+		defer func() {
+			if err := recover(); err != nil {
+				log.Println(err)
+				http.Error(w, "Internal server error", http.StatusInternalServerError)
+			}
+		}()
+
+		// Call the next handler
+		next.ServeHTTP(w, r)
+	})
+}

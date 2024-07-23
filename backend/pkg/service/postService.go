@@ -1,13 +1,7 @@
 package service
 
+import "backend/pkg/dto"
+
 type PostService interface {
-	CreatePost()
-	PostPrivacyFromString()
-	GetPost()
-	UpdatePost()
-	DeletePost()
-	GetUserPosts()
-	GetAllPosts()
-	GetAvailablePostsForUser()
-	GetPostFromQuery()
+	CreatePost(post *dto.PostDTO) (int, error)
 }

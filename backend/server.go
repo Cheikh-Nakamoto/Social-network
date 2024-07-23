@@ -57,6 +57,7 @@ func StartServer(tab []string) error {
 	// Initializing repositories
 	userRepo := repository.NewUserRepoImpl(*db)
 	groupRepo := repository.NewGroupRepoImpl(*db)
+	postRepo := repository.NewPostRepoImpl(*&db)
 
 	// Initializing services
 	userService := impl.UserServiceImpl{
@@ -65,7 +66,10 @@ func StartServer(tab []string) error {
 	groupService := impl.GroupServiceImpl{
 		Repository: groupRepo,
 	}
-
+	postService := impl.PostServiceImpl{
+        Repository: postRepo,
+    }
+	
 	// Initializing controllers
 	userController := handlers.UserController{
 		UserService: userService,
@@ -73,10 +77,15 @@ func StartServer(tab []string) error {
 	groupController := handlers.GroupController{
 		GroupService: groupService,
 	}
+	postController := handlers.PostController{
+        PostService: postService,
+    }
+	
 
 	// Routes
 	mux = userController.RegisterRoutes(mux)
 	mux = groupController.RegisterRoutes(mux)
+	mux = postController.RegisterRoutes(mux)
 
 	// Create a new handler
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
