@@ -1,4 +1,5 @@
-CREATE TABLE IF NOT EXISTS posts (
+CREATE TABLE IF NOT EXISTS posts
+(
     id UUID PRIMARY KEY,
     user_id INTEGER REFERENCES users(id),
     title TEXT,
@@ -10,5 +11,5 @@ CREATE TABLE IF NOT EXISTS posts (
         OR privacy = 'almost private'
     ),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

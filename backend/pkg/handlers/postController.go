@@ -18,7 +18,7 @@ func (p *PostController) RegisterRoutes(mux *http.ServeMux) *http.ServeMux {
 		log.Println(err)
 		return mux
 	}
-	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/groups/create", p.CreatePostHandler)
+	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/posts/create", p.CreatePostHandler)
 	return mux
 }
 func (pc *PostController) CreatePostHandler(w http.ResponseWriter, r *http.Request) {
