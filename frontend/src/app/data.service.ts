@@ -2,40 +2,49 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { UserDTO } from './models/models.compenant';
 
-@Injectable({
-  providedIn: 'root'
-})
+
 export class DataService {
 
-  private apiUrl = 'https://api.example.com'; // Remplacez par l'URL de votre API
+  private apiUrl = 'http://localhost:8080/sn/api'; // l'URL de votre API
 
   constructor(private http: HttpClient) { }
 
   // Exemple de requête GET
-  getData(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/data`)
+  getData(endpoint: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${endpoint}`)
       .pipe(
-        catchError(this.handleError<any>('getData'))
+        catchError(this.handleError)
       );
   }
-
-  // Exemple de requête POST
-  postData(data: any): Observable<any> {
+  // Méthode POST
+  postData(endpoint: string, data: any): Observable<any> {
     const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
     };
-    return this.http.post<any>(`${this.apiUrl}/data`, data, httpOptions)
+    return this.http.post(`${this.apiUrl}/${endpoint}`, data, httpOptions)
       .pipe(
-        catchError(this.handleError<any>('postData'))
+        catchError(this.handleError)
       );
   }
-
-  // Gestion des erreurs
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(`${operation} failed: ${error.message}`);
-      return of(result as T);
+  // Méthode pour enregistrer un utilisateur
+  registerUser(user: UserDTO): Observable<UserDTO> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
     };
+    return this.http.post<UserDTO>(`${this.apiUrl}/register`, user, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+  // Gestion des erreurs
+  private handleError(error: any): Observable<never> {
+    console.error('An error occurred:', error);
+    throw error;
   }
 }
