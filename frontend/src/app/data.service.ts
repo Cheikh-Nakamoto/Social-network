@@ -3,7 +3,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { UserDTO } from './models/models.compenant';
-
+@Injectable(
+  { providedIn: 'root' }
+)
 
 export class DataService {
 
@@ -25,7 +27,8 @@ export class DataService {
         'Content-Type': 'application/json'
       })
     };
-    return this.http.post(`${this.apiUrl}/${endpoint}`, data, httpOptions)
+    console.log(`${this.apiUrl}${endpoint} send this ${data }`)
+    return this.http.post(`${this.apiUrl}${endpoint}`, data, httpOptions)
       .pipe(
         catchError(this.handleError)
       );
