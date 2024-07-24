@@ -1,11 +1,11 @@
 module backend
 
-go 1.22.4
+go 1.21.1
 
 require (
 	github.com/golang-migrate/migrate/v4 v4.17.1
 	github.com/mattn/go-sqlite3 v1.14.22
-	golang.org/x/crypto v0.20.0
+	golang.org/x/crypto v0.25.0
 )
 
 require (
