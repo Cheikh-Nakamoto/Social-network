@@ -11,14 +11,5 @@ import {MatTabsModule} from '@angular/material/tabs';
 
 })
 export class LoginComponent {
-  log ! : HTMLDivElement;
-  signup! : HTMLDivElement
-  constructor(){}
 
-  translate(){
-    this.signup = document.querySelector('.signup-section') as HTMLDivElement
-    this.log = document.querySelector('.login-section') as HTMLDivElement
-    this.log.style.display = 'flex'
-    this.signup.style.display = 'none'
-  }
 }
