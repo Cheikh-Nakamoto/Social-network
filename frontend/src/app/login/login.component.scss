@@ -110,18 +110,7 @@ body {
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
-.login-section {
-  position: absolute;
-  left: 50%;
-  bottom: -88%;
-  transform: translateX(-50%);
-  width: calc(100% + 250px);
-  padding: 20px 140px;
-  background: #fff;
-  border-radius: 290px;
-  height: 100%;
-  transition: all 0.6s ease;
-}
+
 .login-section header,
 .signup-section header {
   font-size: 30px;
@@ -132,11 +121,11 @@ body {
   font-family: "smith";
 }
 .login-section header {
-  color: #000;
+  color: #fcfcfc;
   opacity: 0.6;
 }
 .login-section .social-buttons button {
-  border: 1px solid #000;
+  border: 1px solid #f3f3f3;
 }
 .container-auth form {
   display: flex;
@@ -256,4 +245,9 @@ form .btn {
   position: absolute;
   right: 39px;
   top: 134px;
+}
+
+
+:host ::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: white;
 }

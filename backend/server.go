@@ -2,7 +2,7 @@ package main
 
 import (
 	"backend/pkg/db/sqlite"
-	"backend/pkg/handlers"
+	"backend/pkg/web"
 	"backend/pkg/middleware"
 	"backend/pkg/repository"
 	"backend/pkg/service/impl"
@@ -71,13 +71,13 @@ func StartServer(tab []string) error {
     }
 	
 	// Initializing controllers
-	userController := handlers.UserController{
+	userController := web.UserController{
 		UserService: userService,
 	}
-	groupController := handlers.GroupController{
+	groupController := web.GroupController{
 		GroupService: groupService,
 	}
-	postController := handlers.PostController{
+	postController := web.PostController{
         PostService: postService,
     }
 	
