@@ -44,16 +44,16 @@ func (p *PostController) createPostHandler(w http.ResponseWriter, r *http.Reques
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	
+
 	post.ID = id
 	post.CreatedAt = time.Now()
 	post.UpdatedAt = time.Now()
 	json.NewEncoder(w).Encode(post)
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 }
 
 func (p *PostController) getAllPostsHandler(w http.ResponseWriter, r *http.Request) {
+	_ = r
 	posts, err := p.PostService.GetAllPosts()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

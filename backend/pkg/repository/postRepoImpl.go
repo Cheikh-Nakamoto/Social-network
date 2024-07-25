@@ -33,7 +33,6 @@ func (p *PostRepoImpl) CreatePost(userID string, title, content, postImage strin
 		fmt.Println("err create")
 		return "", fmt.Errorf("CreatePost: %v", err)
 	}
-	fmt.Println("created post")
 	return id, nil
 }
 
