@@ -1,4 +1,4 @@
-package entity
+package models
 
 type Follow struct {
 	ID         uint   `json:"id" db:"id"`

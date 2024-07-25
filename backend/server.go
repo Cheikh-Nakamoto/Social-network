@@ -2,7 +2,7 @@ package main
 
 import (
 	"backend/pkg/db/sqlite"
-	"backend/pkg/web"
+	"backend/pkg/handlers"
 	"backend/pkg/middleware"
 	"backend/pkg/repository"
 	"backend/pkg/service/impl"
@@ -23,7 +23,7 @@ func main() {
 		return
 	}
 }
-//commité gatoucha gouterrererere
+
 func StartServer(tab []string) error {
 	// Check arguments
 	if len(tab) != 0 {
@@ -57,7 +57,7 @@ func StartServer(tab []string) error {
 	// Initializing repositories
 	userRepo := repository.NewUserRepoImpl(*db)
 	groupRepo := repository.NewGroupRepoImpl(*db)
-	postRepo := repository.NewPostRepoImpl(*&db)
+	postRepo := repository.NewPostRepoImpl(*db)
 
 	// Initializing services
 	userService := impl.UserServiceImpl{
@@ -67,20 +67,19 @@ func StartServer(tab []string) error {
 		Repository: groupRepo,
 	}
 	postService := impl.PostServiceImpl{
-        Repository: postRepo,
-    }
-	
+		Repository: postRepo,
+	}
+
 	// Initializing controllers
-	userController := web.UserController{
+	userController := handlers.UserController{
 		UserService: userService,
 	}
-	groupController := web.GroupController{
+	groupController := handlers.GroupController{
 		GroupService: groupService,
 	}
-	postController := web.PostController{
-        PostService: postService,
-    }
-	
+	postController := handlers.PostController{
+		PostService: &postService,
+	}
 
 	// Routes
 	mux = userController.RegisterRoutes(mux)

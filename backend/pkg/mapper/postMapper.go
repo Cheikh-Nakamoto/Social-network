@@ -2,10 +2,10 @@ package mapper
 
 import (
 	"backend/pkg/dto"
-	"backend/pkg/entity"
+	"backend/pkg/models"
 )
 
-func PostToDTO(post *entity.Post) *dto.PostDTO {
+func PostToDTO(post *models.Post) *dto.PostDTO {
 	return &dto.PostDTO{
 		ID:        post.ID,
 		UserID:    post.UserID,
@@ -18,15 +18,15 @@ func PostToDTO(post *entity.Post) *dto.PostDTO {
 	}
 }
 
-func DTOToPost(postDTO *dto.PostDTO) *entity.Post {
-	return &entity.Post{
-        ID:        postDTO.ID,
-        UserID:    postDTO.UserID,
-        Title:     postDTO.Title,
-        Content:   postDTO.Content,
-        PostImage: postDTO.PostImage,
-        Privacy:   postDTO.Privacy,
-        CreatedAt: postDTO.CreatedAt,
-        UpdatedAt: postDTO.UpdatedAt,
-    }
+func DTOToPost(postDTO *dto.PostDTO) *models.Post {
+	return &models.Post{
+		ID:        postDTO.ID,
+		UserID:    postDTO.UserID,
+		Title:     postDTO.Title,
+		Content:   postDTO.Content,
+		PostImage: postDTO.PostImage,
+		Privacy:   postDTO.Privacy,
+		CreatedAt: postDTO.CreatedAt,
+		UpdatedAt: postDTO.UpdatedAt,
+	}
 }
