@@ -5,20 +5,42 @@
     <p>Engage, Share, Connect with ease.</p>
   </div>
   <div class="right-panel">
-    <div class="title animated-text">
-      <h1>Social Network</h1>
-      <div class="barre"></div>
-    </div>
-    <div class="form">
-      <form class="login-form" [formGroup]="loginForm" >
-        <h2>Log in</h2>
-        <label for="post-content">Post Content</label>
-        <input type="text" id="post-content" formControlName="username" placeholder="Enter your message here">
-        <label for="password">Password</label>
-        <input type="password" id="password" formControlName="password" placeholder="Password">
-        <button type="submit" (click) = "onlogin()">Log in</button>
-        <a href="#" class="forgot-password">Forgot your password?</a>
-      </form>
+    <div class="container-auth">
+      <mat-tab-group headerPosition="below">
+        <mat-tab label="Signup">
+          <div class="signup-section" id="register">
+            <header>Signup</header>
+            <form>
+              <div class="name-container">
+                <input type="text" placeholder="First Name" required />
+                <input type="text" placeholder="Last Name" required />
+              </div>
+              <input type="text" placeholder="Nickname" />
+              <input type="email" placeholder="Email" required />
+              <input type="password" placeholder="Password" required />
+              <input type="date" placeholder="Date of Birth" required />
+              <div class="file-input-container">
+                <input type="file" id="file-input" />
+                <label class="file-input-label">Choose an avatar</label>
+              </div>
+              <textarea placeholder="About Me"></textarea>
+              <button type="submit" class="btn">Signup</button>
+            </form>
+          </div>
+        </mat-tab>
+        <mat-tab label="Login">
+          <div class="login-section">
+            <header (click)="translate()">Login</header>
+            <form id="loginForm">
+              <input type="email" placeholder="Email" required />
+              <input type="password" placeholder="Password" required />
+              <a href="#">Forget Password?</a>
+              <button class="btn">Login</button>
+            </form>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+
     </div>
   </div>
 </div>
