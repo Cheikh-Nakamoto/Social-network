@@ -16,3 +16,9 @@ export interface UserDTO {
   created_at: string;
   updated_at: string;
 }
+
+export interface Message{
+  userFrom: UserDTO,
+  content: string,
+  userDest: UserDTO
+}
