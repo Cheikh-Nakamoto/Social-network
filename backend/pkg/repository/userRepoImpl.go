@@ -2,7 +2,7 @@ package repository
 
 import (
 	"backend/pkg/db/sqlite"
-	"backend/pkg/entity"
+	"backend/pkg/models"
 	"backend/pkg/session"
 	"database/sql"
 	"errors"
@@ -23,16 +23,16 @@ func NewUserRepoImpl(db sqlite.Database) *UserRepoImpl {
 }
 
 // FindByID is a method to find a user by ID
-func (u *UserRepoImpl) FindByID(id uint) (*entity.User, error) {
-	user := new(entity.User)
+func (u *UserRepoImpl) FindByID(id uint) (*models.User, error) {
+	user := new(models.User)
 	err := u.db.GetDB().QueryRow("SELECT * FROM users WHERE id = ?", id).Scan(&user.ID, &user.Email, &user.Password, &user.Firstname, &user.Lastname, &user.Avatar, &user.Nickname, &user.AboutMe, &user.IsPublic, &user.CreatedAt, &user.UpdatedAt)
 
 	return user, err
 }
 
 // FindByEmail is a method to find a user by email
-func (u *UserRepoImpl) FindByEmail(email string) (*entity.User, error) {
-	user := new(entity.User)
+func (u *UserRepoImpl) FindByEmail(email string) (*models.User, error) {
+	user := new(models.User)
 	err := u.db.GetDB().QueryRow(`SELECT id, email, password, firstname, lastname, date_of_birth, avatar, nickname, about_me, is_public, created_at, updated_at FROM users WHERE email = ?`, email).Scan(&user.ID, &user.Email, &user.Password, &user.Firstname, &user.Lastname, &user.DateOfBirth, &user.Avatar, &user.Nickname, &user.AboutMe, &user.IsPublic, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -44,7 +44,7 @@ func (u *UserRepoImpl) FindByEmail(email string) (*entity.User, error) {
 }
 
 // Save is a method to save a user
-func (u *UserRepoImpl) Save(user *entity.User) error {
+func (u *UserRepoImpl) Save(user *models.User) error {
 	_, err := u.db.GetDB().Exec(`INSERT INTO users (email, password, firstname, lastname, date_of_birth, avatar, nickname, about_me) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, user.Email, user.Password, user.Firstname, user.Lastname, user.DateOfBirth, user.Avatar, user.Nickname, user.AboutMe)
 	if err != nil {
 		log.Println("Error saving user")
@@ -54,7 +54,7 @@ func (u *UserRepoImpl) Save(user *entity.User) error {
 	return nil
 }
 
-func (u *UserRepoImpl) Update(user *entity.User) error {
+func (u *UserRepoImpl) Update(user *models.User) error {
 	_, err := u.db.GetDB().Exec(`UPDATE users SET firstname = ?, lastname = ?, avatar = ?, nickname = ?, about_me = ?, updated_at = ? WHERE id = ?`, user.Firstname, user.Lastname, user.Avatar, user.Nickname, user.AboutMe, user.ID, time.Now())
 
 	return err
@@ -72,7 +72,7 @@ func (u *UserRepoImpl) Unfollow(followerID, followingID uint) error {
 	return err
 }
 
-func (u *UserRepoImpl) GetFollowers(userID uint) ([]*entity.User, error) {
+func (u *UserRepoImpl) GetFollowers(userID uint) ([]*models.User, error) {
 	rows, err := u.db.GetDB().Query(`SELECT u.* FROM users u JOIN follows f ON u.id = f.follower_id WHERE f.following_id = ?`, userID)
 	if err != nil {
 		return nil, err
@@ -85,9 +85,9 @@ func (u *UserRepoImpl) GetFollowers(userID uint) ([]*entity.User, error) {
 		}
 	}(rows)
 
-	var users []*entity.User
+	var users []*models.User
 	for rows.Next() {
-		user := new(entity.User)
+		user := new(models.User)
 		err := rows.Scan(&user.ID, &user.Email, &user.Password, &user.Firstname, &user.Lastname, &user.Avatar, &user.Nickname, &user.AboutMe, &user.IsPublic, &user.CreatedAt, &user.UpdatedAt)
 		if err != nil {
 			return nil, err
