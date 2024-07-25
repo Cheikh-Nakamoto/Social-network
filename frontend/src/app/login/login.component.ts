@@ -1,6 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms'
-
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -9,23 +8,22 @@ import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms'
     ReactiveFormsModule
   ],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'] // Corriger 'styleUrl' en 'styleUrls'
+  styleUrls: ['./login.component.scss'] // Correction : 'styleUrl' en 'styleUrls'
 })
+export class LoginComponent implements OnInit {
+  loginForm!: FormGroup;
 
-export class LoginComponent implements OnInit{
-  loginForm ! : FormGroup;
-  constructor(private formbuilder : FormBuilder) {
-  }
+  constructor(private formbuilder: FormBuilder) {}
+
   ngOnInit() {
     this.loginForm = this.formbuilder.group({
-      username : [null],
-      password : [null]
+      username: [null],
+      password: [null]
     });
   }
 
-  onlogin(){
-    //this.apiservice.postData('/login',this.loginForm.value)
-    console.log(this.loginForm.value,'        ');
+  onlogin() {
+    // Simule une soumission de formulaire. Dans un vrai projet, vous enverrez les données au backend via un service HTTP.
+    console.log(this.loginForm.value);
   }
-
 }
