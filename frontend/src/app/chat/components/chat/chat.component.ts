@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ChatService } from '../../services/chat.service';
-// import { Message } from '../../../models/models.compenant';
+// import { Message } from '../../../entity/entity.compenant';
 
 
 @Component({
@@ -15,9 +15,9 @@ export class ChatComponent {
   response: string=""
 
 
-  
+
   constructor(private chatService: ChatService) {
-    
+
   }
 
   ngOnInit(): void {

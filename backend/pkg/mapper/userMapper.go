@@ -2,10 +2,10 @@ package mapper
 
 import (
 	"backend/pkg/dto"
-	"backend/pkg/models"
+	"backend/pkg/entity"
 )
 
-func UserToDTO(user *models.User) *dto.UserDTO {
+func UserToDTO(user *entity.User) *dto.UserDTO {
 	return &dto.UserDTO{
 		ID:          user.ID,
 		Email:       user.Email,
@@ -22,8 +22,8 @@ func UserToDTO(user *models.User) *dto.UserDTO {
 	}
 }
 
-func DTOToUser(userDTO *dto.UserDTO) *models.User {
-	return &models.User{
+func DTOToUser(userDTO *dto.UserDTO) *entity.User {
+	return &entity.User{
 		ID:          userDTO.ID,
 		Email:       userDTO.Email,
 		Password:    userDTO.Password,

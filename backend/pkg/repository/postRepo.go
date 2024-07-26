@@ -1,11 +1,11 @@
 package repository
 
 import (
-	"backend/pkg/models"
+	"backend/pkg/entity"
 )
 
 type PostRepo interface {
-	CreatePost(userID string, title, content, postImage string, privacy models.PostPrivacy) (string, error)
-	GetAllPosts() ([]models.Post, error)
-	DeletePost() ([]models.Post, error)
+	CreatePost(userID string, title, content, postImage string, privacy entity.PostPrivacy) (string, error)
+	GetAllPosts() ([]entity.Post, error)
+	DeletePost() ([]entity.Post, error)
 }

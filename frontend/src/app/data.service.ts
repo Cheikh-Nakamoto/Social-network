@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { UserDTO } from './models/models.compenant';
+import { UserDTO } from './entity/entity.compenant';
 
 
 export class DataService {

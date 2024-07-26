@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DataService } from '../data.service';
 import { HttpClientModule } from '@angular/common/http';
-import { UserDTO } from '../models/models.compenant';
+import { UserDTO } from '../entity/entity.compenant';
 @Component({
   selector: 'app-login',
   standalone: true,
