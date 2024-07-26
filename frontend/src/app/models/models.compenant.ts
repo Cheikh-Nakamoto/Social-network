@@ -1,15 +1,5 @@
 import {NgForm} from "@angular/forms";
 
-export  class logindata {
-  username: string;
-  password: string;
-  constructor(username: string, password: string) {
-    this.username = username;
-    this.password = password;
-  }
-  // Other methods...
-
-}
 
 
 export interface UserDTO {
@@ -25,4 +15,10 @@ export interface UserDTO {
   is_public: boolean;
   created_at: string;
   updated_at: string;
+}
+
+export interface Message{
+  userFrom: UserDTO,
+  content: string,
+  userDest: UserDTO
 }
