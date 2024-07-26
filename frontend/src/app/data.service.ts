@@ -2,8 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { UserDTO } from './entity/entity.compenant';
+import { UserDTO} from './models/models.compenant';
 
+@Injectable({
+  providedIn: 'root'
+})
 
 export class DataService {
 
