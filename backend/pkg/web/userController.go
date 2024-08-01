@@ -6,6 +6,7 @@ import (
 	"backend/pkg/session"
 	"backend/pkg/utils"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -65,7 +66,7 @@ func (c *UserController) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var credentials struct {
-		Email    string `json:"email" db:"email"`
+		Email    string `json:"username" db:"email"`
 		Password string `json:"password" db:"password"`
 	}
 
@@ -76,6 +77,7 @@ func (c *UserController) Login(w http.ResponseWriter, r *http.Request) {
 
 	userDTO, err := c.UserService.Connection(credentials.Email, credentials.Password)
 	if err != nil {
+		fmt.Println(1)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -83,6 +85,7 @@ func (c *UserController) Login(w http.ResponseWriter, r *http.Request) {
 	// I will add the token generation here
 	sessionToken, err := c.UserService.CreateSession(userDTO)
 	if err != nil {
+		fmt.Println("2")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

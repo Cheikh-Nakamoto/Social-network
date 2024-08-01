@@ -1,5 +1,10 @@
 import {NgForm} from "@angular/forms";
 
+export interface responselogin{
+  status : string,
+  token: string,
+  user: UserDTO
+}
 
 
 export interface UserDTO {
@@ -21,4 +26,10 @@ export interface Message{
   userFrom: UserDTO,
   content: string,
   userDest: UserDTO
+}
+
+
+export  interface  login {
+  username: string,
+  password: string
 }

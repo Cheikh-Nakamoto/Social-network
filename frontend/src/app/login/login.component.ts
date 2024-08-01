@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MatTabsModule } from '@angular/material/tabs'; // Importer MatTabsModule
 import { DataService } from '../data.service';
-import { UserDTO } from '../models/models.compenant';
+import { responselogin, UserDTO } from '../models/models.compenant';
 
 @Component({
   selector: 'app-login',
@@ -20,20 +20,9 @@ import { UserDTO } from '../models/models.compenant';
 })
 export class LoginComponent implements OnInit {
   loginForm !: FormGroup;
-  user: UserDTO = {
-    firstname: "madiambal",
-    lastname: "diagne",
-    email: "madiambal@gmail.com",
-    password: "123456",
-    date_of_birth: "1990-02-15",
-    nickname: "madiambal",
-    about_me: "madiambal est un développeur web passionné par les nouvelles technologies",
-    is_public: true,
-    created_at: "2022-02-15 11:20:30",
-    id: 1, // Add this line
-    avatar: "", // Add this line
-    updated_at: "" // Add this line
-  };
+  registerForm!: FormGroup;
+  // Initialisation de l'objet user
+  responselogin!:responselogin;
 
   constructor(private formbuilder: FormBuilder, private apiservice: DataService) { }
 
@@ -42,15 +31,43 @@ export class LoginComponent implements OnInit {
       username: [null],
       password: [null]
     });
+    this.registerForm = this.formbuilder.group({
+      email: [null],
+      password: [null],
+      firstname: [null],
+      lastname: [null],
+      date_of_birth: [null],
+      avatar: [null],
+      nickname: [null],
+      about_me: [null],
+      is_public: [null]
+    }
+
+    )
     // Initialisation de l'objet user
   }
 
   onlogin() {
-    console.log("ici c'est :", this.user);
-    this.apiservice.postData('/register', this.user).subscribe((response: any) => {
-      console.log(response);
+    console.log("ici c'est :", this.loginForm.value);
+    this.apiservice.postData('login', this.loginForm.value).subscribe((response: any) => {
+      localStorage.setItem("status",response.status)
+      localStorage.setItem("token",response.token)
+      localStorage.setItem("user",JSON.stringify(response.user))
+      alert("Connexion reussi!")
     }, error => {
+      alert("Erreur lors de la connexion")
       console.error('Erreur lors de la connexion:', error);
     });
   }
+
+  onregister(){
+    console.log("ici c'est :", this.registerForm.value);
+    this.apiservice.postData('register', this.registerForm.value).subscribe((response: any) => {
+     alert("Inscription reussi !")
+    }, error => {
+      console.error('Erreur lors de l\'inscription:', error);
+    });
+  }
 }
+
+
