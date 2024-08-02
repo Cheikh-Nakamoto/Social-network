@@ -116,7 +116,7 @@ export class HomeComponent implements OnInit {
   getAllPosts() {
     this.apiservice.getData("AllPost").subscribe(
       response => {
-        console.log(response);
+        console.log(response.json);
         // Si vous voulez assigner les posts récupérés à la variable posts, utilisez :
         // this.posts = response;
       },

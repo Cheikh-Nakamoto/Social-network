@@ -11,10 +11,10 @@ func PostToDTO(post *entity.Post) *dto.PostDTO {
 		UserID:    post.UserID,
 		Title:     post.Title,
 		Content:   post.Content,
-		PostImage: post.PostImage,
-		Privacy:   post.Privacy,
+		Image: post.Image,
+		IsPublic:   post.IsPublic,
 		CreatedAt: post.CreatedAt,
-		UpdatedAt: post.UpdatedAt,
+		
 	}
 }
 
@@ -24,9 +24,8 @@ func DTOToPost(postDTO *dto.PostDTO) *entity.Post {
 		UserID:    postDTO.UserID,
 		Title:     postDTO.Title,
 		Content:   postDTO.Content,
-		PostImage: postDTO.PostImage,
-		Privacy:   postDTO.Privacy,
+		Image: postDTO.Image,
+		IsPublic:   postDTO.IsPublic,
 		CreatedAt: postDTO.CreatedAt,
-		UpdatedAt: postDTO.UpdatedAt,
 	}
 }

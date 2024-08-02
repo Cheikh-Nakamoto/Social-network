@@ -5,7 +5,7 @@ import (
 )
 
 type PostRepo interface {
-	CreatePost(userID string, title, content, postImage string, privacy entity.PostPrivacy) (string, error)
+	CreatePost(userID string, title, content, Image string, IsPublic string) (string, error)
 	GetAllPosts() ([]entity.Post, error)
 	DeletePostByID(id int) ([]entity.Post, error)
 }

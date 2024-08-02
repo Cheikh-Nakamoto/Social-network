@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -25,7 +26,7 @@ func (c *PostController) RegisterRoutes(mux *http.ServeMux) *http.ServeMux {
 
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/AllPost", c.getAllPostsHandler)
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/CreatePost", c.createPostHandler)
-	
+
 	return mux
 
 }
@@ -35,6 +36,7 @@ func (p *PostController) createPostHandler(w http.ResponseWriter, r *http.Reques
 	var post dto.PostDTO
 	err := json.NewDecoder(r.Body).Decode(&post)
 	if err != nil {
+		fmt.Println(err, r.Body)
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
 		return
 	}
@@ -46,9 +48,9 @@ func (p *PostController) createPostHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	post.ID = id
+	nbr, _ := strconv.Atoi(id)
+	post.ID = int64(nbr)
 	post.CreatedAt = time.Now()
-	post.UpdatedAt = time.Now()
 	json.NewEncoder(w).Encode(post)
 	w.WriteHeader(http.StatusCreated)
 }
