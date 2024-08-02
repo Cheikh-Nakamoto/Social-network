@@ -33,3 +33,24 @@ export  interface  login {
   username: string,
   password: string
 }
+
+
+// post.model.ts
+export interface Comment {
+  id: number;
+  owner: string;
+  content: string;
+}
+
+export interface Post {
+  id: number;
+  userID: number;
+  title: string;
+  content: string;
+  categories: string[];
+  image: string;
+  comments: Comment[];
+  likes: number;
+  dislikes: number;
+  shares: number;
+}

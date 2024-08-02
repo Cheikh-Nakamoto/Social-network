@@ -3,9 +3,12 @@ package web
 import (
 	"backend/pkg/dto"
 	"backend/pkg/service"
+	"backend/pkg/utils"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -13,20 +16,18 @@ type PostController struct {
 	PostService service.PostService
 }
 
-func (p *PostController) RegisterRoutes(mux *http.ServeMux) *http.ServeMux {
-	mux.HandleFunc("/posts", p.handlePosts)
-	return mux
-}
-
-func (p *PostController) handlePosts(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case http.MethodGet:
-		p.getAllPostsHandler(w, r)
-	case http.MethodPost:
-		p.createPostHandler(w, r)
-	default:
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+func (c *PostController) RegisterRoutes(mux *http.ServeMux) *http.ServeMux {
+	err := utils.Environment()
+	if err != nil {
+		log.Println(err)
+		return mux
 	}
+
+	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/AllPost", c.getAllPostsHandler)
+	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/CreatePost", c.createPostHandler)
+	
+	return mux
+
 }
 
 func (p *PostController) createPostHandler(w http.ResponseWriter, r *http.Request) {

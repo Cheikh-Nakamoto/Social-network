@@ -1,0 +1,65 @@
+.container {
+  width: 80%;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1px solid #000000;
+  border-radius: 10px;
+}
+.header {
+  text-align: center;
+  color: #000000;
+  background-color: #0000ff;
+  padding: 10px;
+  border-radius: 10px 10px 0 0;
+}
+.form-group {
+  margin-bottom: 15px;
+}
+.form-group label {
+  display: block;
+  color: #000000;
+  margin-bottom: 5px;
+}
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #000000;
+  border-radius: 5px;
+}
+.form-group button {
+  background-color: #0000ff;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.form-group button:hover {
+  background-color: #000099;
+}
+.posts {
+  margin-top: 30px;
+}
+.post {
+  background-color: #e0e0e0;
+  border: 1px solid #000000;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+.post-title {
+  font-size: 18px;
+  color: #0000ff;
+  margin-bottom: 10px;
+}
+.post-content {
+  color: #000000;
+}
+
+
+.example-card {
+  max-width: 400px;
+  margin-bottom: 8px;
+}

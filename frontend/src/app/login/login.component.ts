@@ -4,6 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatTabsModule } from '@angular/material/tabs'; // Importer MatTabsModule
 import { DataService } from '../data.service';
 import { responselogin, UserDTO } from '../models/models.compenant';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +25,7 @@ export class LoginComponent implements OnInit {
   // Initialisation de l'objet user
   responselogin!:responselogin;
 
-  constructor(private formbuilder: FormBuilder, private apiservice: DataService) { }
+  constructor(private formbuilder: FormBuilder, private apiservice: DataService , private router : Router) { }
 
   ngOnInit() {
     this.loginForm = this.formbuilder.group({
@@ -54,6 +55,7 @@ export class LoginComponent implements OnInit {
       localStorage.setItem("token",response.token)
       localStorage.setItem("user",JSON.stringify(response.user))
       alert("Connexion reussi!")
+      this.redirectToHome()
     }, error => {
       alert("Erreur lors de la connexion")
       console.error('Erreur lors de la connexion:', error);
@@ -67,6 +69,14 @@ export class LoginComponent implements OnInit {
     }, error => {
       console.error('Erreur lors de l\'inscription:', error);
     });
+  }
+
+  redirectToHome() {
+    this.router.navigate(['/Acceuil']);
+  }
+
+  redirectToAbout() {
+    this.router.navigate(['/about']);
   }
 }
 
