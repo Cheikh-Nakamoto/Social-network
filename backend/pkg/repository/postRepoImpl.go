@@ -18,13 +18,14 @@ func NewPostRepoImpl(db sqlite.Database) *PostRepoImpl {
 }
 
 func (p *PostRepoImpl) CreatePost(userID string, title, content, Image string, IsPublic string) (string, error) {
+	fmt.Println("ispublic :",IsPublic)
 
-	stmt := `INSERT INTO posts ( user_id, title, content, privacy, created_at) VALUES ( ?, ?, ?, ?, ?)`
+	stmt := `INSERT INTO posts ( user_id, title, content,post_image, privacy, created_at) VALUES ( ?, ?, ?, ?, ?,?)`
 	escapedTitle := html.EscapeString(title)
 	escapedContent := html.EscapeString(content)
 	// escapedImage := html.EscapeString(Image)
 	log.Println(escapedTitle)
-	id, err := p.db.GetDB().Exec(stmt, userID, escapedTitle, escapedContent, IsPublic, time.Now())
+	id, err := p.db.GetDB().Exec(stmt, userID, escapedTitle, escapedContent,Image, IsPublic, time.Now())
 	if err != nil {
 		fmt.Println("err create", err)
 		return "", fmt.Errorf("CreatePost: %v", err)
@@ -34,8 +35,9 @@ func (p *PostRepoImpl) CreatePost(userID string, title, content, Image string, I
 }
 
 func (p *PostRepoImpl) GetAllPosts() ([]entity.Post, error) {
-	row, err := p.db.GetDB().Query(`SELECT id, user_id, title, content, post_image, privacy, created_at FROM posts`)
+	row, err := p.db.GetDB().Query(`SELECT * FROM posts`)
 	if err != nil {
+		fmt.Println("erreur lors de la recuperation des post")
 		return nil, fmt.Errorf("GetAllPosts: %v", err)
 	}
 	defer row.Close()
@@ -52,6 +54,7 @@ func (p *PostRepoImpl) GetAllPosts() ([]entity.Post, error) {
 			&post.CreatedAt,
 		)
 		if err != nil {
+			fmt.Println("erreur lor de l'affectation des donnés !", err)
 			return nil, fmt.Errorf("GetAllPosts: %v", err)
 		}
 		posts = append(posts, post)

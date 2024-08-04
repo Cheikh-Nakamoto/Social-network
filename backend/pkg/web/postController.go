@@ -36,11 +36,11 @@ func (p *PostController) createPostHandler(w http.ResponseWriter, r *http.Reques
 	var post dto.PostDTO
 	err := json.NewDecoder(r.Body).Decode(&post)
 	if err != nil {
-		fmt.Println(err, r.Body)
+		fmt.Println("error ",err)
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
-		return
+		return 
 	}
-
+fmt.Println("post envoyer :",post)
 	id, err := p.PostService.CreatePost(&post)
 	if err != nil {
 		fmt.Println("err")
@@ -51,14 +51,14 @@ func (p *PostController) createPostHandler(w http.ResponseWriter, r *http.Reques
 	nbr, _ := strconv.Atoi(id)
 	post.ID = int64(nbr)
 	post.CreatedAt = time.Now()
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(post)
-	w.WriteHeader(http.StatusCreated)
 }
 
 func (p *PostController) getAllPostsHandler(w http.ResponseWriter, r *http.Request) {
-	_ = r
 	posts, err := p.PostService.GetAllPosts()
 	if err != nil {
+		fmt.Println("Erreur lors de la recuperation des post !")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

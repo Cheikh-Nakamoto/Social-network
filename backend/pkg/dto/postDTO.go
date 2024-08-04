@@ -10,7 +10,7 @@ type PostDTO struct {
 	Content    string    `json:"content"`
 	Image      string    `json:"image"`
 	Categories string    `json:"categories"`
-	IsPublic   string      `json:"is_public"`
+	IsPublic   string      `json:"ispublic"`
 	UserID     string    `json:"user_id"` // Change this to int64 if you're sending a number
 	CreatedAt  time.Time `json:"created_at"`
 }

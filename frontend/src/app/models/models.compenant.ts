@@ -1,7 +1,8 @@
-import {NgForm} from "@angular/forms";
 
-export interface responselogin{
-  status : string,
+import { NgForm } from "@angular/forms";
+
+export interface responselogin {
+  status: string,
   token: string,
   user: UserDTO
 }
@@ -22,14 +23,14 @@ export interface UserDTO {
   updated_at: string;
 }
 
-export interface Message{
+export interface Message {
   userFrom: UserDTO,
   content: string,
   userDest: UserDTO
 }
 
 
-export  interface  login {
+export interface login {
   username: string,
   password: string
 }
@@ -42,15 +43,23 @@ export interface Comment {
   content: string;
 }
 
-export interface Post {
+export interface Posts {
   id: number;
-  userID: number;
-  title: string;
-  content: string;
-  categories: string[];
-  image: string;
+  post: Post;
   comments: Comment[];
   likes: number;
   dislikes: number;
   shares: number;
 }
+
+// post.model.ts
+
+export interface Post {
+  title: string;
+  content: string;
+  image: string;
+  categories: string[];
+  privacy: string;
+  user_id: string;
+}
+

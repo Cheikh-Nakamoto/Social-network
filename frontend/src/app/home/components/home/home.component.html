@@ -5,26 +5,26 @@
         <mat-card-header>
             <!--<div mat-card-avatar class="example-header-image"></div>-->
             <img routerLink="/profile/{{id}}" mat-card-avatar src="profile.png" width="64" height="64" alt="profile">
-            <mat-card-title routerLink="/profile/{{id}}">{{ users[post.userID-1].name }}</mat-card-title>
-            <mat-card-subtitle routerLink="/profile/{{id}}">&#64;{{ users[post.userID-1].username }}</mat-card-subtitle>
+            <mat-card-title routerLink="/profile/{{id}}">{{ user.name }}</mat-card-title>
+            <mat-card-subtitle routerLink="/profile/{{id}}">&#64;{{ user.nickname }}</mat-card-subtitle>
         </mat-card-header>
-        <img class="post-image" mat-card-image src="{{ post.image }}" alt="Photo of a Shiba Inu" height="300">
+        <img class="post-image" mat-card-image [src]="post.image" alt="Photo of a Shiba Inu" >
         <mat-card-content>
             <p>{{ post.content }}</p>
         </mat-card-content>
         <mat-card-actions>
             <button mat-icon-button>
-                <span>{{ post.likes }}</span>
+                <span>{{ like }}</span>
                 <mat-icon>thumb_up_outilne</mat-icon>
             </button>
             <button mat-icon-button>
-                <span>{{ post.dislikes }}</span>
+                <span>{{ dislike}}</span>
                 <mat-icon>thumb_down</mat-icon>
             </button>
-            <button mat-icon-button>
-                <span>{{ post.comments.length }}</span>
+            <!-- <button mat-icon-button>
+                <span>{{ comments.length }}</span>
                 <mat-icon>forum</mat-icon>
-            </button>
+            </button> -->
             <span class="comment-form">
                 <form>
                     <input matInput placeholder="Comment">
@@ -34,10 +34,12 @@
                 </form>
             </span>
             <span class="spacer"></span>
-            <button mat-icon-button>
-                <span>{{ post.shares }}</span>
+            <!-- <button mat-icon-button>
+                <span>{{ shares }}</span>
                 <mat-icon>share</mat-icon>
-            </button>
+            </button> -->
         </mat-card-actions>
     </mat-card>
 </div>
+
+

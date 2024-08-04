@@ -2,11 +2,11 @@ package main
 
 import (
 	"backend/pkg/db/sqlite"
-	"backend/pkg/web"
 	"backend/pkg/middleware"
 	"backend/pkg/repository"
 	"backend/pkg/service/impl"
 	"backend/pkg/utils"
+	"backend/pkg/web"
 	"errors"
 	"log"
 	"net/http"
@@ -58,6 +58,8 @@ func StartServer(tab []string) error {
 	userRepo := repository.NewUserRepoImpl(*db)
 	groupRepo := repository.NewGroupRepoImpl(*db)
 	postRepo := repository.NewPostRepoImpl(*db)
+	commentRepo := repository.NewCommentRepoImpl(*db)
+	likeDislikeRepo := repository.NewLikeDislikeRepoImpl(*db)
 
 	// Initializing services
 	userService := impl.UserServiceImpl{
@@ -68,6 +70,12 @@ func StartServer(tab []string) error {
 	}
 	postService := impl.PostServiceImpl{
 		Repository: postRepo,
+	}
+	commentService := impl.CommentServiceImpl{
+		Repository: commentRepo,
+	}
+	likeDislikeService := impl.LikeDislikeServiceImpl{
+		Repository: likeDislikeRepo,
 	}
 
 	// Initializing controllers
@@ -80,11 +88,22 @@ func StartServer(tab []string) error {
 	postController := web.PostController{
 		PostService: &postService,
 	}
+	commentController := web.CommentController{
+		CommentService: commentService,
+	}
+	likedislikeController := web.LikeDislikeController{
+		LikeDislikeService: likeDislikeService,
+	}
 
 	// Routes
 	mux = userController.RegisterRoutes(mux)
 	mux = groupController.RegisterRoutes(mux)
 	mux = postController.RegisterRoutes(mux)
+	mux = web.RegisterRoutes(mux)
+	mux = commentController.RegisterRoutes(mux)
+	mux = likedislikeController.RegisterRoutes(mux)
+	// Serve static files from the public directory
+	mux.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./public"))))
 
 	// Create a new handler
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
