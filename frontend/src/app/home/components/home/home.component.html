@@ -18,10 +18,10 @@
         <span>{{ dislikemap[post.id]}}</span>
         <mat-icon>thumb_down</mat-icon>
       </button>
-      <!-- <button mat-icon-button>
-                <span>{{ comments.length }}</span>
-                <mat-icon>forum</mat-icon>
-            </button> -->
+      <button mat-icon-button>
+        <span>12</span>
+        <mat-icon>forum</mat-icon>
+      </button>
       <span class="comment-form">
         <form (submit)="onComment(post.id,'comment', $event)">
           <input matInput placeholder="Comment" name="comment">
