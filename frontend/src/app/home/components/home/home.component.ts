@@ -44,6 +44,9 @@ export class HomeComponent implements OnInit {
   like : number=0
   comment : number=0
   dislike : number=0
+  likemap = []
+  dislikemap = []
+
 
   user: any;
   PostandButton !: Posts
@@ -62,10 +65,42 @@ export class HomeComponent implements OnInit {
       (response: Post[]) => { // Typage de la réponse comme un tableau de Post
         this.posts = response; // Assignez la réponse à la variable posts
         console.log("ici sont les post", this.posts);
+        this.loadLikes("post");
+        this.loadDislikes("post");
       },
       error => {
         console.error('Error fetching posts:', error);
       }
     );
   }
+
+  onLike(targetId: number, targetType: string) {
+    this.apiservice.likeTarget(0, this.id, targetId, targetType, true).subscribe((response) => {
+      console.log(response)
+      this.loadLikes(targetType);
+      this.loadDislikes(targetType); // Optionnel, si vous voulez mettre à jour aussi les dislikes
+    });
+  }
+
+  onDislike(targetId: number, targetType: string) {
+    this.apiservice.dislikeTarget(0, this.id, targetId, targetType, false).subscribe(() => {
+      this.loadLikes(targetType);
+      this.loadDislikes(targetType); // Optionnel, si vous voulez mettre à jour aussi les likes
+    });
+  }
+
+  private loadLikes(targetType : string) {
+    this.apiservice.getTargetLikes(targetType).subscribe(likes => {
+      this.likemap = likes;
+      console.log(likes)
+    });
+  }
+
+  private loadDislikes(targetType : string) {
+    this.apiservice.getTargetDislikes(targetType).subscribe(dislikes => {
+      this.dislikemap = dislikes;
+      console.log(dislikes)
+    });
+  }
+
 }

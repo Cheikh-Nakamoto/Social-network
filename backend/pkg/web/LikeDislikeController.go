@@ -5,10 +5,10 @@ import (
 	"backend/pkg/service/impl"
 	"backend/pkg/utils"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 )
 
 type LikeDislikeController struct {
@@ -34,6 +34,7 @@ func (c *LikeDislikeController) likeTargetHandler(w http.ResponseWriter, r *http
 	var likeDislike dto.LikeDislikeDTO
 	err := json.NewDecoder(r.Body).Decode(&likeDislike)
 	if err != nil {
+		fmt.Println("Invalid request payload", err)
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
 		return
 	}
@@ -65,15 +66,9 @@ func (c *LikeDislikeController) dislikeTargetHandler(w http.ResponseWriter, r *h
 }
 
 func (c *LikeDislikeController) getTargetLikesHandler(w http.ResponseWriter, r *http.Request) {
-	targetIDStr := r.URL.Query().Get("target_id")
 	targetType := r.URL.Query().Get("target_type")
-	targetID, err := strconv.ParseInt(targetIDStr, 10, 64)
-	if err != nil {
-		http.Error(w, "Invalid target ID", http.StatusBadRequest)
-		return
-	}
 
-	likes, err := c.LikeDislikeService.GetLikes(targetID, targetType)
+	likes, err := c.LikeDislikeService.GetLikes(targetType)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -84,15 +79,8 @@ func (c *LikeDislikeController) getTargetLikesHandler(w http.ResponseWriter, r *
 }
 
 func (c *LikeDislikeController) getTargetDislikesHandler(w http.ResponseWriter, r *http.Request) {
-	targetIDStr := r.URL.Query().Get("target_id")
 	targetType := r.URL.Query().Get("target_type")
-	targetID, err := strconv.ParseInt(targetIDStr, 10, 64)
-	if err != nil {
-		http.Error(w, "Invalid target ID", http.StatusBadRequest)
-		return
-	}
-
-	dislikes, err := c.LikeDislikeService.GetDislikes(targetID, targetType)
+	dislikes, err := c.LikeDislikeService.GetDislikes(targetType)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

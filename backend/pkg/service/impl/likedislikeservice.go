@@ -34,10 +34,10 @@ func (s *LikeDislikeServiceImpl) DislikeTarget(likeDislike *dto.LikeDislikeDTO) 
 	return s.Repository.DislikeTarget(entity)
 }
 
-func (s *LikeDislikeServiceImpl) GetLikes(targetID int64, targetType string) (int, error) {
-	return s.Repository.GetLikes(targetID, targetType)
+func (s *LikeDislikeServiceImpl) GetLikes(targetType string) (map[int]int, error) {
+	return s.Repository.GetLikes(targetType)
 }
 
-func (s *LikeDislikeServiceImpl) GetDislikes(targetID int64, targetType string) (int, error) {
-	return s.Repository.GetDislikes(targetID, targetType)
+func (s *LikeDislikeServiceImpl) GetDislikes(targetType string) (map[int]int, error) {
+	return s.Repository.GetDislikes(targetType)
 }
