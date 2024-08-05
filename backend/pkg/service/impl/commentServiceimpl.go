@@ -17,7 +17,9 @@ func NewCommentServiceImpl(repo repository.CommentRepo) *CommentServiceImpl {
 func (s *CommentServiceImpl) CreateComment(comment *dto.CommentDTO) (int64, error) {
 	entity := &entity.Comment{
 		UserID:    comment.UserID,
+		TargetId: comment.TargetId,
 		Content:   comment.Content,
+		TargetType: comment.TargetType,
 		CreatedAt: comment.CreatedAt,
 	}
 	return s.Repository.CreateComment(entity)

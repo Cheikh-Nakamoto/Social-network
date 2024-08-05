@@ -41,9 +41,9 @@ export class HomeComponent implements OnInit {
   id !: number
   posts: Post[] = []
   share : number=0
-  like : number=0
+
   comment : number=0
-  dislike : number=0
+
   likemap = []
   dislikemap = []
 
@@ -89,17 +89,41 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  onComment(postId: number,targetType: string, event: Event) {
+    event.preventDefault();
+
+    const target = event.target as HTMLFormElement;
+    const content = (target.querySelector('input[name="comment"]') as HTMLInputElement).value;
+
+    if (!content) {
+        return;
+    }
+
+    let body = {
+      id: 0,
+      user_id: this.id.toString(),
+      target_id: postId,
+      content: content,
+      target_type: targetType,
+    };
+
+    this.apiservice.postData("CreateComment", JSON.stringify(body)).subscribe(response => {
+      console.log(response);
+      // Clear the input field after posting the comment
+      (target.querySelector('input[name="comment"]') as HTMLInputElement).value = '';
+    });
+}
+
+
   private loadLikes(targetType : string) {
     this.apiservice.getTargetLikes(targetType).subscribe(likes => {
       this.likemap = likes;
-      console.log(likes)
     });
   }
 
   private loadDislikes(targetType : string) {
     this.apiservice.getTargetDislikes(targetType).subscribe(dislikes => {
       this.dislikemap = dislikes;
-      console.log(dislikes)
     });
   }
 

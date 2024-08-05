@@ -15,8 +15,9 @@ func NewCommentRepoImpl(db sqlite.Database) *CommentRepoImpl {
 }
 
 func (repo *CommentRepoImpl) CreateComment(comment *entity.Comment) (int64, error) {
-	stmt := `INSERT INTO comments (user_id, content, likes, dislikes, created_at) VALUES (?, ?, ?, ?, ?)`
-	result, err := repo.db.GetDB().Exec(stmt, comment.UserID, comment.Content, comment.CreatedAt)
+	stmt := `INSERT INTO comments (user_id,target_id, content,target_type, created_at) VALUES (?, ?, ?, ?,?)`
+	fmt.Println("target type :",comment.TargetType)
+	result, err := repo.db.GetDB().Exec(stmt, comment.UserID,comment.TargetId, comment.Content,comment.TargetType, comment.CreatedAt)
 	if err != nil {
 		return 0, fmt.Errorf("CreateComment: %v", err)
 	}
