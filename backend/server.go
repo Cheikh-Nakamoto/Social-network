@@ -77,6 +77,9 @@ func StartServer(tab []string) error {
 	likeDislikeService := impl.LikeDislikeServiceImpl{
 		Repository: likeDislikeRepo,
 	}
+	chatControler:=web.ChatControler{
+		
+	}
 
 	// Initializing controllers
 	userController := web.UserController{
@@ -102,6 +105,7 @@ func StartServer(tab []string) error {
 	mux = web.RegisterRoutes(mux)
 	mux = commentController.RegisterRoutes(mux)
 	mux = likedislikeController.RegisterRoutes(mux)
+	mux = chatControler.RegisterRoutes(mux)
 	// Serve static files from the public directory
 	mux.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./public"))))
 
