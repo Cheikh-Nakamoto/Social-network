@@ -1,6 +1,6 @@
 module backend
 
-go 1.21.1
+go 1.23
 
 require (
 	github.com/golang-migrate/migrate/v4 v4.17.1
