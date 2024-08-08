@@ -20,6 +20,24 @@ func (s *UserServiceImpl) GetUserById(id uint) (*dto.UserDTO, error) {
 	return mapper.UserToDTO(user), nil
 }
 
+func (s *UserServiceImpl)AllUsers()([]*dto.UserDTO, error){
+	users, err:=s.Repository.GetAllUsers()
+	if err!=nil{
+		return nil, err
+
+	}
+	userDTOs := make([]*dto.UserDTO, len(users))
+	for _, user := range users {
+		if user !=nil{
+
+			userDTOs = append(userDTOs, mapper.UserToDTO(user))
+		}
+	}
+
+	return userDTOs, nil
+
+}
+
 func (s *UserServiceImpl) CreateUser(user *dto.UserDTO) error {
 	isExisted, err := s.Repository.FindByEmail(user.Email)
 	if err != nil {
@@ -94,3 +112,5 @@ func (s *UserServiceImpl) CreateSession(user *dto.UserDTO) (string, error) {
 	s.Repository.StoreSession(token, user.ID)
 	return token, nil
 }
+
+

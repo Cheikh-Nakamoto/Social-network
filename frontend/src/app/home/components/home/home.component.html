@@ -38,3 +38,22 @@
     </mat-card-actions>
   </mat-card>
 </div>
+
+<div class="user-list-container" *ngIf="allusers && allusers.length > 0; else noUsers">
+  <div class="user-card" *ngFor="let user of allusers">
+    <img [src]="user.avatar" alt="Avatar of {{ user.firstname }}" class="user-avatar">
+    <div class="user-details">
+      <h3>{{ user.firstname }} {{ user.lastname }}</h3>
+      <p>{{ user.email }}</p>
+      <p>{{ user.nickname || 'No nickname' }}</p>
+      <button >Add User</button>
+    </div>
+  </div>
+</div>
+
+<ng-template #noUsers>
+  <p>No users available.</p>
+</ng-template>
+
+
+

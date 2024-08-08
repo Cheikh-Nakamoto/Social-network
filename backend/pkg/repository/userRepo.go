@@ -13,4 +13,5 @@ type UserRepo interface {
 	StoreSession(token string, userID uint)
 	GetUserID(token string) (uint, bool)
 	ClearSession(token string)
+	GetAllUsers()([]*entity.User, error)
 }

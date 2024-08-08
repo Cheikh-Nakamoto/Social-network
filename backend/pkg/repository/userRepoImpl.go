@@ -6,6 +6,7 @@ import (
 	"backend/pkg/session"
 	"database/sql"
 	"errors"
+	"fmt"
 	"log"
 	"time"
 )
@@ -29,6 +30,12 @@ func (u *UserRepoImpl) FindByID(id uint) (*entity.User, error) {
 
 	return user, err
 }
+type AllUsers struct{
+	id int
+	nickname string
+}
+
+
 
 // FindByEmail is a method to find a user by email
 func (u *UserRepoImpl) FindByEmail(email string) (*entity.User, error) {
@@ -108,4 +115,34 @@ func (u *UserRepoImpl) GetUserID(token string) (uint, bool) {
 
 func (u *UserRepoImpl) ClearSession(token string) {
 	u.sessionStore.ClearSession(token)
+}
+
+
+func (s *UserRepoImpl)GetAllUsers()([]*entity.User, error){
+	 query := `
+        SELECT id, email, firstname, lastname, date_of_birth, avatar, nickname, about_me, is_public, created_at, updated_at
+        FROM users
+    ` 
+	rows, err := s.db.GetDB().Query(query)
+    if err != nil {
+        return nil, fmt.Errorf("failed to execute query: %w", err)
+    }
+    defer rows.Close()
+
+	 var users []*entity.User
+
+	 for rows.Next() {
+        user:=new(entity.User)
+        err := rows.Scan(&user.ID, &user.Email, &user.Firstname, &user.Lastname, &user.DateOfBirth, &user.Avatar, &user.Nickname, &user.AboutMe, &user.IsPublic, &user.CreatedAt, &user.UpdatedAt)
+        if err != nil {
+            return nil, fmt.Errorf("failed to scan row: %w", err)
+        }
+        users = append(users, user)
+    }
+
+	if err = rows.Err(); err != nil {
+        return nil, fmt.Errorf("row iteration error: %w", err)
+    }
+
+    return users, nil
 }
