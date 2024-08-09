@@ -16,8 +16,8 @@ func NewCommentRepoImpl(db sqlite.Database) *CommentRepoImpl {
 
 func (repo *CommentRepoImpl) CreateComment(comment *entity.Comment) (int64, error) {
 	stmt := `INSERT INTO comments (user_id,target_id, content,target_type, created_at) VALUES (?, ?, ?, ?,?)`
-	fmt.Println("target type :",comment.TargetType)
-	result, err := repo.db.GetDB().Exec(stmt, comment.UserID,comment.TargetId, comment.Content,comment.TargetType, comment.CreatedAt)
+	fmt.Println("target type :", comment.TargetType)
+	result, err := repo.db.GetDB().Exec(stmt, comment.UserID, comment.TargetId, comment.Content, comment.TargetType, comment.CreatedAt)
 	if err != nil {
 		return 0, fmt.Errorf("CreateComment: %v", err)
 	}
@@ -28,23 +28,25 @@ func (repo *CommentRepoImpl) CreateComment(comment *entity.Comment) (int64, erro
 	return id, nil
 }
 
-func (repo *CommentRepoImpl) GetAllComments() ([]entity.Comment, error) {
-	stmt := `SELECT id, user_id, content, likes, dislikes, created_at FROM comments`
+func (repo *CommentRepoImpl) GetAllComments() (map[int][]entity.Comment, error) {
+	stmt := `SELECT id ,user_id,target_id,content,target_type,created_at FROM comments`
 	rows, err := repo.db.GetDB().Query(stmt)
 	if err != nil {
 		return nil, fmt.Errorf("GetAllComments: %v", err)
 	}
 	defer rows.Close()
 
-	var comments []entity.Comment
+	var comments = make(map[int][]entity.Comment)
+
 	for rows.Next() {
 		var comment entity.Comment
-		err := rows.Scan(&comment.ID, &comment.UserID, &comment.Content, &comment.CreatedAt)
+		err := rows.Scan(&comment.ID, &comment.UserID, &comment.TargetId, &comment.Content, &comment.TargetType, &comment.CreatedAt)
 		if err != nil {
 			return nil, fmt.Errorf("GetAllComments: %v", err)
 		}
-		comments = append(comments, comment)
+		comments[int(comment.TargetId)] = append(comments[int(comment.TargetId)],comment)
 	}
+	
 	return comments, nil
 }
 

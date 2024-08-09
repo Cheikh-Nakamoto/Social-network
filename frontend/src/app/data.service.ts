@@ -65,6 +65,8 @@ export class DataService {
     return this.http.post<void>(`${this.apiUrl}/dislikeTarget`, JSON.stringify(body));
   }
 
+
+
   getTargetLikes( targetType: string): Observable<any> {
     let params = new HttpParams()
       .set('target_type', targetType);

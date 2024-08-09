@@ -16,30 +16,32 @@ func NewCommentServiceImpl(repo repository.CommentRepo) *CommentServiceImpl {
 
 func (s *CommentServiceImpl) CreateComment(comment *dto.CommentDTO) (int64, error) {
 	entity := &entity.Comment{
-		UserID:    comment.UserID,
-		TargetId: comment.TargetId,
-		Content:   comment.Content,
+		UserID:     comment.UserID,
+		TargetId:   comment.TargetId,
+		Content:    comment.Content,
 		TargetType: comment.TargetType,
-		CreatedAt: comment.CreatedAt,
+		CreatedAt:  comment.CreatedAt,
 	}
 	return s.Repository.CreateComment(entity)
 }
 
-func (s *CommentServiceImpl) GetAllComments() ([]dto.CommentDTO, error) {
+func (s *CommentServiceImpl) GetAllComments() (map[int][]dto.CommentDTO, error) {
 	comments, err := s.Repository.GetAllComments()
 	if err != nil {
 		return nil, err
 	}
 
-	var commentDTOs []dto.CommentDTO
-	for _, comment := range comments {
-		commentDTO := dto.CommentDTO{
-			ID:        comment.ID,
-			UserID:    comment.UserID,
-			Content:   comment.Content,
-			CreatedAt: comment.CreatedAt,
+	var commentDTOs = make(map[int][]dto.CommentDTO)
+	for cle, comment := range comments {
+		for _, v := range comment {
+			commentDTO := dto.CommentDTO{
+				ID:        v.ID,
+				UserID:    v.UserID,
+				Content:   v.Content,
+				CreatedAt: v.CreatedAt,
+			}
+			commentDTOs[cle] = append(commentDTOs[cle], commentDTO)
 		}
-		commentDTOs = append(commentDTOs, commentDTO)
 	}
 	return commentDTOs, nil
 }
