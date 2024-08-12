@@ -18,8 +18,8 @@
         <span>{{ dislikemap[post.id]}}</span>
         <mat-icon>thumb_down</mat-icon>
       </button>
-      <button mat-icon-button>
-        <span>12</span>
+      <button mat-icon-button (click)="openDialog(post.id)">
+        <span>{{Comment[post.id].length}}</span>
         <mat-icon>forum</mat-icon>
       </button>
       <span class="comment-form">
@@ -36,5 +36,8 @@
                 <mat-icon>share</mat-icon>
             </button> -->
     </mat-card-actions>
+    <!-- <div class="comments" *ngIf="comments.length > 0">
+
+    </div> -->
   </mat-card>
 </div>

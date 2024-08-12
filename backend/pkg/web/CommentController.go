@@ -9,7 +9,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 	"time"
 )
 
@@ -34,19 +33,19 @@ func (c *CommentController) createCommentHandler(w http.ResponseWriter, r *http.
 	var comment dto.CommentDTO
 	err := json.NewDecoder(r.Body).Decode(&comment)
 	if err != nil {
-		fmt.Println("Invalid request payload",err)
+		fmt.Println("Invalid request payload", err)
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
 		return
 	}
-	if comment.TargetType != "comment" && comment.TargetType != "post"{
+	if comment.TargetType != "comment" && comment.TargetType != "post" {
 		fmt.Println("Le type de target ne peut etre que comment")
-        http.Error(w, "Le type de target ne peut etre que comment", http.StatusBadRequest)
-        return
+		http.Error(w, "Le type de target ne peut etre que comment", http.StatusBadRequest)
+		return
 	}
 	fmt.Println("target type controller :", comment.TargetType)
 	id, err := c.CommentService.CreateComment(&comment)
 	if err != nil {
-		fmt.Println("Erreur lors de la creation du commentaire ,",err)
+		fmt.Println("Erreur lors de la creation du commentaire ,", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -59,7 +58,9 @@ func (c *CommentController) createCommentHandler(w http.ResponseWriter, r *http.
 
 func (c *CommentController) getAllCommentsHandler(w http.ResponseWriter, r *http.Request) {
 	comments, err := c.CommentService.GetAllComments()
+
 	if err != nil {
+		fmt.Println("error: ", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -69,18 +70,18 @@ func (c *CommentController) getAllCommentsHandler(w http.ResponseWriter, r *http
 }
 
 func (c *CommentController) deleteCommentHandler(w http.ResponseWriter, r *http.Request) {
-	idStr := r.URL.Query().Get("id")
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		http.Error(w, "Invalid comment ID", http.StatusBadRequest)
-		return
-	}
+	// idStr := r.URL.Query().Get("id")
+	// id, err := strconv.Atoi(idStr)
+	// if err != nil {
+	// 	http.Error(w, "Invalid comment ID", http.StatusBadRequest)
+	// 	return
+	// }
 
-	err = c.CommentService.DeleteComment(int64(id))
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	// err = c.CommentService.DeleteComment(int64(id))
+	// if err != nil {
+	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
+	// 	return
+	// }
 
 	w.WriteHeader(http.StatusNoContent)
 }
