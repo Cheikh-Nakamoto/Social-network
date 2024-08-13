@@ -1,0 +1,19 @@
+<h2 mat-dialog-title>Comments</h2>
+<mat-dialog-content class="mat-typography">
+  <div class="container" *ngFor="let comment of comments">
+    <div class="user-comment">
+      <div class="user">
+        <span>{{ comment.user_id }}</span>
+      </div>
+      <div class="comment">
+        {{ comment.content }}
+      </div>
+      <div class="date">
+        <span>{{ comment.created_at | date:'long' }}</span> <!-- Formatez la date si nécessaire -->
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

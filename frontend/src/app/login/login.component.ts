@@ -55,6 +55,7 @@ export class LoginComponent implements OnInit {
       localStorage.setItem("token",response.token)
       localStorage.setItem("user",JSON.stringify(response.user))
       alert("Connexion reussi!")
+      
       this.redirectToHome()
     }, error => {
       alert("Erreur lors de la connexion")

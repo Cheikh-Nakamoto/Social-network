@@ -15,61 +15,66 @@ func NewLikeDislikeRepoImpl(db sqlite.Database) *LikeDislikeRepoImpl {
 }
 
 func (repo *LikeDislikeRepoImpl) IsUniqueLikeOrDislike(likeDislike *entity.LikeDislike) bool {
-	if likeDislike.TargetType != "post" && likeDislike.TargetType != "comment"{
-		fmt.Println("Tu veux nous fail ou quoi ! Calm down ceci n'est pas autoriser !")
+	if likeDislike.TargetType != "post" && likeDislike.TargetType != "comment" {
+		fmt.Println("Tu veux nous fail ou quoi ! Calm down ceci n'est pas autorisé !")
 		return true
 	}
-	stmp := `SELECT * FROM likes_dislikes WHERE target_type =?`
-	row, err := repo.db.GetDB().Query(stmp, likeDislike.TargetType)
+	query := `SELECT id, user_id, target_id, target_type, like, created_at, updated_at FROM likes_dislikes WHERE target_type = ?`
+	rows, err := repo.db.GetDB().Query(query, likeDislike.TargetType)
 	if err != nil {
-		fmt.Println("Erreur lors de l'execution de la requette de verification des like")
+		fmt.Println("Erreur lors de l'exécution de la requête de vérification des likes/dislikes:", err)
 		return true
 	}
-	
-	defer row.Close()
-	var tmp entity.LikeDislike
-	var created_at, updateçat string
-	for row.Next() {
-		err := row.Scan(&tmp.ID, &tmp.UserID, &tmp.TargetID, &tmp.TargetType, &tmp.Like, &created_at, &updateçat)
+	defer rows.Close()
+	var CreatedAt,UpdatedAt string
+	var existingLikeDislike entity.LikeDislike
+	for rows.Next() {
+		err := rows.Scan(&existingLikeDislike.ID, &existingLikeDislike.UserID, &existingLikeDislike.TargetID, &existingLikeDislike.TargetType, &existingLikeDislike.Like, &CreatedAt, &UpdatedAt)
 		if err != nil {
-			fmt.Println("Echecs lors du transfere des donne a la variable", err)
+			fmt.Println("Échec lors du transfert des données à la variable:", err)
 			return true
 		}
-		if likeDislike.UserID == tmp.UserID && likeDislike.TargetID == tmp.TargetID && likeDislike.TargetType == tmp.TargetType {
-			break
+		if likeDislike.UserID == existingLikeDislike.UserID && likeDislike.TargetID == existingLikeDislike.TargetID && likeDislike.TargetType == existingLikeDislike.TargetType {
+			if likeDislike.Like != existingLikeDislike.Like {
+				_, err := repo.db.GetDB().Exec("UPDATE likes_dislikes SET like = ? WHERE id = ?", likeDislike.Like, existingLikeDislike.ID)
+				if err != nil {
+					fmt.Println("Erreur lors de la mise à jour de l'état de la table likes_dislikes:", err)
+				}
+				return true
+			}
+			return true
 		}
 	}
-	if likeDislike.Like != tmp.Like {
-		_, err := repo.db.GetDB().Exec("UPDATE likes_dislikes SET like = ?  WHERE id=?", likeDislike.Like, tmp.ID)
-		if err != nil {
-			fmt.Println("Erreur lor de l'update de l'etat de la table likes_dislikes", err)
-		}
-		return true
-	}
+
 	return false
 }
 
 func (repo *LikeDislikeRepoImpl) LikeTarget(likeDislike *entity.LikeDislike) error {
+	if repo.IsUniqueLikeOrDislike(likeDislike) {
+		return nil
+	}
+
 	stmt := `INSERT INTO likes_dislikes (user_id, target_id, target_type, like) VALUES (?, ?, ?, ?)`
-	if !repo.IsUniqueLikeOrDislike(likeDislike) {
-		_, err := repo.db.GetDB().Exec(stmt, likeDislike.UserID, likeDislike.TargetID, likeDislike.TargetType, true)
-		if err != nil {
-			return fmt.Errorf("LikeTarget: %v", err)
-		}
+	_, err := repo.db.GetDB().Exec(stmt, likeDislike.UserID, likeDislike.TargetID, likeDislike.TargetType, true)
+	if err != nil {
+		return fmt.Errorf("LikeTarget: %v", err)
 	}
 	return nil
 }
 
 func (repo *LikeDislikeRepoImpl) DislikeTarget(likeDislike *entity.LikeDislike) error {
+	if repo.IsUniqueLikeOrDislike(likeDislike) {
+		return nil
+	}
+
 	stmt := `INSERT INTO likes_dislikes (user_id, target_id, target_type, like) VALUES (?, ?, ?, ?)`
-	if !repo.IsUniqueLikeOrDislike(likeDislike) {
-		_, err := repo.db.GetDB().Exec(stmt, likeDislike.UserID, likeDislike.TargetID, likeDislike.TargetType, false)
-		if err != nil {
-			return fmt.Errorf("DislikeTarget: %v", err)
-		}
+	_, err := repo.db.GetDB().Exec(stmt, likeDislike.UserID, likeDislike.TargetID, likeDislike.TargetType, false)
+	if err != nil {
+		return fmt.Errorf("DislikeTarget: %v", err)
 	}
 	return nil
 }
+
 
 func (repo *LikeDislikeRepoImpl) GetLikes(targetType string) (map[int]int, error) {
 	postquery := `SELECT target_id FROM likes_dislikes WHERE like =? `

@@ -15,6 +15,8 @@ body {
     border-radius: 10px;
     overflow: hidden;
     background-color: white;
+    margin-top: 40px;
+    margin-left: 20px;
 }
 
 .chat-header {
@@ -89,6 +91,7 @@ body {
 
 .message-container {
     display: flex;
+    align-items: center;
     width: 100%;
 }
 
@@ -101,5 +104,18 @@ body {
 }
 
 .send-button {
-    margin-left: 10px;
+    background-color: #1da1f2;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 12px;
+    cursor: pointer;
+}
+
+.send-button svg {
+    fill: white;
+    width: 20px;
 }
