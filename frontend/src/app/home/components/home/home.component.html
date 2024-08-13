@@ -19,7 +19,7 @@
         <mat-icon>thumb_down</mat-icon>
       </button>
       <button mat-icon-button (click)="openDialog(post.id)">
-        <span>{{Comment[post.id].length}}</span>
+        <span>{{comments.comments_by_post[post.id].length}}</span>
         <mat-icon>forum</mat-icon>
       </button>
       <span class="comment-form">

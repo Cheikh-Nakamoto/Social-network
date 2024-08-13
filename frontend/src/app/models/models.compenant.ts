@@ -1,12 +1,20 @@
 
-import { NgForm } from "@angular/forms";
-
 export interface responselogin {
   status: string,
   token: string,
   user: UserDTO
 }
 
+export interface AllUsersDTO {
+  users: UserDTO[]
+}
+
+export interface User {
+  id: number;
+  nickname: string;
+  firstname: string;
+  lastname: string;
+}
 
 export interface UserDTO {
   id: number;
@@ -36,12 +44,22 @@ export interface login {
 }
 
 
-// post.model.ts
-export interface Comment {
+// Représente un commentaire individuel
+export interface CommentDTO {
   id: number;
-  owner: string;
+  user_id: string;
+  target_id: number;
   content: string;
+  target_type: string;
+  created_at: string;
 }
+
+// Représente la réponse structurée contenant les commentaires par post
+export interface CommentContent {
+  comments_by_post: { [key: number]: CommentDTO[] };
+}
+
+
 
 export interface Posts {
   id: number;

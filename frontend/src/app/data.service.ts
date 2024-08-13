@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders , HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -14,12 +14,14 @@ export class DataService {
   constructor(private http: HttpClient) { }
 
   // Exemple de requête GET
-  getData(endpoint: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${endpoint}`)
+  getData<T>(endpoint: string, returnType?: T): Observable<T | any> {
+    return this.http.get<T>(`${this.apiUrl}/${endpoint}`)
       .pipe(
-        catchError(this.handleError)
+        catchError(this.handleError),
+        map(data => returnType ? data : data as any)
       );
   }
+  
 
   // Méthode POST
   postData(endpoint: string, data: any): Observable<any> {

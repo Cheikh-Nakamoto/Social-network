@@ -37,6 +37,8 @@ func (s *CommentServiceImpl) GetAllComments() (map[int][]dto.CommentDTO, error) 
 			commentDTO := dto.CommentDTO{
 				ID:        v.ID,
 				UserID:    v.UserID,
+				TargetId: v.TargetId,
+                TargetType: v.TargetType,
 				Content:   v.Content,
 				CreatedAt: v.CreatedAt,
 			}

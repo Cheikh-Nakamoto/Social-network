@@ -1,20 +1,20 @@
-import { Post } from './../../../models/models.compenant';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { MatSidenav, MatSidenavContainer } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatButton, MatIconButton } from '@angular/material/button';
-import { JsonPipe, NgForOf, NgOptimizedImage } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { NgForOf, NgOptimizedImage } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatFormField } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { HttpClientModule } from '@angular/common/http'; // Importez HttpClientModule
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { HttpClientModule } from '@angular/common/http';
 import { DataService } from '../../../data.service';
-import { Posts } from '../../../models/models.compenant';
+import { Post, CommentContent, Posts, CommentDTO } from '../../../models/models.compenant';
 import { DialogCommentComponent } from '../../../dialog-comment/dialog-comment.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { User,AllUsersDTO } from '../../../models/models.compenant';
 
 @Component({
   selector: 'app-home',
@@ -26,72 +26,66 @@ import { MatDialog } from '@angular/material/dialog';
     RouterLink,
     MatCardModule,
     MatIconModule,
-    MatButton,
+    MatButtonModule,
     NgOptimizedImage,
     NgForOf,
-    MatIconButton,
     ReactiveFormsModule,
-    MatFormField,
-    MatInput,
-    HttpClientModule // Ajoutez HttpClientModule ici
+    MatFormFieldModule,
+    MatInputModule,
+    HttpClientModule,
+    MatDialogModule
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   providers: [DataService]
 })
 export class HomeComponent implements OnInit {
-  id !: number
-  posts: Post[] = []
-  share: number = 0
-
-  Comment : any
-
-  likemap = []
-  dislikemap = []
-
-  token = localStorage.getItem("token")
-
-
+  id!: number;
+  AllUser : AllUsersDTO = {users: []};
+  posts: Post[] = [];
+  share: number = 0;
+  comments: CommentContent = { comments_by_post: {} };
+  likemap = [];
+  dislikemap = [];
+  token = localStorage.getItem('token');
   user: any;
-  PostandButton !: Posts
-  constructor(private apiservice: DataService) { }
+  postAndButton!: Posts;
 
+  constructor(private apiService: DataService) { }
 
   ngOnInit(): void {
-    this.user = JSON.parse(localStorage.getItem("user") as string)
+    this.user = JSON.parse(localStorage.getItem('user') as string);
     this.id = this.user.id;
+    this.loadComments();
     this.getAllPosts();
-
-
   }
 
   getAllPosts(): void {
-    this.apiservice.getData("AllPost").subscribe(
-      (response: Post[]) => { // Typage de la réponse comme un tableau de Post
-        this.posts = response; // Assignez la réponse à la variable posts
-        console.log("ici sont les post", this.posts);
-        this.loadLikes("post");
-        this.loadDislikes("post");
-        this.comment()
+    this.apiService.getData('AllPost').subscribe(
+      (response: Post[]) => {
+        this.posts = response;
+        console.log('ici sont les posts', this.posts);
+        this.loadLikes('post');
+        this.loadDislikes('post');
       },
-      error => {
+      (error) => {
         console.error('Error fetching posts:', error);
       }
     );
   }
 
   onLike(targetId: number, targetType: string) {
-    this.apiservice.likeTarget(0, this.id, targetId, targetType, true).subscribe((response) => {
-      console.log(response)
+    this.apiService.likeTarget(0, this.id, targetId, targetType, true).subscribe((response) => {
+      console.log("like response ", response);
       this.loadLikes(targetType);
-      this.loadDislikes(targetType); // Optionnel, si vous voulez mettre à jour aussi les dislikes
+      this.loadDislikes(targetType);
     });
   }
 
   onDislike(targetId: number, targetType: string) {
-    this.apiservice.dislikeTarget(0, this.id, targetId, targetType, false).subscribe(() => {
+    this.apiService.dislikeTarget(0, this.id, targetId, targetType, false).subscribe(() => {
       this.loadLikes(targetType);
-      this.loadDislikes(targetType); // Optionnel, si vous voulez mettre à jour aussi les likes
+      this.loadDislikes(targetType);
     });
   }
 
@@ -105,7 +99,7 @@ export class HomeComponent implements OnInit {
       return;
     }
 
-    let body = {
+    const body = {
       id: 0,
       user_id: this.id.toString(),
       target_id: postId,
@@ -113,47 +107,53 @@ export class HomeComponent implements OnInit {
       target_type: targetType,
     };
 
-    this.apiservice.postData("CreateComment", JSON.stringify(body)).subscribe(response => {
-      // Clear the input field after posting the comment
+    this.apiService.postData('CreateComment', JSON.stringify(body)).subscribe(() => {
       (target.querySelector('input[name="comment"]') as HTMLInputElement).value = '';
+      this.loadComments();
     });
-    this.comment()
-  }
-  comment(){
-    this.loadComment()
-    console.log(this.Comment)
+    
   }
 
-  private loadComment(){
-    this.apiservice.getData("AllComments").subscribe(comments => {
-      console.log("ici sont les commentaires", comments);  // Affichez les commentaires ici pour les utiliser dans votre template HTML ou autre partie de votre application.  // Pour ce qui est de fait, vous pouvez les afficher dans un tableau dans votre template HTML, ou utiliser des composants pour afficher chaque commentaire séparément.  // Vous pouvez aussi utiliser un pipe Angular (JsonPipe) pour transformer les commentaires en une
-      this.Comment = comments;
-    });
+  private loadComments(): void {
+    this.apiService.getData('AllComments').subscribe(
+      (comment: { [key: number]: CommentDTO[] }) => {
+        this.comments.comments_by_post = comment;
+        console.log('ici sont les commentaires', this.comments);
+      },
+      error => {
+        console.error('Erreur lors du chargement des commentaires:', error);
+      }
+    );
   }
 
   private loadLikes(targetType: string) {
-    this.apiservice.getTargetLikes(targetType).subscribe(likes => {
+    this.apiService.getTargetLikes(targetType).subscribe((likes) => {
       this.likemap = likes;
     });
   }
 
   private loadDislikes(targetType: string) {
-    this.apiservice.getTargetDislikes(targetType).subscribe(dislikes => {
+    this.apiService.getTargetDislikes(targetType).subscribe((dislikes) => {
       this.dislikemap = dislikes;
     });
   }
 
   readonly dialog = inject(MatDialog);
 
-  openDialog(post_id:number) {
-    localStorage.setItem('post_id',post_id.toString())
+  openDialog(postId: number): void {
+    // Récupérer les commentaires pour le post spécifié
+    const comment = this.comments.comments_by_post[postId] || [];
+
+    // Ouvrir le dialogue avec les commentaires pour le post
     const dialogRef = this.dialog.open(DialogCommentComponent, {
-      data: this.Comment[post_id]
+      data: {
+        postId: postId,
+        comments: comment
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
     });
   }
-
 }

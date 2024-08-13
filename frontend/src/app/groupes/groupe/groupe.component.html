@@ -1,0 +1,31 @@
+<div class="group-container">
+    <h1>Groupes de Discussion</h1>
+  
+    <!-- Liste des groupes existants -->
+    <div class="group-list">
+      <h2>Groupes Existants</h2>
+      <ul>
+        <li *ngFor="let group of groups">
+          <!-- {{ group.name }} -->
+        </li>
+      </ul>
+    </div>
+  
+    <!-- Bouton pour créer un nouveau groupe -->
+    <div class="create-group">
+      <button >Créer un Nouveau Groupe</button>
+    </div>
+  </div>
+  
+  <!-- Dialogue pour créer un groupe -->
+  <ng-template #createGroupDialog>
+    <div class="create-group-dialog">
+      <h2>Créer un Nouveau Groupe</h2>
+      <form >
+        <label for="groupName">Nom du Groupe</label>
+        <input type="text" id="groupName"  name="groupName" required />
+        <button type="submit">Créer</button>
+      </form>
+    </div>
+  </ng-template>
+  
