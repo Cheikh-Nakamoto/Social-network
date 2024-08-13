@@ -32,7 +32,8 @@ import { DataService } from '../../data.service';
         MatSidenavContainer,
         MatSidenav,
         HomeComponent,
-        ToolbarComponent
+      ToolbarComponent,
+        RouterOutlet
     ],
     templateUrl: './sidenav.component.html',
     styleUrl: './sidenav.component.scss',

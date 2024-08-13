@@ -292,6 +292,45 @@ func (c *UserController) GetFollowers(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	
+}
+
+
+func (c *UserController) GetAllUsers( w http.ResponseWriter, r *http.Request){
+	fmt.Println("dddddddddddddddddd")
+	err := utils.Environment()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if r.Method != http.MethodGet {
+		http.Error(w, os.Getenv("METHOD_NOT_ALLOWED"), http.StatusMethodNotAllowed)
+		return
+	}
+
+	if r.URL.Path != os.Getenv("DEFAULT_API_LINK")+"/allusers" {
+		http.Error(w, os.Getenv("NOT_FOUND"), http.StatusNotFound)
+		return
+	}
+
+
+	users, err:=c.UserService.AllUsers()
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set(os.Getenv("CONTENT_TYPE"), os.Getenv("APPLICATION_JSON"))
+	err = json.NewEncoder(w).Encode(users)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 }
 
 // RegisterRoutes Register routes
@@ -309,6 +348,9 @@ func (c *UserController) RegisterRoutes(routes *http.ServeMux) *http.ServeMux {
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/follow", c.Follow)
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/unfollow", c.Unfollow)
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/followers/{id}", c.GetFollowers)
+	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/allusers", c.GetAllUsers)
 
 	return routes
 }
+
+
