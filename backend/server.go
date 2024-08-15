@@ -56,6 +56,7 @@ func StartServer(tab []string) error {
 
 	// Initializing repositories
 	userRepo := repository.NewUserRepoImpl(*db)
+	followRepo := repository.NewFollowRepoImpl(*db)
 	groupRepo := repository.NewGroupRepoImpl(*db)
 	postRepo := repository.NewPostRepoImpl(*db)
 	commentRepo := repository.NewCommentRepoImpl(*db)
@@ -65,6 +66,7 @@ func StartServer(tab []string) error {
 	userService := impl.UserServiceImpl{
 		Repository: userRepo,
 	}
+	followService := impl.FollowServiceImpl{Repository: followRepo}
 	groupService := impl.GroupServiceImpl{
 		Repository: groupRepo,
 	}
@@ -85,6 +87,7 @@ func StartServer(tab []string) error {
 	userController := web.UserController{
 		UserService: userService,
 	}
+	followController := web.FollowController{FollowService: followService}
 	groupController := web.GroupController{
 		GroupService: groupService,
 	}
@@ -100,6 +103,7 @@ func StartServer(tab []string) error {
 
 	// Routes
 	mux = userController.RegisterRoutes(mux)
+	mux = followController.FollowsRoutes(mux)
 	mux = groupController.RegisterRoutes(mux)
 	mux = postController.RegisterRoutes(mux)
 	mux = web.RegisterRoutes(mux)
