@@ -82,27 +82,28 @@ export class DataService {
   }
 
   getGroups(): Observable<any> {
-    return this.http.get(`${this.apiUrl}`);
+    return this.http.get(`${this.apiUrl}/groups`);
   }
 
   getGroupById(id: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${id}`);
+    return this.http.get(`${this.apiUrl}/groups/${id}`);
   }
 
   createGroup(group: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/create`, group);
+    console.log(group)
+    return this.http.post(`${this.apiUrl}/groups/create`, group);
   }
 
   addMember(groupId: number, userId: number, role: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/add_member`, { groupId, userId, role });
+    return this.http.post(`${this.apiUrl}/groups/add_member`, { groupId, userId, role });
   }
 
   ejectMember(groupId: number, userId: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/eject_member`, { groupId, userId });
+    return this.http.post(`${this.apiUrl}/groups/eject_member`, { groupId, userId });
   }
 
   deleteGroup(groupId: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/delete?id=${groupId}`);
+    return this.http.delete(`${this.apiUrl}/groups/delete?id=${groupId}`);
   }
 
   // Gestion des erreurs

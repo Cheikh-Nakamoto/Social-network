@@ -4,9 +4,24 @@
   <!-- Liste des groupes existants -->
   <div class="group-list">
     <h2>Groupes Existants</h2>
-    <ul>
-      <li *ngFor="let group of groups">
-        {{ group.name }}
+    <ul class="allgroupe">
+      <li *ngFor="let group of groups" class="group-card">
+        <mat-card class="example-card" appearance="outlined">
+          <mat-card-header>
+            <div mat-card-avatar class="example-header-image"></div>
+            <mat-card-title>{{ group.name }}</mat-card-title>
+          </mat-card-header>
+          <img mat-card-image
+            src="https://www.istockphoto.com/photo/female-speaker-giving-a-presentation-during-business-seminar-at-convention-center-gm1783743772-547130548?utm_source=pixabay&utm_medium=affiliate&utm_campaign=SRP_image_sponsored&utm_content=https%3A%2F%2Fpixabay.com%2Fimages%2Fsearch%2Fgrouo%2F&utm_term=group"
+            alt="Photo of {{ group.name }}">
+          <mat-card-content>
+            <p>{{ group.description }}</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button>JOIN</button>
+            <button mat-button>SHARE</button>
+          </mat-card-actions>
+        </mat-card>
       </li>
     </ul>
   </div>
@@ -15,21 +30,4 @@
   <div class="create-group">
     <button (click)="handleClick('/CreateGroup', $event)">Créer un Nouveau Groupe</button>
   </div>
-</div>
-
-<div class="allgroupe">
-  <mat-card class="example-card" appearance="outlined" *ngFor="let group of groups">
-    <mat-card-header>
-      <div mat-card-avatar class="example-header-image"></div>
-      <mat-card-title>{{ group.name }}</mat-card-title>
-      <mat-card-subtitle>{{ group.owner }}</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      <p>{{ group.description }}</p>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-button>LIKE</button>
-      <button mat-button>SHARE</button>
-    </mat-card-actions>
-  </mat-card>
 </div>

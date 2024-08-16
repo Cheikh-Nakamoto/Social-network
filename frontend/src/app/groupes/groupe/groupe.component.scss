@@ -1,46 +1,64 @@
 .group-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .group-list ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .group-list li {
-    padding: 10px;
-    border: 1px solid #ccc;
-    margin-bottom: 5px;
-    border-radius: 5px;
-  }
-  
-  .create-group {
-    text-align: center;
-    margin-top: 20px;
-  }
-  
-  .create-group-dialog {
-    padding: 20px;
-  }
-  
-  .create-group-dialog form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .create-group-dialog input {
-    padding: 10px;
-    margin-bottom: 10px;
-  }
-  
-  .create-group-dialog button {
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.group-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.group-list li {
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 5px;
+  border-radius: 5px;
+}
+
+.create-group {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.create-group-dialog {
+  padding: 20px;
+}
+
+.create-group-dialog form {
+  display: flex;
+  flex-direction: column;
+}
+
+.create-group-dialog input {
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.create-group-dialog button {
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.allgroupe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.group-card {
+  flex: 0 1 30%;
+}
+
+.group-card mat-card {
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

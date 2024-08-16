@@ -1,1 +1,29 @@
-<p>create-group works!</p>
+<div class="groupe-form-container">
+    <h2>Créer un nouveau groupe</h2>
+  
+    <form [formGroup]="groupeForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="groupName">Nom du groupe</label>
+        <input id="groupName" formControlName="name" type="text" class="form-control" />
+        <div *ngIf="groupeForm.get('groupName')?.invalid && groupeForm.get('groupName')?.touched" class="error-message">
+          Le nom du groupe est requis et ne doit pas dépasser 50 caractères.
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" formControlName="description" class="form-control"></textarea>
+        <div *ngIf="groupeForm.get('description')?.invalid && groupeForm.get('description')?.touched" class="error-message">
+          La description est requise et ne doit pas dépasser 250 caractères.
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label for="isPublic">Groupe Public</label>
+        <input id="isPublic" formControlName="isPublic" type="checkbox" />
+      </div>
+  
+      <button type="submit" [disabled]="groupeForm.invalid" class="btn btn-primary">Créer le groupe</button>
+    </form>
+  </div>
+  
