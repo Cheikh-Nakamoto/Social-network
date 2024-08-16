@@ -3,7 +3,7 @@
   <div class="container" *ngFor="let comment of comments">
     <div class="user-comment">
       <div class="user">
-        <span>{{ comment.user_id }}</span>
+        <span>{{ user[comment.user_id].nickname }}</span>
       </div>
       <div class="comment">
         {{ comment.content }}

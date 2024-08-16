@@ -81,6 +81,30 @@ export class DataService {
     return this.http.get(`${this.apiUrl}/targetDislikes`, { params });
   }
 
+  getGroups(): Observable<any> {
+    return this.http.get(`${this.apiUrl}`);
+  }
+
+  getGroupById(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}`);
+  }
+
+  createGroup(group: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/create`, group);
+  }
+
+  addMember(groupId: number, userId: number, role: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/add_member`, { groupId, userId, role });
+  }
+
+  ejectMember(groupId: number, userId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/eject_member`, { groupId, userId });
+  }
+
+  deleteGroup(groupId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/delete?id=${groupId}`);
+  }
+
   // Gestion des erreurs
   private handleError(error: any): Observable<never> {
     console.error('An error occurred:', error);

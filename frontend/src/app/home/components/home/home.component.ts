@@ -41,7 +41,7 @@ import { User,AllUsersDTO } from '../../../models/models.compenant';
 })
 export class HomeComponent implements OnInit {
   id!: number;
-  AllUser : AllUsersDTO = {users: []};
+  AllUser : AllUsersDTO = {};
   posts: Post[] = [];
   share: number = 0;
   comments: CommentContent = { comments_by_post: {} };
@@ -56,6 +56,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('user') as string);
     this.id = this.user.id;
+    this.loadUser('allusers');
     this.loadComments();
     this.getAllPosts();
   }
@@ -138,6 +139,14 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  private loadUser(targetlink: string ) {
+    this.apiService.getData(targetlink).subscribe((user: AllUsersDTO) => {
+      this.AllUser = user;
+      console.log('ici sont les utilisateurs', this.AllUser);
+      console.log(user);
+    });
+  }
+
   readonly dialog = inject(MatDialog);
 
   openDialog(postId: number): void {
@@ -148,6 +157,7 @@ export class HomeComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogCommentComponent, {
       data: {
         postId: postId,
+        user : this.AllUser,
         comments: comment
       }
     });

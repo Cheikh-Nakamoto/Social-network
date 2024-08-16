@@ -6,7 +6,7 @@ export interface responselogin {
 }
 
 export interface AllUsersDTO {
-  users: UserDTO[]
+  [key: string]: UserDTO
 }
 
 export interface User {
@@ -68,6 +68,15 @@ export interface Posts {
   likes: number;
   dislikes: number;
   shares: number;
+}
+
+//group
+export interface Group {
+  id: number;
+  name: string;
+  description?: string;
+  owner: string;
+  createdAt: string;
 }
 
 // post.model.ts
