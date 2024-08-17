@@ -1,64 +1,41 @@
 .group-container {
-  max-width: 600px;
-  margin: 0 auto;
   padding: 20px;
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
 }
 
-.group-list ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.group-list li {
-  padding: 10px;
-  border: 1px solid #ccc;
-  margin-bottom: 5px;
-  border-radius: 5px;
-}
-
-.create-group {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.create-group-dialog {
-  padding: 20px;
-}
-
-.create-group-dialog form {
-  display: flex;
-  flex-direction: column;
-}
-
-.create-group-dialog input {
-  padding: 10px;
-  margin-bottom: 10px;
-}
-
-.create-group-dialog button {
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.allgroupe {
+.group-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
-  justify-content: space-around;
-  margin-top: 20px;
+  gap: 20px;
+  justify-content: center;
 }
 
 .group-card {
-  flex: 0 1 30%;
+  width: 300px;
 }
 
-.group-card mat-card {
-  height: 250px;
-  display: flex;
-  flex-direction: column;
+.example-card {
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.example-header-image {
+  background-color: #f0f0f0;
+  border-radius: 50%;
+}
+
+mat-card-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+mat-card-content p {
+  color: #666;
+}
+
+mat-card-actions {
   justify-content: space-between;
 }

@@ -14,37 +14,26 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
   templateUrl: './groupe.component.html',
   styleUrls: ['./groupe.component.scss'],
   providers: [DataService],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GroupeComponent implements OnInit {
   groups: Group[] = [];
   groupeForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private groupService: DataService, private router: Router) {}
+  constructor(private fb: FormBuilder, private groupService: DataService, private router: Router) { }
 
   ngOnInit(): void {
-    this.loadGroups()
+    this.loadGroups().then(() => {
+      console.log("Loading groups...", this.groups);
+    });
     console.log("Loading groups...", this.groups);
   }
 
-  get formControls() {
-    return this.groupeForm.controls;
-  }
-
-  loadGroups(): void {
-    this.groupService.getGroups().subscribe(
-      (data) => {
-        this.groups = data
-        this.afterGroupsLoaded();
-        console.log('Les groupes sont:', this.groups);
-      },
-      (error) => console.error('Error fetching groups:', error)
-    );
-  }
-  afterGroupsLoaded(): void {
-    // Logic that requires `this.groups` to be populated goes here
-    console.log('Groups loaded:', this.groups);
-
+  async loadGroups(): Promise<void> {
+    try {
+      this.groups = await this.groupService.getGroups().toPromise();
+    } catch (error) {
+      console.error('Error fetching groups:', error);
+    }
   }
 
   addMember(groupId: number, userId: number, role: string): void {
@@ -52,6 +41,11 @@ export class GroupeComponent implements OnInit {
       () => console.log('Member added successfully'),
       (error) => console.error('Error adding member:', error)
     );
+  }
+  
+  joinGroup(group: Group): void {
+    console.log('Joining group:', group.name);
+    // Add logic to join the group
   }
 
   ejectMember(groupId: number, userId: number): void {

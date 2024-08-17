@@ -8,35 +8,58 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-create-group',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,HttpClientModule],
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
   templateUrl: './create-group.component.html',
   styleUrl: './create-group.component.scss',
   providers: [DataService] // Ajouter DataService ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son
 })
 export class CreateGroupComponent {
   groupeForm!: FormGroup;
+  selectedFile: File | null = null;
+  selectedFileName: string = '';
 
-  constructor(private fb: FormBuilder,private apiService : DataService,private router : Router) {}
+
+  constructor(private fb: FormBuilder, private apiService: DataService, private router: Router) { }
 
   ngOnInit(): void {
     let user = localStorage.getItem('user');
     this.groupeForm = this.fb.group({
-      name : ['', [Validators.required, Validators.maxLength(50)]],
+      name: ['', [Validators.required, Validators.maxLength(50)]],
       description: ['', [Validators.required, Validators.maxLength(250)]],
       isPublic: [true, Validators.required],
       owner: [(JSON.parse(user as string).id).toString(), Validators.required]  // Ajouter userId pour spécifier l'utilisateur qui crée le groupe.  // Ajouter userId pour spécifier l'utilisateur qui crée le groupe.  // Ajouter userId pour spécifier l'utilisateur qui crée le groupe.  // Ajouter userId pour spécifier l'utilisateur qui crée le groupe.  // Ajouter userId pour spécifier l'utilisateur qui crée le groupe.
     });
   }
-
+  onFileSelected(event: any): void {
+    console.log("event declanché !!!!!");  // Afficher les informations du fichier sélectionné.  // Afficher les informations du fichier sélectionné.  // Afficher les informations du fichier sélectionné.  // Afficher les informations du fichier sélectionné.  // Afficher les informations du fichier sélectionné.  // Afficher les informations du fichier sélectionné.  // Afficher les informations du fichier sélectionné.  // Afficher les informations du fichier sélectionné.  //
+    const file: File = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.selectedFileName = file.name;  
+    }
+  }
   onSubmit(): void {
     if (this.groupeForm.valid) {
-     this.apiService.createGroup(this.groupeForm.value).subscribe(res => {
-       console.log('Group created successfully');
-       this.groupeForm.reset();
-     });
+      const formData = new FormData();
+      formData.append('name', this.groupeForm.get('name')?.value);
+      formData.append('description', this.groupeForm.get('description')?.value);
+      formData.append('isPublic', this.groupeForm.get('isPublic')?.value);
+      formData.append('owner', this.groupeForm.get('owner')?.value);
+      if (this.selectedFile) {
+        console.log('Image uploaded');
+        formData.append('image', this.selectedFile);
+      }
+      console.log(formData);
+      let res = this.apiService.uploadImage(formData);
+      console.log("respons",res);
+      this.apiService.createGroup(this.groupeForm.value).subscribe(res => {
+        console.log('Group created successfully');
+        this.groupeForm.reset();
+        this.router.navigateByUrl('groups');
+      });
     } else {
       console.log('Formulaire invalide');
     }
-this.router.navigateByUrl('groups');
+    
   }
 }

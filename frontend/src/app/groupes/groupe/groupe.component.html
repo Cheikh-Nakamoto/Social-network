@@ -2,32 +2,36 @@
   <h1>Groupes de Discussion</h1>
 
   <!-- Liste des groupes existants -->
-  <div class="group-list">
+  <div class="group-list" *ngIf="groups.length > 0; else noGroups">
     <h2>Groupes Existants</h2>
-    <ul class="allgroupe">
+    <ul class="group-list-container">
       <li *ngFor="let group of groups" class="group-card">
-        <mat-card class="example-card" appearance="outlined">
-          <mat-card-header>
-            <div mat-card-avatar class="example-header-image"></div>
+        <mat-card class="example-card" >
+          <mat-card-header class="mat-card-header">
             <mat-card-title>{{ group.name }}</mat-card-title>
           </mat-card-header>
           <img mat-card-image
-            src="https://www.istockphoto.com/photo/female-speaker-giving-a-presentation-during-business-seminar-at-convention-center-gm1783743772-547130548?utm_source=pixabay&utm_medium=affiliate&utm_campaign=SRP_image_sponsored&utm_content=https%3A%2F%2Fpixabay.com%2Fimages%2Fsearch%2Fgrouo%2F&utm_term=group"
+            src="https://cdn.pixabay.com/photo/2022/07/02/14/07/women-7297355_1280.jpg"
             alt="Photo of {{ group.name }}">
           <mat-card-content>
             <p>{{ group.description }}</p>
           </mat-card-content>
           <mat-card-actions>
-            <button mat-button>JOIN</button>
-            <button mat-button>SHARE</button>
+            <button mat-button color="primary">JOIN</button>
           </mat-card-actions>
         </mat-card>
       </li>
     </ul>
   </div>
 
+  <ng-template #noGroups>
+    <p>Aucun groupe à afficher.</p>
+  </ng-template>
+
   <!-- Bouton pour créer un nouveau groupe -->
   <div class="create-group">
-    <button (click)="handleClick('/CreateGroup', $event)">Créer un Nouveau Groupe</button>
+    <button mat-raised-button color="primary" (click)="handleClick('/CreateGroup', $event)">
+      Créer un Nouveau Groupe
+    </button>
   </div>
 </div>
