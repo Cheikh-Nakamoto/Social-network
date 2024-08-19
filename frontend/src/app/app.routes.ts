@@ -15,7 +15,7 @@ export const routes: Routes = [
   { path: 'CreatePost', component: CreatePostComponent, canActivate: [HomeGuard]  },
   { path: "groups", component: GroupeComponent , canActivate: [HomeGuard] },
   {path: "CreateGroup", component: CreateGroupComponent, canActivate: [HomeGuard] },
-  {path: "chat", component:ChatComponent , canActivate: [HomeGuard] },
+  {path: "chat", component:ChatComponent },
   { path: '', redirectTo: 'Acceuil', pathMatch: 'full' },
   { path: '**', redirectTo: 'Acceuil' }
 ]
