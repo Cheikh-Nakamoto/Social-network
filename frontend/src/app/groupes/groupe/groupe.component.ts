@@ -5,23 +5,29 @@ import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ToolbarComponent } from '../../nav/toolbar/toolbar.component';
+
 
 @Component({
   selector: 'app-groupe',
   standalone: true,
-  imports: [CommonModule, MatCardModule, HttpClientModule, ReactiveFormsModule],
+  imports: [CommonModule, MatCardModule, HttpClientModule, ReactiveFormsModule,ToolbarComponent],
   templateUrl: './groupe.component.html',
   styleUrls: ['./groupe.component.scss'],
   providers: [DataService],
+
 })
 export class GroupeComponent implements OnInit {
   groups: Group[] = [];
   groupeForm!: FormGroup;
+  id !: string;
 
   constructor(private fb: FormBuilder, private groupService: DataService, private router: Router) { }
 
   ngOnInit(): void {
+  let user = JSON.parse(localStorage.getItem("user") as string);
+  this.id = user.id;
     this.loadGroups().then(() => {
       console.log("Loading groups...", this.groups);
     });

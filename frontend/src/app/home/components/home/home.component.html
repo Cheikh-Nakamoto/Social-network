@@ -2,8 +2,8 @@
   <mat-card class="example-card" appearance="outlined">
     <mat-card-header>
       <img routerLink="/profile/{{id}}" mat-card-avatar src="logo.png" width="64" height="64" alt="profile">
-      <mat-card-title routerLink="/profile/{{id}}">{{ user.name }}</mat-card-title>
-      <mat-card-subtitle routerLink="/profile/{{id}}">&#64;{{  AllUser[post.id].nickname}}</mat-card-subtitle>
+      <mat-card-title routerLink="/profile/{{id}}">{{  AllUser[post.user_id].nickname }}</mat-card-title>
+      <mat-card-subtitle routerLink="/profile/{{id}}">&#64;{{  AllUser[post.user_id].nickname}}</mat-card-subtitle>
     </mat-card-header>
     <img class="post-image" mat-card-image [src]="post.image" alt="Photo of a Shiba Inu">
     <mat-card-content>
@@ -18,7 +18,7 @@
         <span>{{ dislikemap[post.id]}}</span>
         <mat-icon>thumb_down</mat-icon>
       </button>
-      <button mat-icon-button (click)="openDialog(post.id)">
+      <button mat-icon-button (click)="openDialog(post.id)" *ngIf="comments.comments_by_post[post.id].length > 0">
         <span>{{comments.comments_by_post[post.id].length}}</span>
         <mat-icon>forum</mat-icon>
       </button>

@@ -1,15 +1,14 @@
 package dto
 
-
 import (
-    "time"
+	"time"
 )
 
 type GroupDTO struct {
 	ID          int       `json:"id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description,omitempty"`
-	Owner 		string 	  `json:"owner"`
+	Owner       string    `json:"owner"`
+	Image       string    `json:"image"`
 	CreatedAt   time.Time `json:"created_at"`
-
 }

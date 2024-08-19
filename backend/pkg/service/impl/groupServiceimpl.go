@@ -10,7 +10,7 @@ type GroupServiceImpl struct {
 }
 
 func (s *GroupServiceImpl) CreateGroup(group *dto.GroupDTO) (int, error) {
-	return s.Repository.CreateGroup(group.Name, group.Description, group.Owner)
+	return s.Repository.CreateGroup(group.Name, group.Description, group.Owner, group.Image)
 }
 
 func (s *GroupServiceImpl) AddMember(userID, groupID int, role string) error {

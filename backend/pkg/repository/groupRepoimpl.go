@@ -12,6 +12,7 @@ type Group struct {
 	Name        string    `json:"name"`
 	Description string    `json:"description,omitempty"`
 	Owner       string    `json:"owner"`
+	Image       string    `json:"image"`
 	CreatedAt   time.Time `json:"created_at"`
 }
 
@@ -26,10 +27,10 @@ func NewGroupRepoImpl(db sqlite.Database) *GroupRepoImpl {
 }
 
 // CreateGroup creates a new group in the database
-func (repo *GroupRepoImpl) CreateGroup(name, description, owner string) (int, error) {
-	stmt := `INSERT INTO groups (name, description, owner, created_at) VALUES (?, ?, ?, ?) RETURNING id`
+func (repo *GroupRepoImpl) CreateGroup(name, description, owner string,image string) (int, error) {
+	stmt := `INSERT INTO groups (name, description, owner,image, created_at) VALUES (?, ?, ?, ?,?) RETURNING id`
 	var id int
-	err := repo.db.GetDB().QueryRow(stmt, name, description, owner, time.Now()).Scan(&id)
+	err := repo.db.GetDB().QueryRow(stmt, name, description, owner,image, time.Now()).Scan(&id)
 	if err != nil {
 		return 0, fmt.Errorf("CreateGroup: %v", err)
 	}
@@ -77,12 +78,12 @@ func (repo *GroupRepoImpl) DeleteGroup(groupID int) error {
 // GetGroupByID retrieves a group by its ID
 func (repo *GroupRepoImpl) GetGroupByID(id int) (*Group, error) {
 	group := new(Group)
-	err := repo.db.GetDB().QueryRow("SELECT id, name, description, owner, created_at FROM groups WHERE id = ?", id).Scan(&group.ID, &group.Name, &group.Description, &group.Owner, &group.CreatedAt)
+	err := repo.db.GetDB().QueryRow("SELECT id, name, description, owner, image,created_at FROM groups WHERE id = ?", id).Scan(&group.ID, &group.Name, &group.Description, &group.Owner,&group.Image, &group.CreatedAt)
 	return group, err
 }
 
 func (repo *GroupRepoImpl) GetAllGroups() ([]Group, error) {
-	rows, err := repo.db.GetDB().Query(`SELECT id, name, description, owner, created_at FROM groups`)
+	rows, err := repo.db.GetDB().Query(`SELECT id, name, description, owner,image, created_at FROM groups`)
 	if err != nil {
 		return nil, fmt.Errorf("GetAllGroups: %v", err)
 	}
@@ -91,7 +92,7 @@ func (repo *GroupRepoImpl) GetAllGroups() ([]Group, error) {
 	var groups []Group
 	for rows.Next() {
 		var group Group
-		if err := rows.Scan(&group.ID, &group.Name, &group.Description, &group.Owner, &group.CreatedAt); err != nil {
+		if err := rows.Scan(&group.ID, &group.Name, &group.Description, &group.Owner,&group.Image, &group.CreatedAt); err != nil {
 			return nil, fmt.Errorf("GetAllGroups: %v", err)
 		}
 		groups = append(groups, group)

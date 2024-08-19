@@ -27,7 +27,6 @@ func RegisterRoutes(routes *http.ServeMux) *http.ServeMux {
 // UploadImage handler
 func UploadImage(w http.ResponseWriter, r *http.Request) {
 	// Parse multipart form, with a maximum upload of 10MB files
-	fmt.Println("ICI UPLOAD")
 	err := r.ParseMultipartForm(10 << 20)
 	if err != nil {
 		fmt.Println("Unable to parse multipart form")

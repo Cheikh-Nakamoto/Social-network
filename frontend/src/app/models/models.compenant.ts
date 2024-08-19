@@ -76,6 +76,7 @@ export interface Group {
   name: string;
   description?: string;
   owner: string;
+  image?: string
   createdAt: string;
 }
 

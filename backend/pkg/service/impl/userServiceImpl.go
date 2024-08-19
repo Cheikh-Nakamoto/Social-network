@@ -2,10 +2,12 @@ package impl
 
 import (
 	"backend/pkg/dto"
+	"backend/pkg/entity"
 	"backend/pkg/mapper"
 	"backend/pkg/repository"
 	"backend/pkg/utils"
 	"errors"
+	"strconv"
 )
 
 type UserServiceImpl struct {
@@ -20,17 +22,16 @@ func (s *UserServiceImpl) GetUserById(id uint) (*dto.UserDTO, error) {
 	return mapper.UserToDTO(user), nil
 }
 
-func (s *UserServiceImpl)AllUsers()([]*dto.UserDTO, error){
+func (s *UserServiceImpl)AllUsers()(map[string]*entity.User, error){
 	users, err:=s.Repository.GetAllUsers()
 	if err!=nil{
 		return nil, err
 
 	}
-	userDTOs := make([]*dto.UserDTO, len(users))
+	userDTOs := make(map[string]*entity.User)
 	for _, user := range users {
 		if user !=nil{
-
-			userDTOs = append(userDTOs, mapper.UserToDTO(user))
+			userDTOs[strconv.Itoa(int(user.ID))] = user
 		}
 	}
 

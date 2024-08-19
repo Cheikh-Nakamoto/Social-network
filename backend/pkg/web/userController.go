@@ -298,7 +298,6 @@ func (c *UserController) GetFollowers(w http.ResponseWriter, r *http.Request) {
 
 
 func (c *UserController) GetAllUsers( w http.ResponseWriter, r *http.Request){
-	fmt.Println("dddddddddddddddddd")
 	err := utils.Environment()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -317,6 +316,7 @@ func (c *UserController) GetAllUsers( w http.ResponseWriter, r *http.Request){
 
 
 	users, err:=c.UserService.AllUsers()
+	fmt.Println("all users ", users)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

@@ -27,13 +27,17 @@ export class CreateGroupComponent {
       name: ['', [Validators.required, Validators.maxLength(50)]],
       description: ['', [Validators.required, Validators.maxLength(250)]],
       isPublic: [true, Validators.required],
-      owner: [(JSON.parse(user as string).id).toString(), Validators.required]  // Ajouter userId pour spécifier l'utilisateur qui crée le groupe.  // Ajouter userId pour spécifier l'utilisateur qui crée le groupe.  // Ajouter userId pour spécifier l'utilisateur qui crée le groupe.  // Ajouter userId pour spécifier l'utilisateur qui crée le groupe.  // Ajouter userId pour spécifier l'utilisateur qui crée le groupe.
+      owner: [(JSON.parse(user as string).id).toString(), Validators.required],
+      image: ['',null]
     });
   }
   onFileSelected(event: any): void {
     console.log("event declanché !!!!!");  // Afficher les informations du fichier sélectionné.  // Afficher les informations du fichier sélectionné.  // Afficher les informations du fichier sélectionné.  // Afficher les informations du fichier sélectionné.  // Afficher les informations du fichier sélectionné.  // Afficher les informations du fichier sélectionné.  // Afficher les informations du fichier sélectionné.  // Afficher les informations du fichier sélectionné.  //
     const file: File = event.target.files[0];
     if (file) {
+      const formData = new FormData();
+      formData.append('image', file);
+      console.log(formData);
       this.selectedFile = file;
       this.selectedFileName = file.name;  
     }
@@ -47,16 +51,31 @@ export class CreateGroupComponent {
       formData.append('owner', this.groupeForm.get('owner')?.value);
       if (this.selectedFile) {
         console.log('Image uploaded');
-        formData.append('image', this.selectedFile);
+        formData.append('file', this.selectedFile);
       }
-      console.log(formData);
-      let res = this.apiService.uploadImage(formData);
-      console.log("respons",res);
-      this.apiService.createGroup(this.groupeForm.value).subscribe(res => {
-        console.log('Group created successfully');
-        this.groupeForm.reset();
-        this.router.navigateByUrl('groups');
-      });
+
+      this.apiService.uploadImage(formData).subscribe(
+        (response) => {
+          // Supposons que la réponse de l'upload d'image contienne l'URL ou l'identifiant de l'image sous 'image'
+          this.groupeForm.patchValue({ image: response.image });
+      
+          // Créez le groupe avec les données du formulaire mises à jour
+          this.apiService.createGroup(this.groupeForm.value).subscribe(
+            (res) => {
+              console.log('Group created successfully');
+              this.groupeForm.reset();
+              this.router.navigateByUrl('groups');
+            },
+            (error) => {
+              console.error('Group creation failed:', error);
+            }
+          );
+        },
+        (error) => {
+          console.error('Image upload failed:', error);
+        }
+      );
+      
     } else {
       console.log('Formulaire invalide');
     }

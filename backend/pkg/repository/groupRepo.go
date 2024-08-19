@@ -1,7 +1,7 @@
 package repository
 
 type GroupRepo interface {
-	CreateGroup(name, description, owner string) (int, error)
+	CreateGroup(name, description, owner,image string) (int, error)
 	AddMember(userID, groupID int, role string) error
 	EjectMember(userID, groupID int) error
 	DeleteGroup(groupID int) error

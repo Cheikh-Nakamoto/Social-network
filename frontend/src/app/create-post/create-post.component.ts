@@ -55,7 +55,12 @@ export class CreatePostComponent implements OnInit {
   }
 
   onPrivacyChange(event: any): void {
-    this.isPublic = event.value;
+    if (event.value == "private"){
+      this.isPublic = event.value;
+    }else{
+      this.isPublic = "public"
+    }
+    console.log(event.value);
   }
 
   onSubmit(): void {
