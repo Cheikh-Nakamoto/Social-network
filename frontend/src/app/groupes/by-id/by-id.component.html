@@ -1,0 +1,41 @@
+
+<div class="group-container">
+    <div class="group-list" *ngIf="groups.length > 0; else noGroups">
+        <div class="container" *ngFor="let group of groups" class="group-card">
+            <div class="onegroup">
+                <div class="header-group">
+                    <div class="img">
+                        <img [src]="group.image" alt="">
+                    </div>
+                    <h3> <strong>Name</strong> :{{group.name}}</h3>
+                    <p><strong>Description :</strong>{{group.description}}</p>
+                    <div class="admin-actions">
+                        @if(group.owner == id){
+                        <button mat-button color="primary"
+                            (click)="handleClick('/group/edit', $event, group.id)">Modifier</button>
+                        <button mat-button color="warn"
+                            (click)="handleClick('/group/delete', $event, group.id)">Supprimer</button>
+                        }
+                        <button mat-button color="primary"
+                            (click)="handleClick('/group/event/create', $event, group.id)">Ajouter un évènement</button>
+                    </div>
+                </div>
+                <div class="event-group">
+                    <h4>Évènements</h4>
+                    <!-- <div class="events" *ngFor="let event of events">
+                <div class="event">
+                    <h5>{{event.title}}</h5>
+                    <p>{{event.date | date: 'dd/MM/yyyy'}}</p>
+                    <p>{{event.description}}</p>
+                    <button mat-button color="primary" (click)="handleClick('/event/edit', $event, event.id)">Modifier</button>
+                </div>
+            </div> -->
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <ng-template #noGroups>
+        <p>Aucun groupe à afficher.</p>
+    </ng-template>
+</div>

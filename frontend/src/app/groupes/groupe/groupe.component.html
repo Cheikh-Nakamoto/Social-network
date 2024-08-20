@@ -1,19 +1,18 @@
-<app-toolbar></app-toolbar>
 <div class="group-container">
   <h1>Groupes de Discussion</h1>
   <!-- Liste des groupes existants -->
   <div class="group-list" *ngIf="groups.length > 0; else noGroups">
-    <div class="container" *ngFor="let group of groups" class="group-card">
-      <mat-card class="example-card">
+    <div class="container" *ngFor="let group of groups" class="group-card" >
+      <mat-card class="example-card" (click)="handleClick('/groups',$event,group.id)">
         <mat-card-header class="mat-card-header">
-          <mat-card-title>{{ group.name }}</mat-card-title>
+          <mat-card-title>Name : {{ group.name }}</mat-card-title>
         </mat-card-header>
         <img mat-card-image [src]="group.image" alt="Photo of {{ group.name }}">
         <mat-card-content>
-          <p>{{ group.description }}</p>
+          <p>Description :{{ group.description }}</p>
         </mat-card-content>
         <mat-card-actions *ngIf="group.owner != id">
-          <button mat-button color="primary">JOIN</button>
+          <button mat-button color="primary" (click)="addMember(group.id,id,'member')">JOIN</button>
         </mat-card-actions>        
       </mat-card>
     </div>

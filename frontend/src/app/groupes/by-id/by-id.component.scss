@@ -1,0 +1,22 @@
+.header-group{
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.header-group h3{
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.header-group .img{
+    height: 300px;
+}
+
+img{
+    height: 100%;
+}
+
+.admin-actions button{
+    margin: 5px;
+}

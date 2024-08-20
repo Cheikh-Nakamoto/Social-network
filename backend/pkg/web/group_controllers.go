@@ -1,6 +1,9 @@
 package web
 
 import (
+	"backend/pkg/dto"
+	"backend/pkg/service/impl"
+	"backend/pkg/utils"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -8,9 +11,6 @@ import (
 	"os"
 	"strconv"
 	"time"
-	"backend/pkg/dto"
-	"backend/pkg/service/impl"
-	"backend/pkg/utils"
 )
 
 // GroupController defines the controller for group operations
@@ -38,7 +38,7 @@ func (gc *GroupController) CreateGroupHandler(w http.ResponseWriter, r *http.Req
 	var group dto.GroupDTO
 
 	if err := json.NewDecoder(r.Body).Decode(&group); err != nil {
-		fmt.Println("error: ", err,r.Body)
+		fmt.Println("error: ", err, r.Body)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -58,15 +58,14 @@ func (gc *GroupController) CreateGroupHandler(w http.ResponseWriter, r *http.Req
 // AddMemberHandler handles adding a member to a group
 func (gc *GroupController) AddMemberHandler(w http.ResponseWriter, r *http.Request) {
 	var data struct {
-		UserID  int    `json:"user_id"`
 		GroupID int    `json:"group_id"`
+		UserID  int `json:"user_id"`
 		Role    string `json:"role"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-
 	if err := gc.GroupService.AddMember(data.UserID, data.GroupID, data.Role); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

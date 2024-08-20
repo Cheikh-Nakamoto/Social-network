@@ -1,46 +1,43 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
+
 import { DataService } from '../../data.service';
 import { Group } from '../../models/models.compenant';
-import { MatCardModule } from '@angular/material/card';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToolbarComponent } from '../../nav/toolbar/toolbar.component';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ToolbarComponent } from '../../nav/toolbar/toolbar.component';
-
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
-  selector: 'app-groupe',
+  selector: 'app-by-id',
   standalone: true,
-  imports: [CommonModule, MatCardModule, HttpClientModule, ReactiveFormsModule, ToolbarComponent],
-  templateUrl: './groupe.component.html',
-  styleUrls: ['./groupe.component.scss'],
-  providers: [DataService],
-
+  imports: [ToolbarComponent,CommonModule, MatCardModule, HttpClientModule, ReactiveFormsModule, ToolbarComponent],
+  templateUrl: './by-id.component.html',
+  styleUrl: './by-id.component.scss',
+  providers: [DataService]
 })
-export class GroupeComponent implements OnInit,OnDestroy {
+export class ByIdComponent implements OnInit {
   groups: Group[] = [];
   groupeForm!: FormGroup;
   id !: string;
+  groupId!: number;
   clear!: any;
 
-  constructor(private fb: FormBuilder, private groupService: DataService, private router: Router) { }
+  constructor(private fb: FormBuilder, private groupService: DataService, private router: Router,private rout:ActivatedRoute) { }
 
   ngOnInit(): void {
     let user = JSON.parse(localStorage.getItem("user") as string);
     this.id = user.id;
-   this.clear = setInterval(() => {
-      this.loadGroups()
-    }, 1000);
-    console.log("Loading groups...", this.groups);
+    this.groupId = this.rout.snapshot.params['id'];
+    this.loadGroups().then(data => {
+      console.log("Loading groups...", this.groups);
+      this.groups = this.groups.filter(group => group.id == this.groupId);
+      console.log("Loading groups...", this.groups);
+    })
   }
-  ngOnDestroy(): void {
-    if (this.clear) {
-      clearInterval(this.clear);
-      console.log("Interval cleared");
-    }
-  }
-  
+ 
+
   async loadGroups(): Promise<void> {
     try {
       let group = await this.groupService.getGroups().toPromise();
@@ -67,7 +64,7 @@ export class GroupeComponent implements OnInit,OnDestroy {
       (error) => console.error('Error ejecting member:', error)
     );
   }
-  Getgroup(route: string, groupId: number) {
+  Getgroupbyid(route: string, groupId: number) {
 
   }
   deleteGroup(groupId: number): void {
@@ -77,13 +74,13 @@ export class GroupeComponent implements OnInit,OnDestroy {
     );
   }
 
-  handleClick(route: string, event: Event,id?:number): void {
+  handleClick(route: string, event: Event, id?: number): void {
     event.preventDefault();
     console.log('Button clicked, navigating to:', route);
-   if (id) {
-    this.router.navigate([route, id]);
-   }else{
-    this.router.navigateByUrl(route);
-   }
+    if (id) {
+      this.router.navigate([route, id]);
+    } else {
+      this.router.navigateByUrl(route);
+    }
   }
 }
