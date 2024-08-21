@@ -42,3 +42,6 @@ testem.log
 Thumbs.db
 
 .db-shm
+
+
+/node_modules/*
