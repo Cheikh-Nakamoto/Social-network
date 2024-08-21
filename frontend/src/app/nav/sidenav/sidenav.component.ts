@@ -1,5 +1,4 @@
-import { routes } from './../../app.routes';
-import { ChangeDetectorRef, Component, Injectable } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import * as model from './../../models/models.compenant'
 import { CommonModule } from '@angular/common';
 import {
@@ -44,6 +43,13 @@ import { WebSocketService } from '../../chat/services/chat.service';
   providers: [DataService], // Add any additional services you need to this component.
 })
 export class SidenavComponent {
+  menuItems = [
+    { name: 'Home', route: '/', icon: 'icofont-ui-home' },
+    { name: 'Profile', route: '/profile', icon: 'icofont-user' },
+    { name: 'Friends', route: '/followers', icon: 'icofont-users-alt-4' },
+    { name: 'Groups', route: '/groups', icon: 'icofont-users-social' },
+    { name: 'New Post', route: '/CreatePost', icon: 'icofont-pencil-alt-1' },
+  ];
   users: model.UserDTO[] = [];
   constructor(
     private router: Router,
@@ -124,14 +130,7 @@ export class SidenavComponent {
       }
     });
   }
-  menuItems = [
-    { name: 'Home', route: '/', icon: 'home' },
-    { name: 'Profile', route: '/profile', icon: 'person' },
-    { name: 'Friends', route: '/followers', icon: 'person_add' },
-    { name: 'Groups', route: '/groups', icon: 'group' },
-    { name: 'New Post', route: '/CreatePost', icon: 'create' },
-    
-  ];
+
 
   handleToolbarClick(event: Event) {
     console.log('Toolbar link clicked!', event);
