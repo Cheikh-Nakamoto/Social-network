@@ -30,28 +30,10 @@ import { MatCardAvatar } from "@angular/material/card";
 export class ToolbarComponent {
   user = JSON.parse(localStorage.getItem('user') as string)
   title = 'Social Network';
-  username = this.user.nickname;
+  username = this.user == null ? '' : this.user.nickname;
   hiddenNotif = false;
   hiddenMessage = false;
 
-  messages = [
-    {
-      username: 'Janel Proverbes',
-      message: 'Hey, how are you?'
-    },
-    {
-      username: 'Janel Proverbes',
-      message: 'Hey, how are you?'
-    },
-    {
-      username: 'Janel Proverbes',
-      message: 'Hey, how are you?'
-    },
-    {
-      username: 'Janel Proverbes',
-      message: 'Hey, how are you?'
-    }
-  ]
 
   visibilityNotif() {
     this.hiddenNotif = !this.hiddenNotif;

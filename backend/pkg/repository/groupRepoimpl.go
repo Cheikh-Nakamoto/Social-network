@@ -27,11 +27,12 @@ func NewGroupRepoImpl(db sqlite.Database) *GroupRepoImpl {
 }
 
 // CreateGroup creates a new group in the database
-func (repo *GroupRepoImpl) CreateGroup(name, description, owner string,image string) (int, error) {
+func (repo *GroupRepoImpl) CreateGroup(name, description, owner ,image string) (int, error) {
 	stmt := `INSERT INTO groups (name, description, owner,image, created_at) VALUES (?, ?, ?, ?,?) RETURNING id`
 	var id int
 	err := repo.db.GetDB().QueryRow(stmt, name, description, owner,image, time.Now()).Scan(&id)
 	if err != nil {
+		fmt.Printf("CreateGroup: %v", err)
 		return 0, fmt.Errorf("CreateGroup: %v", err)
 	}
 	return id, nil
