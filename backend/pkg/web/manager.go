@@ -1,6 +1,7 @@
-package  web
+package web
 
 import (
+	"backend/pkg/db/sqlite"
 	"database/sql"
 	"encoding/json"
 	"errors"
@@ -135,8 +136,11 @@ func SendMessageHandler(event Event, c *Client) error {
 }
 
 func addMessageToTable(messageData ReturnMessageEvent) {
-	var DB *sql.DB
-	statement, err := DB.Prepare("INSERT INTO messages (senderId, receiverId, sentDate, message) VALUES (?, ?, ?, ?)")
+	db, err := sqlite.Connect()
+	if err != nil {
+		panic(err) 
+	}
+	statement, err := db.GetDB().Prepare("INSERT INTO messages (senderId, receiverId, sentDate, message) VALUES (?, ?, ?, ?)")
 	if err != nil {
 		log.Println(err)
 		return
@@ -171,21 +175,27 @@ func GetMessagesHandler(event Event, c *Client) error {
 }
 
 func getNicknameById(userId int) string {
-	var DB *sql.DB
+	db, err := sqlite.Connect()
+	if err != nil {
+		panic(err) 
+	}
 	var nickname string
 
-	DB.QueryRow("SELECT nickname FROM users WHERE userId = ?", userId).Scan(&nickname)
+	db.GetDB().QueryRow("SELECT nickname FROM users WHERE id = ?", userId).Scan(&nickname)
 	return nickname
 }
 
 func getChatData(currentChatterId, otherChatterId, amount int) ReturnChatDataEvent {
 	var returnChatData ReturnChatDataEvent
-	var DB *sql.DB
+	db, err := sqlite.Connect()
+	if err != nil {
+		panic(err) 
+	}
 
 	returnChatData.CurrentChatterNickname = getNicknameById(currentChatterId)
 	returnChatData.OtherChatterNickname = getNicknameById(otherChatterId)
 
-	rows, err := DB.Query(`
+	rows, err := db.GetDB().Query(`
 		SELECT messageId, senderId, receiverId, message, sentDate FROM messages 
 		WHERE (senderId = ? AND receiverId = ?) OR (senderId = ? AND receiverId = ?)
 		ORDER BY sentDate DESC LIMIT ?`, currentChatterId, otherChatterId, otherChatterId, currentChatterId, amount)
@@ -234,9 +244,12 @@ func GetChatbarDataHandler(event Event, c *Client) error {
 
 func getChatbarData(currentUserId int) []UserDataEvent {
 	var userDataSlc []UserDataEvent
-	var DB *sql.DB
+	db, err := sqlite.Connect()
+	if err != nil {
+		panic(err) 
+	}
 
-	rows, err := DB.Query(`SELECT userId, nickname, online FROM users WHERE userId != ? ORDER BY nickname COLLATE NOCASE ASC`, currentUserId)
+	rows, err := db.GetDB().Query(`SELECT id, nickname, online FROM users WHERE id != ? ORDER BY nickname COLLATE NOCASE ASC`, currentUserId)
 	if err != nil {
 		log.Println(err)
 	}
@@ -255,9 +268,11 @@ func getChatbarData(currentUserId int) []UserDataEvent {
 
 func getLastMsgData(currentUserId, senderId int) ReturnMessageEvent {
 	var lastMsgData ReturnMessageEvent
-	var DB *sql.DB
-
-	err := DB.QueryRow(`
+	db, err := sqlite.Connect()
+	if err != nil {
+		panic(err) 
+	}
+	err = db.GetDB().QueryRow(`
 		SELECT message, senderId, receiverId, sentDate FROM messages
 		WHERE (senderId = ? AND receiverId = ?) OR (senderId = ? AND receiverId = ?)
 		ORDER BY sentDate DESC`, senderId, currentUserId, currentUserId, senderId).Scan(&lastMsgData.Message, &lastMsgData.SenderId, &lastMsgData.ReceiverId, &lastMsgData.SentDate)
@@ -284,7 +299,7 @@ func UpdateChatbarData(event Event, c *Client) error {
 }
 
 // broadcastUpdate diffuse les données mises à jour de la barre de chat à tous les clients connectés.
-func broadcastUpdate(c *Client) error {
+func 	broadcastUpdate(c *Client) error {
 	for client := range c.manager.clients {
 		data, err := json.Marshal(getChatbarData(client.userId))
 		if err != nil {
@@ -304,23 +319,26 @@ func (m *Manager) addClient(client *Client) {
 	m.Lock()
 	defer m.Unlock()
 
-	// Créer un timer pour mettre à jour l'état en ligne de l'utilisateur après 3 secondes
-	// timer := time.NewTimer(3 * time.Second)
+	//Créer un timer pour mettre à jour l'état en ligne de l'utilisateur après 3 secondes
+	timer := time.NewTimer(3 * time.Second)
 
-	// go func() {
-	// 	<-timer.C
-	// 	if m.isClientOnline(client.userId) && hasSession(client.userId) {
-	// 		updateUserStatus(true, client.userId)
-	// 		broadcastUpdate(client)
-	// 	}
-	// }()
+	go func() {
+		<-timer.C
+		if m.isClientOnline(client.userId) && hasSession(client.userId) {
+			updateUserStatus(true, client.userId)
+			broadcastUpdate(client)
+		}
+	}()
 
 	m.clients[client] = true
 }
 
 func updateUserStatus(newStatus bool, userId int) {
-	var DB *sql.DB
-	statement, err := DB.Prepare("UPDATE users SET online = ? WHERE userID = ?")
+	db, err := sqlite.Connect()
+	if err != nil {
+		panic(err) 
+	}
+	statement, err := db.GetDB().Prepare("UPDATE users SET online = ? WHERE id = ?")
 	if err != nil {
 		log.Println(err)
 		return
@@ -335,8 +353,12 @@ func updateUserStatus(newStatus bool, userId int) {
 
 func hasSession(userId int) bool {
 	var exists bool
-	var DB *sql.DB
-	err := DB.QueryRow("SELECT EXISTS(SELECT 1 FROM sessions WHERE userId = ?)", userId).Scan(&exists)
+	db, err := sqlite.Connect()
+	if err != nil {
+		panic(err) 
+	}
+	
+	err = db.GetDB().QueryRow("SELECT EXISTS(SELECT 1 FROM sessions WHERE userId = ?)", userId).Scan(&exists)
 	if err != nil {
 		log.Println(err)
 		return false

@@ -29,6 +29,7 @@ export interface UserDTO {
   is_public: boolean;
   created_at: string;
   updated_at: string;
+  isOnline: boolean; // Ajout de la propriété isOnline
 }
 
 export interface Message {

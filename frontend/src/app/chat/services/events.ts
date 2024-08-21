@@ -1,4 +1,5 @@
 // event-handler.ts
+import { UserDTO } from "../../models/models.compenant";
 export interface EventPayload {
   [key: string]: any;
 }
@@ -60,6 +61,28 @@ export function handleGetMessages(payload: EventPayload): void {
 export function handleGetChatbarData(payload: EventPayload): void {
   console.log('handleGetChatbarData', payload);
   // Implement your logic here
+  if (payload instanceof Array) {
+    console.log('successfully retrieved chatbar data');
+    payload.sort((a, b) => {
+      const dateA = new Date(a.lastMsgData.sentDate);
+      const dateB = new Date(b.lastMsgData.sentDate);
+
+      if (a.lastMsgData.sentDate === '') return 1;
+      if (b.lastMsgData.sentDate === '') return -1;
+      return dateB.getTime() - dateA.getTime();
+    });
+
+    // allusers.forEach((user: UserDTO) => {
+    //   const matchingUser = payload.find((user2) => user2.id === user.id);
+    //   if (matchingUser) {
+    //     user.isOnline = true;
+    //   }
+    // });
+
+    // console.log(obj.allusers)
+  } else {
+    console.log('retrieving chatbar data');
+  }
 }
 
 export function handleTypingStart(payload: EventPayload): void {

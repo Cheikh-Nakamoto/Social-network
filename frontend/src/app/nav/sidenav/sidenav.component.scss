@@ -29,6 +29,7 @@ mat-list, mat-list-item {
     background: none;
     border: none;
     box-shadow: none;
+    gap: 10px;
 }
 
 a {
@@ -49,4 +50,24 @@ a {
 mat-icon {
     margin-right: 12px;
     font-size: 20px;
+}
+
+.status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.online {
+  background-color: green;
+}
+
+.offline {
+  background-color: red;
+}
+
+
+.message-icon {
+  margin-left: auto; /* Pousse l'icône vers la droite */
 }
