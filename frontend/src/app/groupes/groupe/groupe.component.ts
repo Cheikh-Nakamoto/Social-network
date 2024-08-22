@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '../../data.service';
-import { Group } from '../../models/models.compenant';
+import { Group, JoinGroupVerification } from '../../models/models.compenant';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -18,7 +18,8 @@ import { ToolbarComponent } from '../../nav/toolbar/toolbar.component';
   providers: [DataService],
 
 })
-export class GroupeComponent implements OnInit,OnDestroy {
+export class GroupeComponent implements OnInit, OnDestroy {
+  IsIn!: JoinGroupVerification;
   groups: Group[] = [];
   groupeForm!: FormGroup;
   id !: string;
@@ -29,9 +30,10 @@ export class GroupeComponent implements OnInit,OnDestroy {
   ngOnInit(): void {
     let user = JSON.parse(localStorage.getItem("user") as string);
     this.id = user.id;
-   this.clear = setInterval(() => {
+    this.clear = setInterval(() => {
       this.loadGroups()
-    }, 1000);
+      this.joinedgroup()
+    }, 10000);
     console.log("Loading groups...", this.groups);
   }
   ngOnDestroy(): void {
@@ -40,7 +42,7 @@ export class GroupeComponent implements OnInit,OnDestroy {
       console.log("Interval cleared");
     }
   }
-  
+
   async loadGroups(): Promise<void> {
     try {
       let group = await this.groupService.getGroups().toPromise();
@@ -77,13 +79,20 @@ export class GroupeComponent implements OnInit,OnDestroy {
     );
   }
 
-  handleClick(route: string, event: Event,id?:number): void {
+  joinedgroup(): void {
+    this.groupService.getGroupJoined().subscribe(res => {
+      console.log('Group joined', res);
+      this.IsIn = res
+    }, (error) => console.error('Error', error))
+  }
+
+  handleClick(route: string, event: Event, id?: number): void {
     event.preventDefault();
     console.log('Button clicked, navigating to:', route);
-   if (id) {
-    this.router.navigate([route, id]);
-   }else{
-    this.router.navigateByUrl(route);
-   }
+    if (id) {
+      this.router.navigate([route, id]);
+    } else {
+      this.router.navigateByUrl(route);
+    }
   }
 }

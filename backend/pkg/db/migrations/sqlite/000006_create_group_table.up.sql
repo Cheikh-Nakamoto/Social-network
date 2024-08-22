@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS groups (
     name TEXT NOT NULL,
     description TEXT,
     owner TEXT NOT NULL,
-    image TEXT NOT  NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    image TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (owner) REFERENCES users(id) ON DELETE CASCADE
 );

@@ -85,6 +85,12 @@ export class DataService {
     return this.http.get(`${this.apiUrl}/groups`);
   }
 
+  getGroupJoined() : Observable<any> {
+    let user = localStorage.getItem('user');
+    let userId = JSON.parse(user as string).id.toString(); // Convert user id to string
+    return this.http.get(`${this.apiUrl}/groups/joined?user_id=${userId}`);
+  }
+
   getGroupById(id: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/groups/${id}`);
   }
@@ -99,8 +105,7 @@ export class DataService {
   }
 
   addMember(groupId: number, userId: string, role: string): Observable<any> {
-    console.log(JSON.stringify({ 'group_id':groupId, 'user_id':userId, 'role ':role }))
-    return this.http.post(`${this.apiUrl}/groups/add_member`, JSON.stringify({ 'group_id':groupId, 'user_id':userId, 'role ':role }));
+    return this.http.post(`${this.apiUrl}/groups/add_member`, JSON.stringify({ 'group_id':groupId, 'user_id':userId, 'role':role }));
   }
 
   ejectMember(groupId: number, userId: number): Observable<any> {

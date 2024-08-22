@@ -7,4 +7,5 @@ type GroupRepo interface {
 	DeleteGroup(groupID int) error
 	GetGroupByID(id int) (*Group, error)
 	GetAllGroups() ([]Group, error)
+	GetAllJoinGroupByID(userID int) (map[int]bool, error)
 }

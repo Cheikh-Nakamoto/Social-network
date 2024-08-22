@@ -27,10 +27,10 @@ func NewGroupRepoImpl(db sqlite.Database) *GroupRepoImpl {
 }
 
 // CreateGroup creates a new group in the database
-func (repo *GroupRepoImpl) CreateGroup(name, description, owner ,image string) (int, error) {
+func (repo *GroupRepoImpl) CreateGroup(name, description, owner, image string) (int, error) {
 	stmt := `INSERT INTO groups (name, description, owner,image, created_at) VALUES (?, ?, ?, ?,?) RETURNING id`
 	var id int
-	err := repo.db.GetDB().QueryRow(stmt, name, description, owner,image, time.Now()).Scan(&id)
+	err := repo.db.GetDB().QueryRow(stmt, name, description, owner, image, time.Now()).Scan(&id)
 	if err != nil {
 		fmt.Printf("CreateGroup: %v", err)
 		return 0, fmt.Errorf("CreateGroup: %v", err)
@@ -79,7 +79,7 @@ func (repo *GroupRepoImpl) DeleteGroup(groupID int) error {
 // GetGroupByID retrieves a group by its ID
 func (repo *GroupRepoImpl) GetGroupByID(id int) (*Group, error) {
 	group := new(Group)
-	err := repo.db.GetDB().QueryRow("SELECT id, name, description, owner, image,created_at FROM groups WHERE id = ?", id).Scan(&group.ID, &group.Name, &group.Description, &group.Owner,&group.Image, &group.CreatedAt)
+	err := repo.db.GetDB().QueryRow("SELECT id, name, description, owner, image,created_at FROM groups WHERE id = ?", id).Scan(&group.ID, &group.Name, &group.Description, &group.Owner, &group.Image, &group.CreatedAt)
 	return group, err
 }
 
@@ -93,11 +93,57 @@ func (repo *GroupRepoImpl) GetAllGroups() ([]Group, error) {
 	var groups []Group
 	for rows.Next() {
 		var group Group
-		if err := rows.Scan(&group.ID, &group.Name, &group.Description, &group.Owner,&group.Image, &group.CreatedAt); err != nil {
+		if err := rows.Scan(&group.ID, &group.Name, &group.Description, &group.Owner, &group.Image, &group.CreatedAt); err != nil {
 			return nil, fmt.Errorf("GetAllGroups: %v", err)
 		}
 		groups = append(groups, group)
 	}
 
 	return groups, nil
+}
+
+// GetAllJoinGroupByID renvoie une map d'IDs de groupes associés à un booléen indiquant si l'utilisateur les a rejoints
+func (repo *GroupRepoImpl) GetAllJoinGroupByID(userID int) (map[int]bool, error) {
+	// Initialisation de la map
+	groupsJoined := make(map[int]bool)
+
+	// Requête pour obtenir les IDs des groupes auxquels l'utilisateur a rejoint
+	stm := `SELECT group_id FROM group_members`
+	stmt := `SELECT group_id FROM group_members WHERE user_id = ?`
+	rows, err := repo.db.GetDB().Query(stmt, userID)
+	if err != nil {
+		return nil, fmt.Errorf("GetAllJoinGroupByID: %v", err)
+	}
+	defer rows.Close()
+
+	// Remplir la map avec les IDs des groupes rejoints
+	for rows.Next() {
+		var groupID int
+		if err := rows.Scan(&groupID); err != nil {
+			return nil, fmt.Errorf("GetAllJoinGroupByID: %v", err)
+		}
+		groupsJoined[groupID] = true
+	}
+	rows, err = repo.db.GetDB().Query(stm)
+	if err != nil {
+		return nil, fmt.Errorf("GetAllJoinGroupByID: %v", err)
+	}
+	defer rows.Close()
+	// Remplir la map avec les IDs des groupes rejoints
+	for rows.Next() {
+		var groupID int
+		if err := rows.Scan(&groupID); err != nil {
+			return nil, fmt.Errorf("GetAllJoinGroupByID: %v", err)
+		}
+		if !groupsJoined[groupID] {
+			groupsJoined[groupID] = false
+		}
+	}
+	fmt.Println("listen group", groupsJoined)
+	// Vérification d'erreurs lors de l'itération des lignes
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("GetAllJoinGroupByID: %v", err)
+	}
+
+	return groupsJoined, nil
 }

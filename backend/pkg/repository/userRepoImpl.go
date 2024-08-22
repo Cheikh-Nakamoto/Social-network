@@ -30,12 +30,6 @@ func (u *UserRepoImpl) FindByID(id uint) (*entity.User, error) {
 
 	return user, err
 }
-type AllUsers struct{
-	id int
-	nickname string
-}
-
-
 
 // FindByEmail is a method to find a user by email
 func (u *UserRepoImpl) FindByEmail(email string) (*entity.User, error) {

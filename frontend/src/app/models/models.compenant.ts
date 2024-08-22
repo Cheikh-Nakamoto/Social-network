@@ -93,5 +93,20 @@ export interface Post {
   user_id: string;
 }
 
+// notification group et message
 
+export interface Notification {
+  id: number;          // Identifiant unique de la notification
+  content: string;     // Contenu du message de la notification
+  userId: number;      // Référence à l'utilisateur qui reçoit la notification
+  groupId?: number;    // Référence optionnelle au groupe associé à la notification
+  isRead: boolean;     // Indique si la notification a été lue
+  createdAt: Date;     // Date et heure de création de la notification
+}
+
+// join group verification
+
+export interface JoinGroupVerification {
+  [groupId: number]: boolean;
+}
 

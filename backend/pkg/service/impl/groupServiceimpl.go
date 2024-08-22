@@ -47,3 +47,8 @@ func (s *GroupServiceImpl) GetAllGroups() ([]*dto.GroupDTO, error) {
 
     return dtos, nil
 }
+
+// GetAllJoinGroupByID renvoie une map d'IDs de groupes associés à un booléen indiquant si l'utilisateur les a rejoints
+func (s *GroupServiceImpl) GetAllJoinGroupByID(userID int) (map[int]bool, error) {
+    return s.Repository.GetAllJoinGroupByID(userID)
+}

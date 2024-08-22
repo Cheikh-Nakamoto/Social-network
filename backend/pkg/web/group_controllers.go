@@ -25,6 +25,7 @@ func (gc *GroupController) RegisterRoutes(mux *http.ServeMux) *http.ServeMux {
 		return mux
 	}
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/groups/create", gc.CreateGroupHandler)
+	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/groups/user/joined", gc.GetAllJoinGroupsByUserIDHandler)
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/groups/add_member", gc.AddMemberHandler)
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/groups/eject_member", gc.EjectMemberHandler)
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/groups/delete", gc.DeleteGroupHandler)
@@ -59,13 +60,14 @@ func (gc *GroupController) CreateGroupHandler(w http.ResponseWriter, r *http.Req
 func (gc *GroupController) AddMemberHandler(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		GroupID int    `json:"group_id"`
-		UserID  int `json:"user_id"`
+		UserID  int    `json:"user_id"`
 		Role    string `json:"role"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	fmt.Println("data:", data.GroupID, data.UserID, data.Role)
 	if err := gc.GroupService.AddMember(data.UserID, data.GroupID, data.Role); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -143,4 +145,30 @@ func (gc *GroupController) GetGroupByIDHandler(w http.ResponseWriter, r *http.Re
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(group)
+}
+
+// GetAllJoinGroupsByUserIDHandler handles retrieving all groups that a user has joined
+func (gc *GroupController) GetAllJoinGroupsByUserIDHandler(w http.ResponseWriter, r *http.Request) {
+	// Récupérer l'ID de l'utilisateur à partir de la requête
+	fmt.Println("ici la fonction de l'utilisateur	")
+
+	userIDStr := r.URL.Query().Get("user_id")
+	fmt.Println("ici userid ___",userIDStr)
+	userID, err := strconv.Atoi(userIDStr)
+	if err != nil {
+		fmt.Println("error",err)
+		http.Error(w, "Invalid user ID", http.StatusBadRequest)
+		return
+	}
+
+	// Appeler le service pour obtenir la map des groupes que l'utilisateur a rejoints
+	groupMap, err := gc.GroupService.GetAllJoinGroupByID(userID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Envoyer la réponse en JSON
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(groupMap)
 }

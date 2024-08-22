@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatToolbar } from "@angular/material/toolbar";
 import { MatIcon } from "@angular/material/icon";
 import { MatIconButton } from "@angular/material/button";
@@ -27,13 +27,21 @@ import { MatCardAvatar } from "@angular/material/card";
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss'
 })
-export class ToolbarComponent {
+export class ToolbarComponent implements OnInit {
   user = JSON.parse(localStorage.getItem('user') as string)
   title = 'Social Network';
   username = this.user == null ? '' : this.user.nickname;
   hiddenNotif = false;
   hiddenMessage = false;
-
+  ngOnInit () {
+    // Update user data on every refresh
+    window.addEventListener('storage', (event) => {
+      if (event.key === 'user') {
+        this.user = JSON.parse(localStorage.getItem('user') as string);
+        this.username = this.user == null? '' : this.user.nickname;
+      }
+    });
+  }
 
   visibilityNotif() {
     this.hiddenNotif = !this.hiddenNotif;
