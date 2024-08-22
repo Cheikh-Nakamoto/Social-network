@@ -1,18 +1,16 @@
 @if(username != ""){
-<mat-toolbar>
-    <!--<button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
-                <mat-icon>menu</mat-icon>
-            </button>-->
-    <span>
-        <a routerLink="/" class="logo"><img src="logo.png" height="100" alt="">{{ title }}</a>
-    </span>
+<mat-toolbar class="app-toolbar">
+    <div class="toolbar-left">
+        <a routerLink="/" class="logo">
+            <img src="logo.png" height="60" alt="" />
+            <span class="title">{{ title }}</span></a>
+    </div>
 
-    <span class="search">
-        <input matInput placeholder="Search...">
-    </span>
+    <div class="toolbar-center">
+        <input matInput placeholder="Search..." />
+    </div>
 
-    <!--<span class="example-spacer"></span>-->
-    <span class="button">
+    <div class="toolbar-right">
         <button (click)="visibilityMessage()" [matBadgeHidden]="hiddenMessage"
             aria-label="Example icon-button with heart icon" class="example-icon" mat-icon-button matBadge="12">
             <mat-icon>chat</mat-icon>
@@ -21,12 +19,12 @@
             aria-label="Example icon-button with heart icon" class="example-icon" mat-icon-button matBadge="7">
             <mat-icon>notifications</mat-icon>
         </button>
-        <span>
-            {{ username }}
-        </span>
-        <button aria-label="Example icon-button with more icon" class="example-icon" mat-icon-button>
-            <img src="profile.png" width="64" height="64" alt="profile">
-        </button>
-    </span>
+        <div class=" relative">
+            <img src="female.svg" width="30" height="30" alt="profile" />
+            <span class="username">{{ username }}</span>
+
+        </div>
+    </div>
 </mat-toolbar>
+
 }
