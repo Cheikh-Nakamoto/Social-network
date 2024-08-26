@@ -11,7 +11,7 @@
         <mat-card-content>
           <p>Description :{{ group.description }}</p>
         </mat-card-content>
-        <mat-card-actions *ngIf="group.owner != id">
+        <mat-card-actions *ngIf="group.owner != id && !IsIn[group.id]">
           <button mat-button color="primary" (click)="addMember(group.id,id,'member')">JOIN</button>
         </mat-card-actions>        
       </mat-card>

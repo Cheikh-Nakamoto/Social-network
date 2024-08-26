@@ -8,4 +8,5 @@ type GroupService interface{
 	EjectMember(userID, groupID int) error
 	DeleteGroup(groupID int) error
 	GetAllJoinGroupByID(userID int) (map[int]bool, error)
+	CreateEventsInGroup(event dto.Events) error
 }

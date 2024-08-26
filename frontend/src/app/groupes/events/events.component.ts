@@ -20,12 +20,13 @@ export class EventsComponent {
 
   ngOnInit(): void {
     let user = localStorage.getItem('user');
+
     this.groupeForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(50)]],
       description: ['', [Validators.required, Validators.maxLength(250)]],
-      isPublic: [true, Validators.required],
       owner: [(JSON.parse(user as string).id).toString(), Validators.required],
-      image: ['',null]
+      image: ['',null],
+      groupid: [parseInt(localStorage.getItem('groupid') as string, 10)],
     });
   }
   onFileSelected(event: any): void {
@@ -55,6 +56,7 @@ export class EventsComponent {
         (response) => {
           // Supposons que la réponse de l'upload d'image contienne l'URL ou l'identifiant de l'image sous 'image'
           this.groupeForm.patchValue({ image: response.image });
+          
       
           // Créez le groupe avec les données du formulaire mises à jour
           this.apiService.createEvent(this.groupeForm.value).subscribe(

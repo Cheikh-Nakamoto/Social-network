@@ -19,7 +19,7 @@ import { ToolbarComponent } from '../../nav/toolbar/toolbar.component';
 
 })
 export class GroupeComponent implements OnInit, OnDestroy {
-  IsIn!: JoinGroupVerification;
+  IsIn: JoinGroupVerification = {};
   groups: Group[] = [];
   groupeForm!: FormGroup;
   id !: string;
@@ -31,9 +31,9 @@ export class GroupeComponent implements OnInit, OnDestroy {
     let user = JSON.parse(localStorage.getItem("user") as string);
     this.id = user.id;
     this.clear = setInterval(() => {
-      this.loadGroups()
       this.joinedgroup()
-    }, 10000);
+      this.loadGroups()
+    }, 3000);
     console.log("Loading groups...", this.groups);
   }
   ngOnDestroy(): void {
@@ -69,9 +69,7 @@ export class GroupeComponent implements OnInit, OnDestroy {
       (error) => console.error('Error ejecting member:', error)
     );
   }
-  Getgroup(route: string, groupId: number) {
 
-  }
   deleteGroup(groupId: number): void {
     this.groupService.deleteGroup(groupId).subscribe(
       () => this.groups = this.groups.filter(group => group.id !== groupId),
@@ -83,14 +81,25 @@ export class GroupeComponent implements OnInit, OnDestroy {
     this.groupService.getGroupJoined().subscribe(res => {
       console.log('Group joined', res);
       this.IsIn = res
-    }, (error) => console.error('Error', error))
+    }, (error) => console.error('Error fetching ', error))
   }
+
+  // async joinedgroup(): Promise<void> {
+  //   try{
+  //     let joinedgrp = await this.groupService.getGroupJoined().toPromise();
+  //     this.IsIn = joinedgrp;
+  //     console.log("Is in", this.IsIn);
+  //   }catch(error) {
+  //     console.error('Error fetching joined groups:', error);
+  //   }
+  // }
 
   handleClick(route: string, event: Event, id?: number): void {
     event.preventDefault();
     console.log('Button clicked, navigating to:', route);
     if (id) {
       this.router.navigate([route, id]);
+      localStorage.setItem('groupid', id.toString());
     } else {
       this.router.navigateByUrl(route);
     }

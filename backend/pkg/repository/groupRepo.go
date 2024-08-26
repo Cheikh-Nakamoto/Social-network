@@ -1,5 +1,7 @@
 package repository
 
+import "backend/pkg/dto"
+
 type GroupRepo interface {
 	CreateGroup(name, description, owner,image string) (int, error)
 	AddMember(userID, groupID int, role string) error
@@ -8,4 +10,5 @@ type GroupRepo interface {
 	GetGroupByID(id int) (*Group, error)
 	GetAllGroups() ([]Group, error)
 	GetAllJoinGroupByID(userID int) (map[int]bool, error)
+	CreateEventsInGroup(event dto.Events) error 
 }

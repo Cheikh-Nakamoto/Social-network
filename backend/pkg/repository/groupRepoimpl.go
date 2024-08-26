@@ -2,6 +2,8 @@ package repository
 
 import (
 	"backend/pkg/db/sqlite"
+	"backend/pkg/dto"
+	"errors"
 	"fmt"
 	"time"
 )
@@ -139,11 +141,24 @@ func (repo *GroupRepoImpl) GetAllJoinGroupByID(userID int) (map[int]bool, error)
 			groupsJoined[groupID] = false
 		}
 	}
-	fmt.Println("listen group", groupsJoined)
 	// Vérification d'erreurs lors de l'itération des lignes
 	if err = rows.Err(); err != nil {
 		return nil, fmt.Errorf("GetAllJoinGroupByID: %v", err)
 	}
 
 	return groupsJoined, nil
+}
+
+// create Events in group by ID
+func (repo *GroupRepoImpl) CreateEventsInGroup(event dto.Events) error {
+	// SQL query to insert an event into the database
+	query := "INSERT INTO events (name, description, owner, image, group_id, user_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
+
+	// Execute the query
+	_, err := repo.db.GetDB().Exec(query,  event.Name, event.Description, event.Owner, event.Image, event.GroupId, event.UserID, event.CreatedAt)
+	if err != nil {
+		return errors.New("failed to create event: " + err.Error())
+	}
+
+	return nil
 }

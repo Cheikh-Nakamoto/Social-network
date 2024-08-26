@@ -25,7 +25,7 @@ func (gc *GroupController) RegisterRoutes(mux *http.ServeMux) *http.ServeMux {
 		return mux
 	}
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/groups/create", gc.CreateGroupHandler)
-	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/groups/user/joined", gc.GetAllJoinGroupsByUserIDHandler)
+	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/joined/groups/", gc.GetAllJoinGroupsByUserIDHandler)
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/groups/add_member", gc.AddMemberHandler)
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/groups/eject_member", gc.EjectMemberHandler)
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/groups/delete", gc.DeleteGroupHandler)
@@ -171,4 +171,27 @@ func (gc *GroupController) GetAllJoinGroupsByUserIDHandler(w http.ResponseWriter
 	// Envoyer la réponse en JSON
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(groupMap)
+}
+
+
+// CreateEventsHandler handles the creation of a new event in a group
+func (gc *GroupController) CreateEventsHandler(w http.ResponseWriter, r *http.Request) {
+    var event dto.Events
+
+    if err := json.NewDecoder(r.Body).Decode(&event); err != nil {
+        fmt.Println("error: ", err, r.Body)
+        http.Error(w, err.Error(), http.StatusBadRequest)
+        return
+    }
+
+    event.CreatedAt = time.Now()
+
+    err := gc.GroupService.CreateEventsInGroup(event)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(event)
 }

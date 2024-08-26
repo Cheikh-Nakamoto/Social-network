@@ -52,3 +52,8 @@ func (s *GroupServiceImpl) GetAllGroups() ([]*dto.GroupDTO, error) {
 func (s *GroupServiceImpl) GetAllJoinGroupByID(userID int) (map[int]bool, error) {
     return s.Repository.GetAllJoinGroupByID(userID)
 }
+
+// CreateEventsInGroup crée un nouvel événement dans un groupe
+func (s *GroupServiceImpl) CreateEventsInGroup(event dto.Events) error {
+    return s.Repository.CreateEventsInGroup(event)
+}

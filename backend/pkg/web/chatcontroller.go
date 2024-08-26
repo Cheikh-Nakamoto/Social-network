@@ -37,18 +37,13 @@ func (m *Manager) ServeWS(w http.ResponseWriter, r *http.Request) {
 
 	// Récupérer l'ID utilisateur à partir des paramètres de requête
 	userId, err := strconv.Atoi(r.URL.Query().Get("userId"))
-	fmt.Println("premier utilisateur")
 	if (err!=nil){
-		fmt.Println("eeeeeeeeeeeeeee", err)
+		fmt.Println("error ", err)
 	}
 	client := NewClient(conn, m, userId)
-
-	
-
 	// Ajouter le client à la liste des clients gérés par le Manager
-	 m.addClient(client)
+	m.addClient(client)
 
-	log.Print("ddddddddddddddddd")
 	// Démarrer les goroutines pour la lecture et l'écriture des messages
 	go client.readMessages()
 	go client.writeMessages()
