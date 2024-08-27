@@ -12,4 +12,5 @@ type GroupRepo interface {
 	GetAllJoinGroupByID(userID int) (map[int]bool, error)
 	CreateEventsInGroup(event dto.Events) error
 	NotificationExists(userID int) (map[int]dto.Notification, error)
+	CheckNotificationExists(userID, targetID int, message string) (bool, error)
 }

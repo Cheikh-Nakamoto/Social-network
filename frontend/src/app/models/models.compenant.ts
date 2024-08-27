@@ -95,14 +95,17 @@ export interface Post {
 
 // notification group et message
 
+// TypeScript type for Notification
 export interface Notification {
-  id: number;          // Identifiant unique de la notification
-  content: string;     // Contenu du message de la notification
-  userId: number;      // Référence à l'utilisateur qui reçoit la notification
-  groupId?: number;    // Référence optionnelle au groupe associé à la notification
-  isRead: boolean;     // Indique si la notification a été lue
-  createdAt: Date;     // Date et heure de création de la notification
+  id: number;          // Unique identifier for the notification
+  userId: number;      // ID of the user who created the notification
+  targetId: number;    // ID of the target user or entity (can be NULL in some cases)
+  groupId?: number;    // ID of the group (optional, can be NULL)
+  message: string;     // The message content of the notification
+  isRead: boolean;     // Flag indicating whether the notification has been read
+  createdAt: string;   // Timestamp of when the notification was created (ISO 8601 string)
 }
+
 
 // join group verification
 
@@ -111,6 +114,6 @@ export interface JoinGroupVerification {
 }
 
 export interface NotificationVerification {
-  [groupId: number]: boolean;
+  [groupId: number]: Notification;
 }
 

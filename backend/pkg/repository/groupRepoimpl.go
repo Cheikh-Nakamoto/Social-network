@@ -51,13 +51,32 @@ func (repo *GroupRepoImpl) AddMember(userID, targetID int, role, name string) er
 	} else {
 		return fmt.Errorf("role : %s not allowed !", role)
 	}
-	stmt := `INSERT INTO notifications (user_id, target_id, message, is_read, created_at)
+	check, erro := repo.CheckNotificationExists(userID, targetID, message)
+	if erro != nil {
+		return fmt.Errorf("Notification existe verify: %v", erro)
+	}
+	if check {
+		return fmt.Errorf("Notification existe : %v", check)
+	}
+
+	stmt := `INSERT INTO notifications (user_id, group_id, message, is_read, created_at)
 	VALUES (?, ?, ?,?,?);`
 	_, err := repo.db.GetDB().Exec(stmt, userID, targetID, message, false, time.Now())
 	if err != nil {
 		return fmt.Errorf("Add Notification: %v", err)
 	}
 	return nil
+}
+
+// CheckNotificationExists vérifie si une notification avec les mêmes userID, targetID, et message existe déjà
+func (repo *GroupRepoImpl) CheckNotificationExists(userID, targetID int, message string) (bool, error) {
+	query := `SELECT COUNT(*) FROM notifications WHERE user_id = ? AND group_id = ? AND message = ?`
+	var count int
+	err := repo.db.GetDB().QueryRow(query, userID, targetID, message).Scan(&count)
+	if err != nil {
+		return false, fmt.Errorf("CheckNotificationExists: %v", err)
+	}
+	return count > 0, nil
 }
 
 // EjectMember removes a member from a group
@@ -178,7 +197,7 @@ func (repo *GroupRepoImpl) NotificationExists(userID int) (map[int]dto.Notificat
 	notification := make(map[int]dto.Notification)
 	query := `SELECT id, user_id, target_id, group_id, message, is_read, created_at 
 	          FROM notifications 
-	          WHERE (user_id = )`
+	          WHERE user_id = ?`
 	rows, err := repo.db.GetDB().Query(query, userID)
 	if err != nil {
 		return nil, fmt.Errorf("NotificationExists: %v", err)
@@ -187,18 +206,21 @@ func (repo *GroupRepoImpl) NotificationExists(userID int) (map[int]dto.Notificat
 
 	for rows.Next() {
 		var notif dto.Notification
-		var groupID sql.NullInt32 // Pour gérer les valeurs NULL
-		err := rows.Scan(&notif.ID, &notif.UserID, &notif.TargetID, &groupID, &notif.Message, &notif.IsRead, &notif.CreatedAt)
+		var groupID sql.NullInt64 // Pour gérer les valeurs NULL
+		var targetID sql.NullInt64
+		err := rows.Scan(&notif.ID, &notif.UserID, &targetID, &groupID, &notif.Message, &notif.IsRead, &notif.CreatedAt)
 		if err != nil {
 			return nil, fmt.Errorf("NotificationExists: %v", err)
 		}
 
 		if groupID.Valid {
-			gid := int(groupID.Int32)
+			gid := int(groupID.Int64)
 			notif.GroupID = gid
 			notification[gid] = notif
-		} else {
-			notification[notif.TargetID] = notif
+		} else if targetID.Valid {
+			tid := int(targetID.Int64)
+			notif.TargetID = tid
+			notification[tid] = notif
 		}
 	}
 

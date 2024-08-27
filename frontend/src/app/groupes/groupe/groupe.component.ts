@@ -22,7 +22,7 @@ import { ToolbarComponent } from '../../nav/toolbar/toolbar.component';
 })
 export class GroupeComponent implements OnInit, OnDestroy {
   IsIn: JoinGroupVerification = {};
-  IsNotify : NotificationVerification = {}
+  IsNotify: NotificationVerification = {}
   groups: Group[] = [];
   groupeForm!: FormGroup;
   id !: string;
@@ -63,14 +63,22 @@ export class GroupeComponent implements OnInit, OnDestroy {
     console.log('Adding member', userId, 'to group', groupId, 'with role', role);
     this.groupService.addMember(groupId, userId, role).subscribe(
       () => console.log('Member added successfully'),
-      (error) => console.error('Error adding member:', error)
+      (error) => {
+        // Vérifiez la condition correctement avec '==='
+        if (error.error == "Notification existe : true\n") {
+          alert("Votre demande d'adhésion a déjà été envoyée !");
+        } else {
+          // Gérer d'autres erreurs ici si nécessaire
+          console.error('Erreur lors de l\'ajout du membre:', error);
+        }
+      }
     );
   }
 
-  notify(){
-    this.groupService.postData("notification",{'user_id':this.id}).subscribe(res => {
+
+  notify() {
+    this.groupService.postData("notification", { 'user_id': this.id }).subscribe(res => {
       this.IsNotify = res
-      console.log(this.IsNotify,"     \n",res)
     })
   }
 
@@ -94,16 +102,6 @@ export class GroupeComponent implements OnInit, OnDestroy {
       this.IsIn = res
     }, (error) => console.error('Error fetching ', error))
   }
-
-  // async joinedgroup(): Promise<void> {
-  //   try{
-  //     let joinedgrp = await this.groupService.getGroupJoined().toPromise();
-  //     this.IsIn = joinedgrp;
-  //     console.log("Is in", this.IsIn);
-  //   }catch(error) {
-  //     console.error('Error fetching joined groups:', error);
-  //   }
-  // }
 
   handleClick(route: string, event: Event, id?: number): void {
     event.preventDefault();

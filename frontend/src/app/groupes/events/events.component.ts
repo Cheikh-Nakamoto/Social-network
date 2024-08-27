@@ -78,6 +78,5 @@ export class EventsComponent {
     } else {
       console.log('Formulaire invalide');
     }
-    
   }
 }
