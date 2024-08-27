@@ -11,6 +11,7 @@ import { MatCardAvatar } from "@angular/material/card";
 import { DataService } from '../../data.service';
 import { NotificationVerification } from '../../models/models.compenant';
 import { HttpClientModule } from '@angular/common/http';
+import { AuthService } from '../../service/auth.service';
 
 
 @Component({
@@ -34,7 +35,7 @@ import { HttpClientModule } from '@angular/common/http';
   styleUrl: './toolbar.component.scss',
   providers: [DataService]
 })
-export class ToolbarComponent implements OnInit , OnDestroy {
+export class ToolbarComponent implements OnInit, OnDestroy {
   user = JSON.parse(localStorage.getItem('user') as string)
   title = 'Social Network';
   id = this.user.id
@@ -43,11 +44,14 @@ export class ToolbarComponent implements OnInit , OnDestroy {
   NotifyLength !: number
   hiddenMessage = false;
   timerid !: any
-  constructor(private groupService: DataService) {
+  constructor(private groupService: DataService, private authService: AuthService) {
 
   }
-  IsNotify: NotificationVerification = {notif:[]}
+  IsNotify: NotificationVerification = { notif: [] }
+
   ngOnInit() {
+    this.authService.isOnline();
+
     // Update user data on every refresh
     window.addEventListener('storage', (event) => {
       if (event.key === 'user') {
@@ -55,9 +59,9 @@ export class ToolbarComponent implements OnInit , OnDestroy {
         this.username = this.user == null ? '' : this.user.nickname;
       }
     });
-   this.timerid= setTimeout(()=>{
+    this.timerid = setTimeout(() => {
       this.notify()
-    },5000)
+    }, 5000)
   }
   ngOnDestroy(): void {
     clearTimeout(this.timerid)

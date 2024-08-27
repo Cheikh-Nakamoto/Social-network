@@ -8,11 +8,12 @@ import { ToolbarComponent } from '../../nav/toolbar/toolbar.component';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-by-id',
   standalone: true,
-  imports: [ToolbarComponent,CommonModule, MatCardModule, HttpClientModule, ReactiveFormsModule, ToolbarComponent],
+  imports: [ToolbarComponent, CommonModule, MatCardModule, HttpClientModule, ReactiveFormsModule, ToolbarComponent],
   templateUrl: './by-id.component.html',
   styleUrl: './by-id.component.scss',
   providers: [DataService]
@@ -24,9 +25,11 @@ export class ByIdComponent implements OnInit {
   groupId!: number;
   clear!: any;
 
-  constructor(private fb: FormBuilder, private groupService: DataService, private router: Router,private rout:ActivatedRoute) { }
+  constructor(private fb: FormBuilder, private groupService: DataService, private router: Router, private rout: ActivatedRoute, private authSrvice: AuthService) { }
 
   ngOnInit(): void {
+    this.authSrvice.isOnline();
+
     let user = JSON.parse(localStorage.getItem("user") as string);
     this.id = user.id;
     this.groupId = this.rout.snapshot.params['id'];
@@ -36,7 +39,7 @@ export class ByIdComponent implements OnInit {
       console.log("Loading groups...", this.groups);
     })
   }
- 
+
 
   async loadGroups(): Promise<void> {
     try {

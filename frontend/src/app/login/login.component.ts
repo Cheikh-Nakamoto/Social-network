@@ -5,6 +5,7 @@ import { MatTabsModule } from '@angular/material/tabs'; // Importer MatTabsModul
 import { DataService } from '../data.service';
 import { responselogin, UserDTO } from '../models/models.compenant';
 import { Router } from '@angular/router';
+import { AuthService } from '../service/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ import { Router } from '@angular/router';
     ReactiveFormsModule,
     HttpClientModule,
     MatTabsModule, // Ajouter MatTabsModule ici
-     // Ajouter  ici
+    // Ajouter  ici
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
@@ -23,11 +24,14 @@ export class LoginComponent implements OnInit {
   loginForm !: FormGroup;
   registerForm!: FormGroup;
   // Initialisation de l'objet user
-  responselogin!:responselogin;
+  responselogin!: responselogin;
 
-  constructor(private formbuilder: FormBuilder, private apiservice: DataService , private router : Router) { }
+  constructor(
+    private formbuilder: FormBuilder, private apiservice: DataService, private router: Router, private authService: AuthService) { }
 
   ngOnInit() {
+    this.authService.isOnline()
+
     this.loginForm = this.formbuilder.group({
       username: [null],
       password: [null]
@@ -51,11 +55,11 @@ export class LoginComponent implements OnInit {
   onlogin() {
     console.log("ici c'est :", this.loginForm.value);
     this.apiservice.postData('login', this.loginForm.value).subscribe((response: any) => {
-      localStorage.setItem("status",response.status)
-      localStorage.setItem("token",response.token)
-      localStorage.setItem("user",JSON.stringify(response.user))
+      localStorage.setItem("status", response.status)
+      localStorage.setItem("token", response.token)
+      localStorage.setItem("user", JSON.stringify(response.user))
       alert("Connexion reussi!")
-      
+
       this.redirectToHome()
     }, error => {
       alert("Erreur lors de la connexion")
@@ -63,10 +67,10 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  onregister(){
+  onregister() {
     console.log("ici c'est :", this.registerForm.value);
     this.apiservice.postData('register', this.registerForm.value).subscribe((response: any) => {
-     alert("Inscription reussi !")
+      alert("Inscription reussi !")
     }, error => {
       console.error('Erreur lors de l\'inscription:', error);
     });

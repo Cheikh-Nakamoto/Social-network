@@ -1,22 +1,23 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import * as model from './../../models/models.compenant'
 import { CommonModule } from '@angular/common';
 import {
-    MatDrawer,
-    MatDrawerContainer,
-    MatDrawerContent,
-    MatSidenav,
-    MatSidenavContainer
+  MatDrawer,
+  MatDrawerContainer,
+  MatDrawerContent,
+  MatSidenav,
+  MatSidenavContainer
 } from "@angular/material/sidenav";
-import {Router, RouterLink, RouterOutlet} from "@angular/router";
-import {MatListModule} from "@angular/material/list";
-import {MatIcon} from "@angular/material/icon";
-import {NgForOf, NgIf} from "@angular/common";
-import {MatFabAnchor} from "@angular/material/button";
+import { Router, RouterLink, RouterOutlet } from "@angular/router";
+import { MatListModule } from "@angular/material/list";
+import { MatIcon } from "@angular/material/icon";
+import { NgForOf, NgIf } from "@angular/common";
+import { MatFabAnchor } from "@angular/material/button";
 import { HomeComponent } from '../../home/components/home/home.component';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
 import { DataService } from '../../data.service';
 import { WebSocketService } from '../../chat/services/chat.service';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -42,7 +43,7 @@ import { WebSocketService } from '../../chat/services/chat.service';
   styleUrl: './sidenav.component.scss',
   providers: [DataService], // Add any additional services you need to this component.
 })
-export class SidenavComponent {
+export class SidenavComponent implements OnInit {
   menuItems = [
     { name: 'Home', route: '/', icon: 'icofont-ui-home' },
     { name: 'Profile', route: '/profile', icon: 'icofont-user' },
@@ -55,9 +56,13 @@ export class SidenavComponent {
     private router: Router,
     private apiservice: DataService,
     private websocketService: WebSocketService,
-    private cdRef: ChangeDetectorRef
-  ) {}
+    private cdRef: ChangeDetectorRef,
+    private authService: AuthService
+  ) { }
+
   ngOnInit(): void {
+    this.authService.isOnline();
+
     this.getAllusers();
     this.websocketService.connect();
     this.websocketService.messages$.subscribe(
@@ -83,7 +88,7 @@ export class SidenavComponent {
     this.apiservice.getData('allusers').subscribe(
       (response: any) => {
         console.log("ffffffff", response)
-         const usersArray: model.UserDTO[] = Object.values(response);
+        const usersArray: model.UserDTO[] = Object.values(response);
         // Typage de la réponse comme un tableau de Post
         this.users = usersArray.filter(
           (user) => user != null && user.id != userData.id
@@ -104,7 +109,7 @@ export class SidenavComponent {
   updateUsers(payloads: any[]): void {
     payloads.forEach((payload) => {
       let user = this.users.find((u) => u.id === payload.userId);
-      
+
       if (user) {
         user.email = payload.email ?? user.email;
         user.nickname = payload.nickname ?? user.nickname;
@@ -138,8 +143,8 @@ export class SidenavComponent {
 
   handleMenuItemClick(item: any, event: Event) {
     console.log('Menu item clicked:', item.id);
-    
+
     this.router.navigate(item.route)
-    
+
   }
 }

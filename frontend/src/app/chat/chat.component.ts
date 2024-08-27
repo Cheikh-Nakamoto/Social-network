@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import * as model from '../models/models.compenant'
 import { DataService } from '../data.service';
 import { HttpClientModule } from '@angular/common/http';
+import { AuthService } from '../service/auth.service';
 
 
 
@@ -26,13 +27,14 @@ import { HttpClientModule } from '@angular/common/http';
 export class ChatComponent implements OnInit, OnDestroy {
   private messagesSubscription!: Subscription;
   public messages: any[] = [];
- user!: model.UserDTO;
+  user!: model.UserDTO;
   private id!: number;
 
   constructor(
     private websocketService: WebSocketService,
     private route: ActivatedRoute,
-    private apiservice: DataService
+    private apiservice: DataService,
+    private authService: AuthService
   ) {
     route.queryParams.subscribe((params) => {
       this.id = params['userid'];
@@ -40,6 +42,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.authService.isOnline();
+
     this.getUserById(this.id);
     this.messagesSubscription = this.websocketService.messages$.subscribe(
       (message) => {
@@ -72,7 +76,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         // Utilisez `find` pour rechercher directement l'utilisateur avec l'ID correspondant
         const foundUser = response.find(
           (user) => user != null && user.id === Number(id)
-                    
+
         );
 
 

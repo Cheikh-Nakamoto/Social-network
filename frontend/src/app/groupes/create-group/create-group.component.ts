@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { DataService } from '../../data.service';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-create-group',
@@ -13,22 +14,24 @@ import { Router } from '@angular/router';
   styleUrl: './create-group.component.scss',
   providers: [DataService] // Ajouter DataService ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son
 })
-export class CreateGroupComponent {
+export class CreateGroupComponent implements OnInit {
   groupeForm!: FormGroup;
   selectedFile: File | null = null;
   selectedFileName: string = '';
 
 
-  constructor(private fb: FormBuilder, private apiService: DataService, private router: Router) { }
+  constructor(private fb: FormBuilder, private apiService: DataService, private router: Router, private authService: AuthService) { }
 
   ngOnInit(): void {
+    this.authService.isOnline();
+
     let user = localStorage.getItem('user');
     this.groupeForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(50)]],
       description: ['', [Validators.required, Validators.maxLength(250)]],
       isPublic: [true, Validators.required],
       owner: [(JSON.parse(user as string).id).toString(), Validators.required],
-      image: ['',null]
+      image: ['', null]
     });
   }
   onFileSelected(event: any): void {
@@ -39,7 +42,7 @@ export class CreateGroupComponent {
       formData.append('image', file);
       console.log(formData);
       this.selectedFile = file;
-      this.selectedFileName = file.name;  
+      this.selectedFileName = file.name;
     }
   }
   onSubmit(): void {
@@ -58,7 +61,7 @@ export class CreateGroupComponent {
         (response) => {
           // Supposons que la réponse de l'upload d'image contienne l'URL ou l'identifiant de l'image sous 'image'
           this.groupeForm.patchValue({ image: response.image });
-      
+
           // Créez le groupe avec les données du formulaire mises à jour
           this.apiService.createGroup(this.groupeForm.value).subscribe(
             (res) => {
@@ -75,10 +78,10 @@ export class CreateGroupComponent {
           console.error('Image upload failed:', error);
         }
       );
-      
+
     } else {
       console.log('Formulaire invalide');
     }
-    
+
   }
 }
