@@ -37,7 +37,7 @@ import { HttpClientModule } from '@angular/common/http';
 export class ToolbarComponent implements OnInit , OnDestroy {
   user = JSON.parse(localStorage.getItem('user') as string)
   title = 'Social Network';
-  id = this.user.id
+  id !: String
   username = this.user == null ? '' : this.user.nickname;
   hiddenNotif = false;
   NotifyLength !: number
@@ -53,6 +53,7 @@ export class ToolbarComponent implements OnInit , OnDestroy {
       if (event.key === 'user') {
         this.user = JSON.parse(localStorage.getItem('user') as string);
         this.username = this.user == null ? '' : this.user.nickname;
+        this.id = this.user == null ? '' : this.user.id;
       }
     });
    this.timerid= setTimeout(()=>{
