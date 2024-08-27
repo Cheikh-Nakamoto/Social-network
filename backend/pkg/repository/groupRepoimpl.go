@@ -51,11 +51,10 @@ func (repo *GroupRepoImpl) AddMember(userID, targetID int, role, name string) er
 		return fmt.Errorf("role : %s not allowed !",role)
 	}
 	stmt := `INSERT INTO notifications (user_id, target_id, message, is_read, created_at)
-	VALUES (?, ?, ?,?,?);
-	`
+	VALUES (?, ?, ?,?,?);`
 	_, err := repo.db.GetDB().Exec(stmt, userID, targetID,message,false, role, time.Now())
 	if err != nil {
-		return fmt.Errorf("AddMember: %v", err)
+		return fmt.Errorf("Add Notification: %v", err)
 	}
 	return nil
 }
