@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '../../data.service';
 import { Group, JoinGroupVerification, NotificationVerification } from '../../models/models.compenant';
 import { MatCardModule } from '@angular/material/card';
@@ -22,7 +22,6 @@ import { ToolbarComponent } from '../../nav/toolbar/toolbar.component';
 })
 export class GroupeComponent implements OnInit, OnDestroy {
   IsIn: JoinGroupVerification = {};
-  IsNotify: NotificationVerification = {}
   groups: Group[] = [];
   groupeForm!: FormGroup;
   id !: string;
@@ -36,7 +35,6 @@ export class GroupeComponent implements OnInit, OnDestroy {
     this.clear = setInterval(() => {
       this.joinedgroup()
       this.loadGroups()
-      this.notify()
     }, 3000);
     console.log("Loading groups...", this.groups);
   }
@@ -76,12 +74,7 @@ export class GroupeComponent implements OnInit, OnDestroy {
   }
 
 
-  notify() {
-    this.groupService.postData("notification", { 'user_id': this.id }).subscribe(res => {
-      this.IsNotify = res
-    })
-  }
-
+ 
   ejectMember(groupId: number, userId: number): void {
     this.groupService.ejectMember(userId, groupId).subscribe(
       () => console.log('Member ejected successfully'),

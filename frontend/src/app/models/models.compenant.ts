@@ -114,6 +114,6 @@ export interface JoinGroupVerification {
 }
 
 export interface NotificationVerification {
-  [groupId: number]: Notification;
+  notif : Notification[];
 }
 

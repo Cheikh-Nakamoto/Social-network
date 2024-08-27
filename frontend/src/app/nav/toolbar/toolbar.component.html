@@ -15,16 +15,18 @@
             aria-label="Example icon-button with heart icon" class="example-icon" mat-icon-button matBadge="12">
             <mat-icon>chat</mat-icon>
         </button>
-        <button (click)="visibilityNotif()" [matBadgeHidden]="hiddenNotif"
+        <button (click)="visibilityNotif()" [matMenuTriggerFor]="menu" [matBadgeHidden]="hiddenNotif"
             aria-label="Example icon-button with heart icon" class="example-icon" mat-icon-button matBadge="7">
             <mat-icon>notifications</mat-icon>
         </button>
-        <button type="button" class="btn btn-primary" id="liveToastBtn">Show live toast</button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item>Item 1</button>
+            <button mat-menu-item>Item 2</button>
+        </mat-menu>
 
         <div class=" relative">
             <img src="female.svg" width="30" height="30" alt="profile" />
             <span class="username">{{ username }}</span>
-
         </div>
     </div>
 </mat-toolbar>

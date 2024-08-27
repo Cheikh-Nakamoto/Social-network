@@ -193,8 +193,8 @@ func (repo *GroupRepoImpl) CreateEventsInGroup(event dto.Events) error {
 }
 
 // NotificationExists vérifie si une notification existe dans la base de données pour un user_id, target_id et/ou group_id spécifique
-func (repo *GroupRepoImpl) NotificationExists(userID int) (map[int]dto.Notification, error) {
-	notification := make(map[int]dto.Notification)
+func (repo *GroupRepoImpl) NotificationExists(userID int) ([]dto.Notification, error) {
+	var notification  []dto.Notification
 	query := `SELECT id, user_id, target_id, group_id, message, is_read, created_at 
 	          FROM notifications 
 	          WHERE user_id = ?`
@@ -216,12 +216,11 @@ func (repo *GroupRepoImpl) NotificationExists(userID int) (map[int]dto.Notificat
 		if groupID.Valid {
 			gid := int(groupID.Int64)
 			notif.GroupID = gid
-			notification[gid] = notif
 		} else if targetID.Valid {
 			tid := int(targetID.Int64)
 			notif.TargetID = tid
-			notification[tid] = notif
 		}
+		notification = append(notification, notif)
 	}
 
 	if err = rows.Err(); err != nil {

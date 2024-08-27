@@ -9,5 +9,5 @@ type GroupService interface {
 	DeleteGroup(groupID int) error
 	GetAllJoinGroupByID(userID int) (map[int]bool, error)
 	CreateEventsInGroup(event dto.Events) error
-	NotificationExists(userID int) (map[int]dto.Notification, error)
+	NotificationExists(userID int) ([]dto.Notification, error)
 }

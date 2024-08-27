@@ -58,7 +58,6 @@ func (s *GroupServiceImpl) CreateEventsInGroup(event dto.Events) error {
 	return s.Repository.CreateEventsInGroup(event)
 }
 
-func (s GroupServiceImpl) NotificationExists(userID int) (map[int]dto.Notification, error) {
+func (s GroupServiceImpl) NotificationExists(userID int) ([]dto.Notification, error) {
 	return s.Repository.NotificationExists(userID)
 }
-
