@@ -31,6 +31,7 @@ func (gc *GroupController) RegisterRoutes(mux *http.ServeMux) *http.ServeMux {
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/groups/delete", gc.DeleteGroupHandler)
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/groups", gc.GetAllGroupsHandler)
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/groups/", gc.GetGroupByIDHandler)
+	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK") + "/notification",gc.NotificationExists)
 	return mux
 }
 
@@ -69,7 +70,7 @@ func (gc *GroupController) AddMemberHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 	fmt.Println("data:", data.GroupID, data.UserID, data.Role)
-	if err := gc.GroupService.AddMember(data.UserID, data.GroupID, data.Role ,data.Name); err != nil {
+	if err := gc.GroupService.AddMember(data.UserID, data.GroupID, data.Role, data.Name); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -194,4 +195,24 @@ func (gc *GroupController) CreateEventsHandler(w http.ResponseWriter, r *http.Re
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(event)
+}
+
+func (gc *GroupController) NotificationExists(w http.ResponseWriter, r *http.Request) {
+	type data struct {
+		UserId   int `json:"user_id"`
+	}
+	var Data data
+	if err := json.NewDecoder(r.Body).Decode(&Data); err != nil {
+		fmt.Println("error: ", err, r.Body)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	IsIn, err := gc.GroupService.NotificationExists(Data.UserId)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(IsIn)
 }

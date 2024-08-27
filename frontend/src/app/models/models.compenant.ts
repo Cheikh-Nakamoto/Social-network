@@ -110,3 +110,7 @@ export interface JoinGroupVerification {
   [groupId: number]: boolean;
 }
 
+export interface NotificationVerification {
+  [groupId: number]: boolean;
+}
+

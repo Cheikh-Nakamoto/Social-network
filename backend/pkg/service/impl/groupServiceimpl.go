@@ -13,8 +13,8 @@ func (s *GroupServiceImpl) CreateGroup(group *dto.GroupDTO) (int, error) {
 	return s.Repository.CreateGroup(group.Name, group.Description, group.Owner, group.Image)
 }
 
-func (s *GroupServiceImpl) AddMember(userID, groupID int, role , name string) error {
-	return s.Repository.AddMember(userID, groupID, role,name)
+func (s *GroupServiceImpl) AddMember(userID, groupID int, role, name string) error {
+	return s.Repository.AddMember(userID, groupID, role, name)
 }
 
 func (s *GroupServiceImpl) EjectMember(userID, groupID int) error {
@@ -27,33 +27,37 @@ func (s *GroupServiceImpl) DeleteGroup(groupID int) error {
 
 func (s *GroupServiceImpl) GetGroupByID(id int) (*dto.GroupDTO, error) {
 	group, err := s.Repository.GetGroupByID(id)
-    if err != nil {
-        return nil, err
-    }
+	if err != nil {
+		return nil, err
+	}
 
-    return (*dto.GroupDTO)(group), nil
+	return (*dto.GroupDTO)(group), nil
 }
 
 func (s *GroupServiceImpl) GetAllGroups() ([]*dto.GroupDTO, error) {
 	groups, err := s.Repository.GetAllGroups()
-    if err != nil {
-        return nil, err
-    }
+	if err != nil {
+		return nil, err
+	}
 
-    dtos := make([]*dto.GroupDTO, len(groups))
-    for i, group := range groups {
-        dtos[i] = (*dto.GroupDTO)(&group)
-    }
+	dtos := make([]*dto.GroupDTO, len(groups))
+	for i, group := range groups {
+		dtos[i] = (*dto.GroupDTO)(&group)
+	}
 
-    return dtos, nil
+	return dtos, nil
 }
 
 // GetAllJoinGroupByID renvoie une map d'IDs de groupes associés à un booléen indiquant si l'utilisateur les a rejoints
 func (s *GroupServiceImpl) GetAllJoinGroupByID(userID int) (map[int]bool, error) {
-    return s.Repository.GetAllJoinGroupByID(userID)
+	return s.Repository.GetAllJoinGroupByID(userID)
 }
 
 // CreateEventsInGroup crée un nouvel événement dans un groupe
 func (s *GroupServiceImpl) CreateEventsInGroup(event dto.Events) error {
-    return s.Repository.CreateEventsInGroup(event)
+	return s.Repository.CreateEventsInGroup(event)
+}
+
+func (s GroupServiceImpl) NotificationExists(userID int) (map[int]dto.Notification, error) {
+	return s.Repository.NotificationExists(userID)
 }

@@ -62,6 +62,7 @@ func Migrate(db *sql.DB) error {
 	fmt.Println("migration ditrectory :", os.Getenv("DB_MIGRATION_PATH"))
 	m, err := migrate.NewWithDatabaseInstance("file://"+os.Getenv("DB_MIGRATION_PATH"), "sqlite3", driver)
 	if err != nil {
+		fmt.Println("error migration",err)
 		return err
 	}
 

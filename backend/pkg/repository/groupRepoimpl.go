@@ -3,6 +3,7 @@ package repository
 import (
 	"backend/pkg/db/sqlite"
 	"backend/pkg/dto"
+	"database/sql"
 	"errors"
 	"fmt"
 	"time"
@@ -45,14 +46,14 @@ func (repo *GroupRepoImpl) AddMember(userID, targetID int, role, name string) er
 	message := ""
 	if role == "member" {
 		message = fmt.Sprintf("%s want to join your group . Can you accept ?", name)
-	}else if role == "admin" {
+	} else if role == "admin" {
 		message = fmt.Sprintf("%s want to insert her group . Can you accept ?", name)
-	}else{
-		return fmt.Errorf("role : %s not allowed !",role)
+	} else {
+		return fmt.Errorf("role : %s not allowed !", role)
 	}
 	stmt := `INSERT INTO notifications (user_id, target_id, message, is_read, created_at)
 	VALUES (?, ?, ?,?,?);`
-	_, err := repo.db.GetDB().Exec(stmt, userID, targetID,message,false, role, time.Now())
+	_, err := repo.db.GetDB().Exec(stmt, userID, targetID, message, false, time.Now())
 	if err != nil {
 		return fmt.Errorf("Add Notification: %v", err)
 	}
@@ -170,4 +171,40 @@ func (repo *GroupRepoImpl) CreateEventsInGroup(event dto.Events) error {
 	}
 
 	return nil
+}
+
+// NotificationExists vérifie si une notification existe dans la base de données pour un user_id, target_id et/ou group_id spécifique
+func (repo *GroupRepoImpl) NotificationExists(userID int) (map[int]dto.Notification, error) {
+	notification := make(map[int]dto.Notification)
+	query := `SELECT id, user_id, target_id, group_id, message, is_read, created_at 
+	          FROM notifications 
+	          WHERE (user_id = )`
+	rows, err := repo.db.GetDB().Query(query, userID)
+	if err != nil {
+		return nil, fmt.Errorf("NotificationExists: %v", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var notif dto.Notification
+		var groupID sql.NullInt32 // Pour gérer les valeurs NULL
+		err := rows.Scan(&notif.ID, &notif.UserID, &notif.TargetID, &groupID, &notif.Message, &notif.IsRead, &notif.CreatedAt)
+		if err != nil {
+			return nil, fmt.Errorf("NotificationExists: %v", err)
+		}
+
+		if groupID.Valid {
+			gid := int(groupID.Int32)
+			notif.GroupID = gid
+			notification[gid] = notif
+		} else {
+			notification[notif.TargetID] = notif
+		}
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("NotificationExists: %v", err)
+	}
+
+	return notification, nil
 }
