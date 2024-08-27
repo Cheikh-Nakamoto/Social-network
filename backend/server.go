@@ -79,9 +79,7 @@ func StartServer(tab []string) error {
 	likeDislikeService := impl.LikeDislikeServiceImpl{
 		Repository: likeDislikeRepo,
 	}
-	chatControler:=web.ChatControler{
-		
-	}
+	chatControler := web.ChatControler{}
 
 	// Initializing controllers
 	userController := web.UserController{
@@ -102,7 +100,7 @@ func StartServer(tab []string) error {
 	}
 
 	// Routes
-	mux = userController.RegisterRoutes(mux)
+	mux = userController.UsersRoutes(mux)
 	// mux = followController.FollowsRoutes(mux)
 	mux = groupController.RegisterRoutes(mux)
 	mux = postController.RegisterRoutes(mux)
