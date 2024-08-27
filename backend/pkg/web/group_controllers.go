@@ -62,13 +62,14 @@ func (gc *GroupController) AddMemberHandler(w http.ResponseWriter, r *http.Reque
 		GroupID int    `json:"group_id"`
 		UserID  int    `json:"user_id"`
 		Role    string `json:"role"`
+		Name    string `json : "name"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 	fmt.Println("data:", data.GroupID, data.UserID, data.Role)
-	if err := gc.GroupService.AddMember(data.UserID, data.GroupID, data.Role); err != nil {
+	if err := gc.GroupService.AddMember(data.UserID, data.GroupID, data.Role ,data.Name); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -153,10 +154,10 @@ func (gc *GroupController) GetAllJoinGroupsByUserIDHandler(w http.ResponseWriter
 	fmt.Println("ici la fonction de l'utilisateur	")
 
 	userIDStr := r.URL.Query().Get("user_id")
-	fmt.Println("ici userid ___",userIDStr)
+	fmt.Println("ici userid ___", userIDStr)
 	userID, err := strconv.Atoi(userIDStr)
 	if err != nil {
-		fmt.Println("error",err)
+		fmt.Println("error", err)
 		http.Error(w, "Invalid user ID", http.StatusBadRequest)
 		return
 	}
@@ -173,25 +174,24 @@ func (gc *GroupController) GetAllJoinGroupsByUserIDHandler(w http.ResponseWriter
 	json.NewEncoder(w).Encode(groupMap)
 }
 
-
 // CreateEventsHandler handles the creation of a new event in a group
 func (gc *GroupController) CreateEventsHandler(w http.ResponseWriter, r *http.Request) {
-    var event dto.Events
+	var event dto.Events
 
-    if err := json.NewDecoder(r.Body).Decode(&event); err != nil {
-        fmt.Println("error: ", err, r.Body)
-        http.Error(w, err.Error(), http.StatusBadRequest)
-        return
-    }
+	if err := json.NewDecoder(r.Body).Decode(&event); err != nil {
+		fmt.Println("error: ", err, r.Body)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
-    event.CreatedAt = time.Now()
+	event.CreatedAt = time.Now()
 
-    err := gc.GroupService.CreateEventsInGroup(event)
-    if err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-        return
-    }
+	err := gc.GroupService.CreateEventsInGroup(event)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-    w.Header().Set("Content-Type", "application/json")
-    json.NewEncoder(w).Encode(event)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(event)
 }

@@ -41,9 +41,19 @@ func (repo *GroupRepoImpl) CreateGroup(name, description, owner, image string) (
 }
 
 // AddMember adds a member to a group
-func (repo *GroupRepoImpl) AddMember(userID, groupID int, role string) error {
-	stmt := `INSERT INTO group_members (user_id, group_id, role, joined_at) VALUES (?, ?, ?, ?)`
-	_, err := repo.db.GetDB().Exec(stmt, userID, groupID, role, time.Now())
+func (repo *GroupRepoImpl) AddMember(userID, targetID int, role, name string) error {
+	message := ""
+	if role == "member" {
+		message = fmt.Sprintf("%s want to join your group . Can you accept ?", name)
+	}else if role == "admin" {
+		message = fmt.Sprintf("%s want to insert her group . Can you accept ?", name)
+	}else{
+		return fmt.Errorf("role : %s not allowed !",role)
+	}
+	stmt := `INSERT INTO notifications (user_id, target_id, message, is_read, created_at)
+	VALUES (?, ?, ?,?,?);
+	`
+	_, err := repo.db.GetDB().Exec(stmt, userID, targetID,message,false, role, time.Now())
 	if err != nil {
 		return fmt.Errorf("AddMember: %v", err)
 	}
@@ -155,7 +165,7 @@ func (repo *GroupRepoImpl) CreateEventsInGroup(event dto.Events) error {
 	query := "INSERT INTO events (name, description, owner, image, group_id, user_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
 
 	// Execute the query
-	_, err := repo.db.GetDB().Exec(query,  event.Name, event.Description, event.Owner, event.Image, event.GroupId, event.UserID, event.CreatedAt)
+	_, err := repo.db.GetDB().Exec(query, event.Name, event.Description, event.Owner, event.Image, event.GroupId, event.UserID, event.CreatedAt)
 	if err != nil {
 		return errors.New("failed to create event: " + err.Error())
 	}

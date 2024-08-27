@@ -13,8 +13,8 @@ func (s *GroupServiceImpl) CreateGroup(group *dto.GroupDTO) (int, error) {
 	return s.Repository.CreateGroup(group.Name, group.Description, group.Owner, group.Image)
 }
 
-func (s *GroupServiceImpl) AddMember(userID, groupID int, role string) error {
-	return s.Repository.AddMember(userID, groupID, role)
+func (s *GroupServiceImpl) AddMember(userID, groupID int, role , name string) error {
+	return s.Repository.AddMember(userID, groupID, role,name)
 }
 
 func (s *GroupServiceImpl) EjectMember(userID, groupID int) error {
