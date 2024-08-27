@@ -16,7 +16,7 @@ import { AuthService } from '../../service/auth.service';
   imports: [ToolbarComponent, CommonModule, MatCardModule, HttpClientModule, ReactiveFormsModule, ToolbarComponent],
   templateUrl: './by-id.component.html',
   styleUrl: './by-id.component.scss',
-  providers: [DataService]
+  providers: [DataService,AuthService]
 })
 export class ByIdComponent implements OnInit {
   groups: Group[] = [];

@@ -39,7 +39,7 @@ import { AuthService } from '../../../service/auth.service';
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  providers: [DataService]
+  providers: [DataService,AuthService]
 })
 export class HomeComponent implements OnInit {
   id!: number;
@@ -56,7 +56,7 @@ export class HomeComponent implements OnInit {
   constructor(private apiService: DataService, private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.authService.isOnline();
+   this.authService.isOnline();
 
     this.user = JSON.parse(localStorage.getItem('user') as string);
     this.id = this.user.id;

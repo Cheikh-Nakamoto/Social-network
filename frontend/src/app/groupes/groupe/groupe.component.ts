@@ -18,7 +18,7 @@ import { AuthService } from '../../service/auth.service';
   imports: [CommonModule, MatCardModule, HttpClientModule, ReactiveFormsModule, ToolbarComponent, MatIconModule, MatDividerModule],
   templateUrl: './groupe.component.html',
   styleUrls: ['./groupe.component.scss'],
-  providers: [DataService],
+  providers: [DataService,AuthService],
 
 })
 export class GroupeComponent implements OnInit, OnDestroy {

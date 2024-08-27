@@ -23,7 +23,7 @@ export class DialogCommentComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) public data: { post_id: number, user: AllUsersDTO, comments: CommentDTO[] }, private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.authService.isOnline();
+   // this.authService.isOnline();
 
     this.comments = this.data.comments
     this.user = this.data.user;

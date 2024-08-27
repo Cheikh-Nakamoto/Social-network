@@ -12,7 +12,7 @@ import { AuthService } from '../../service/auth.service';
   imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
   templateUrl: './create-group.component.html',
   styleUrl: './create-group.component.scss',
-  providers: [DataService] // Ajouter DataService ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son
+  providers: [DataService,AuthService] // Ajouter DataService ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son
 })
 export class CreateGroupComponent implements OnInit {
   groupeForm!: FormGroup;

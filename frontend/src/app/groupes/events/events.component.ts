@@ -3,13 +3,15 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { DataService } from '../../data.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../../service/auth.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-events',
   standalone: true,
-  imports: [],
+  imports: [HttpClientModule],
   templateUrl: './events.component.html',
-  styleUrl: './events.component.scss'
+  styleUrl: './events.component.scss',
+  providers:[AuthService]
 })
 export class EventsComponent implements OnInit {
   groupeForm!: FormGroup;

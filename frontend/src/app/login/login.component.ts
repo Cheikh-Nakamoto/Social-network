@@ -18,7 +18,7 @@ import { AuthService } from '../service/auth.service';
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  providers: [DataService]
+  providers: [DataService,AuthService]
 })
 export class LoginComponent implements OnInit {
   loginForm !: FormGroup;
@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit {
       avatar: [null],
       nickname: [null],
       about_me: [null],
-      is_public: [null]
+      is_public: ['']
     }
 
     )

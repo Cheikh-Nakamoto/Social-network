@@ -22,7 +22,7 @@ import { AuthService } from '../service/auth.service';
   imports: [CommonModule, FormsModule, RouterOutlet, HttpClientModule], // Ajouter CommonModule ici
   templateUrl: 'chat.component.html',
   styleUrls: ['chat.component.scss'],
-  providers: [DataService],
+  providers: [DataService,AuthService],
 })
 export class ChatComponent implements OnInit, OnDestroy {
   private messagesSubscription!: Subscription;

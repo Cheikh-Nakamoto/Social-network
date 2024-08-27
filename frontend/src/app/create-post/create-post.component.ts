@@ -18,7 +18,7 @@ import { AuthService } from '../service/auth.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './create-post.component.html',
   styleUrls: ['./create-post.component.scss'],
-  providers: [DataService]
+  providers: [DataService,AuthService]
 })
 export class CreatePostComponent implements OnInit {
   hideSingleSelectionIndicator = signal(false);

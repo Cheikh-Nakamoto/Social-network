@@ -7,6 +7,7 @@ import (
 	"backend/pkg/utils"
 	"database/sql"
 	"errors"
+	"fmt"
 	"time"
 )
 
@@ -24,7 +25,7 @@ func (u *UserRepoImpl) FindByID(id uint) (*entity.User, error) {
 	user := new(entity.User)
 	err := u.db.GetDB().QueryRow("SELECT * FROM users WHERE id = ?", id).Scan(&user.ID, &user.Email, &user.Password, &user.Firstname, &user.Lastname, &user.DateOfBirth, &user.Avatar, &user.Nickname, &user.AboutMe, &user.IsPublic, &user.CreatedAt, &user.UpdatedAt)
 	user.Password = ""
-
+	fmt.Println("err")
 	return user, err
 }
 

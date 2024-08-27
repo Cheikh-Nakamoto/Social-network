@@ -41,7 +41,7 @@ import { AuthService } from '../../service/auth.service';
   ],
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.scss',
-  providers: [DataService], // Add any additional services you need to this component.
+  providers: [DataService,AuthService], // Add any additional services you need to this component.
 })
 export class SidenavComponent implements OnInit {
   menuItems = [
