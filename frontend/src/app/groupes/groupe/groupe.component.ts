@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 import { DataService } from '../../data.service';
 import { Group, JoinGroupVerification } from '../../models/models.compenant';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -12,7 +14,7 @@ import { ToolbarComponent } from '../../nav/toolbar/toolbar.component';
 @Component({
   selector: 'app-groupe',
   standalone: true,
-  imports: [CommonModule, MatCardModule, HttpClientModule, ReactiveFormsModule, ToolbarComponent],
+  imports: [CommonModule, MatCardModule, HttpClientModule, ReactiveFormsModule, ToolbarComponent, MatIconModule, MatDividerModule],
   templateUrl: './groupe.component.html',
   styleUrls: ['./groupe.component.scss'],
   providers: [DataService],

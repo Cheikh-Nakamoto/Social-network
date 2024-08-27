@@ -6,7 +6,6 @@
   }
 }
 
-
 .group-list {
   display: flex;
   flex-wrap: wrap;
@@ -18,25 +17,49 @@
   width: 300px;
 }
 
-.example-card {
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.onegroup {
+  display: flex;
+  flex-direction: column;
 }
 
-.example-header-image {
-  background-color: #f0f0f0;
-  border-radius: 50%;
+.header-group {
+  display: flex;
+  flex-direction: column;
 }
 
-mat-card-title {
-  font-size: 1.5rem;
-  font-weight: bold;
+.header-group h3 {
+  font-size: 24px;
+  margin-bottom: 10px;
 }
 
-mat-card-content p {
-  color: #666;
+.header-group .img {
+  height: 300px;
 }
 
-mat-card-actions {
-  justify-content: space-between;
+img {
+  height: 200px;
+}
+
+.admin-actions button {
+  margin: 5px;
+}
+
+.event-group {
+  margin-top: 20px;
+}
+
+/* Ajoutez ces styles pour une meilleure expérience utilisateur */
+.group-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.create-group {
+  margin-top: 20px;
+  text-align: center;
+}
+
+button {
+  min-height: 40px;
+  padding: 0 16px;
 }
