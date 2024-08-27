@@ -49,7 +49,7 @@ body {
 }
 
 .left-panel {
-  background-color: #6d9773;
+  background-color: #b8daff;
   color: white;
   display: flex;
   flex-direction: column;
@@ -106,7 +106,7 @@ body {
   height: 570px;
   border-radius: 12px;
   padding: 20px 30px 120px;
-  background: #0c3b2e;
+  background: #b8daff;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
@@ -120,13 +120,7 @@ body {
   cursor: pointer;
   font-family: "smith";
 }
-.login-section header {
-  color: #fcfcfc;
-  opacity: 0.6;
-}
-.login-section .social-buttons button {
-  border: 1px solid #f3f3f3;
-}
+
 .container-auth form {
   display: flex;
   flex-direction: column;
@@ -136,17 +130,21 @@ body {
 form input,
 form textarea {
   border: 0;
-  border-bottom: 2px solid #e8e9eb36;
+  border-bottom: 2px solid #fff;
   outline: 0;
   padding: 6px 8px;
   font-weight: 400;
   border-radius: 6px;
   background: transparent;
-  color: #fff;
-  font-size: 10px;
+  color: #000;
+  font-size: 12px;
+}
+form input::placeholder,
+form textarea::placeholder {
+  color: #000;
 }
 form input[type="date"] {
-  color: rgba(255, 255, 255, 0.6);
+  color: #000;
 }
 form input[type="file"] {
   display: none;
@@ -159,28 +157,28 @@ form input[type="file"] {
 .file-input-label {
   display: inline-block;
   width: 100%;
-  color: rgba(255, 255, 255, 0.6);
+  color: #000;
   cursor: pointer;
   font-size: 12px;
-  border-bottom: 2px solid #e8e9eb36;
+  border-bottom: 2px solid #fff;
   border-radius: 6px;
   padding: 6px 8px;
-  font-size: 10px;
 }
 form textarea {
   resize: none;
   height: 60px;
+ 
 }
 .login-section input {
-  border-bottom: 2px solid #aaaaaa3b;
+  border-bottom: 2px solid fff;
   color: #000;
 }
 form a {
-  color: #333;
+  color: #000;
   font-size: 12px;
 }
 .signup-section form a {
-  color: #fff;
+  color: #000;
 }
 form .btn {
   margin-top: 20px;
@@ -190,7 +188,7 @@ form .btn {
   font-size: 18px;
   font-weight: 500;
   cursor: pointer;
-  background: #6d9773;
+  background: #005cbb;
   color: #fff;
 }
 .name-container {
@@ -247,7 +245,7 @@ form .btn {
   top: 134px;
 }
 
-
 :host ::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
   color: white;
+  border: none;
 }

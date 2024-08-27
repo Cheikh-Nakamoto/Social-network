@@ -2,23 +2,26 @@
   <h1>Groupes de Discussion</h1>
   <!-- Liste des groupes existants -->
   <div class="group-list" *ngIf="groups.length > 0; else noGroups">
-    <div class="container" *ngFor="let group of groups" class="group-card" >
+    <div class="container" *ngFor="let group of groups" class="group-card">
       <mat-card class="example-card" (click)="handleClick('/groups',$event,group.id)">
-        <mat-card-header class="mat-card-header">
-          <mat-card-title>Name : {{ group.name }}</mat-card-title>
-        </mat-card-header>
         <img mat-card-image [src]="group.image" alt="Photo of {{ group.name }}">
+        <mat-card-header class="mat-card-header">
+          <mat-card-title>Name {{ group.name }}</mat-card-title>
+        </mat-card-header>
         <mat-card-content>
-          <p>Description :{{ group.description }}</p>
+          <h6>Description </h6>
+          <span>
+            <p> {{ group.description }}</p>
+          </span>
         </mat-card-content>
         <mat-card-actions *ngIf="group.owner != id && !IsIn[group.id]">
           <button mat-button color="primary" (click)="addMember(group.id,id,'member')">JOIN</button>
-        </mat-card-actions>        
+        </mat-card-actions>
       </mat-card>
     </div>
   </div>
   <ng-template #noGroups>
-    <p>Aucun groupe à afficher.</p>
+    <p>Loading...</p>
   </ng-template>
 
   <!-- Bouton pour créer un nouveau groupe -->
