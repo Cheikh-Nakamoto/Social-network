@@ -23,7 +23,6 @@
             <button mat-menu-item>Item 1</button>
             <button mat-menu-item>Item 2</button>
         </mat-menu>
-
         <div class=" relative">
             <button [matMenuTriggerFor]="userMenu" class="user-menu-button">
                 <div class="user-info">
@@ -31,10 +30,11 @@
                     <span class="username">{{ username }}</span>
                 </div>
             </button>
-    
+
             <mat-menu #userMenu="matMenu">
-                <button mat-menu-item (click)="handleLogout()">Logout</button>
-                
+                <button mat-menu-item (click)="handleLogout()">
+                    <i class="icofont ">Logout</i>
+                </button>
             </mat-menu>
         </div>
     </div>

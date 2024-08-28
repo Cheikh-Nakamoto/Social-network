@@ -6,7 +6,7 @@
         {{ AllUser[post.user_id] && AllUser[post.user_id].nickname }}
       </mat-card-title>
       <mat-card-subtitle routerLink="/profile/{{post.user_id}}">
-        &#64;{{ AllUser[post.user_id].nickname }}
+        {{ AllUser[post.user_id].created_at  | date:'mediumDate' }}
       </mat-card-subtitle>
     </mat-card-header>
     <img class="post-image" mat-card-image [src]="post.image" alt="Post image">
