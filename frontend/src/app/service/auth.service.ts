@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { map, Observable, of } from "rxjs";
 import { Router } from '@angular/router';
 
+
 @Injectable({
     providedIn: 'root'
 })
@@ -22,9 +23,30 @@ export class AuthService {
     register(user: any): Observable<any> {
         return this.http.post(`${this.api}/register`, user)
     }
+    logout(): Observable<void> {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.log('No token found, redirecting to login.');
+            this.removeSession();
+            this.router.navigateByUrl('/login')
+        }
 
-    logout(token: any): Observable<any> {
-        return this.http.post(`${this.api}/logout`, token)
+        return new Observable<void>(subscriber => {
+            this.http.post<void>(`${this.api}/logout`, { token }).subscribe({
+                next: () => {
+                    this.removeSession();
+                    this.router.navigateByUrl('/login')
+                    subscriber.next(); // Notify observers that operation completed successfully
+                    subscriber.complete(); // Complete the observable
+                },
+                error: (err) => {
+                    console.error('Error during logout:', err);
+                    this.removeSession();
+                    this.router.navigateByUrl('/login')
+                    subscriber.error(err); // Notify observers that an error occurred
+                }
+            });
+        });
     }
 
     checkOnlineStatus(token: any): Observable<any> {

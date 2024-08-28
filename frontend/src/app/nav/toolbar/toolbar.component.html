@@ -25,8 +25,16 @@
         </mat-menu>
 
         <div class=" relative">
-            <img src="female.svg" width="30" height="30" alt="profile" />
-            <span class="username">{{ username }}</span>
+            <button [matMenuTriggerFor]="userMenu" class="user-menu-button">
+                <div class="user-info">
+                    <img src="female.svg" width="30" height="30" alt="profile" />
+                    <span class="username">{{ username }}</span>
+                </div>
+            </button>
+    
+            <mat-menu #userMenu="matMenu">
+                <button mat-menu-item (click)="handleLogout()">Logout</button>
+            </mat-menu>
         </div>
     </div>
 </mat-toolbar>

@@ -80,12 +80,18 @@ a {
     cursor: pointer;
     display: flex;
   }
-
-  .username {
-    font-size: 14px;
-    color: #005cbb;
-    margin-left: 4px;
+  .user-menu-button {
+    border: none;
+    cursor: pointer;
+    background: none;
+    
+    .username {
+      font-size: 14px;
+      color: #005cbb;
+      margin-left: 4px;
+    }
   }
+
 }
 
 :host {

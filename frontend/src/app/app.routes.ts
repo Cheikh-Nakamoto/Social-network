@@ -14,7 +14,7 @@ import { ProfileComponent } from './profile/profile.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [AuthGuard] },
-  { path: 'Acceuil', component: SidenavComponent, canActivate: [HomeGuard] },
+  { path: 'Accueil', component: SidenavComponent, canActivate: [HomeGuard] },
   { path: 'CreatePost', component: CreatePostComponent, canActivate: [HomeGuard]  },
   { path: "groups", component: GroupeComponent , canActivate: [HomeGuard] },
   { path: "groups/:id", component:ByIdComponent,canActivate: [HomeGuard]},
@@ -22,8 +22,8 @@ export const routes: Routes = [
   { path: 'profile', component: ProfileComponent, canActivate: [HomeGuard] },
   {path: "CreateGroup", component: CreateGroupComponent, canActivate: [HomeGuard] },
   {path: "chat", component:ChatComponent },
-  { path: '', redirectTo: 'Acceuil', pathMatch: 'full' },
-  { path: '**', redirectTo: 'Acceuil' }
+  { path: '', redirectTo: 'Accueil', pathMatch: 'full' },
+  { path: '**', redirectTo: 'Accueil' }
 
  
 ]

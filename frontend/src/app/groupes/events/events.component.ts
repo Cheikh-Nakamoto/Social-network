@@ -4,11 +4,12 @@ import { DataService } from '../../data.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../../service/auth.service';
 import { HttpClientModule } from '@angular/common/http';
+import { ToolbarComponent } from "../../nav/toolbar/toolbar.component";
 
 @Component({
   selector: 'app-events',
   standalone: true,
-  imports: [HttpClientModule],
+  imports: [HttpClientModule, ToolbarComponent],
   templateUrl: './events.component.html',
   styleUrl: './events.component.scss',
   providers:[AuthService]
