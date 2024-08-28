@@ -13,6 +13,7 @@ import { NotificationVerification } from '../../models/models.compenant';
 import { HttpClientModule } from '@angular/common/http';
 
 
+
 @Component({
   selector: 'app-toolbar',
   standalone: true,
@@ -32,22 +33,25 @@ import { HttpClientModule } from '@angular/common/http';
   ],
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',
-  providers: [DataService]
+  providers: [DataService,AuthService]
 })
-export class ToolbarComponent implements OnInit , OnDestroy {
+export class ToolbarComponent implements OnInit, OnDestroy {
   user = JSON.parse(localStorage.getItem('user') as string)
   title = 'Social Network';
-  id !: String
+  id!:string
   username = this.user == null ? '' : this.user.nickname;
   hiddenNotif = false;
   NotifyLength !: number
   hiddenMessage = false;
   timerid !: any
-  constructor(private groupService: DataService) {
+  constructor(private groupService: DataService, private authService: AuthService) {
 
   }
-  IsNotify: NotificationVerification = {notif:[]}
+  IsNotify: NotificationVerification = { notif: [] }
+
   ngOnInit() {
+    this.authService.isOnline();
+
     // Update user data on every refresh
     window.addEventListener('storage', (event) => {
       if (event.key === 'user') {
@@ -56,9 +60,9 @@ export class ToolbarComponent implements OnInit , OnDestroy {
         this.id = this.user == null ? '' : this.user.id;
       }
     });
-   this.timerid= setTimeout(()=>{
+    this.timerid = setTimeout(() => {
       this.notify()
-    },5000)
+    }, 5000)
   }
   ngOnDestroy(): void {
     clearTimeout(this.timerid)
