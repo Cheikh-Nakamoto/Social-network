@@ -6,6 +6,7 @@ import (
 	"backend/pkg/session"
 	"backend/pkg/utils"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 	"strings"
@@ -18,6 +19,7 @@ type UserController struct {
 
 // Register Create new user controller
 func (c *UserController) Register(w http.ResponseWriter, r *http.Request) {
+
 	err := utils.Environment()
 	if err != nil {
 		utils.LoggerError.Println(utils.Error, http.StatusInternalServerError, "-", err.Error()+utils.Reset)
@@ -46,10 +48,12 @@ func (c *UserController) Register(w http.ResponseWriter, r *http.Request) {
 
 	err = c.UserService.CreateUser(&userDTO)
 	if err != nil {
+		fmt.Println("error :", err)
 		utils.LoggerInfo.Println(http.StatusInternalServerError, "-", err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	fmt.Println("ici !!!")
 	w.WriteHeader(http.StatusCreated)
 	utils.LoggerInfo.Println(utils.Info, http.StatusCreated, "-", "User created successfully"+utils.Reset)
 }

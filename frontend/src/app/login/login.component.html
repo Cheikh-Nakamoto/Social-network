@@ -11,7 +11,7 @@
           <div class="login-section">
             <header>Login</header>
             <form id="loginForm" [formGroup]="loginForm" (ngSubmit)="onlogin()">
-              <input type="email" placeholder="Email" formControlName="username" required />
+              <input type="email" placeholder="Email" formControlName="email" required />
               <input type="password" placeholder="Password" formControlName="password" required />
               <a href="#">Forget Password?</a>
               <button class="btn">Login</button>

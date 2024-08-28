@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MatTabsModule } from '@angular/material/tabs'; // Importer MatTabsModule
 import { DataService } from '../data.service';
 import { responselogin, UserDTO } from '../models/models.compenant';
 import { Router } from '@angular/router';
 import { AuthService } from '../service/auth.service';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -18,11 +19,26 @@ import { AuthService } from '../service/auth.service';
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  providers: [DataService,AuthService]
+  providers: [DataService, AuthService]
 })
 export class LoginComponent implements OnInit {
-  loginForm !: FormGroup;
-  registerForm!: FormGroup;
+  age!: number
+
+  loginForm: FormGroup = this.formbuilder.group({
+    email: [null, [Validators.required]],
+    password: [null, [Validators.required, Validators.minLength(6)]]
+  })
+
+  registerForm: FormGroup = this.formbuilder.group({
+    email: [null, [Validators.required, Validators.email]],
+    password: [null, [Validators.required]],
+    firstname: [null, [Validators.required]],
+    lastname: [null, [Validators.required]],
+    date_of_birth: [null, [Validators.required]],
+    avatar: [null],
+    nickname: [null],
+    about_me: [null]
+  })
   // Initialisation de l'objet user
   responselogin!: responselogin;
 
@@ -31,50 +47,86 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.authService.isOnline()
-
-    this.loginForm = this.formbuilder.group({
-      username: [null],
-      password: [null]
-    });
-    this.registerForm = this.formbuilder.group({
-      email: [null],
-      password: [null],
-      firstname: [null],
-      lastname: [null],
-      date_of_birth: [null],
-      avatar: [null],
-      nickname: [null],
-      about_me: [null],
-      is_public: ['']
-    }
-
-    )
     // Initialisation de l'objet user
   }
 
   onlogin() {
-    console.log("ici c'est :", this.loginForm.value);
-    this.apiservice.postData('login', this.loginForm.value).subscribe((response: any) => {
-      localStorage.setItem("status", response.status)
-      localStorage.setItem("token", response.token)
-      localStorage.setItem("user", JSON.stringify(response.user))
-      alert("Connexion reussi!")
+    // console.log("ici c'est :", this.loginForm.value);
+    // this.apiservice.postData('login', this.loginForm.value).subscribe((response: any) => {
+    //   localStorage.setItem("status", response.status)
+    //   localStorage.setItem("token", response.token)
+    //   localStorage.setItem("user", JSON.stringify(response.user))
+    //   alert("Connexion reussi!")
 
-      this.redirectToHome()
-    }, error => {
-      alert("Erreur lors de la connexion")
-      console.error('Erreur lors de la connexion:', error);
-    });
+    //   this.redirectToHome()
+    // }, error => {
+    //   alert("Erreur lors de la connexion")
+    //   console.error('Erreur lors de la connexion:', error);
+    // });
+    if (this.loginForm.invalid) {
+      alert('Please fill in the form correctly');
+      return;
+    }
+    console.log(this.loginForm.value);
+    this.login(this.loginForm.value).subscribe(() => {
+      console.log('Logged in');
+      this.router.navigateByUrl('/home').then();
+      // this.router.navigate(['/home']);
+    })
+    console.log('Form submitted');
+  }
+
+  login(credentials: { email: string, password: string }) {
+    return this.authService.login(credentials).pipe(
+      tap((res: any) => {
+        console.log("Login response", res);
+        if (!res.status || res.status !== 'success') {
+          alert(res.message);
+          return;
+        }
+        localStorage.setItem("token", res.token)
+        localStorage.setItem("userID", res.user.id)
+      })
+    )
   }
 
   onregister() {
+    const data = {
+      ...this.registerForm.value,
+    }
+
+    this.age = this.checkAge(data.date_of_birth)
+
+    if (this.age < 12 || this.age > 120) {
+      alert('You must be between 12 and 120 years old to register')
+      return
+    }
+
+    if (this.registerForm.invalid) {
+      alert('Please fill all the required fields');
+      return;
+    } else {
+      this.authService.register(data).subscribe(() => {
+        console.log("User registered")
+        this.router.navigateByUrl('/login').then();
+      }, (error) => {
+        console.log(error)
+      })
+    }
+  }
+
+  checkAge(data: Date): number {
+    return Math.floor(Math.abs(Date.now() - new Date(data).getTime()) / (1000 * 3600 * 24 * 365))
+  }
+
+  /*onregister() {
     console.log("ici c'est :", this.registerForm.value);
     this.apiservice.postData('register', this.registerForm.value).subscribe((response: any) => {
       alert("Inscription reussi !")
     }, error => {
       console.error('Erreur lors de l\'inscription:', error);
     });
-  }
+  }*/
 
   redirectToHome() {
     this.router.navigate(['/Acceuil']);

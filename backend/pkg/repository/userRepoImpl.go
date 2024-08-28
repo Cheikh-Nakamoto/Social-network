@@ -25,7 +25,7 @@ func (u *UserRepoImpl) FindByID(id uint) (*entity.User, error) {
 	user := new(entity.User)
 	err := u.db.GetDB().QueryRow("SELECT * FROM users WHERE id = ?", id).Scan(&user.ID, &user.Email, &user.Password, &user.Firstname, &user.Lastname, &user.DateOfBirth, &user.Avatar, &user.Nickname, &user.AboutMe, &user.IsPublic, &user.CreatedAt, &user.UpdatedAt)
 	user.Password = ""
-	fmt.Println("err")
+	fmt.Println("err",err)
 	return user, err
 }
 
@@ -34,6 +34,7 @@ func (u *UserRepoImpl) FindByEmail(email string) (*entity.User, error) {
 	user := new(entity.User)
 	err := u.db.GetDB().QueryRow(`SELECT id, email, password, firstname, lastname, date_of_birth, avatar, nickname, about_me, is_public, created_at, updated_at FROM users WHERE email = ?`, email).Scan(&user.ID, &user.Email, &user.Password, &user.Firstname, &user.Lastname, &user.DateOfBirth, &user.Avatar, &user.Nickname, &user.AboutMe, &user.IsPublic, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
+		fmt.Println("FindByEmail error:",err)
 		if errors.Is(err, sql.ErrNoRows) {
 			utils.LoggerInfo.Println(utils.Warn + "No user found" + utils.Reset)
 			return nil, nil // No user found
@@ -47,6 +48,7 @@ func (u *UserRepoImpl) FindByEmail(email string) (*entity.User, error) {
 func (u *UserRepoImpl) Save(user *entity.User) error {
 	_, err := u.db.GetDB().Exec(`INSERT INTO users (email, password, firstname, lastname, date_of_birth, avatar, nickname, about_me) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, user.Email, user.Password, user.Firstname, user.Lastname, user.DateOfBirth, user.Avatar, user.Nickname, user.AboutMe)
 	if err != nil {
+		fmt.Println("error saving user")
 		return errors.New("error saving user")
 	}
 
@@ -72,11 +74,13 @@ func (u *UserRepoImpl) CountUsers() (uint, error) {
 func (u *UserRepoImpl) FindAllUsers() ([]*entity.User, error) {
 	rows, err := u.db.GetDB().Query("SELECT * FROM users")
 	if err != nil {
+		fmt.Println("FindAllUsers error")
 		return nil, err
 	}
 	defer func(rows *sql.Rows) {
 		err := rows.Close()
 		if err != nil {
+		fmt.Println("FindAllUsers error")
 			utils.LoggerError.Println("Error closing rows" + utils.Reset)
 			return
 		}

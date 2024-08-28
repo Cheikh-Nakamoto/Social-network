@@ -7,6 +7,7 @@ import (
 	"backend/pkg/session"
 	"backend/pkg/utils"
 	"errors"
+	"fmt"
 )
 
 type UserServiceImpl struct {
@@ -23,20 +24,25 @@ func (s *UserServiceImpl) GetUserById(id uint) (*dto.UserDTO, error) {
 
 func (s *UserServiceImpl) CreateUser(user *dto.UserDTO) error {
 	if user.Email == "" || user.Password == "" || user.Firstname == "" || user.Lastname == "" || user.DateOfBirth == "" {
+		fmt.Println("missing required fields")
 		return errors.New("missing required fields")
 	}
 
 	isExisted, err := s.Repository.FindByEmail(user.Email)
 	if err != nil {
+		fmt.Println("Erreur findbyemail")
 		return err
 	}
+	fmt.Println("Test n 1111")
 
 	if isExisted != nil {
+		fmt.Println("user already existed")
 		return errors.New("user already existed")
 	}
 
 	hashedPassword, err := utils.Encrypt(user.Password)
 	if err != nil {
+		fmt.Println("Encrypte password")
 		return err
 	}
 	user.Password = hashedPassword
