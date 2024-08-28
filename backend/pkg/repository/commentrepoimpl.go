@@ -4,6 +4,7 @@ import (
 	"backend/pkg/db/sqlite"
 	"backend/pkg/entity"
 	"fmt"
+	"time"
 )
 
 type CommentRepoImpl struct {
@@ -17,7 +18,7 @@ func NewCommentRepoImpl(db sqlite.Database) *CommentRepoImpl {
 func (repo *CommentRepoImpl) CreateComment(comment *entity.Comment) (int64, error) {
 	stmt := `INSERT INTO comments (user_id,target_id, content,target_type, created_at) VALUES (?, ?, ?, ?,?)`
 	fmt.Println("target type :", comment.TargetType)
-	result, err := repo.db.GetDB().Exec(stmt, comment.UserID, comment.TargetId, comment.Content, comment.TargetType, comment.CreatedAt)
+	result, err := repo.db.GetDB().Exec(stmt, comment.UserID, comment.TargetId, comment.Content, comment.TargetType, time.Now())
 	if err != nil {
 		return 0, fmt.Errorf("CreateComment: %v", err)
 	}
