@@ -30,10 +30,12 @@
                     <span class="username">{{ username }}</span>
                 </div>
             </button>
-
             <mat-menu #userMenu="matMenu">
+                <button mat-menu-item>
+                    <i class="icofont icofont-edit"><span class="name">Edit profile</span></i>
+                </button>
                 <button mat-menu-item (click)="handleLogout()">
-                    <i class="icofont icofont-logout">Logout</i>
+                    <i class="icofont icofont-logout"><span class="name">Logout</span></i>
                 </button>
             </mat-menu>
         </div>

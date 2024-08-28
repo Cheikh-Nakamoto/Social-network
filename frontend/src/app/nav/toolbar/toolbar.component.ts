@@ -36,10 +36,9 @@ import { AuthService } from '../../service/auth.service';
   providers: [DataService, AuthService]
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
-  user = JSON.parse(localStorage.getItem('user') as string)
   title = 'Social Network';
   id!: string
-  username = this.user == null ? '' : this.user.nickname;
+  username = ""
   hiddenNotif = false;
   NotifyLength !: number
   hiddenMessage = false;
@@ -55,6 +54,9 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.authService.isOnline();
     this.id = JSON.parse(localStorage.getItem('userID') as string);
+    this.username = localStorage.getItem('firstname') as string
+  console.log("this is my name ",localStorage.getItem('firstname') as string)
+
     // this.timerid = setTimeout(() => {
     //   this.notify()
     // }, 5000)
