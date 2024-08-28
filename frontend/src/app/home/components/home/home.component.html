@@ -3,7 +3,7 @@
     <mat-card-header>
       <img routerLink="/profile/{{post.user_id}}" mat-card-avatar src="logo.png" width="64" height="64" alt="profile">
       <mat-card-title routerLink="/profile/{{post.user_id}}">
-        {{ AllUser[post.user_id] && AllUser[post.user_id].nickname }}
+        {{ AllUser[post.user_id] && AllUser[post.user_id].firstname }}
       </mat-card-title>
       <mat-card-subtitle routerLink="/profile/{{post.user_id}}">
         {{ AllUser[post.user_id].created_at | date:'mediumDate' }}
