@@ -78,8 +78,7 @@ export class AuthService {
 
     removeSession() {
         localStorage.removeItem('token')
-        localStorage.removeItem('status')
-        localStorage.removeItem('user')
+        localStorage.removeItem('userID')
     }
 
     updateUser(id: any, user: any) {

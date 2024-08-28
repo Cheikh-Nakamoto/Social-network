@@ -33,7 +33,6 @@ func (s *UserServiceImpl) CreateUser(user *dto.UserDTO) error {
 		fmt.Println("Erreur findbyemail")
 		return err
 	}
-	fmt.Println("Test n 1111")
 
 	if isExisted != nil {
 		fmt.Println("user already existed")
