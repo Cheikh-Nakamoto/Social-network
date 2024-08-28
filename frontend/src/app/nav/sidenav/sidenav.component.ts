@@ -85,7 +85,7 @@ export class SidenavComponent implements OnInit {
 
   getAllusers(): void {
     const userData = JSON.parse(localStorage.getItem('user') || '{}');
-    this.apiservice.getData('allusers').subscribe(
+    this.apiservice.getData('users').subscribe(
       (response: any) => {
         console.log("ffffffff", response)
         const usersArray: model.UserDTO[] = Object.values(response);

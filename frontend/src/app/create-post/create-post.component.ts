@@ -75,8 +75,7 @@ export class CreatePostComponent implements OnInit {
       formData.append('privacy', this.Post.get('privacy')?.value);
       formData.append('file', this.selectedFile);
 
-      let user = localStorage.getItem("user") as string
-      let userId = JSON.parse(user).id.toString(); // Convert user id to string
+      let userId = JSON.parse(localStorage.getItem("userID") as string).toString()
       formData.append('user_id', userId);
 
       this.apiservice.uploadImage(formData).subscribe(

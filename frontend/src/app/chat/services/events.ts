@@ -72,14 +72,14 @@ export function handleGetChatbarData(payload: EventPayload): void {
       return dateB.getTime() - dateA.getTime();
     });
 
-    // allusers.forEach((user: UserDTO) => {
+    // users.forEach((user: UserDTO) => {
     //   const matchingUser = payload.find((user2) => user2.id === user.id);
     //   if (matchingUser) {
     //     user.isOnline = true;
     //   }
     // });
 
-    // console.log(obj.allusers)
+    // console.log(obj.users)
   } else {
     console.log('retrieving chatbar data');
   }

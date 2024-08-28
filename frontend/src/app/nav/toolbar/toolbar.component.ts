@@ -34,13 +34,13 @@ import { AuthService } from '../../service/auth.service';
   ],
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',
-  providers: [DataService,AuthService]
+  providers: [DataService, AuthService]
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
   user = JSON.parse(localStorage.getItem('user') as string)
   title = 'Social Network';
-  id!:string
-  username = this.user == null ? '' : this.user.nickname;
+  id!: string
+  username = "papa"
   hiddenNotif = false;
   NotifyLength !: number
   hiddenMessage = false;
@@ -52,18 +52,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.authService.isOnline();
-
-    // Update user data on every refresh
-    window.addEventListener('storage', (event) => {
-      if (event.key === 'user') {
-        this.user = JSON.parse(localStorage.getItem('user') as string);
-        this.username = this.user == null ? '' : this.user.nickname;
-        this.id = this.user == null ? '' : this.user.id;
-      }
-    });
-    this.timerid = setTimeout(() => {
-      this.notify()
-    }, 5000)
+    this.id = JSON.parse(localStorage.getItem('userID') as string);
+    // this.timerid = setTimeout(() => {
+    //   this.notify()
+    // }, 5000)
   }
   ngOnDestroy(): void {
     clearTimeout(this.timerid)

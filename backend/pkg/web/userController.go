@@ -342,10 +342,7 @@ func (c *UserController) Users(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set(os.Getenv("CONTENT_TYPE"), os.Getenv("APPLICATION_JSON"))
 	// err = json.NewEncoder(w).Encode(users)
 	if len(users) != 0 {
-		err = json.NewEncoder(w).Encode(map[string]interface{}{
-			"status": "success",
-			"users":  users,
-		})
+		err = json.NewEncoder(w).Encode(users)
 	} else {
 		err = json.NewEncoder(w).Encode(map[string]interface{}{
 			"status":  "empty",

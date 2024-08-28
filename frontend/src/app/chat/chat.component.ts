@@ -71,7 +71,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.apiservice.getData('allusers').subscribe(
+    this.apiservice.getData('users').subscribe(
       (response: model.UserDTO[]) => {
         // Utilisez `find` pour rechercher directement l'utilisateur avec l'ID correspondant
         const foundUser = response.find(

@@ -86,8 +86,9 @@ func (u *UserRepoImpl) FindAllUsers() ([]*entity.User, error) {
 
 	var users []*entity.User
 	for rows.Next() {
+		online := false
 		user := new(entity.User)
-		err := rows.Scan(&user.ID, &user.Email, &user.Password, &user.Firstname, &user.Lastname, &user.DateOfBirth, &user.Avatar, &user.Nickname, &user.AboutMe, &user.IsPublic, &user.CreatedAt, &user.UpdatedAt)
+		err := rows.Scan(&user.ID, &user.Email, &user.Password, &user.Firstname, &user.Lastname, &user.DateOfBirth, &user.Avatar, &user.Nickname, &user.AboutMe, &user.IsPublic, &user.CreatedAt, &user.UpdatedAt,&online)
 		if err != nil {
 			return nil, err
 		}

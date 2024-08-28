@@ -13,6 +13,7 @@ import { AuthService } from '../service/auth.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './dialog-comment.component.html',
   styleUrls: ['./dialog-comment.component.scss'],
+  providers : [AuthService]
 
 })
 export class DialogCommentComponent implements OnInit {

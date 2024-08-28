@@ -57,10 +57,8 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
    this.authService.isOnline();
-
-    this.user = JSON.parse(localStorage.getItem('user') as string);
-    this.id = this.user.id;
-    this.loadUser('allusers');
+    this.id = JSON.parse(localStorage.getItem("userID") as string);
+    this.loadUser('users');
     this.loadComments();
     this.getAllPosts();
   }
@@ -147,7 +145,6 @@ export class HomeComponent implements OnInit {
     this.apiService.getData(targetlink).subscribe((user: AllUsersDTO) => {
       this.AllUser = user;
       console.log('ici sont les utilisateurs', this.AllUser);
-      console.log(user);
     });
   }
 

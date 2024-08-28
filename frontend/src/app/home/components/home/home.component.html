@@ -1,32 +1,43 @@
 <div class="posts" *ngFor="let post of posts">
   <mat-card class="example-card" appearance="outlined">
     <mat-card-header>
-      <img routerLink="/profile/{{id}}" mat-card-avatar src="logo.png" width="64" height="64" alt="profile">
-      <mat-card-title routerLink="/profile/{{id}}">{{ AllUser[post.user_id].nickname }}</mat-card-title>
-      <mat-card-subtitle routerLink="/profile/{{id}}">&#64;{{ AllUser[post.user_id].nickname}}</mat-card-subtitle>
+      <img 
+        routerLink="/profile/{{post.user_id}}" 
+        mat-card-avatar 
+        src="logo.png" 
+        width="64" 
+        height="64" 
+        alt="profile">
+      <mat-card-title routerLink="/profile/{{post.user_id}}">
+        {{ AllUser[post.user_id]?.nickname }}
+      </mat-card-title>
+      <mat-card-subtitle routerLink="/profile/{{post.user_id}}">
+        &#64;{{ AllUser[post.user_id]?.nickname }}
+      </mat-card-subtitle>
     </mat-card-header>
-    <img class="post-image" mat-card-image [src]="post.image" alt="Photo of a Shiba Inu">
+    <img class="post-image" mat-card-image [src]="post.image" alt="Post image">
     <mat-card-content>
       <p>{{ post.content }}</p>
     </mat-card-content>
     <mat-card-actions>
       <button mat-icon-button (click)="onLike(post.id, 'post')">
-        <span>{{ likemap[post.id] }}</span>
-        <mat-icon>thumb_up_outilne</mat-icon>
+        <span>{{ likemap[post.id] || 0 }}</span>
+        <mat-icon>thumb_up_outline</mat-icon>
       </button>
-      <button mat-icon-button (click)="onDislike(post.id,'post')">
-        <span>{{ dislikemap[post.id]}}</span>
+      <button mat-icon-button (click)="onDislike(post.id, 'post')">
+        <span>{{ dislikemap[post.id] || 0 }}</span>
         <mat-icon>thumb_down</mat-icon>
       </button>
-      <button mat-icon-button (click)="comments.comments_by_post[post.id].length > 0 ? openDialog(post.id) : null"
-        [disabled]="comments.comments_by_post[post.id].length === 0">
-        <span>{{ comments.comments_by_post[post.id].length > 0 ? comments.comments_by_post[post.id].length : '0'
-          }}</span>
+      <button 
+        mat-icon-button 
+        (click)="comments.comments_by_post?.[post.id]?.length ? openDialog(post.id) : null"
+        [disabled]="!(comments.comments_by_post[post.id].length > 0)">
+        <span>{{ comments.comments_by_post?.[post.id]?.length || '0' }}</span>
         <mat-icon>forum</mat-icon>
       </button>
 
       <span class="comment-form">
-        <form (submit)="onComment(post.id,'comment', $event)">
+        <form (submit)="onComment(post.id, 'comment', $event)">
           <input matInput placeholder="Comment" name="comment">
           <button class="send" mat-icon-button type="submit">
             <mat-icon>send</mat-icon>
@@ -34,13 +45,6 @@
         </form>
       </span>
       <span class="spacer"></span>
-      <!-- <button mat-icon-button>
-                <span>{{ shares }}</span>
-                <mat-icon>share</mat-icon>
-            </button> -->
     </mat-card-actions>
-    <!-- <div class="comments" *ngIf="comments.length > 0">
-
-    </div> -->
   </mat-card>
 </div>
