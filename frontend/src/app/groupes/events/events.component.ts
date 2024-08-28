@@ -1,31 +1,36 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { DataService } from '../../data.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../../service/auth.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-events',
   standalone: true,
-  imports: [],
+  imports: [HttpClientModule],
   templateUrl: './events.component.html',
-  styleUrl: './events.component.scss'
+  styleUrl: './events.component.scss',
+  providers:[AuthService]
 })
-export class EventsComponent {
+export class EventsComponent implements OnInit {
   groupeForm!: FormGroup;
   selectedFile: File | null = null;
   selectedFileName: string = '';
 
 
-  constructor(private fb: FormBuilder, private apiService: DataService, private router: Router) { }
+  constructor(private fb: FormBuilder, private apiService: DataService, private router: Router, private authService: AuthService) { }
 
   ngOnInit(): void {
+    this.authService.isOnline();
+
     let user = localStorage.getItem('user');
 
     this.groupeForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(50)]],
       description: ['', [Validators.required, Validators.maxLength(250)]],
       owner: [(JSON.parse(user as string).id).toString(), Validators.required],
-      image: ['',null],
+      image: ['', null],
       groupid: [parseInt(localStorage.getItem('groupid') as string, 10)],
     });
   }
@@ -37,7 +42,7 @@ export class EventsComponent {
       formData.append('image', file);
       console.log(formData);
       this.selectedFile = file;
-      this.selectedFileName = file.name;  
+      this.selectedFileName = file.name;
     }
   }
   onSubmit(): void {
@@ -56,8 +61,8 @@ export class EventsComponent {
         (response) => {
           // Supposons que la réponse de l'upload d'image contienne l'URL ou l'identifiant de l'image sous 'image'
           this.groupeForm.patchValue({ image: response.image });
-          
-      
+
+
           // Créez le groupe avec les données du formulaire mises à jour
           this.apiService.createEvent(this.groupeForm.value).subscribe(
             (res) => {
@@ -74,7 +79,7 @@ export class EventsComponent {
           console.error('Image upload failed:', error);
         }
       );
-      
+
     } else {
       console.log('Formulaire invalide');
     }

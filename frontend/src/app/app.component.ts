@@ -4,12 +4,13 @@ import { SidenavComponent } from './nav/sidenav/sidenav.component';
 import { ToolbarComponent } from './nav/toolbar/toolbar.component';
 import { LoginComponent } from "./login/login.component";
 import { HomeComponent } from "./home/components/home/home.component";
+import { HttpClientModule } from '@angular/common/http';
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, ToolbarComponent, SidenavComponent, LoginComponent, HomeComponent],
+  imports: [RouterOutlet, ToolbarComponent, SidenavComponent, LoginComponent, HomeComponent,HttpClientModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

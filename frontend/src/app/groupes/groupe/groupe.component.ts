@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ToolbarComponent } from '../../nav/toolbar/toolbar.component';
+import { AuthService } from '../../service/auth.service';
 
 
 @Component({
@@ -17,7 +18,7 @@ import { ToolbarComponent } from '../../nav/toolbar/toolbar.component';
   imports: [CommonModule, MatCardModule, HttpClientModule, ReactiveFormsModule, ToolbarComponent, MatIconModule, MatDividerModule],
   templateUrl: './groupe.component.html',
   styleUrls: ['./groupe.component.scss'],
-  providers: [DataService],
+  providers: [DataService,AuthService],
 
 })
 export class GroupeComponent implements OnInit, OnDestroy {
@@ -27,9 +28,11 @@ export class GroupeComponent implements OnInit, OnDestroy {
   id !: string;
   clear!: any;
 
-  constructor(private fb: FormBuilder, private groupService: DataService, private router: Router) { }
+  constructor(private fb: FormBuilder, private groupService: DataService, private router: Router, private authService: AuthService) { }
 
   ngOnInit(): void {
+    this.authService.isOnline();
+
     let user = JSON.parse(localStorage.getItem("user") as string);
     this.id = user.id;
     this.clear = setInterval(() => {
@@ -74,7 +77,7 @@ export class GroupeComponent implements OnInit, OnDestroy {
   }
 
 
- 
+
   ejectMember(groupId: number, userId: number): void {
     this.groupService.ejectMember(userId, groupId).subscribe(
       () => console.log('Member ejected successfully'),

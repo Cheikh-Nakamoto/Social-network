@@ -9,6 +9,7 @@ import { DataService } from '../data.service';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Router } from '@angular/router';
+import { AuthService } from '../service/auth.service';
 
 @Component({
   selector: 'app-create-post',
@@ -17,7 +18,7 @@ import { Router } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './create-post.component.html',
   styleUrls: ['./create-post.component.scss'],
-  providers: [DataService]
+  providers: [DataService,AuthService]
 })
 export class CreatePostComponent implements OnInit {
   hideSingleSelectionIndicator = signal(false);
@@ -36,9 +37,11 @@ export class CreatePostComponent implements OnInit {
   Post!: FormGroup;
   selectedFile!: File;
 
-  constructor(private postFormBuilder: FormBuilder, private apiservice: DataService, private router: Router) { }
+  constructor(private postFormBuilder: FormBuilder, private apiservice: DataService, private router: Router, private authService: AuthService) { }
 
   ngOnInit(): void {
+    this.authService.isOnline();
+
     this.Post = this.postFormBuilder.group({
       title: new FormControl(''),
       content: new FormControl(''),
@@ -55,9 +58,9 @@ export class CreatePostComponent implements OnInit {
   }
 
   onPrivacyChange(event: any): void {
-    if (event.value == "private"){
+    if (event.value == "private") {
       this.isPublic = event.value;
-    }else{
+    } else {
       this.isPublic = "public"
     }
     console.log(event.value);

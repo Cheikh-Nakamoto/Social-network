@@ -14,7 +14,8 @@ import { DataService } from '../../../data.service';
 import { Post, CommentContent, Posts, CommentDTO } from '../../../models/models.compenant';
 import { DialogCommentComponent } from '../../../dialog-comment/dialog-comment.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { User,AllUsersDTO } from '../../../models/models.compenant';
+import { User, AllUsersDTO } from '../../../models/models.compenant';
+import { AuthService } from '../../../service/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -38,11 +39,11 @@ import { User,AllUsersDTO } from '../../../models/models.compenant';
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  providers: [DataService]
+  providers: [DataService,AuthService]
 })
 export class HomeComponent implements OnInit {
   id!: number;
-  AllUser : AllUsersDTO = {};
+  AllUser: AllUsersDTO = {};
   posts: Post[] = [];
   share: number = 0;
   comments: CommentContent = { comments_by_post: {} };
@@ -52,9 +53,11 @@ export class HomeComponent implements OnInit {
   user: any;
   postAndButton!: Posts;
 
-  constructor(private apiService: DataService) { }
+  constructor(private apiService: DataService, private authService: AuthService) { }
 
   ngOnInit(): void {
+   this.authService.isOnline();
+
     this.user = JSON.parse(localStorage.getItem('user') as string);
     this.id = this.user.id;
     this.loadUser('allusers');
@@ -113,7 +116,7 @@ export class HomeComponent implements OnInit {
       (target.querySelector('input[name="comment"]') as HTMLInputElement).value = '';
       this.loadComments();
     });
-    
+
   }
 
   private loadComments(): void {
@@ -140,7 +143,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  private loadUser(targetlink: string ) {
+  private loadUser(targetlink: string) {
     this.apiService.getData(targetlink).subscribe((user: AllUsersDTO) => {
       this.AllUser = user;
       console.log('ici sont les utilisateurs', this.AllUser);
@@ -158,7 +161,7 @@ export class HomeComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogCommentComponent, {
       data: {
         postId: postId,
-        user : this.AllUser,
+        user: this.AllUser,
         comments: comment
       }
     });

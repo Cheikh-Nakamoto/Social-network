@@ -11,6 +11,7 @@ import { MatCardAvatar } from "@angular/material/card";
 import { DataService } from '../../data.service';
 import { NotificationVerification } from '../../models/models.compenant';
 import { HttpClientModule } from '@angular/common/http';
+import { AuthService } from '../../service/auth.service';
 
 
 
