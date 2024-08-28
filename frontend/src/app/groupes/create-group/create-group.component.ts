@@ -25,12 +25,12 @@ export class CreateGroupComponent implements OnInit {
   ngOnInit(): void {
     this.authService.isOnline();
 
-    let user = localStorage.getItem('user');
+    let userID = localStorage.getItem('userID');
     this.groupeForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(50)]],
       description: ['', [Validators.required, Validators.maxLength(250)]],
       isPublic: [true, Validators.required],
-      owner: [(JSON.parse(user as string).id).toString(), Validators.required],
+      owner: [(JSON.parse(userID as string)).toString(), Validators.required],
       image: ['', null]
     });
   }
