@@ -22,10 +22,8 @@
         <span>{{ dislikemap[post.id] || 0 }}</span>
         <mat-icon>thumb_down</mat-icon>
       </button>
-      <button mat-icon-button (click)="comments.comments_by_post[post.id] ? openDialog(post.id) : null"
-        [disabled]="!(comments.comments_by_post[post.id].length >= 0)">
-        <span>{{ (comments.comments_by_post && comments.comments_by_post[post.id] ?
-          comments.comments_by_post[post.id].length : 0) || '0' }}</span>
+      <button mat-icon-button (click)="comments.comments_by_post[post.id] ? openDialog(post.id) : null">
+        <span>{{ !comlength[post.id] ? 0 :  comlength[post.id]}}</span>
         <mat-icon>forum</mat-icon>
       </button>
 

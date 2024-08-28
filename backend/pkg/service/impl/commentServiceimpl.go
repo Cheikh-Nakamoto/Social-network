@@ -25,27 +25,36 @@ func (s *CommentServiceImpl) CreateComment(comment *dto.CommentDTO) (int64, erro
 	return s.Repository.CreateComment(entity)
 }
 
-func (s *CommentServiceImpl) GetAllComments() (map[int][]dto.CommentDTO, error) {
+func (s *CommentServiceImpl) GetAllComments() (dto.SendCommentDTO, error) {
 	comments, err := s.Repository.GetAllComments()
 	if err != nil {
-		return nil, err
+		return dto.SendCommentDTO{}, err
 	}
 
 	var commentDTOs = make(map[int][]dto.CommentDTO)
+	var sendcomments dto.SendCommentDTO
+	var commentLength = make(map[int]int)
 	for cle, comment := range comments {
 		for _, v := range comment {
 			commentDTO := dto.CommentDTO{
-				ID:        v.ID,
-				UserID:    v.UserID,
-				TargetId: v.TargetId,
-                TargetType: v.TargetType,
-				Content:   v.Content,
-				CreatedAt: v.CreatedAt,
+				ID:         v.ID,
+				UserID:     v.UserID,
+				TargetId:   v.TargetId,
+				TargetType: v.TargetType,
+				Content:    v.Content,
+				CreatedAt:  v.CreatedAt,
 			}
 			commentDTOs[cle] = append(commentDTOs[cle], commentDTO)
 		}
+		if len(commentDTOs[cle]) != 0 {
+			commentLength[cle] =len(commentDTOs[cle])
+		}else {
+			commentLength[cle] = 0
+		}
 	}
-	return commentDTOs, nil
+	sendcomments.Comments = commentDTOs
+	sendcomments.CommentsLength = commentLength
+	return sendcomments, nil
 }
 
 func (s *CommentServiceImpl) GetCommentByID(id int64) (dto.CommentDTO, error) {

@@ -11,7 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { HttpClientModule } from '@angular/common/http';
 import { DataService } from '../../../data.service';
-import { Post, CommentContent, Posts, CommentDTO } from '../../../models/models.compenant';
+import { Post, CommentContent, Posts, CommentDTO, length } from '../../../models/models.compenant';
 import { DialogCommentComponent } from '../../../dialog-comment/dialog-comment.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { User, AllUsersDTO } from '../../../models/models.compenant';
@@ -52,6 +52,7 @@ export class HomeComponent implements OnInit {
   token = localStorage.getItem('token');
   user: any;
   postAndButton!: Posts;
+  comlength : length = {}
 
   constructor(private apiService: DataService, private authService: AuthService) { }
 
@@ -120,9 +121,13 @@ export class HomeComponent implements OnInit {
 
   private loadComments(): void {
     this.apiService.getData('AllComments').subscribe(
-      (comment: { [key: number]: CommentDTO[] }) => {
-        this.comments.comments_by_post = comment;
-        console.log('ici sont les commentaires', this.comments);
+      (comment: {
+        Comments: { [key: number]: CommentDTO[] }
+        CommentsLength: { [key: number]: number }
+      }) => {
+        this.comments.comments_by_post = comment.Comments;
+        this.comlength = comment.CommentsLength
+        console.log('ici sont les commentaires', comment);
       },
       error => {
         console.error('Erreur lors du chargement des commentaires:', error);

@@ -60,6 +60,15 @@ export interface CommentContent {
   comments_by_post: { [key: number]: CommentDTO[] };
 }
 
+// SendCommentDTO interface
+export interface SendCommentDTO {
+  comments: { [key: number]: CommentDTO[] }; // Represents map[int][]CommentDTO
+  commentsLength: { [key: number]: number }; // Represents map[int]int
+}
+
+export interface length {
+  [key: number]: number
+}
 
 
 export interface Posts {
@@ -114,6 +123,6 @@ export interface JoinGroupVerification {
 }
 
 export interface NotificationVerification {
-  notif : Notification[];
+  notif: Notification[];
 }
 
