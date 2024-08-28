@@ -3,13 +3,13 @@
   <div class="container" *ngFor="let comment of comments">
     <div class="user-comment">
       <div class="user">
-        <span>{{ user[comment.user_id].nickname }}</span>
+        <span>{{ user[comment.user_id].firstname }}</span>
       </div>
       <div class="comment">
         {{ comment.content }}
       </div>
       <div class="date">
-        <span>{{ comment.created_at | date:'long' }}</span> <!-- Formatez la date si nécessaire -->
+        <span>{{ comment.created_at | date:'short' }}</span>
       </div>
     </div>
   </div>

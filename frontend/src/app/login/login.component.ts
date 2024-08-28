@@ -67,7 +67,7 @@ export class LoginComponent implements OnInit {
       alert('Please fill in the form correctly');
       return;
     }
-    console.log(this.loginForm.value);
+   
     this.login(this.loginForm.value).subscribe(() => {
       console.log('Logged in');
       this.router.navigateByUrl('/home').then();
@@ -84,8 +84,12 @@ export class LoginComponent implements OnInit {
           alert(res.message);
           return;
         }
+        this.authService.getUser
         localStorage.setItem("token", res.token)
         localStorage.setItem("userID", res.user.id)
+        localStorage.setItem("firstname",res.user.firstname)
+        localStorage.setItem("lastname",res.user.lastname)
+
       })
     )
   }

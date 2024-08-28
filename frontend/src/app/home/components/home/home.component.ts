@@ -39,7 +39,7 @@ import { AuthService } from '../../../service/auth.service';
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  providers: [DataService,AuthService]
+  providers: [DataService, AuthService]
 })
 export class HomeComponent implements OnInit {
   id!: number;
@@ -56,8 +56,9 @@ export class HomeComponent implements OnInit {
   constructor(private apiService: DataService, private authService: AuthService) { }
 
   ngOnInit(): void {
-   this.authService.isOnline();
-    this.id = JSON.parse(localStorage.getItem("userID") as string);
+    this.authService.isOnline();
+    this.id = (JSON.parse(localStorage.getItem("userID") as string));
+
     this.loadUser('users');
     this.loadComments();
     this.getAllPosts();
@@ -97,7 +98,7 @@ export class HomeComponent implements OnInit {
 
     const target = event.target as HTMLFormElement;
     const content = (target.querySelector('input[name="comment"]') as HTMLInputElement).value;
-
+    console.log("ooo", content);
     if (!content) {
       return;
     }
@@ -109,7 +110,7 @@ export class HomeComponent implements OnInit {
       content: content,
       target_type: targetType,
     };
-
+    console.log("le body", body)
     this.apiService.postData('CreateComment', JSON.stringify(body)).subscribe(() => {
       (target.querySelector('input[name="comment"]') as HTMLInputElement).value = '';
       this.loadComments();
