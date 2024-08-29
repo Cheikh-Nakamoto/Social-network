@@ -49,21 +49,21 @@ func (repo *GroupRepoImpl) AddMember(userID, targetID int, role, name string) er
 	} else if role == "admin" {
 		message = fmt.Sprintf("%s want to insert her group . Can you accept ?", name)
 	} else {
-		return fmt.Errorf("role: %s not allowed", role)
+		return fmt.Errorf("role : %s not allowed !", role)
 	}
 	check, erro := repo.CheckNotificationExists(userID, targetID, message)
 	if erro != nil {
-		return fmt.Errorf("notification existe verify: %v", erro)
+		return fmt.Errorf("Notification existe verify: %v", erro)
 	}
 	if check {
-		return fmt.Errorf("notification existe : %v", check)
+		return fmt.Errorf("Notification existe : %v", check)
 	}
 
 	stmt := `INSERT INTO notifications (user_id, group_id, message, is_read, created_at)
 	VALUES (?, ?, ?,?,?);`
 	_, err := repo.db.GetDB().Exec(stmt, userID, targetID, message, false, time.Now())
 	if err != nil {
-		return fmt.Errorf("add Notification: %v", err)
+		return fmt.Errorf("Add Notification: %v", err)
 	}
 	return nil
 }
@@ -194,7 +194,7 @@ func (repo *GroupRepoImpl) CreateEventsInGroup(event dto.Events) error {
 
 // NotificationExists vérifie si une notification existe dans la base de données pour un user_id, target_id et/ou group_id spécifique
 func (repo *GroupRepoImpl) NotificationExists(userID int) ([]dto.Notification, error) {
-	var notification []dto.Notification
+	var notification  []dto.Notification
 	query := `SELECT id, user_id, target_id, group_id, message, is_read, created_at 
 	          FROM notifications 
 	          WHERE user_id = ?`
@@ -228,53 +228,4 @@ func (repo *GroupRepoImpl) NotificationExists(userID int) ([]dto.Notification, e
 	}
 
 	return notification, nil
-}
-
-// GetNotificationsByUserID récupère toutes les notifications pour un utilisateur spécifique
-func (repo *GroupRepoImpl) GetNotificationsByUserID(userID int) ([]dto.Notification, error) {
-	query := `
-        SELECT id, user_id, group_id, target_id, message, is_read, created_at 
-        FROM notifications 
-        WHERE user_id = ?
-        ORDER BY created_at DESC;
-    `
-
-	rows, err := repo.db.GetDB().Query(query, userID)
-	if err != nil {
-		return nil, fmt.Errorf("GetNotificationsByUserID: %v", err)
-	}
-	defer rows.Close()
-
-	var notifications []dto.Notification
-	for rows.Next() {
-		var notif dto.Notification
-		var groupID sql.NullInt64  // Pour gérer les valeurs NULL de group_id
-		var targetID sql.NullInt64 // Pour gérer les valeurs NULL de target_id
-
-		err := rows.Scan(&notif.ID, &notif.UserID, &groupID, &targetID, &notif.Message, &notif.IsRead, &notif.CreatedAt)
-		if err != nil {
-			return nil, fmt.Errorf("GetNotificationsByUserID: %v", err)
-		}
-
-		// Assigner les valeurs de groupID et targetID seulement si elles sont valides
-		if groupID.Valid {
-			notif.GroupID = int(groupID.Int64)
-		} else {
-			notif.GroupID = 0
-		}
-		if targetID.Valid {
-			notif.TargetID = int(targetID.Int64)
-		} else {
-			notif.TargetID = 0
-		}
-		fmt.Println("notif", notif)
-		notifications = append(notifications, notif)
-	}
-
-	// Vérification des erreurs potentielles lors de l'itération des lignes
-	if err = rows.Err(); err != nil {
-		return nil, fmt.Errorf("GetNotificationsByUserID: %v", err)
-	}
-
-	return notifications, nil
 }
