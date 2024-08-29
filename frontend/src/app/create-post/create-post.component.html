@@ -1,16 +1,22 @@
 <app-toolbar></app-toolbar>
 <div class="container">
   <div class="header">
-    <h1>Create a Post</h1>
+    <h1>Create Post</h1>
   </div>
   <form id="postForm" [formGroup]="Post" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="title">Title</label>
       <input type="text" id="title" formControlName="title" name="title" required>
+      <div *ngIf="Post.get('title')?.invalid && Post.get('title')?.touched" class="error-message">
+        Title is required and should not exceed 30 characters.
+      </div>
     </div>
     <div class="form-group">
       <label for="content">Content</label>
       <textarea id="content" formControlName="content" name="content" rows="5" required></textarea>
+      <div *ngIf="Post.get('content')?.invalid && Post.get('content')?.touched" class="error-message">
+        Content is required and should not exceed 300 characters.
+      </div>
     </div>
     <div class="form-group">
       <label for="image">Image</label>
@@ -18,7 +24,7 @@
     </div>
     <div class="form-group">
       <label for="categorie">Category</label>
-      <input type="text" id="categorie" formControlName="categories" name="categorie" required >
+      <input type="text" id="categorie" formControlName="categories" name="categorie" required>
     </div>
     <div class="form-group">
       <section>

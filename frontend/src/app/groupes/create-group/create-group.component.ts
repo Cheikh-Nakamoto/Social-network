@@ -36,7 +36,6 @@ export class CreateGroupComponent implements OnInit {
     });
   }
   onFileSelected(event: any): void {
-    console.log("event declanché !!!!!");  // Afficher les informations du fichier sélectionné.  // Afficher les informations du fichier sélectionné.  // Afficher les informations du fichier sélectionné.  // Afficher les informations du fichier sélectionné.  // Afficher les informations du fichier sélectionné.  // Afficher les informations du fichier sélectionné.  // Afficher les informations du fichier sélectionné.  // Afficher les informations du fichier sélectionné.  //
     const file: File = event.target.files[0];
     if (file) {
       const formData = new FormData();
@@ -54,7 +53,6 @@ export class CreateGroupComponent implements OnInit {
       formData.append('isPublic', this.groupeForm.get('isPublic')?.value);
       formData.append('owner', this.groupeForm.get('owner')?.value);
       if (this.selectedFile) {
-        console.log('Image uploaded');
         formData.append('file', this.selectedFile);
       }
 

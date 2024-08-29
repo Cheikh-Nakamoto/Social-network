@@ -1,13 +1,13 @@
 <app-toolbar></app-toolbar>
 <div class="groupe-form-container">
-    <h2>Créer un nouveau groupe</h2>
-  
+    <h2>Add group</h2>
+
     <form [formGroup]="groupeForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
-        <label for="groupName">Nom du groupe</label>
+        <label for="groupName">Name</label>
         <input id="groupName" formControlName="name" type="text" class="form-control" />
         <div *ngIf="groupeForm.get('name')?.invalid && groupeForm.get('name')?.touched" class="error-message">
-          Le nom du groupe est requis et ne doit pas dépasser 50 caractères.
+          The group name is required and must not exceed 50 characters.
         </div>
       </div>
   
@@ -15,7 +15,7 @@
         <label for="description">Description</label>
         <textarea id="description" formControlName="description" class="form-control"></textarea>
         <div *ngIf="groupeForm.get('description')?.invalid && groupeForm.get('description')?.touched" class="error-message">
-          La description est requise et ne doit pas dépasser 250 caractères.
+          The description is required and must not exceed 250 characters.
         </div>
       </div>
   

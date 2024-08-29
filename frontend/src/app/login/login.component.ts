@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild  } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { MatTabsModule } from '@angular/material/tabs'; // Importer MatTabsModule
+import { MatTabsModule, MatTabGroup } from '@angular/material/tabs'; // Importer MatTabsModule
 import { DataService } from '../data.service';
 import { responselogin, UserDTO } from '../models/models.compenant';
 import { Router } from '@angular/router';
@@ -14,14 +14,14 @@ import { tap } from 'rxjs';
   imports: [
     ReactiveFormsModule,
     HttpClientModule,
-    MatTabsModule, // Ajouter MatTabsModule ici
-    // Ajouter  ici
+    MatTabsModule, 
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   providers: [DataService, AuthService]
 })
 export class LoginComponent implements OnInit {
+  @ViewChild(MatTabGroup) tabGroup!: MatTabGroup;
   age!: number
 
   loginForm: FormGroup = this.formbuilder.group({
@@ -39,7 +39,6 @@ export class LoginComponent implements OnInit {
     nickname: [null],
     about_me: [null]
   })
-  // Initialisation de l'objet user
   responselogin!: responselogin;
 
   constructor(
@@ -47,7 +46,6 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.authService.isOnline()
-    // Initialisation de l'objet user
   }
 
   onlogin() {
@@ -95,15 +93,12 @@ export class LoginComponent implements OnInit {
   }
 
   onregister() {
-    const data = {
-      ...this.registerForm.value,
-    }
-
-    this.age = this.checkAge(data.date_of_birth)
+    const data = { ...this.registerForm.value };
+    this.age = this.checkAge(data.date_of_birth);
 
     if (this.age < 12 || this.age > 120) {
-      alert('You must be between 12 and 120 years old to register')
-      return
+      alert('You must be between 12 and 120 years old to register');
+      return;
     }
 
     if (this.registerForm.invalid) {
@@ -111,17 +106,19 @@ export class LoginComponent implements OnInit {
       return;
     } else {
       this.authService.register(data).subscribe(() => {
-        console.log("User registered")
-        this.router.navigateByUrl('/login').then();
+        console.log("User registered");
+        this.tabGroup.selectedIndex = 0; // Définit l'onglet "Login" comme actif
       }, (error) => {
-        console.log(error)
-      })
+        console.log(error);
+      });
     }
   }
 
   checkAge(data: Date): number {
     return Math.floor(Math.abs(Date.now() - new Date(data).getTime()) / (1000 * 3600 * 24 * 365))
   }
+
+  
 
   /*onregister() {
     console.log("ici c'est :", this.registerForm.value);
