@@ -86,8 +86,7 @@ export class DataService {
   }
 
   getGroupJoined() : Observable<any> {
-    let user = localStorage.getItem('user');
-    let userId = JSON.parse(user as string).id.toString();
+    let userId = JSON.parse(localStorage.getItem('userID') as string);
     return this.http.get(`${this.apiUrl}/joined/groups/?user_id=${userId}`);
   }
 

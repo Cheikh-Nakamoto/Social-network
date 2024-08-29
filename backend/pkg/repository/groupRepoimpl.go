@@ -229,3 +229,53 @@ func (repo *GroupRepoImpl) NotificationExists(userID int) ([]dto.Notification, e
 
 	return notification, nil
 }
+
+
+// GetNotificationsByUserID récupère toutes les notifications pour un utilisateur spécifique
+func (repo *GroupRepoImpl) GetNotificationsByUserID(userID int) ([]dto.Notification, error) {
+	query := `
+        SELECT id, user_id, group_id, target_id, message, is_read, created_at 
+        FROM notifications 
+        WHERE user_id = ?
+        ORDER BY created_at DESC;
+    `
+
+	rows, err := repo.db.GetDB().Query(query, userID)
+	if err != nil {
+		return nil, fmt.Errorf("GetNotificationsByUserID: %v", err)
+	}
+	defer rows.Close()
+
+	var notifications []dto.Notification
+	for rows.Next() {
+		var notif dto.Notification
+		var groupID sql.NullInt64 // Pour gérer les valeurs NULL de group_id
+		var targetID sql.NullInt64 // Pour gérer les valeurs NULL de target_id
+
+		err := rows.Scan(&notif.ID, &notif.UserID, &groupID, &targetID, &notif.Message, &notif.IsRead, &notif.CreatedAt)
+		if err != nil {
+			return nil, fmt.Errorf("GetNotificationsByUserID: %v", err)
+		}
+
+		// Assigner les valeurs de groupID et targetID seulement si elles sont valides
+		if groupID.Valid {
+			notif.GroupID = int(groupID.Int64)
+		}else{
+			notif.GroupID = 0
+		}
+		if targetID.Valid {
+			notif.TargetID = int(targetID.Int64)
+		}else{
+			notif.TargetID = 0
+		}
+		fmt.Println("notif", notif)
+		notifications = append(notifications, notif)
+	}
+
+	// Vérification des erreurs potentielles lors de l'itération des lignes
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("GetNotificationsByUserID: %v", err)
+	}
+
+	return notifications, nil
+}

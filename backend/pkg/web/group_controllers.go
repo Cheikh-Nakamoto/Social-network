@@ -31,7 +31,9 @@ func (gc *GroupController) RegisterRoutes(mux *http.ServeMux) *http.ServeMux {
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/groups/delete", gc.DeleteGroupHandler)
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/groups", gc.GetAllGroupsHandler)
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/groups/", gc.GetGroupByIDHandler)
-	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK") + "/notification",gc.NotificationExists)
+	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/notification", gc.NotificationExists)
+	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/notification/", gc.NotificationsByUserID)
+
 	return mux
 }
 
@@ -199,7 +201,7 @@ func (gc *GroupController) CreateEventsHandler(w http.ResponseWriter, r *http.Re
 
 func (gc *GroupController) NotificationExists(w http.ResponseWriter, r *http.Request) {
 	type data struct {
-		UserId   int `json:"user_id"`
+		UserId int `json:"user_id"`
 	}
 	var Data data
 	if err := json.NewDecoder(r.Body).Decode(&Data); err != nil {
@@ -215,4 +217,25 @@ func (gc *GroupController) NotificationExists(w http.ResponseWriter, r *http.Req
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(IsIn)
+}
+
+func (gc *GroupController) NotificationsByUserID(w http.ResponseWriter, r *http.Request) {
+	userIDStr := r.URL.Query().Get("user_id")
+	userID, err := strconv.Atoi(userIDStr)
+	if err != nil {
+		fmt.Println("error", err)
+		http.Error(w, "Invalid user ID", http.StatusBadRequest)
+		return
+	}
+
+	notif,err := gc.GroupService.GetNotificationsByUserID(userID)
+
+	if err != nil {
+		fmt.Println("error", err)
+		http.Error(w, "Invalid user ID", http.StatusBadRequest)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(notif)
+	
 }

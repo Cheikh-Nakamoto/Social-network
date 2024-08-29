@@ -24,11 +24,12 @@ type Events struct {
 	CreatedAt   time.Time `json:"created_at"`
 }
 
+
 type Notification struct {
 	ID        int       `json:"id"`
 	UserID    int       `json:"user_id"`
-	TargetID  int       `json:"target_id"`
-	GroupID   int       `json:"group_id"` // Pointeur pour permettre NULL
+	GroupID   int       `json:"group_id"`  // omitempty pour ignorer si vide
+	TargetID  int       `json:"target_id"` // omitempty pour ignorer si vide
 	Message   string    `json:"message"`
 	IsRead    bool      `json:"is_read"`
 	CreatedAt time.Time `json:"created_at"`

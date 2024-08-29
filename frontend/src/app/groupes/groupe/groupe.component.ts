@@ -32,9 +32,7 @@ export class GroupeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.authService.isOnline();
-
-    let user = JSON.parse(localStorage.getItem("user") as string);
-    this.id = user.id;
+    this.id = JSON.parse(localStorage.getItem("userID") as string);
     this.clear = setInterval(() => {
       this.joinedgroup()
       this.loadGroups()

@@ -29,9 +29,7 @@ export class ByIdComponent implements OnInit {
 
   ngOnInit(): void {
     this.authSrvice.isOnline();
-
-    let user = JSON.parse(localStorage.getItem("user") as string);
-    this.id = user.id;
+    this.id = JSON.parse(localStorage.getItem("userID") as string);
     this.groupId = this.rout.snapshot.params['id'];
     this.loadGroups().then(data => {
       console.log("Loading groups...", this.groups);
