@@ -4,8 +4,6 @@ import (
 	"backend/pkg/db/sqlite"
 	"backend/pkg/entity"
 	"fmt"
-	"html"
-	"log"
 	"time"
 )
 
@@ -18,14 +16,11 @@ func NewPostRepoImpl(db sqlite.Database) *PostRepoImpl {
 }
 
 func (p *PostRepoImpl) CreatePost(userID string, title, content, Image string, IsPublic string) (string, error) {
-	fmt.Println("ispublic :",IsPublic)
+	fmt.Println("ispublic :", IsPublic)
 
 	stmt := `INSERT INTO posts ( user_id, title, content,post_image, privacy, created_at) VALUES ( ?, ?, ?, ?, ?,?)`
-	escapedTitle := html.EscapeString(title)
-	escapedContent := html.EscapeString(content)
-	// escapedImage := html.EscapeString(Image)
-	log.Println(escapedTitle)
-	id, err := p.db.GetDB().Exec(stmt, userID, escapedTitle, escapedContent,Image, IsPublic, time.Now())
+
+	id, err := p.db.GetDB().Exec(stmt, userID, title, content, Image, IsPublic, time.Now())
 	if err != nil {
 		fmt.Println("err create", err)
 		return "", fmt.Errorf("CreatePost: %v", err)
