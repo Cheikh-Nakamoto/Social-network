@@ -13,4 +13,5 @@ type GroupRepo interface {
 	CreateEventsInGroup(event dto.Events) error
 	NotificationExists(userID int) ([]dto.Notification, error)
 	CheckNotificationExists(userID, targetID int, message string) (bool, error)
+	GetNotificationsByUserID(userID int) ([]dto.Notification, error)
 }
