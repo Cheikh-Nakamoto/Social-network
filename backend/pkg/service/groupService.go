@@ -4,7 +4,7 @@ import "backend/pkg/dto"
 
 type GroupService interface {
 	CreateGroup(group *dto.GroupDTO) (int, error)
-	AddMember(userID, groupID int, role string) error
+	AddMember(userID, groupID,targetID int, role string) error
 	EjectMember(userID, groupID int) error
 	DeleteGroup(groupID int) error
 	GetAllJoinGroupByID(userID int) (map[int]bool, error)

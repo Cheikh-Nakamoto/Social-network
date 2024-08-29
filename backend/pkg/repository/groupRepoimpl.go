@@ -42,7 +42,7 @@ func (repo *GroupRepoImpl) CreateGroup(name, description, owner, image string) (
 }
 
 // AddMember adds a member to a group
-func (repo *GroupRepoImpl) AddMember(userID, targetID int, role, name string) error {
+func (repo *GroupRepoImpl) AddMember(userID, groupID,targetID int, role, name string) error {
 	message := ""
 	if role == "member" {
 		message = fmt.Sprintf("%s want to join your group . Can you accept ?", name)
@@ -59,9 +59,9 @@ func (repo *GroupRepoImpl) AddMember(userID, targetID int, role, name string) er
 		return fmt.Errorf("Notification existe : %v", check)
 	}
 
-	stmt := `INSERT INTO notifications (user_id, group_id, message, is_read, created_at)
+	stmt := `INSERT INTO notifications (user_id, group_id,target_is, message, is_read, created_at)
 	VALUES (?, ?, ?,?,?);`
-	_, err := repo.db.GetDB().Exec(stmt, userID, targetID, message, false, time.Now())
+	_, err := repo.db.GetDB().Exec(stmt, userID, groupID,targetID, message, false, time.Now())
 	if err != nil {
 		return fmt.Errorf("Add Notification: %v", err)
 	}

@@ -62,17 +62,18 @@ func (gc *GroupController) CreateGroupHandler(w http.ResponseWriter, r *http.Req
 // AddMemberHandler handles adding a member to a group
 func (gc *GroupController) AddMemberHandler(w http.ResponseWriter, r *http.Request) {
 	var data struct {
-		GroupID int    `json:"group_id"`
-		UserID  int    `json:"user_id"`
-		Role    string `json:"role"`
-		Name    string `json : "name"`
+		GroupID  int    `json:"group_id"`
+		UserID   int    `json:"user_id"`
+		TargetID int    `json:"target_id"`
+		Role     string `json:"role"`
+		Name     string `json : "name"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 	fmt.Println("data:", data.GroupID, data.UserID, data.Role)
-	if err := gc.GroupService.AddMember(data.UserID, data.GroupID, data.Role, data.Name); err != nil {
+	if err := gc.GroupService.AddMember(data.UserID, data.GroupID,data.TargetID, data.Role, data.Name); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -228,7 +229,7 @@ func (gc *GroupController) NotificationsByUserID(w http.ResponseWriter, r *http.
 		return
 	}
 
-	notif,err := gc.GroupService.GetNotificationsByUserID(userID)
+	notif, err := gc.GroupService.GetNotificationsByUserID(userID)
 
 	if err != nil {
 		fmt.Println("error", err)
@@ -237,5 +238,5 @@ func (gc *GroupController) NotificationsByUserID(w http.ResponseWriter, r *http.
 	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(notif)
-	
+
 }
