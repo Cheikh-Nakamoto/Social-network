@@ -11,6 +11,7 @@ import { MatCardAvatar } from "@angular/material/card";
 import { DataService } from '../../data.service';
 import { NotificationVerification } from '../../models/models.compenant';
 import { AuthService } from '../../service/auth.service';
+import { NgForOf } from '@angular/common';
 
 
 
@@ -29,7 +30,8 @@ import { AuthService } from '../../service/auth.service';
     MatMenu,
     MatCardAvatar,
     MatButtonModule,
-    MatMenuModule
+    MatMenuModule,
+    NgForOf,
   ],
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',
@@ -43,6 +45,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   NotifyLength !: number
   hiddenMessage = false;
   timerid !: any
+  notifylength : string = '0'
   constructor(
     private groupService: DataService,
     private authService: AuthService,
@@ -55,25 +58,23 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     this.authService.isOnline();
     this.id = JSON.parse(localStorage.getItem('userID') as string);
     this.username = localStorage.getItem('firstname') as string
-  console.log("this is my name ",localStorage.getItem('firstname') as string)
-
-    // this.timerid = setTimeout(() => {
-    //   this.notify()
-    // }, 5000)
+    this.timerid = setTimeout(() => {
+      this.notify()
+    }, 2000)
   }
   ngOnDestroy(): void {
     clearTimeout(this.timerid)
   }
   notify() {
-    this.groupService.postData("notification", { 'user_id': this.id }).subscribe(res => {
-      this.IsNotify = res
-      console.log(this.IsNotify)
+    this.groupService.getNotification(  this.id ).subscribe(res => {
+      this.IsNotify.notif = res
+      this.notifylength =    this.IsNotify.notif.length != 0 ? (this.IsNotify.notif.length).toString() : '0'
     })
   }
 handleLogout() {
   this.authService.logout().subscribe({
     next: () => {
-      console.log('Déconnexion réussie');
+      
       this.router.navigateByUrl('/login')
     },
     error: (err: any) => {

@@ -232,7 +232,7 @@ func (repo *GroupRepoImpl) NotificationExists(userID int) ([]dto.Notification, e
 
 func (repo *GroupRepoImpl) GetNotificationsByUserID(userID int) ([]dto.Notification, error) {
 	query := `
-        SELECT id, user_id, group_id, target_id, message, is_read, created_at 
+        SELECT *
         FROM notifications 
         WHERE user_id = ?
         ORDER BY created_at DESC;

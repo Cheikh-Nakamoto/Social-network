@@ -74,6 +74,11 @@ export class DataService {
       .set('target_type', targetType);
     return this.http.get(`${this.apiUrl}/targetLikes`, { params });
   }
+  getNotification(userID : string) : Observable<any>{
+    let params = new HttpParams()
+    .set('user_id', userID);
+  return this.http.get(`${this.apiUrl}/notification/`, { params });
+  }
 
   getTargetDislikes(targetType: string): Observable<any> {
     let params = new HttpParams()
