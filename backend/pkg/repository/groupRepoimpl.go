@@ -42,7 +42,7 @@ func (repo *GroupRepoImpl) CreateGroup(name, description, owner, image string) (
 }
 
 // AddMember adds a member to a group
-func (repo *GroupRepoImpl) AddMember(userID, groupID,targetID int, role, name string) error {
+func (repo *GroupRepoImpl) AddMember(userID, groupID, targetID int, role, name string) error {
 	message := ""
 	if role == "member" {
 		message = fmt.Sprintf("%s want to join your group . Can you accept ?", name)
@@ -51,7 +51,7 @@ func (repo *GroupRepoImpl) AddMember(userID, groupID,targetID int, role, name st
 	} else {
 		return fmt.Errorf("role : %s not allowed !", role)
 	}
-	check, erro := repo.CheckNotificationExists(userID, targetID, message)
+	check, erro := repo.CheckNotificationExists(userID, groupID, targetID, message)
 	if erro != nil {
 		return fmt.Errorf("Notification existe verify: %v", erro)
 	}
@@ -59,9 +59,9 @@ func (repo *GroupRepoImpl) AddMember(userID, groupID,targetID int, role, name st
 		return fmt.Errorf("Notification existe : %v", check)
 	}
 
-	stmt := `INSERT INTO notifications (user_id, group_id,target_is, message, is_read, created_at)
+	stmt := `INSERT INTO notifications (user_id, group_id, target_is, message, is_read, created_at)
 	VALUES (?, ?, ?,?,?);`
-	_, err := repo.db.GetDB().Exec(stmt, userID, groupID,targetID, message, false, time.Now())
+	_, err := repo.db.GetDB().Exec(stmt, userID, groupID, targetID, message, false, time.Now())
 	if err != nil {
 		return fmt.Errorf("Add Notification: %v", err)
 	}
@@ -69,13 +69,14 @@ func (repo *GroupRepoImpl) AddMember(userID, groupID,targetID int, role, name st
 }
 
 // CheckNotificationExists vérifie si une notification avec les mêmes userID, targetID, et message existe déjà
-func (repo *GroupRepoImpl) CheckNotificationExists(userID, targetID int, message string) (bool, error) {
-	query := `SELECT COUNT(*) FROM notifications WHERE user_id = ? AND group_id = ? AND message = ?`
+func (repo *GroupRepoImpl) CheckNotificationExists(userID, GroupID, targetID int, message string) (bool, error) {
+	query := `SELECT COUNT(*) FROM notifications WHERE user_id = ? AND group_id = ? AND message = ? AND target_id =?`
 	var count int
-	err := repo.db.GetDB().QueryRow(query, userID, targetID, message).Scan(&count)
+	err := repo.db.GetDB().QueryRow(query, userID, GroupID, message, targetID).Scan(&count)
 	if err != nil {
 		return false, fmt.Errorf("CheckNotificationExists: %v", err)
 	}
+	fmt.Println("count: ", count)
 	return count > 0, nil
 }
 
