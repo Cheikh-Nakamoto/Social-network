@@ -59,8 +59,8 @@ export class GroupeComponent implements OnInit, OnDestroy {
   }
 
   addMember(groupId: number, userId: string, target_id: string, role: string): void {
-    console.log('Adding member', userId, 'to group', groupId, 'with role', role);
-    this.groupService.addMember(groupId, userId, role).subscribe(
+    console.log('Adding member', userId, 'to group', groupId, 'with role', role, "target_id :", target_id);
+    this.groupService.addMember(groupId, userId, target_id, role).subscribe(
       () => console.log('Member added successfully'),
       (error) => {
         // Vérifiez la condition correctement avec '==='

@@ -108,8 +108,8 @@ export class DataService {
     return this.http.post(`${this.apiUrl}/events/create`, group);
   }
 
-  addMember(groupId: number, userId: string, role: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/groups/add_member`, JSON.stringify({ 'group_id':groupId, 'user_id':userId, 'role':role }));
+  addMember(groupId: number, userId: string,target_id:string, role: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/groups/add_member`, JSON.stringify({ 'group_id':groupId, 'user_id':userId, 'role':role ,'target_id':parseInt(target_id)}));
   }
 
   ejectMember(groupId: number, userId: number): Observable<any> {

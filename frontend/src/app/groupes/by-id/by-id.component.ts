@@ -53,7 +53,7 @@ export class ByIdComponent implements OnInit {
 
   addMember(groupId: number, userId: string, role: string): void {
     console.log('Adding member', userId, 'to group', groupId, 'with role', role);
-    this.groupService.addMember(groupId, userId, role).subscribe(
+    this.groupService.addMember(groupId, userId, "0",role).subscribe(
       () => console.log('Member added successfully'),
       (error) => console.error('Error adding member:', error)
     );
