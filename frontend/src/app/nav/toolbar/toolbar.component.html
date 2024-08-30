@@ -22,6 +22,16 @@
         </button>
         <mat-menu #menu="matMenu">
             <div class="notif" *ngFor="let notif of this.IsNotify.notif">
+                <div class="buttons">
+                    <button class="btn btn-success" routerLink="/accept/">
+                        <span class="material-icons text-white">check_circle</span>
+                        Accept
+                    </button>
+                    <button class="btn btn-danger" routerLink="r/decline/">
+                        <span class="material-icons text-white">cancel</span>
+                        Decline
+                    </button>
+                </div>
                 <button mat-menu-item>{{notif.id}}</button>
             </div>
         </mat-menu>

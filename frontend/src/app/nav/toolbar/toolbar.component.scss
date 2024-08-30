@@ -17,7 +17,7 @@ $primaryColor: #005cbb;
   box-shadow: 0 2px 2px -2px gray;
   background-color: white;
   padding: 0 16px; // Ajoute un padding pour espacer les bords
-  
+
   .logo {
     display: flex;
     align-items: center;
@@ -46,9 +46,9 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 16px; 
-  width: 40%; 
-  
+  margin: 0 16px;
+  width: 40%;
+
   input {
     border: none;
     outline: none;
@@ -68,7 +68,7 @@ a {
 
   button {
     margin-right: 10px;
-    
+
     mat-icon {
       font-size: 24px;
       color: #005cbb;
@@ -80,11 +80,12 @@ a {
     cursor: pointer;
     display: flex;
   }
+
   .user-menu-button {
     border: none;
     cursor: pointer;
     background: none;
-    
+
     .username {
       font-size: 14px;
       color: #005cbb;
@@ -104,6 +105,21 @@ a {
   align-items: flex-start;
 }
 
-.demo-section + .demo-section {
+.demo-section+.demo-section {
   margin-top: 16px;
+}
+
+.buttons {
+  display: flex;
+  gap: 7px;
+
+  button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    span {
+      font-size: 18px;
+    }
+  }
 }
