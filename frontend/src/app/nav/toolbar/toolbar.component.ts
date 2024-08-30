@@ -45,7 +45,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   NotifyLength !: number
   hiddenMessage = false;
   timerid !: any
-  notifylength : string = '0'
+  notifylength : string = '0';
   constructor(
     private groupService: DataService,
     private authService: AuthService,
