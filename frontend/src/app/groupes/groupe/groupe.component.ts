@@ -18,7 +18,7 @@ import { AuthService } from '../../service/auth.service';
   imports: [CommonModule, MatCardModule, HttpClientModule, ReactiveFormsModule, ToolbarComponent, MatIconModule, MatDividerModule],
   templateUrl: './groupe.component.html',
   styleUrls: ['./groupe.component.scss'],
-  providers: [DataService,AuthService],
+  providers: [DataService, AuthService],
 
 })
 export class GroupeComponent implements OnInit, OnDestroy {
@@ -58,7 +58,7 @@ export class GroupeComponent implements OnInit, OnDestroy {
     }
   }
 
-  addMember(groupId: number, userId: string, role: string): void {
+  addMember(groupId: number, userId: string, target_id: string, role: string): void {
     console.log('Adding member', userId, 'to group', groupId, 'with role', role);
     this.groupService.addMember(groupId, userId, role).subscribe(
       () => console.log('Member added successfully'),

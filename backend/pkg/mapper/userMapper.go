@@ -19,6 +19,7 @@ func UserToDTO(user *entity.User) *dto.UserDTO {
 		IsPublic:    user.IsPublic,
 		CreatedAt:   user.CreatedAt,
 		UpdatedAt:   user.UpdatedAt,
+		IsOnline: user.IsOnline,
 	}
 }
 
