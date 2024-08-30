@@ -13,9 +13,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../service/auth.service';
 
 
-
-
-
 @Component({
   selector: 'chat-app',
   standalone: true,

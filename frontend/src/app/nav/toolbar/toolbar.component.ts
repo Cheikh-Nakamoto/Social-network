@@ -45,7 +45,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   NotifyLength !: number
   hiddenMessage = false;
   timerid !: any
-  notifylength : string = '0'
+  notifylength : string = '0';
   constructor(
     private groupService: DataService,
     private authService: AuthService,
@@ -68,6 +68,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   notify() {
     this.groupService.getNotification(  this.id ).subscribe(res => {
       this.IsNotify.notif = res
+      console.log(this.IsNotify)
       this.notifylength =    this.IsNotify.notif.length != 0 ? (this.IsNotify.notif.length).toString() : '0'
     })
   }

@@ -62,8 +62,10 @@ a {
 }
 
 .status {
-  width: 10px;
-  height: 10px;
+  position: absolute;
+  top: 21px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   display: inline-block;
 }
@@ -77,5 +79,5 @@ a {
 }
 
 .message-icon {
-  margin-left: auto; /* Pousse l'icône vers la droite */
+  margin-left: auto; 
 }

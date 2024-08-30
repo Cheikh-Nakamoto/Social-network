@@ -23,7 +23,7 @@ func NewUserRepoImpl(db sqlite.Database) *UserRepoImpl {
 // FindByID is a method to find a user by ID
 func (u *UserRepoImpl) FindByID(id uint) (*entity.User, error) {
 	user := new(entity.User)
-	err := u.db.GetDB().QueryRow("SELECT * FROM users WHERE id = ?", id).Scan(&user.ID, &user.Email, &user.Password, &user.Firstname, &user.Lastname, &user.DateOfBirth, &user.Avatar, &user.Nickname, &user.AboutMe, &user.IsPublic, &user.CreatedAt, &user.UpdatedAt)
+	err := u.db.GetDB().QueryRow("SELECT * FROM users WHERE id = ?", id).Scan(&user.ID, &user.Email, &user.Password, &user.Firstname, &user.Lastname, &user.DateOfBirth, &user.Avatar, &user.Nickname, &user.AboutMe, &user.IsPublic, &user.CreatedAt, &user.UpdatedAt, &user.IsOnline)
 	user.Password = ""
 	fmt.Println("err", err)
 	return user, err
