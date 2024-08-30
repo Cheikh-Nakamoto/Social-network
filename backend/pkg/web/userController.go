@@ -355,6 +355,43 @@ func (c *UserController) Users(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+
+func (c *UserController) GetAllUsers( w http.ResponseWriter, r *http.Request){
+	
+	err := utils.Environment()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if r.Method != http.MethodGet {
+		http.Error(w, os.Getenv("METHOD_NOT_ALLOWED"), http.StatusMethodNotAllowed)
+		return
+	}
+
+	if r.URL.Path != os.Getenv("DEFAULT_API_LINK")+"/allusers" {
+		http.Error(w, os.Getenv("NOT_FOUND"), http.StatusNotFound)
+		return
+	}
+
+
+	users, err:=c.UserService.AllUsers()
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set(os.Getenv("CONTENT_TYPE"), os.Getenv("APPLICATION_JSON"))
+	err = json.NewEncoder(w).Encode(users)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+}
+
 // UsersRoutes Register routes
 func (c *UserController) UsersRoutes(routes *http.ServeMux) *http.ServeMux {
 	err := utils.Environment()
@@ -369,6 +406,7 @@ func (c *UserController) UsersRoutes(routes *http.ServeMux) *http.ServeMux {
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/is_online", c.IsUserOnline)
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/profile/", c.GetProfile)
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/profile-update/", c.UpdateProfile)
+	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/allusers", c.GetAllUsers)
 
 	return routes
 }

@@ -115,3 +115,22 @@ func (s *UserServiceImpl) IsUserOnline(token string) (bool, error) {
 	}
 	return true, nil
 }
+
+
+func (s *UserServiceImpl)AllUsers()([]*dto.UserDTO, error){
+	users, err:=s.Repository.GetAllUsers()
+	if err!=nil{
+		return nil, err
+
+	}
+	userDTOs := make([]*dto.UserDTO, len(users))
+	for _, user := range users {
+		if user !=nil{
+
+			userDTOs = append(userDTOs, mapper.UserToDTO(user))
+		}
+	}
+
+	return userDTOs, nil
+
+}

@@ -109,3 +109,33 @@ func (u *UserRepoImpl) GetUserID(token string) (uint, bool) {
 func (u *UserRepoImpl) ClearSession(token string) {
 	u.sessionStore.ClearSession(token)
 }
+
+
+func (s *UserRepoImpl)GetAllUsers()([]*entity.User, error){
+	 query := `
+        SELECT id, email, firstname, lastname, date_of_birth, avatar, nickname, about_me, is_public, created_at, updated_at,online
+        FROM users
+    ` 
+	rows, err := s.db.GetDB().Query(query)
+    if err != nil {
+        return nil, fmt.Errorf("failed to execute query: %w", err)
+    }
+    defer rows.Close()
+
+	 var users []*entity.User
+
+	 for rows.Next() {
+        user:=new(entity.User)
+        err := rows.Scan(&user.ID, &user.Email, &user.Firstname, &user.Lastname, &user.DateOfBirth, &user.Avatar, &user.Nickname, &user.AboutMe, &user.IsPublic, &user.CreatedAt, &user.UpdatedAt,&user.IsOnline)
+        if err != nil {
+            return nil, fmt.Errorf("failed to scan row: %w", err)
+        }
+        users = append(users, user)
+    }
+
+	if err = rows.Err(); err != nil {
+        return nil, fmt.Errorf("row iteration error: %w", err)
+    }
+
+    return users, nil
+}
