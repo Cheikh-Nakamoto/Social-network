@@ -45,9 +45,9 @@ func (repo *GroupRepoImpl) CreateGroup(name, description, owner, image string) (
 func (repo *GroupRepoImpl) AddMember(userID, groupID, targetID int, role, name string) error {
 	message := ""
 	if role == "member" {
-		message = fmt.Sprintf("%s want to join your group . Can you accept ?", name)
+		message =  name + " want to join your group . Can you accept ?"
 	} else if role == "admin" {
-		message = fmt.Sprintf("%s want to insert her group . Can you accept ?", name)
+		message =name + " want to insert her group . Can you accept ?" 
 	} else {
 		return fmt.Errorf("role : %s not allowed !", role)
 	}

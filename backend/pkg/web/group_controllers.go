@@ -66,14 +66,14 @@ func (gc *GroupController) AddMemberHandler(w http.ResponseWriter, r *http.Reque
 		UserID   int    `json:"user_id"`
 		TargetID int    `json:"target_id"`
 		Role     string `json:"role"`
-		Name     string `json : "name"`
+		Username     string `json : "username"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	fmt.Println("data:", data.GroupID, data.UserID, data.Role)
-	if err := gc.GroupService.AddMember(data.UserID, data.GroupID,data.TargetID, data.Role, data.Name); err != nil {
+	fmt.Println("data:", data.GroupID, data.UserID, data.Role,data.Username)
+	if err := gc.GroupService.AddMember(data.UserID, data.GroupID,data.TargetID, data.Role, data.Username); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

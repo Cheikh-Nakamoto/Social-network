@@ -109,7 +109,10 @@ export class DataService {
   }
 
   addMember(groupId: number, userId: string,target_id:string, role: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/groups/add_member`, JSON.stringify({ 'group_id':groupId, 'user_id':userId, 'role':role ,'target_id':parseInt(target_id)}));
+    let firstname = localStorage.getItem('firstname') as string
+    let lastname =  localStorage.getItem('lastname') as string
+    let name = firstname + " "+ lastname
+    return this.http.post(`${this.apiUrl}/groups/add_member`, JSON.stringify({ 'group_id':groupId, 'user_id':userId, 'role':role ,'target_id':parseInt(target_id),'username':name}));
   }
 
   ejectMember(groupId: number, userId: number): Observable<any> {

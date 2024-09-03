@@ -12,6 +12,7 @@ import { DataService } from '../../data.service';
 import { NotificationVerification } from '../../models/models.compenant';
 import { AuthService } from '../../service/auth.service';
 import { NgForOf } from '@angular/common';
+import { firstValueFrom } from 'rxjs';
 
 
 
@@ -45,7 +46,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   NotifyLength !: number
   hiddenMessage = false;
   timerid !: any
-  notifylength : string = '0';
+  notifylength: string = '0';
   constructor(
     private groupService: DataService,
     private authService: AuthService,
@@ -66,23 +67,30 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     clearTimeout(this.timerid)
   }
   notify() {
-    this.groupService.getNotification(  this.id ).subscribe(res => {
+    this.groupService.getNotification(this.id).subscribe(res => {
       this.IsNotify.notif = res
-      console.log(this.IsNotify)
-      this.notifylength =    this.IsNotify.notif.length != 0 ? (this.IsNotify.notif.length).toString() : '0'
+      console.log(this.IsNotify, res)
+      this.notifylength = this.IsNotify.notif.length != 0 ? (this.IsNotify.notif.length).toString() : '0'
     })
   }
-handleLogout() {
-  this.authService.logout().subscribe({
-    next: () => {
-      
-      this.router.navigateByUrl('/login')
-    },
-    error: (err: any) => {
-      console.error('Erreur lors de la déconnexion :', err);
-    }
-  });
-}
+
+  InviteAccept(userID:number,groupID :number,targetID:number){}
+  InviteDecline(){}
+  AdminAddMembers(){}
+  AdminDeleteMembers(){}
+
+
+  handleLogout() {
+    this.authService.logout().subscribe({
+      next: () => {
+
+        this.router.navigateByUrl('/login')
+      },
+      error: (err: any) => {
+        console.error('Erreur lors de la déconnexion :', err);
+      }
+    });
+  }
 
   visibilityNotif() {
     this.hiddenNotif = !this.hiddenNotif;
@@ -92,3 +100,4 @@ handleLogout() {
     this.hiddenMessage = !this.hiddenMessage;
   }
 }
+
