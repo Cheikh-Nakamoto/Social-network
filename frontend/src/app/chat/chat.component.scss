@@ -103,3 +103,71 @@ body {
 .send-button {
     margin-left: 10px;
 }
+
+
+
+/* Cache la date par défaut */
+.timeBoxReceived, .timeBoxSent {
+  display: none;
+  font-size: 12px;
+  color: #888;
+  margin-top: 5px;
+}
+
+/* Affiche la date au survol du message */
+.messageContainer:hover .timeBoxReceived,
+.messageContainer:hover .timeBoxSent {
+  display: block;
+  color: #555;
+}
+
+
+
+.msgBoxSent {
+    background-color: #07A1BD; /* Couleur de fond bleu éclatant pour les messages envoyés */
+    border: none; /* Supprimez la bordure pour un look plus net */
+    border-radius: 18px; /* Coins plus arrondis */
+    width: fit-content; /* Adapte la largeur au contenu */
+    max-width: 80%; /* Limite la largeur maximale */
+    padding: 10px 15px; /* Espacement interne pour plus de confort */
+    margin: 5px 10px 7px auto; /* Espacement autour du message, `auto` pour aligner à droite */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ajoute une légère ombre pour de la profondeur */
+    text-align: left;
+    overflow-wrap: break-word; /* Pour gérer le texte qui dépasse */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Une police lisible et moderne */
+    font-size: 14px; /* Taille de police standard */
+    color: white; /* Couleur du texte pour contraster avec le fond bleu */
+}
+
+
+.msgBoxReceived {
+    background-color: #f0f0f0; /* Une couleur de fond douce et claire */
+    border: none; /* Supprimez la bordure pour un look plus moderne */
+    border-radius: 18px; /* Coins plus arrondis */
+    width: fit-content; /* Adapte la largeur au contenu */
+    max-width: 80%; /* Limite la largeur maximale */
+    padding: 10px 15px; /* Espacement interne pour plus de confort */
+    margin: 5px 10px 7px 10px; /* Espacement autour du message */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ajoute une légère ombre pour de la profondeur */
+    text-align: left;
+    overflow-wrap: break-word; /* Pour gérer le texte qui dépasse */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Une police lisible et moderne */
+    font-size: 14px; /* Taille de police standard */
+    color: #333; /* Couleur du texte */
+}
+
+
+
+
+.messageContainer {
+    display: flex;
+    align-items: center;
+}
+
+.received {
+    justify-content: flex-start !important;
+}
+
+.sent {
+    justify-content: flex-end !important;
+}

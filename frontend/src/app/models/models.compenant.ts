@@ -126,3 +126,15 @@ export interface NotificationVerification {
   notif: Notification[];
 }
 
+
+
+export interface MessageBody {
+  senderId: number;
+  receiverId: number;
+  message: string;
+}
+
+export interface MessageData {
+  type: string;
+  datas: MessageBody;
+}

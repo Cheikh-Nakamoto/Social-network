@@ -41,7 +41,7 @@ import { AuthService } from '../../service/auth.service';
   ],
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.scss',
-  providers: [DataService,AuthService], // Add any additional services you need to this component.
+  providers: [DataService, AuthService], // Add any additional services you need to this component.
 })
 export class SidenavComponent implements OnInit {
   menuItems = [
@@ -50,30 +50,28 @@ export class SidenavComponent implements OnInit {
     { name: 'Friends', route: '/followers', icon: 'icofont-users-alt-4' },
     { name: 'Groups', route: '/groups', icon: 'icofont-users-social' },
     { name: 'New Post', route: '/CreatePost', icon: 'icofont-pencil-alt-1' },
+
   ];
   users: model.UserDTO[] = [];
   constructor(
     private router: Router,
     private apiservice: DataService,
     private websocketService: WebSocketService,
-    private cdRef: ChangeDetectorRef,
-    private authService: AuthService
-  ) { }
-
+    private cdRef: ChangeDetectorRef
+  ) {}
   ngOnInit(): void {
-    this.authService.isOnline();
-
     this.getAllusers();
     this.websocketService.connect();
     this.websocketService.messages$.subscribe(
       (message) => {
-        console.log('Message received in navComponent:', message);
         // Traiter le message ici
         // even.routeEvent(message);
+        console.log(message, "fffffffff")
+        console.log("ttttttttttttttttttttttttttttt",message)
         if (message.type === 'get_chatbar_data') {
-          console.log('ssssssssssssss');
-          this.updateUsers(message.payload)
-          console.log(this.users);
+          console.log("((((((((((((((((((((((((((((((((((((((((", message)
+          this.updateUsers(message.payload);
+
           this.cdRef.detectChanges();
         }
       },
@@ -84,19 +82,18 @@ export class SidenavComponent implements OnInit {
   }
 
   getAllusers(): void {
-    const userData = JSON.parse(localStorage.getItem('user') || '{}');
-    this.apiservice.getData('users').subscribe(
-      (response: any) => {
-        console.log("ffffffff", response)
-        const usersArray: model.UserDTO[] = Object.values(response);
-        // Typage de la réponse comme un tableau de Post
-        this.users = usersArray.filter(
-          (user) => user != null && user.id != userData.id
+    const userData = JSON.parse(localStorage.getItem('userID') as string);
+    const iduser=userData
+this.apiservice.getData('allusers').subscribe(
+      (response: model.UserDTO[]) => {
+        // Typage de la réponse comme un tleau de Post
+        this.users = response.filter(
+          (user) => user !== null && user.id !== Number(iduser)
         ); // Filtrez les utilisateurs nulls
-        console.log(
-          'recuperation de tous les utilisteur du social network',
-          this.users
-        );
+        // console.log(
+        //   'recuperation de tous les utilisteur du social network',
+        //   this.users
+        // );
         // this.loadLikes("post");
         // this.loadDislikes("post");
       },
@@ -136,15 +133,14 @@ export class SidenavComponent implements OnInit {
     });
   }
 
-
   handleToolbarClick(event: Event) {
     console.log('Toolbar link clicked!', event);
   }
 
   handleMenuItemClick(item: any, event: Event) {
-    console.log('Menu item clicked:', item.id);
 
-    this.router.navigate(item.route)
+    this.router.navigate(item.route);
 
+    // this.router.navigate(['/chat'], { queryParams: { userid: item.id } });
   }
 }

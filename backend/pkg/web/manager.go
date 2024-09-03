@@ -311,6 +311,8 @@ func 	broadcastUpdate(c *Client) error {
 		outgoingEvent.Type = EventGetChatbarData
 		client.egress <- outgoingEvent
 	}
+
+	fmt.Println("done")
 	return nil
 }
 

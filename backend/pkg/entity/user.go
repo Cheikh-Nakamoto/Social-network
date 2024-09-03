@@ -13,4 +13,5 @@ type User struct {
 	IsPublic    bool   `json:"is_public" db:"is_public"`
 	CreatedAt   string `json:"created_at" db:"created_at"`
 	UpdatedAt   string `json:"updated_at" db:"updated_at"`
+	IsOnline bool `json:"isOnline"`
 }

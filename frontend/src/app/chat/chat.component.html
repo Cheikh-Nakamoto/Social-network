@@ -13,7 +13,7 @@
         <div class="exit" id="exit">x</div>
     </div>
     <div class="chat-box" id="chatBox"></div>
-    <form id="sendMsg" class="message-form">
+    <form id="sendMsg" class="message-form" (submit)="onSubmit($event)">
         <div class="message-container"> 
             <textarea  name="message" id="msgContent" class="message-input" placeholder="Message"></textarea>
             <button id="submitBtn" class="send-button" type="submit" >Envoyer</button>

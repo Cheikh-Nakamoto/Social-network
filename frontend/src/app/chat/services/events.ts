@@ -26,7 +26,7 @@ export function routeEvent(event: Event): void {
       handleGetMessages(event.payload);
       break;
     case 'get_chatbar_data':
-      handleGetChatbarData(event.payload);
+      // handleGetChatbarData(event.payload);
       break;
     case 'update_chatbar_data':
       console.log('updating chatbar data');
@@ -58,32 +58,32 @@ export function handleGetMessages(payload: EventPayload): void {
   // Implement your logic here
 }
 
-export function handleGetChatbarData(payload: EventPayload): void {
-  console.log('handleGetChatbarData', payload);
-  // Implement your logic here
-  if (payload instanceof Array) {
-    console.log('successfully retrieved chatbar data');
-    payload.sort((a, b) => {
-      const dateA = new Date(a.lastMsgData.sentDate);
-      const dateB = new Date(b.lastMsgData.sentDate);
+// export function handleGetChatbarData(payload: EventPayload): void {
+//   console.log('handleGetChatbarData', payload);
+//   // Implement your logic here
+//   if (payload instanceof Array) {
+//     console.log('successfully retrieved chatbar data');
+//     payload.sort((a, b) => {
+//       const dateA = new Date(a.lastMsgData.sentDate);
+//       const dateB = new Date(b.lastMsgData.sentDate);
 
-      if (a.lastMsgData.sentDate === '') return 1;
-      if (b.lastMsgData.sentDate === '') return -1;
-      return dateB.getTime() - dateA.getTime();
-    });
+//       if (a.lastMsgData.sentDate === '') return 1;
+//       if (b.lastMsgData.sentDate === '') return -1;
+//       return dateB.getTime() - dateA.getTime();
+//     });
 
-    // users.forEach((user: UserDTO) => {
-    //   const matchingUser = payload.find((user2) => user2.id === user.id);
-    //   if (matchingUser) {
-    //     user.isOnline = true;
-    //   }
-    // });
+//     // allusers.forEach((user: UserDTO) => {
+//     //   const matchingUser = payload.find((user2) => user2.id === user.id);
+//     //   if (matchingUser) {
+//     //     user.isOnline = true;
+//     //   }
+//     // });
 
-    // console.log(obj.users)
-  } else {
-    console.log('retrieving chatbar data');
-  }
-}
+//     // console.log(obj.allusers)
+//   } else {
+//     console.log('retrieving chatbar data');
+//   }
+// }
 
 export function handleTypingStart(payload: EventPayload): void {
   console.log('handleTypingStart', payload);
