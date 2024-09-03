@@ -155,6 +155,8 @@ func addMessageToTable(messageData ReturnMessageEvent) {
 
 // GetMessagesHandler gère l'événement de récupération de messages.
 func GetMessagesHandler(event Event, c *Client) error {
+
+	fmt.Println("contacct stablished...")
 	var chatDataEvent SendChatDataEvent
 	if err := json.Unmarshal(event.Payload, &chatDataEvent); err != nil {
 		return fmt.Errorf("bad payload in request: %v", err)
@@ -165,6 +167,8 @@ func GetMessagesHandler(event Event, c *Client) error {
 	if err != nil {
 		return fmt.Errorf("failed to marshal broadcast message: %v", err)
 	}
+
+	fmt.Println("recup:::::::", string(data))
 
 	var outgoingEvent Event
 	outgoingEvent.Payload = data
@@ -311,8 +315,6 @@ func 	broadcastUpdate(c *Client) error {
 		outgoingEvent.Type = EventGetChatbarData
 		client.egress <- outgoingEvent
 	}
-
-	fmt.Println("done")
 	return nil
 }
 
@@ -326,7 +328,7 @@ func (m *Manager) addClient(client *Client) {
 
 	go func() {
 		<-timer.C
-		if m.isClientOnline(client.userId) && hasSession(client.userId) {
+		if m.isClientOnline(client.userId) {
 			updateUserStatus(true, client.userId)
 			broadcastUpdate(client)
 		}

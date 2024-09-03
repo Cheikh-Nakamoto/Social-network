@@ -11,11 +11,22 @@ import * as model from '../models/models.compenant';
 import { DataService } from '../data.service';
 import { HttpClientModule } from '@angular/common/http';
 import { GetUserService } from '../data.service';
+import { ToolbarComponent } from '../nav/toolbar/toolbar.component';
+import { SidenavComponent } from '../nav/sidenav/sidenav.component';
+
 
 @Component({
   selector: 'chat-app',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterOutlet, HttpClientModule], // Ajouter CommonModule ici
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterOutlet,
+    HttpClientModule,
+    ToolbarComponent,
+    SidenavComponent
+ 
+  ], // Ajouter CommonModule ici
   templateUrl: 'chat.component.html',
   styleUrls: ['chat.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -46,7 +57,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.userService.user.subscribe((user) => {
       this.sender = user;
-      console.log("rrrrrrrrrrrrrrrrrrrrr", this.sender)
+      console.log('rrrrrrrrrrrrrrrrrrrrr', this.sender);
     });
     this.getUserById(this.id);
     this.websocketService.connect();

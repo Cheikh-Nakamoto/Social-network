@@ -50,7 +50,6 @@ export class SidenavComponent implements OnInit {
     { name: 'Friends', route: '/followers', icon: 'icofont-users-alt-4' },
     { name: 'Groups', route: '/groups', icon: 'icofont-users-social' },
     { name: 'New Post', route: '/CreatePost', icon: 'icofont-pencil-alt-1' },
-
   ];
   users: model.UserDTO[] = [];
   constructor(
@@ -66,10 +65,10 @@ export class SidenavComponent implements OnInit {
       (message) => {
         // Traiter le message ici
         // even.routeEvent(message);
-        console.log(message, "fffffffff")
-        console.log("ttttttttttttttttttttttttttttt",message)
+        console.log(message, 'fffffffff');
+        console.log('ttttttttttttttttttttttttttttt', message);
         if (message.type === 'get_chatbar_data') {
-          console.log("((((((((((((((((((((((((((((((((((((((((", message)
+          console.log('((((((((((((((((((((((((((((((((((((((((', message);
           this.updateUsers(message.payload);
 
           this.cdRef.detectChanges();
@@ -83,8 +82,8 @@ export class SidenavComponent implements OnInit {
 
   getAllusers(): void {
     const userData = JSON.parse(localStorage.getItem('userID') as string);
-    const iduser=userData
-this.apiservice.getData('allusers').subscribe(
+    const iduser = userData;
+    this.apiservice.getData('allusers').subscribe(
       (response: model.UserDTO[]) => {
         // Typage de la réponse comme un tleau de Post
         this.users = response.filter(
@@ -138,7 +137,6 @@ this.apiservice.getData('allusers').subscribe(
   }
 
   handleMenuItemClick(item: any, event: Event) {
-
     this.router.navigate(item.route);
 
     // this.router.navigate(['/chat'], { queryParams: { userid: item.id } });

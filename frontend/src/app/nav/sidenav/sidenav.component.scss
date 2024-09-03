@@ -1,60 +1,71 @@
-$lightBlue : #B8DAFF;
-$danger : #f44336;
-$primaryColor : #005cbb;
+$lightBlue: #b8daff;
+$danger: #f44336;
+$primaryColor: #005cbb;
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 mat-drawer-container {
-    height: 93vh;
+  height: 93vh;
+  display: flex;
 }
 
 mat-drawer {
-    width: 20vw;
-    background-color: $lightBlue;
-    padding: 24px 12px;
+  width: 18vw;
+  background-color: $lightBlue;
+  padding: 24px 12px;
 }
 
 mat-drawer-content {
-    background: #fff;
-    padding: 24px 12px;
+  background: #fff;
+  padding: 6px;
+  flex-grow: 1;
 }
 
-mat-list, mat-list-item {
-    padding: 0;
-    margin: 0;
-    background: none;
-    border: none;
-    box-shadow: none;
-    gap: 10px;
+.content-wrapper {
+  margin: 0 32px;
+}
+
+mat-list,
+mat-list-item {
+  padding: 4px;
+  margin: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
 }
 
 a {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    width: 100%;
-    background: none;
-    border: none;
-    box-shadow: none;
-    padding: 0 12px;
-    border-radius: 24px;
-    font-weight: bold;
-    color: #005cbb;
-    text-decoration: none;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 0 12px;
+  border-radius: 24px;
+  font-weight: bold;
+  color: #005cbb;
+  text-decoration: none;
 }
+.menu {
+  display: flex;
 
-mat-icon {
-    margin-right: 12px;
-    font-size: 20px;
+  i {
+    margin-right: 10px;
+    font-size: 16px;
+  }
 }
 
 .status {
-  width: 10px;
-  height: 10px;
+  position: absolute;
+  top: 21px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   display: inline-block;
 }
@@ -67,7 +78,6 @@ mat-icon {
   background-color: red;
 }
 
-
 .message-icon {
-  margin-left: auto; /* Pousse l'icône vers la droite */
+  margin-left: auto; 
 }

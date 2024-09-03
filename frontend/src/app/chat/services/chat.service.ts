@@ -54,7 +54,7 @@ export class Event {
 
         this.socket$.subscribe(
           (message) => {
-            // console.log('Received message: ', message);
+             console.log('Received message: ', message);
              const parsedMessage =
                typeof message === 'string' ? JSON.parse(message) : message;
 
