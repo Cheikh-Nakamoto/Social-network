@@ -16,6 +16,7 @@ import { DialogCommentComponent } from '../../../dialog-comment/dialog-comment.c
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { User, AllUsersDTO } from '../../../models/models.compenant';
 import { AuthService } from '../../../service/auth.service';
+import { MainPageComponent } from "../../../main-page/main-page.component";
 
 @Component({
   selector: 'app-home',
@@ -36,7 +37,8 @@ import { AuthService } from '../../../service/auth.service';
     HttpClientModule,
     MatDialogModule,
     CommonModule,
-  ],
+    MainPageComponent
+],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   providers: [DataService, AuthService]

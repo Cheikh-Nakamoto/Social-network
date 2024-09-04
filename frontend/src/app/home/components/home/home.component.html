@@ -1,3 +1,4 @@
+<app-main-page></app-main-page>
 <div class="posts" *ngFor="let post of posts">
   <mat-card class="example-card" appearance="outlined">
     <mat-card-header>
@@ -23,7 +24,7 @@
         <mat-icon>thumb_down</mat-icon>
       </button>
       <button mat-icon-button (click)="comments.comments_by_post[post.id] ? openDialog(post.id) : null">
-        <span>{{ !comlength[post.id] ? 0 :  comlength[post.id]}}</span>
+        <span>{{ !comlength[post.id] ? 0 : comlength[post.id]}}</span>
         <mat-icon>forum</mat-icon>
       </button>
 

@@ -56,8 +56,9 @@ a {
     border-radius: 15px;
     color: #005cbb;
     font-weight: bold;
+    font-size: 14px;
     letter-spacing: 2px;
-    padding: 12px 24px;
+    padding: 10px 20px;
     width: 100%;
   }
 }
@@ -80,7 +81,6 @@ a {
     cursor: pointer;
     display: flex;
   }
-
   .user-menu-button {
     border: none;
     cursor: pointer;
@@ -92,7 +92,6 @@ a {
       margin-left: 4px;
     }
   }
-
 }
 
 .name {
@@ -105,7 +104,7 @@ a {
   align-items: flex-start;
 }
 
-.demo-section+.demo-section {
+.demo-section + .demo-section {
   margin-top: 16px;
 }
 
