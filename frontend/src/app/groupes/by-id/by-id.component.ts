@@ -9,11 +9,15 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { AuthService } from '../../service/auth.service';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-by-id',
   standalone: true,
-  imports: [ToolbarComponent, RouterLink, CommonModule, MatCardModule, HttpClientModule, ReactiveFormsModule, ToolbarComponent],
+  imports: [ToolbarComponent, RouterLink, CommonModule, MatCardModule, HttpClientModule, ReactiveFormsModule, ToolbarComponent, MatCardModule,
+    MatIconModule,
+    MatButtonModule,],
   templateUrl: './by-id.component.html',
   styleUrl: './by-id.component.scss',
   providers: [DataService, AuthService]
