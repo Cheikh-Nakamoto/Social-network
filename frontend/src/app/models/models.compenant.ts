@@ -138,3 +138,14 @@ export interface MessageData {
   type: string;
   datas: MessageBody;
 }
+
+export interface Eventtype {
+  id?: number; // L'ID peut être optionnel si vous n'avez pas encore l'événement créé
+  name: string; // Nom de l'événement
+  description?: string; // Description de l'événement (peut être optionnelle)
+  owner?: number; // Propriétaire de l'événement (peut être optionnel)
+  image?: string; // URL ou chemin de l'image de l'événement (peut être optionnel)
+  groupId: number; // Identifiant du groupe auquel appartient l'événement
+  userId: number; // Identifiant de l'utilisateur créateur de l'événement
+  created_at?: string; // Date et heure de création de l'événement (au format ISO string)
+}

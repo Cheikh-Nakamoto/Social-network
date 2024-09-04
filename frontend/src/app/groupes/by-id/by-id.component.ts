@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 import { DataService } from '../../data.service';
-import { Group } from '../../models/models.compenant';
-import { ActivatedRoute, Router } from '@angular/router';
+import { AllUsersDTO, Eventtype, Group } from '../../models/models.compenant';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ToolbarComponent } from '../../nav/toolbar/toolbar.component';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -13,10 +13,10 @@ import { AuthService } from '../../service/auth.service';
 @Component({
   selector: 'app-by-id',
   standalone: true,
-  imports: [ToolbarComponent, CommonModule, MatCardModule, HttpClientModule, ReactiveFormsModule, ToolbarComponent],
+  imports: [ToolbarComponent, RouterLink, CommonModule, MatCardModule, HttpClientModule, ReactiveFormsModule, ToolbarComponent],
   templateUrl: './by-id.component.html',
   styleUrl: './by-id.component.scss',
-  providers: [DataService,AuthService]
+  providers: [DataService, AuthService]
 })
 export class ByIdComponent implements OnInit {
   groups: Group[] = [];
@@ -24,6 +24,8 @@ export class ByIdComponent implements OnInit {
   id !: string;
   groupId!: number;
   clear!: any;
+  Events !: Eventtype[]
+  AllUser: AllUsersDTO = {};
 
   constructor(private fb: FormBuilder, private groupService: DataService, private router: Router, private rout: ActivatedRoute, private authSrvice: AuthService) { }
 
@@ -31,11 +33,11 @@ export class ByIdComponent implements OnInit {
     this.authSrvice.isOnline();
     this.id = JSON.parse(localStorage.getItem("userID") as string);
     this.groupId = this.rout.snapshot.params['id'];
+    this.loadUser('users');
     this.loadGroups().then(data => {
-      console.log("Loading groups...", this.groups);
       this.groups = this.groups.filter(group => group.id == this.groupId);
-      console.log("Loading groups...", this.groups);
     })
+    this.loadEvents()
   }
 
 
@@ -51,8 +53,8 @@ export class ByIdComponent implements OnInit {
     }
   }
 
-  addMember(groupId: number, userId: string,target_id:string, role: string): void {
-    this.groupService.addMember(groupId, userId, target_id,role).subscribe(
+  addMember(groupId: number, userId: string, target_id: string, role: string): void {
+    this.groupService.addMember(groupId, userId, target_id, role).subscribe(
       () => alert("Request sended succesfully !"),
       (error) => console.error('Error adding member:', error)
     );
@@ -72,9 +74,20 @@ export class ByIdComponent implements OnInit {
     );
   }
 
+  loadEvents() {
+    this.groupService.getData("events/").subscribe((res: Eventtype[]) => {
+      this.Events = res
+    })
+  }
+
+
+  private loadUser(targetlink: string) {
+    this.groupService.getData(targetlink).subscribe((user: AllUsersDTO) => {
+      this.AllUser = user;
+    });
+  }
   handleClick(route: string, event: Event, id?: number): void {
     event.preventDefault();
-    console.log('Button clicked, navigating to:', route);
     if (id) {
       this.router.navigate([route, id]);
     } else {
