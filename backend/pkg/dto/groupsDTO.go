@@ -17,7 +17,7 @@ type Events struct {
 	ID          int       `json:"id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description,omitempty"`
-	Owner       int    `json:"owner"`
+	Owner       string    `json:"owner"`
 	Image       string    `json:"image"`
 	GroupId     int       `json:"groupid"`
 	UserID      int       `json:"user_id"`

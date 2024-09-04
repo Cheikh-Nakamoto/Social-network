@@ -84,6 +84,35 @@ export class ByIdComponent implements OnInit {
   }
 
 
+  // onGoing(targetId: number, targetType: string) {
+  //   this.groupService.likeTarget(0, this.id, targetId, targetType, true).subscribe((response) => {
+  //     console.log("like response ", response);
+  //     this.loadLikes(targetType);
+  //     this.loadDislikes(targetType);
+  //   });
+  // }
+
+  // notGoing(targetId: number, targetType: string) {
+  //   this.groupService.dislikeTarget(0, this.id, targetId, targetType, false).subscribe(() => {
+  //     this.loadLikes(targetType);
+  //     this.loadDislikes(targetType);
+  //   });
+  // }
+
+
+  // private loadLikes(targetType: string) {
+  //   this.groupService.getTargetLikes(targetType).subscribe((likes) => {
+  //     this.likemap = likes;
+  //   });
+  // }
+
+  // private loadDislikes(targetType: string) {
+  //   this.groupService.getTargetDislikes(targetType).subscribe((dislikes) => {
+  //     this.dislikemap = dislikes;
+  //   });
+  // }
+
+
   private loadUser(targetlink: string) {
     this.groupService.getData(targetlink).subscribe((user: AllUsersDTO) => {
       this.AllUser = user;
