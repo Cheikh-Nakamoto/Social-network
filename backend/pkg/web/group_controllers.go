@@ -204,7 +204,14 @@ func (gc *GroupController) CreateEventsHandler(w http.ResponseWriter, r *http.Re
 
 // FetchAllEventsHandler handles retrieving all events
 func (gc *GroupController) FetchAllEventsHandler(w http.ResponseWriter, r *http.Request) {
-	events, err := gc.GroupService.GetAllEventsByGroup()
+
+	id := r.URL.Query().Get("groupid")
+	ID,err := strconv.Atoi(id)
+	if err != nil || r.Method != http.MethodGet{
+		http.Error(w, err.Error(), http.StatusMethodNotAllowed)
+		return
+	}
+	events, err := gc.GroupService.GetAllEventsByGroup(ID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

@@ -194,12 +194,12 @@ func (repo *GroupRepoImpl) CreateEventsInGroup(event dto.Events) error {
 }
 
 // FetchAllEvents retrieves all events from the database
-func (repo *GroupRepoImpl) FetchAllEvents() ([]dto.Events, error) {
+func (repo *GroupRepoImpl) FetchAllEvents(id int) ([]dto.Events, error) {
 	// Définir la requête SQL pour sélectionner tous les événements
-	query := `SELECT name, description, owner, image, group_id, user_id, created_at FROM events`
+	query := `SELECT name, description, owner, image, group_id, user_id, created_at FROM events WHERE group_id=?`
 
 	// Exécuter la requête pour récupérer les lignes de la table "events"
-	rows, err := repo.db.GetDB().Query(query)
+	rows, err := repo.db.GetDB().Query(query,id)
 	if err != nil {
 		return nil, fmt.Errorf("FetchAllEvents: %v", err)
 	}

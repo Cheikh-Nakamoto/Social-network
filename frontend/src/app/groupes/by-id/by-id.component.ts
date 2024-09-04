@@ -48,7 +48,6 @@ export class ByIdComponent implements OnInit {
   async loadGroups(): Promise<void> {
     try {
       let group = await this.groupService.getGroups().toPromise();
-
       if (group.length != this.groups.length) {
         this.groups = group;
       }
@@ -79,7 +78,7 @@ export class ByIdComponent implements OnInit {
   }
 
   loadEvents() {
-    this.groupService.getData("events/").subscribe((res: Eventtype[]) => {
+    this.groupService.getData(`events/?groupid=${this.groupId}`).subscribe((res: Eventtype[]) => {
       this.Events = res
     })
   }
