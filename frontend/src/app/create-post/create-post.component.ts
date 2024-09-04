@@ -19,7 +19,7 @@ import { ToolbarComponent } from "../nav/toolbar/toolbar.component";
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './create-post.component.html',
   styleUrls: ['./create-post.component.scss'],
-  providers: [DataService,AuthService]
+  providers: [DataService, AuthService]
 })
 export class CreatePostComponent implements OnInit {
   hideSingleSelectionIndicator = signal(false);
@@ -48,7 +48,8 @@ export class CreatePostComponent implements OnInit {
       content: new FormControl(''),
       image: new FormControl(''),
       categories: new FormControl(''),
-      privacy: new FormControl(this.isPublic),
+      ispublic: new FormControl(this.isPublic),
+      user_id: localStorage.getItem("userID") as string
     });
   }
 
@@ -73,27 +74,35 @@ export class CreatePostComponent implements OnInit {
       formData.append('title', this.Post.get('title')?.value);
       formData.append('content', this.Post.get('content')?.value);
       formData.append('categories', this.Post.get('categories')?.value);
-      formData.append('privacy', this.Post.get('privacy')?.value);
+      formData.append('privacy', this.Post.get('ispublic')?.value);
       formData.append('file', this.selectedFile);
 
       let userId = JSON.parse(localStorage.getItem("userID") as string).toString()
       formData.append('user_id', userId);
+      if (this.selectedFile) {
+        this.apiservice.uploadImage(formData).subscribe(
+          response => {
+            console.log("imageurl", response);
+            this.apiservice.postData('CreatePost', response).subscribe((response: any) => {
+              this.router.navigateByUrl("Acceuil")
+            }, error => {
+              console.error('Erreur lors de l\'envoi du post:', error);
+            });
+          },
+          error => {
+            console.error('Erreur lors du téléchargement de l\'image:', error);
+          }
+        );
 
-      this.apiservice.uploadImage(formData).subscribe(
-        response => {
-          console.log("imageurl", response);
-          this.apiservice.postData('CreatePost', response).subscribe((response: any) => {
-            this.router.navigateByUrl("Acceuil")
-          }, error => {
-            console.error('Erreur lors de l\'envoi du post:', error);
-          });
-        },
-        error => {
-          console.error('Erreur lors du téléchargement de l\'image:', error);
-        }
-      );
+        this.Post.reset();
+      } else {
 
-      this.Post.reset();
+        this.apiservice.postData('CreatePost', this.Post.value).subscribe((response: any) => {
+          this.router.navigateByUrl("Acceuil")
+        }, error => {
+          console.error('Erreur lors de l\'envoi du post:', error);
+        });
+      }
     }
   }
 }

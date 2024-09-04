@@ -10,7 +10,10 @@
         {{ AllUser[post.user_id].created_at | date:'mediumDate' }}
       </mat-card-subtitle>
     </mat-card-header>
-    <img class="post-image" mat-card-image [src]="post.image" alt="Post image">
+    <div class="img" *ngIf="post.image.length != 0">
+      <img class="post-image" mat-card-image [src]="post.image" alt="Post image">
+    </div>
+
     <mat-card-content>
       <p>{{ post.content }}</p>
     </mat-card-content>

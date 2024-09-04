@@ -25,6 +25,16 @@ else ifeq ($(OS),Windows_NT)
 	@start cmd /c "cd $(FRONTEND_DIR) && npm run start" || echo 'Erreur: Impossible de démarrer le frontend'
 endif
 
+i-dep:
+ifeq ($(UNAME_S),Linux)
+	@gnome-terminal -- bash -c "cd $(FRONTEND_DIR) && npm i || { echo 'Erreur: Impossible de démarrer le frontend'; exit 1; }" || "{ echo 'Erreur avec gnome-terminal. Essai avec tmux...'; tmux new-session -d -s frontend 'cd $(FRONTEND_DIR) && npm run start' }"
+else ifeq ($(UNAME_S),Darwin)
+	@osascript -e 'tell app "Terminal" to do script "cd $(FRONTEND_DIR) && npm i"' || { echo 'Erreur avec osascript. Essai avec tmux...'; tmux new-session -d -s frontend 'cd $(FRONTEND_DIR) && npm run start' }
+else ifeq ($(OS),Windows_NT)
+	@start cmd /c "cd $(FRONTEND_DIR) && npm i" || echo 'Erreur: Impossible de démarrer le frontend'
+endif
+
+
 # Commande pour démarrer les deux serveurs
 start-all: start-backend start-frontend
 	@echo "Les serveurs backend et frontend ont démarré."
