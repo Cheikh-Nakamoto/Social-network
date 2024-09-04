@@ -51,10 +51,9 @@ export class ByIdComponent implements OnInit {
     }
   }
 
-  addMember(groupId: number, userId: string, role: string): void {
-    console.log('Adding member', userId, 'to group', groupId, 'with role', role);
-    this.groupService.addMember(groupId, userId, "0",role).subscribe(
-      () => console.log('Member added successfully'),
+  addMember(groupId: number, userId: string,target_id:string, role: string): void {
+    this.groupService.addMember(groupId, userId, target_id,role).subscribe(
+      () => alert("Request sended succesfully !"),
       (error) => console.error('Error adding member:', error)
     );
   }
@@ -65,10 +64,8 @@ export class ByIdComponent implements OnInit {
       (error) => console.error('Error ejecting member:', error)
     );
   }
-  Getgroupbyid(route: string, groupId: number) {
 
-  }
-  deleteGroup(groupId: number): void {
+  deleteMember(groupId: number): void {
     this.groupService.deleteGroup(groupId).subscribe(
       () => this.groups = this.groups.filter(group => group.id !== groupId),
       (error) => console.error('Error deleting group:', error)

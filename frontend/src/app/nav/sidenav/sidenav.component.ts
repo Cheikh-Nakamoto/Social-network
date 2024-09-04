@@ -64,11 +64,8 @@ export class SidenavComponent implements OnInit {
     this.websocketService.messages$.subscribe(
       (message) => {
         // Traiter le message ici
-        // even.routeEvent(message);
-        console.log(message, 'fffffffff');
-        console.log('ttttttttttttttttttttttttttttt', message);
+        // even.routeEvent(message)
         if (message.type === 'get_chatbar_data') {
-          console.log('((((((((((((((((((((((((((((((((((((((((', message);
           this.updateUsers(message.payload);
 
           this.cdRef.detectChanges();
@@ -88,13 +85,7 @@ export class SidenavComponent implements OnInit {
         // Typage de la réponse comme un tleau de Post
         this.users = response.filter(
           (user) => user !== null && user.id !== Number(iduser)
-        ); // Filtrez les utilisateurs nulls
-        // console.log(
-        //   'recuperation de tous les utilisteur du social network',
-        //   this.users
-        // );
-        // this.loadLikes("post");
-        // this.loadDislikes("post");
+        );
       },
       (error) => {
         console.error('Error fetching posts:', error);

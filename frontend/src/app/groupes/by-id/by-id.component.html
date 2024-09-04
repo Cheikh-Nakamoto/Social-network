@@ -12,12 +12,12 @@
                     <div class="admin-actions">
                         @if(group.owner == id){
                         <button mat-button color="primary"
-                            (click)="handleClick('/group/edit', $event, group.id)">Modifier</button>
+                            (click)="handleClick('/group/edit', $event)">Modifier</button>
                         <button mat-button color="warn"
-                            (click)="handleClick('/group/delete', $event, group.id)">Supprimer</button>
+                            (click)="handleClick('/group/delete', $event)">Supprimer</button>
                         }
                         <button mat-button color="primary"
-                            (click)="handleClick('/group/event/create', $event, group.id)">Ajouter un évènement</button>
+                            (click)="handleClick('/event/create', $event)">Ajouter un évènement</button>
                     </div>
                 </div>
                 <div class="event-group">

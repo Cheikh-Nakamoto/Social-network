@@ -66,3 +66,7 @@ func (s GroupServiceImpl) NotificationExists(userID int) ([]dto.Notification, er
 func (s GroupServiceImpl) GetNotificationsByUserID(userID int) ([]dto.Notification, error){
 	return s.Repository.GetNotificationsByUserID(userID)
 }
+
+func (s GroupServiceImpl) GetAllEventsByGroup() ([]dto.Events, error) {
+    return s.Repository.FetchAllEvents()
+}

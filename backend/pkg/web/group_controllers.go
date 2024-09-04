@@ -28,6 +28,8 @@ func (gc *GroupController) RegisterRoutes(mux *http.ServeMux) *http.ServeMux {
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/joined/groups/", gc.GetAllJoinGroupsByUserIDHandler)
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/groups/add_member", gc.AddMemberHandler)
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/groups/eject_member", gc.EjectMemberHandler)
+	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/events/create", gc.CreateEventsHandler)
+	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/events/", gc.FetchAllEventsHandler)
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/groups/delete", gc.DeleteGroupHandler)
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/groups", gc.GetAllGroupsHandler)
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/groups/", gc.GetGroupByIDHandler)
@@ -66,14 +68,14 @@ func (gc *GroupController) AddMemberHandler(w http.ResponseWriter, r *http.Reque
 		UserID   int    `json:"user_id"`
 		TargetID int    `json:"target_id"`
 		Role     string `json:"role"`
-		Username     string `json : "username"`
+		Username string `json : "username"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	fmt.Println("data:", data.GroupID, data.UserID, data.Role,data.Username)
-	if err := gc.GroupService.AddMember(data.UserID, data.GroupID,data.TargetID, data.Role, data.Username); err != nil {
+	fmt.Println("data:", data.GroupID, data.UserID, data.Role, data.Username)
+	if err := gc.GroupService.AddMember(data.UserID, data.GroupID, data.TargetID, data.Role, data.Username); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -198,6 +200,23 @@ func (gc *GroupController) CreateEventsHandler(w http.ResponseWriter, r *http.Re
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(event)
+}
+
+// FetchAllEventsHandler handles retrieving all events
+func (gc *GroupController) FetchAllEventsHandler(w http.ResponseWriter, r *http.Request) {
+	events, err := gc.GroupService.GetAllEventsByGroup()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if len(events) == 0 {
+		http.Error(w, "No events found", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(events)
 }
 
 func (gc *GroupController) NotificationExists(w http.ResponseWriter, r *http.Request) {

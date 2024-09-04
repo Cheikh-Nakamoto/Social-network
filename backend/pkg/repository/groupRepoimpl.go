@@ -193,6 +193,43 @@ func (repo *GroupRepoImpl) CreateEventsInGroup(event dto.Events) error {
 	return nil
 }
 
+// FetchAllEvents retrieves all events from the database
+func (repo *GroupRepoImpl) FetchAllEvents() ([]dto.Events, error) {
+	// Définir la requête SQL pour sélectionner tous les événements
+	query := `SELECT id, name, description, owner, image, group_id, user_id, created_at FROM events`
+
+	// Exécuter la requête pour récupérer les lignes de la table "events"
+	rows, err := repo.db.GetDB().Query(query)
+	if err != nil {
+		return nil, fmt.Errorf("FetchAllEvents: %v", err)
+	}
+	defer rows.Close()
+
+	// Initialiser un tableau pour stocker tous les événements
+	var events []dto.Events
+
+	// Parcourir chaque ligne renvoyée par la requête
+	for rows.Next() {
+		var event dto.Events
+		// Scanner les valeurs de chaque colonne dans la structure de l'événement
+		err := rows.Scan(&event.ID, &event.Name, &event.Description, &event.Owner, &event.Image, &event.GroupId, &event.UserID, &event.CreatedAt)
+		if err != nil {
+			return nil, fmt.Errorf("FetchAllEvents: %v", err)
+		}
+		// Ajouter l'événement à la liste des événements
+		events = append(events, event)
+	}
+
+	// Vérifier les erreurs potentielles rencontrées lors de l'itération sur les lignes
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("FetchAllEvents: %v", err)
+	}
+
+	// Retourner la liste des événements et une valeur d'erreur nulle
+	return events, nil
+}
+
+
 // NotificationExists vérifie si une notification existe dans la base de données pour un user_id, target_id et/ou group_id spécifique
 func (repo *GroupRepoImpl) NotificationExists(userID int) ([]dto.Notification, error) {
 	var notification []dto.Notification
