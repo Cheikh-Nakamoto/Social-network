@@ -47,6 +47,8 @@ func (s *StoreSessions) StoreSession(token string, userID uint) {
 	}
 		_, err = db.GetDB().Exec("INSERT INTO sessions (sessionId, userId) VALUES (?, ?)", token, int(userID))
 	if err != nil {
+
+		
 		// Gérer l'erreur d'insertion dans la base de données
 		
 		panic(err) // Vous pouvez gérer l'erreur différemment selon votre besoin
