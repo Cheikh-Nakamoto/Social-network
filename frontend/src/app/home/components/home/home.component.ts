@@ -5,7 +5,7 @@ import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { CommonModule, NgForOf, NgOptimizedImage } from '@angular/common';
+import { NgForOf, NgOptimizedImage } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -17,11 +17,14 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { User, AllUsersDTO } from '../../../models/models.compenant';
 import { AuthService } from '../../../service/auth.service';
 import { MainPageComponent } from "../../../main-page/main-page.component";
+import { CommonModule } from '@angular/common'
+
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
+    CommonModule,
     MatSidenavContainer,
     MatSidenav,
     MatListModule,
@@ -36,7 +39,7 @@ import { MainPageComponent } from "../../../main-page/main-page.component";
     MatInputModule,
     HttpClientModule,
     MatDialogModule,
-    CommonModule,
+    
     MainPageComponent
 ],
   templateUrl: './home.component.html',
@@ -44,6 +47,7 @@ import { MainPageComponent } from "../../../main-page/main-page.component";
   providers: [DataService, AuthService]
 })
 export class HomeComponent implements OnInit {
+  selectedFile: File | null = null;
   id!: number;
   AllUser: AllUsersDTO = {};
   posts: Post[] = [];
@@ -95,30 +99,38 @@ export class HomeComponent implements OnInit {
       this.loadDislikes(targetType);
     });
   }
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+    }
+  }
 
   onComment(postId: number, targetType: string, event: Event) {
     event.preventDefault();
 
     const target = event.target as HTMLFormElement;
     const content = (target.querySelector('input[name="comment"]') as HTMLInputElement).value;
-    console.log("ooo", content);
+
     if (!content) {
       return;
     }
 
-    const body = {
-      id: 0,
-      user_id: this.id.toString(),
-      target_id: postId,
-      content: content,
-      target_type: targetType,
-    };
-    console.log("le body", body)
-    this.apiService.postData('CreateComment', JSON.stringify(body)).subscribe(() => {
+    const formData = new FormData();
+    formData.append('user_id', this.id.toString());
+    formData.append('target_id', postId.toString());
+    formData.append('content', content);
+    formData.append('target_type', targetType);
+
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile); // Ajoutez l'image au formulaire si elle existe
+    }
+
+    this.apiService.postData('CreateComment', formData).subscribe(() => {
       (target.querySelector('input[name="comment"]') as HTMLInputElement).value = '';
       this.loadComments();
+      this.selectedFile = null; // Réinitialiser après l'envoi
     });
-
   }
 
   private loadComments(): void {

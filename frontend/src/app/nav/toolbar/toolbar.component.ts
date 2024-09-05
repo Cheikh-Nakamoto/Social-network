@@ -17,7 +17,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { DataService } from '../../data.service';
-
+import { CommonModule } from '@angular/common';
 
 
 
@@ -25,6 +25,7 @@ import { DataService } from '../../data.service';
   selector: 'app-toolbar',
   standalone: true,
   imports: [
+    CommonModule,
     MatInputModule,
     MatAutocompleteModule,
     ReactiveFormsModule,

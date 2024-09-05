@@ -34,6 +34,7 @@
       <span class="comment-form">
         <form (submit)="onComment(post.id, 'comment', $event)">
           <input matInput placeholder="Comment" name="comment">
+          <input type="file" name="image" accept="image/*" (change)="onFileSelected($event)">
           <button class="send" mat-icon-button type="submit">
             <mat-icon>send</mat-icon>
           </button>
