@@ -106,4 +106,15 @@ export class AuthService {
     updateUser(id: any, user: any) {
         return this.http.put(`${this.api}/update-profile/${id}`, user)
     }
+    searchUsers(query: string): Observable<any[]> {
+        return this.http.get<any[]>(`${this.api}/allusers`).pipe(
+            map(users => users.filter(user =>
+                user.firstname.toLowerCase().includes(query.toLowerCase()) ||
+                user.lastname.toLowerCase().includes(query.toLowerCase()) ||
+                user.nickname.toLowerCase().includes(query.toLowerCase())
+            ))
+        );
+    }
+    
+    
 }

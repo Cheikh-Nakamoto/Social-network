@@ -8,11 +8,16 @@ import { Router, RouterLink } from "@angular/router";
 import { MatBadge } from "@angular/material/badge";
 import { MatMenu, MatMenuModule } from "@angular/material/menu";
 import { MatCardAvatar } from "@angular/material/card";
-import { DataService } from '../../data.service';
 import { NotificationVerification } from '../../models/models.compenant';
 import { AuthService } from '../../service/auth.service';
 import { NgForOf } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
+import { DataService } from '../../data.service';
+
 
 
 
@@ -20,6 +25,10 @@ import { firstValueFrom } from 'rxjs';
   selector: 'app-toolbar',
   standalone: true,
   imports: [
+    MatInputModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
+    FormsModule,
     MatToolbar,
     MatIcon,
     MatIconButton,
@@ -48,12 +57,17 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   timerid !: any
   notifylength: string = '0';
   constructor(
-    private groupService: DataService,
+    private dataService: DataService,
     private authService: AuthService,
     private router: Router
-  ) { }
+  ) { 
+    console.log('DataService:', this.dataService);
+  }
 
   IsNotify: NotificationVerification = { notif: [] }
+
+  searchQuery: string = '';
+  filteredUsers: any[] = [];
 
   ngOnInit() {
     this.authService.isOnline();
@@ -67,7 +81,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     clearTimeout(this.timerid)
   }
   notify() {
-    this.groupService.getNotification(this.id).subscribe(res => {
+    this.dataService.getNotification(this.id).subscribe(res => {
       this.IsNotify.notif = res
       console.log(this.IsNotify, res)
       this.notifylength = this.IsNotify.notif.length != 0 ? (this.IsNotify.notif.length).toString() : '0'
@@ -98,6 +112,30 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   visibilityMessage() {
     this.hiddenMessage = !this.hiddenMessage;
+  }
+ 
+  onSearchChange(searchValue: string): void {
+    console.log('Valeur de recherche:', searchValue);
+    if (searchValue && searchValue.length > 0) {
+      this.dataService.searchUsers(searchValue).subscribe((users: any[]) => {
+        console.log('Utilisateurs filtrés:', users);
+        this.filteredUsers = users;
+      });
+    } else {
+      this.filteredUsers = [];
+    }
+  }
+  
+  
+  goToUserProfile(user: any): void {
+    console.log('Navigating to profile of:', user); // Debug
+    this.router.navigate(['/profile', user.id]);
+  }
+  
+  
+  
+  goToProfile(userId: string) {
+    this.router.navigate(['/profile', userId]);
   }
 }
 

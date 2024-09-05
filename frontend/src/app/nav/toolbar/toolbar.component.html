@@ -7,8 +7,19 @@
     </div>
 
     <div class="toolbar-center">
-        <input matInput placeholder="Search..." />
+
+        <mat-label>Search Users</mat-label>
+        <input type="text" matInput [(ngModel)]="searchQuery" (input)="onSearchChange(searchQuery)"
+            [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let user of filteredUsers" [value]="user.firstname + ' ' + user.lastname"
+                (click)="goToUserProfile(user)">
+                {{ user.firstname }} {{ user.lastname }} {{ user.nickname }}
+            </mat-option>
+        </mat-autocomplete>
+
     </div>
+
 
     <div class="toolbar-right">
         <button (click)="visibilityMessage()" [matBadgeHidden]="hiddenMessage"
@@ -24,7 +35,7 @@
             <div class="notif" *ngFor="let notif of this.IsNotify.notif">
                 <div class="notif" mat-menu-item>
                     <p> {{notif.message}}</p>
-                    <div class="buttons" >
+                    <div class="buttons">
                         <button class="btn btn-success" routerLink="/accept/">
                             <span class="material-icons text-white">check_circle</span>
                             Accept

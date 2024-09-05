@@ -358,6 +358,7 @@ func (c *UserController) Users(w http.ResponseWriter, r *http.Request) {
 
 func (c *UserController) GetAllUsers( w http.ResponseWriter, r *http.Request){
 	
+	fmt.Println("sear")
 	err := utils.Environment()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

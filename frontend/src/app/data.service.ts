@@ -10,6 +10,31 @@ import { catchError, map } from 'rxjs/operators';
 })
 export class DataService {
   private apiUrl = 'http://localhost:8080/sn/api'; // l'URL de votre API
+  
+  searchUsers(query: string): Observable<any[]> {
+    console.log("datasearch");
+  
+    return this.http.get<any[]>(`${this.apiUrl}/allusers`).pipe(
+      map(users => {
+        console.log('Données de l\'API:', users);
+        const validUsers = users.filter(user => user !== null && user !== undefined);
+        console.log('Utilisateurs valides:', validUsers);
+        
+        return validUsers.filter(user =>
+          user.firstname.toLowerCase().includes(query.toLowerCase()) ||
+          user.lastname.toLowerCase().includes(query.toLowerCase()) ||
+          user.nickname.toLowerCase().includes(query.toLowerCase())
+        );
+      })
+    );
+  }
+  
+  
+  
+  getAll() {
+    throw new Error('Method not implemented.');
+  }
+  
 
   constructor(private http: HttpClient) { }
 
@@ -128,6 +153,7 @@ export class DataService {
     console.error('An error occurred:', error);
     throw error;
   }
+  
 }
 
 
