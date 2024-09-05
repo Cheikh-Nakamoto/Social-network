@@ -25,33 +25,33 @@
                     <div class="events" *ngFor="let event of Events">
                         <mat-card class="example-card" appearance="outlined">
                             <mat-card-header>
-                              <img routerLink="/profile/{{event.owner}}" mat-card-avatar src="logo.png"  alt="profile">
-                              <mat-card-title routerLink="/profile/{{event.owner}}">
-                                {{ AllUser[1].firstname }}
-                              </mat-card-title>
-                              <mat-card-subtitle routerLink="/profile/{{event.owner}}">
-                                <!-- {{ AllUser[event.owner].created_at | date:'mediumDate' }} -->
-                              </mat-card-subtitle>
+                                <img routerLink="/profile/{{event.owner}}" mat-card-avatar src="logo.png" alt="profile">
+                                <mat-card-title routerLink="/profile/{{event.owner}}">
+                                    {{ AllUser[event.owner] && AllUser[event.owner].firstname }}
+                                </mat-card-title>
+                                <mat-card-subtitle routerLink="/profile/{{event.owner}}">
+                                    <!-- {{ AllUser[event.owner].created_at | date:'mediumDate' }} -->
+                                </mat-card-subtitle>
                             </mat-card-header>
-                            <div class="img" *ngIf="event.image && event.image.length != 0" >
-                              <img class="post-image" mat-card-image [src]="event.image" alt="Post image">
+                            <div class="img" *ngIf="event.image && event.image.length != 0">
+                                <img class="post-image" mat-card-image [src]="event.image" alt="Post image">
                             </div>
-                        
-                            event.owne             <mat-card-content>
-                              <p>{{event.description}}</p>
+
+                            <mat-card-content>
+                                <p>{{event.description}}</p>
                             </mat-card-content>
-                            <!-- <mat-card-actions>
-                              <button mat-icon-button (click)="onLike(post.id, 'post')">
-                                <span>{{ likemap[post.id] || 0 }}</span>
+                            <mat-card-actions>
+                              <button mat-icon-button >
+                                <span>0</span>
                                 <mat-icon>thumb_up_outline</mat-icon>
                               </button>
-                              <button mat-icon-button (click)="onDislike(post.id, 'post')">
-                                <span>{{ dislikemap[post.id] || 0 }}</span>
+                              <button mat-icon-button >
+                                <span>0</span>
                                 <mat-icon>thumb_down</mat-icon>
                               </button>
                               <span class="spacer"></span>
-                            </mat-card-actions> -->
-                          </mat-card>
+                            </mat-card-actions>
+                        </mat-card>
                     </div>
                 </div>
 

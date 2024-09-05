@@ -9,11 +9,15 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { AuthService } from '../../service/auth.service';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-by-id',
   standalone: true,
-  imports: [ToolbarComponent, RouterLink, CommonModule, MatCardModule, HttpClientModule, ReactiveFormsModule, ToolbarComponent],
+  imports: [ToolbarComponent, RouterLink, CommonModule, MatCardModule, HttpClientModule, ReactiveFormsModule, ToolbarComponent, MatCardModule,
+    MatIconModule,
+    MatButtonModule,],
   templateUrl: './by-id.component.html',
   styleUrl: './by-id.component.scss',
   providers: [DataService, AuthService]
@@ -44,7 +48,6 @@ export class ByIdComponent implements OnInit {
   async loadGroups(): Promise<void> {
     try {
       let group = await this.groupService.getGroups().toPromise();
-
       if (group.length != this.groups.length) {
         this.groups = group;
       }
@@ -75,10 +78,39 @@ export class ByIdComponent implements OnInit {
   }
 
   loadEvents() {
-    this.groupService.getData("events/").subscribe((res: Eventtype[]) => {
+    this.groupService.getData(`events/?groupid=${this.groupId}`).subscribe((res: Eventtype[]) => {
       this.Events = res
     })
   }
+
+
+  // onGoing(targetId: number, targetType: string) {
+  //   this.groupService.likeTarget(0, this.id, targetId, targetType, true).subscribe((response) => {
+  //     console.log("like response ", response);
+  //     this.loadLikes(targetType);
+  //     this.loadDislikes(targetType);
+  //   });
+  // }
+
+  // notGoing(targetId: number, targetType: string) {
+  //   this.groupService.dislikeTarget(0, this.id, targetId, targetType, false).subscribe(() => {
+  //     this.loadLikes(targetType);
+  //     this.loadDislikes(targetType);
+  //   });
+  // }
+
+
+  // private loadLikes(targetType: string) {
+  //   this.groupService.getTargetLikes(targetType).subscribe((likes) => {
+  //     this.likemap = likes;
+  //   });
+  // }
+
+  // private loadDislikes(targetType: string) {
+  //   this.groupService.getTargetDislikes(targetType).subscribe((dislikes) => {
+  //     this.dislikemap = dislikes;
+  //   });
+  // }
 
 
   private loadUser(targetlink: string) {
