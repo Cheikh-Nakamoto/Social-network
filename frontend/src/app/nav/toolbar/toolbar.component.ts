@@ -12,7 +12,8 @@ import { DataService } from '../../data.service';
 import { NotificationVerification } from '../../models/models.compenant';
 import { AuthService } from '../../service/auth.service';
 import { NgForOf } from '@angular/common';
-import { firstValueFrom } from 'rxjs';
+import { count, firstValueFrom, Subscription } from 'rxjs';
+import { GetUserService } from '../../data.service';
 
 
 
@@ -36,59 +37,72 @@ import { firstValueFrom } from 'rxjs';
   ],
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',
-  providers: [DataService, AuthService]
+  providers: [DataService, AuthService],
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
   title = 'Social Network';
-  id!: string
-  username = ""
+  id!: string;
+  username = '';
   hiddenNotif = false;
-  NotifyLength !: number
+  NotifyLength!: number;
   hiddenMessage = false;
-  timerid !: any
+  timerid!: any;
   notifylength: string = '0';
+  chatCount: number = 0;
+  private chatCountSubscription!: Subscription;
+
   constructor(
     private groupService: DataService,
     private authService: AuthService,
-    private router: Router
-  ) { }
+    private router: Router,
+    private userService: GetUserService
+  ) {}
 
-  IsNotify: NotificationVerification = { notif: [] }
+  IsNotify: NotificationVerification = { notif: [] };
 
   ngOnInit() {
     this.authService.isOnline();
     this.id = JSON.parse(localStorage.getItem('userID') as string);
-    this.username = localStorage.getItem('firstname') as string
+    this.username = localStorage.getItem('firstname') as string;
     this.timerid = setTimeout(() => {
-      this.notify()
-    }, 2000)
-  }
-  ngOnDestroy(): void {
-    clearTimeout(this.timerid)
-  }
-  notify() {
-    this.groupService.getNotification(this.id).subscribe(res => {
-      this.IsNotify.notif = res
-      console.log(this.IsNotify, res)
-      this.notifylength = this.IsNotify.notif.length != 0 ? (this.IsNotify.notif.length).toString() : '0'
+      this.notify();
+    }, 2000);
+    this.chatCountSubscription = this.userService.chatCount$.subscribe(count => {
+      this.chatCount=count
     })
   }
+  ngOnDestroy(): void {
+    if (this.chatCountSubscription) {
+      this.chatCountSubscription.unsubscribe();
+    }
+    clearTimeout(this.timerid);
+  } 
+  notify() {
+    this.groupService.getNotification(this.id).subscribe((res) => {
+      this.IsNotify.notif = res;
+      console.log(this.IsNotify, res);
+      this.notifylength =
+        this.IsNotify.notif.length != 0
+          ? this.IsNotify.notif.length.toString()
+          : '0';
+    });
+  }
 
-  InviteAccept(userID:number,groupID :number,targetID:number){}
-  InviteDecline(){}
-  AdminAddMembers(){}
-  AdminDeleteMembers(){}
+  
 
+  InviteAccept(userID: number, groupID: number, targetID: number) {}
+  InviteDecline() {}
+  AdminAddMembers() {}
+  AdminDeleteMembers() {}
 
   handleLogout() {
     this.authService.logout().subscribe({
       next: () => {
-
-        this.router.navigateByUrl('/login')
+        this.router.navigateByUrl('/login');
       },
       error: (err: any) => {
         console.error('Erreur lors de la déconnexion :', err);
-      }
+      },
     });
   }
 

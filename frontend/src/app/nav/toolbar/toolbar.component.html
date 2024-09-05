@@ -12,7 +12,7 @@
 
     <div class="toolbar-right">
         <button (click)="visibilityMessage()" [matBadgeHidden]="hiddenMessage"
-            aria-label="Example icon-button with heart icon" class="example-icon" mat-icon-button matBadge="12">
+            aria-label="Example icon-button with heart icon" class="example-icon" mat-icon-button matBadge="{{chatCount}}">
             <mat-icon>chat</mat-icon>
         </button>
         <button (click)="visibilityNotif()" [matMenuTriggerFor]="menu" [matBadgeHidden]="hiddenNotif"

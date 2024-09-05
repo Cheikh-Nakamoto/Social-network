@@ -17,6 +17,10 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { User, AllUsersDTO } from '../../../models/models.compenant';
 import { AuthService } from '../../../service/auth.service';
 import { MainPageComponent } from "../../../main-page/main-page.component";
+import { WebSocketService } from '../../../chat/services/chat.service';
+import { Subscription } from 'rxjs';
+import { GetUserService } from '../../../data.service';
+
 
 @Component({
   selector: 'app-home',
@@ -37,11 +41,11 @@ import { MainPageComponent } from "../../../main-page/main-page.component";
     HttpClientModule,
     MatDialogModule,
     CommonModule,
-    MainPageComponent
-],
+    MainPageComponent,
+  ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  providers: [DataService, AuthService]
+  providers: [DataService, AuthService],
 })
 export class HomeComponent implements OnInit {
   id!: number;
@@ -54,17 +58,43 @@ export class HomeComponent implements OnInit {
   token = localStorage.getItem('token');
   user: any;
   postAndButton!: Posts;
-  comlength : length = {}
+  comlength: length = {};
+  private messagesSubscription!: Subscription;
 
-  constructor(private apiService: DataService, private authService: AuthService) { }
+  constructor(
+    private apiService: DataService,
+    private authService: AuthService,
+    private websocketService: WebSocketService,
+    private userService: GetUserService
+  ) {}
 
   ngOnInit(): void {
     this.authService.isOnline();
-    this.id = (JSON.parse(localStorage.getItem("userID") as string));
-
+    this.id = JSON.parse(localStorage.getItem('userID') as string);
     this.loadUser('users');
     this.loadComments();
     this.getAllPosts();
+    this.websocketService.connect();
+    this.messagesSubscription = this.websocketService.messages$.subscribe(
+      (message) => {
+        const fullPath = window.location.pathname + window.location.search;
+
+        if (message.type === 'new_message') {
+          if (fullPath !== `/chat?userid=${message.payload.senderId}`) {
+            alert('you get a new message');
+            this.userService.updateChatCount(this.userService.getChatAmount()+1)
+          }
+          //  const payload = {
+          //    currentChatterId: this.id,
+          //    otherChatterId: Number(this.id),
+          //    amount: this.amount,
+          //  };
+
+          //  const evenget = new Event('get_messages', payload);
+          //  sendEvent(this.websocketService, evenget);
+        }
+      }
+    );
   }
 
   getAllPosts(): void {
@@ -82,26 +112,32 @@ export class HomeComponent implements OnInit {
   }
 
   onLike(targetId: number, targetType: string) {
-    this.apiService.likeTarget(0, this.id, targetId, targetType, true).subscribe((response) => {
-      console.log("like response ", response);
-      this.loadLikes(targetType);
-      this.loadDislikes(targetType);
-    });
+    this.apiService
+      .likeTarget(0, this.id, targetId, targetType, true)
+      .subscribe((response) => {
+        console.log('like response ', response);
+        this.loadLikes(targetType);
+        this.loadDislikes(targetType);
+      });
   }
 
   onDislike(targetId: number, targetType: string) {
-    this.apiService.dislikeTarget(0, this.id, targetId, targetType, false).subscribe(() => {
-      this.loadLikes(targetType);
-      this.loadDislikes(targetType);
-    });
+    this.apiService
+      .dislikeTarget(0, this.id, targetId, targetType, false)
+      .subscribe(() => {
+        this.loadLikes(targetType);
+        this.loadDislikes(targetType);
+      });
   }
 
   onComment(postId: number, targetType: string, event: Event) {
     event.preventDefault();
 
     const target = event.target as HTMLFormElement;
-    const content = (target.querySelector('input[name="comment"]') as HTMLInputElement).value;
-    console.log("ooo", content);
+    const content = (
+      target.querySelector('input[name="comment"]') as HTMLInputElement
+    ).value;
+    console.log('ooo', content);
     if (!content) {
       return;
     }
@@ -113,25 +149,28 @@ export class HomeComponent implements OnInit {
       content: content,
       target_type: targetType,
     };
-    console.log("le body", body)
-    this.apiService.postData('CreateComment', JSON.stringify(body)).subscribe(() => {
-      (target.querySelector('input[name="comment"]') as HTMLInputElement).value = '';
-      this.loadComments();
-    });
-
+    console.log('le body', body);
+    this.apiService
+      .postData('CreateComment', JSON.stringify(body))
+      .subscribe(() => {
+        (
+          target.querySelector('input[name="comment"]') as HTMLInputElement
+        ).value = '';
+        this.loadComments();
+      });
   }
 
   private loadComments(): void {
     this.apiService.getData('AllComments').subscribe(
       (comment: {
-        Comments: { [key: number]: CommentDTO[] }
-        CommentsLength: { [key: number]: number }
+        Comments: { [key: number]: CommentDTO[] };
+        CommentsLength: { [key: number]: number };
       }) => {
         this.comments.comments_by_post = comment.Comments;
-        this.comlength = comment.CommentsLength
+        this.comlength = comment.CommentsLength;
         console.log('ici sont les commentaires', comment);
       },
-      error => {
+      (error) => {
         console.error('Erreur lors du chargement des commentaires:', error);
       }
     );
@@ -167,11 +206,11 @@ export class HomeComponent implements OnInit {
       data: {
         postId: postId,
         user: this.AllUser,
-        comments: comment
-      }
+        comments: comment,
+      },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       console.log(`Dialog result: ${result}`);
     });
   }
