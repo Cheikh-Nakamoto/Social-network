@@ -125,6 +125,7 @@ func (c *UserController) UpdateProfile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id, err := utils.ExtractIDFromRequest(r)
+	fmt.Println("upd")
 	if err != nil {
 		http.Error(w, "User ID is required", http.StatusBadRequest)
 		return
@@ -355,9 +356,8 @@ func (c *UserController) Users(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (c *UserController) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 
-func (c *UserController) GetAllUsers( w http.ResponseWriter, r *http.Request){
-	
 	fmt.Println("sear")
 	err := utils.Environment()
 	if err != nil {
@@ -375,8 +375,7 @@ func (c *UserController) GetAllUsers( w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-
-	users, err:=c.UserService.AllUsers()
+	users, err := c.UserService.AllUsers()
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

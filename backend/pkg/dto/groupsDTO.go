@@ -19,7 +19,7 @@ type Events struct {
 	Description string    `json:"description,omitempty"`
 	Owner       string    `json:"owner"`
 	Image       string    `json:"image"`
-	GroupId     int       `json:"group_id"`
+	GroupId     int       `json:"groupid"`
 	UserID      int       `json:"user_id"`
 	CreatedAt   time.Time `json:"created_at"`
 }
