@@ -8,6 +8,9 @@
       <div class="comment">
         {{ comment.content }}
       </div>
+      <div class="image" *ngIf="getImageUrl(comment)">
+        <img [src]="getImageUrl(comment)" alt="Comment image" />
+      </div>
       <div class="date">
         <span>{{ comment.created_at | date:'short' }}</span>
       </div>
