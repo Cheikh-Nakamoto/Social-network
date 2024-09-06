@@ -4,20 +4,20 @@
         <div class="container" *ngFor="let group of groups" class="group-card">
             <div class="onegroup">
                 <div class="header-group">
-                    <div class="img">
-                        <img [src]="group.image" alt="">
+                    <div class="img" *ngIf="group.image!= '' ; else noimg">
+                        <img mat-card-image [src]="group.image" alt="Photo of {{ group.name }}">
                     </div>
                     <h3> <strong>Name</strong> :{{group.name}}</h3>
                     <p><strong>Description :</strong>{{group.description}}</p>
                     <div class="admin-actions">
                         @if(group.owner == id){
                         <button mat-button color="primary"
-                            (click)="handleClick('/group/edit', $event)">Modifier</button>
-                        <button mat-button color="warn"
-                            (click)="handleClick('/group/delete', $event)">Supprimer</button>
+                            (click)="handleClick('/group/edit', $event)">Inviter un Membre</button>
                         }
                         <button mat-button color="primary" (click)="handleClick('/event/create', $event)">Ajouter un
                             évènement</button>
+                        <button mat-button color="primary" (click)="handleClick('/event/create', $event)">Ajouter un
+                            Poste</button>
                     </div>
                 </div>
                 <div class="event-group">
@@ -41,15 +41,15 @@
                                 <p>{{event.description}}</p>
                             </mat-card-content>
                             <mat-card-actions>
-                              <button mat-icon-button >
-                                <span>0</span>
-                                <mat-icon>thumb_up_outline</mat-icon>
-                              </button>
-                              <button mat-icon-button >
-                                <span>0</span>
-                                <mat-icon>thumb_down</mat-icon>
-                              </button>
-                              <span class="spacer"></span>
+                                <button mat-icon-button>
+                                    <span>0</span>
+                                    <mat-icon>thumb_up_outline</mat-icon>
+                                </button>
+                                <button mat-icon-button>
+                                    <span>0</span>
+                                    <mat-icon>thumb_down</mat-icon>
+                                </button>
+                                <span class="spacer"></span>
                             </mat-card-actions>
                         </mat-card>
                     </div>
@@ -60,5 +60,8 @@
     </div>
     <ng-template #noGroups>
         <p>Aucun groupe à afficher.</p>
+    </ng-template>
+    <ng-template #noimg>
+        <img src="https://www.imagesgroup.in/images/blog-p-img-1.jpg">
     </ng-template>
 </div>

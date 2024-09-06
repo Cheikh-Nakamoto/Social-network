@@ -54,29 +54,39 @@ export class CreateGroupComponent implements OnInit {
       formData.append('owner', this.groupeForm.get('owner')?.value);
       if (this.selectedFile) {
         formData.append('file', this.selectedFile);
+        this.apiService.uploadImage(formData).subscribe(
+          (response) => {
+            // Supposons que la réponse de l'upload d'image contienne l'URL ou l'identifiant de l'image sous 'image'
+            this.groupeForm.patchValue({ image: response.image });
+  
+            // Créez le groupe avec les données du formulaire mises à jour
+            this.apiService.createGroup(this.groupeForm.value).subscribe(
+              (res) => {
+                console.log('Group created successfully');
+                this.groupeForm.reset();
+                this.router.navigateByUrl('groups');
+              },
+              (error) => {
+                console.error('Group creation failed:', error);
+              }
+            );
+          },
+          (error) => {
+            console.error('Image upload failed:', error);
+          }
+        );
+      }else {
+        this.apiService.createGroup(this.groupeForm.value).subscribe(
+          (res) => {
+            console.log('Group created successfully');
+            this.groupeForm.reset();
+            this.router.navigateByUrl('groups');
+          },
+          (error) => {
+            console.error('Group creation failed:', error);
+          }
+        );
       }
-
-      this.apiService.uploadImage(formData).subscribe(
-        (response) => {
-          // Supposons que la réponse de l'upload d'image contienne l'URL ou l'identifiant de l'image sous 'image'
-          this.groupeForm.patchValue({ image: response.image });
-
-          // Créez le groupe avec les données du formulaire mises à jour
-          this.apiService.createGroup(this.groupeForm.value).subscribe(
-            (res) => {
-              console.log('Group created successfully');
-              this.groupeForm.reset();
-              this.router.navigateByUrl('groups');
-            },
-            (error) => {
-              console.error('Group creation failed:', error);
-            }
-          );
-        },
-        (error) => {
-          console.error('Image upload failed:', error);
-        }
-      );
 
     } else {
       console.log('Formulaire invalide');
