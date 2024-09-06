@@ -4,7 +4,7 @@ import { Group, JoinGroupVerification, NotificationVerification } from '../../mo
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -15,7 +15,7 @@ import { AuthService } from '../../service/auth.service';
 @Component({
   selector: 'app-groupe',
   standalone: true,
-  imports: [CommonModule, MatCardModule, HttpClientModule, ReactiveFormsModule, ToolbarComponent, MatIconModule, MatDividerModule],
+  imports: [CommonModule, MatCardModule, HttpClientModule, ReactiveFormsModule, ToolbarComponent, MatIconModule, MatDividerModule,NgIf,NgFor],
   templateUrl: './groupe.component.html',
   styleUrls: ['./groupe.component.scss'],
   providers: [DataService, AuthService],

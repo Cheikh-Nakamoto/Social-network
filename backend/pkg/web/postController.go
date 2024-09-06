@@ -26,21 +26,20 @@ func (c *PostController) RegisterRoutes(mux *http.ServeMux) *http.ServeMux {
 
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/AllPost", c.getAllPostsHandler)
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/CreatePost", c.createPostHandler)
-
+	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/AllPost/groups/", c.getAllPostsByGroupIDHandler)
 	return mux
 
 }
 
 func (p *PostController) createPostHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("upp")
 	var post dto.PostDTO
 	err := json.NewDecoder(r.Body).Decode(&post)
 	if err != nil {
-		fmt.Println("error ",err)
+		fmt.Println("error ", err)
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
-		return 
+		return
 	}
-fmt.Println("post envoyer :",post)
+	fmt.Println("post envoyer :", post)
 	id, err := p.PostService.CreatePost(&post)
 	if err != nil {
 		fmt.Println("err")
@@ -57,6 +56,23 @@ fmt.Println("post envoyer :",post)
 
 func (p *PostController) getAllPostsHandler(w http.ResponseWriter, r *http.Request) {
 	posts, err := p.PostService.GetAllPosts()
+	if err != nil {
+		fmt.Println("Erreur lors de la recuperation des post !")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(posts)
+}
+
+func (p *PostController) getAllPostsByGroupIDHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.URL.Query().Get("groupid"))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	posts, err := p.PostService.GetAllPostsByGroupID(id)
 	if err != nil {
 		fmt.Println("Erreur lors de la recuperation des post !")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
