@@ -3,7 +3,6 @@ import { AuthService } from '../service/auth.service';
 import { HttpClientModule } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { CreatePostComponent } from '../create-post/create-post.component';
-import { PostComponent } from '../post/post.component';
 
 @Component({
   selector: 'app-main-page',
@@ -25,7 +24,7 @@ export class MainPageComponent implements OnInit {
   }
   
   openCreatePostDialog() {
-    this.dialog.open(PostComponent, {
+    this.dialog.open(CreatePostComponent, {
       width: "auto"
     });
   }

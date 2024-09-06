@@ -27,6 +27,8 @@ export class CreatePostComponent implements OnInit {
   hideMultipleSelectionIndicator = signal(false);
 
   isPublic: string = "public";
+  redirecte! : string
+  groupid!:number
 
   toggleSingleSelectionIndicator() {
     this.hideSingleSelectionIndicator.update(value => !value);
@@ -42,9 +44,12 @@ export class CreatePostComponent implements OnInit {
   constructor(private postFormBuilder: FormBuilder, private apiservice: DataService, private router: Router, private authService: AuthService, private rout: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.redirecte = "Acceuil"
     this.authService.isOnline();
     let checkhref = location.href.split("/")
     if (checkhref[checkhref.length - 2] == "groups") {
+      this.redirecte = "groups"
+      this.groupid = Number(checkhref[checkhref.length - 1])
       console.log("ici groupid :",checkhref[checkhref.length - 1])
       this.Post = this.postFormBuilder.group({
         title: new FormControl(''),
@@ -99,7 +104,11 @@ export class CreatePostComponent implements OnInit {
           response => {
             console.log("imageurl", response);
             this.apiservice.postData('CreatePost', response).subscribe((response: any) => {
-              this.router.navigateByUrl("Acceuil")
+              if (this.redirecte != "Accueil"){
+                this.router.navigate([this.redirecte,this.groupid])
+              }else{
+                this.router.navigateByUrl(this.redirecte)
+              }
               console.log(this.Post.value)
             }, error => {
               console.error('Erreur lors de l\'envoi du post:', error);
@@ -114,7 +123,11 @@ export class CreatePostComponent implements OnInit {
       } else {
 
         this.apiservice.postData('CreatePost', this.Post.value).subscribe((response: any) => {
-          this.router.navigateByUrl("Acceuil")
+          if (this.redirecte != "Accueil"){
+            this.router.navigate([this.redirecte,this.groupid])
+          }else{
+            this.router.navigateByUrl(this.redirecte)
+          }
         }, error => {
           console.error('Erreur lors de l\'envoi du post:', error);
         });
