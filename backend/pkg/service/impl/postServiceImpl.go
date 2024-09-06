@@ -2,6 +2,7 @@ package impl
 
 import (
 	"backend/pkg/dto"
+	"backend/pkg/entity"
 	"backend/pkg/repository"
 )
 
@@ -35,4 +36,8 @@ func (p *PostServiceImpl) GetAllPosts() ([]dto.PostDTO, error) {
 	}
 
 	return postDTOs, nil
+}
+
+func (p *PostServiceImpl) GetAllPostsByGroupID(id int) ([]entity.Post, error) {
+	return p.Repository.GetAllPostsByGroupID(id)
 }

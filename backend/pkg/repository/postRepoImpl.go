@@ -34,7 +34,35 @@ func (p *PostRepoImpl) CreatePost(userID string, title, content, Image string, I
 }
 
 func (p *PostRepoImpl) GetAllPosts() ([]entity.Post, error) {
-	row, err := p.db.GetDB().Query(`SELECT * FROM posts`)
+	row, err := p.db.GetDB().Query(`SELECT * FROM posts WHERE group_id=?`,0)
+	if err != nil {
+		fmt.Println("erreur lors de la recuperation des post")
+		return nil, fmt.Errorf("GetAllPosts: %v", err)
+	}
+	defer row.Close()
+	var posts []entity.Post
+	for row.Next() {
+		var post entity.Post
+		err := row.Scan(
+			&post.ID,
+			&post.UserID,
+			&post.Title,
+			&post.Content,
+			&post.Image,
+			&post.GroupID,
+			&post.IsPublic,
+			&post.CreatedAt,
+		)
+		if err != nil {
+			fmt.Println("erreur lor de l'affectation des donnés !", err)
+			return nil, fmt.Errorf("GetAllPosts: %v", err)
+		}
+		posts = append(posts, post)
+	}
+	return posts, nil
+}
+func (p *PostRepoImpl) GetAllPostsByGroupID(id  int) ([]entity.Post, error) {
+	row, err := p.db.GetDB().Query(`SELECT * FROM posts WHERE group_id=?`,id)
 	if err != nil {
 		fmt.Println("erreur lors de la recuperation des post")
 		return nil, fmt.Errorf("GetAllPosts: %v", err)
