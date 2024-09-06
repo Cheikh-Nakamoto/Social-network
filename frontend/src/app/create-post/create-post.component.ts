@@ -58,7 +58,7 @@ export class CreatePostComponent implements OnInit {
         categories: new FormControl(''),
         ispublic: new FormControl(this.isPublic),
         user_id: localStorage.getItem("userID") as string,
-        group_id: checkhref[checkhref.length - 1]
+        group_id: parseInt(checkhref[checkhref.length - 1],10)
       });
     } else {
       this.Post = this.postFormBuilder.group({
@@ -94,7 +94,7 @@ export class CreatePostComponent implements OnInit {
       formData.append('content', this.Post.get('content')?.value);
       formData.append('categories', this.Post.get('categories')?.value);
       formData.append('privacy', this.Post.get('ispublic')?.value);
-      formData.append('groupid',this.Post.get('group_id')?.value)
+      formData.append('group_id',this.Post.get('group_id')?.value)
       formData.append('file', this.selectedFile);
 
       let userId = JSON.parse(localStorage.getItem("userID") as string).toString()
@@ -109,7 +109,6 @@ export class CreatePostComponent implements OnInit {
               }else{
                 this.router.navigateByUrl(this.redirecte)
               }
-              console.log(this.Post.value)
             }, error => {
               console.error('Erreur lors de l\'envoi du post:', error);
             });
@@ -119,9 +118,9 @@ export class CreatePostComponent implements OnInit {
           }
         );
 
-        this.Post.reset();
+       
       } else {
-
+        console.log("donne envoyer au api this.postFormBuilder",this.Post.value)
         this.apiservice.postData('CreatePost', this.Post.value).subscribe((response: any) => {
           if (this.redirecte != "Accueil"){
             this.router.navigate([this.redirecte,this.groupid])
@@ -133,5 +132,6 @@ export class CreatePostComponent implements OnInit {
         });
       }
     }
+    this.Post.reset();
   }
 }

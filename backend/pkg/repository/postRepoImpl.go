@@ -18,7 +18,6 @@ func NewPostRepoImpl(db sqlite.Database) *PostRepoImpl {
 }
 
 func (p *PostRepoImpl) CreatePost(userID string, title, content, Image string, IsPublic string,Groupid int64) (string, error) {
-	fmt.Println("ispublic :",IsPublic)
 
 	stmt := `INSERT INTO posts ( user_id, title, content,post_image, privacy, group_id,created_at) VALUES ( ?, ?, ?, ?,?, ?,?)`
 	escapedTitle := html.EscapeString(title)
