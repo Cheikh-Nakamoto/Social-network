@@ -8,9 +8,10 @@ import { MatCardModule } from '@angular/material/card';
 import { DataService } from '../data.service';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../service/auth.service';
 import { ToolbarComponent } from "../nav/toolbar/toolbar.component";
+import { group } from '@angular/animations';
 
 @Component({
   selector: 'app-create-post',
@@ -38,19 +39,32 @@ export class CreatePostComponent implements OnInit {
   Post!: FormGroup;
   selectedFile!: File;
 
-  constructor(private postFormBuilder: FormBuilder, private apiservice: DataService, private router: Router, private authService: AuthService) { }
+  constructor(private postFormBuilder: FormBuilder, private apiservice: DataService, private router: Router, private authService: AuthService, private rout: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.authService.isOnline();
-
-    this.Post = this.postFormBuilder.group({
-      title: new FormControl(''),
-      content: new FormControl(''),
-      image: new FormControl(''),
-      categories: new FormControl(''),
-      ispublic: new FormControl(this.isPublic),
-      user_id: localStorage.getItem("userID") as string
-    });
+    let checkhref = location.href.split("/")
+    if (checkhref[checkhref.length - 2] == "groups") {
+      console.log("ici groupid :",checkhref[checkhref.length - 1])
+      this.Post = this.postFormBuilder.group({
+        title: new FormControl(''),
+        content: new FormControl(''),
+        image: new FormControl(''),
+        categories: new FormControl(''),
+        ispublic: new FormControl(this.isPublic),
+        user_id: localStorage.getItem("userID") as string,
+        group_id: checkhref[checkhref.length - 1]
+      });
+    } else {
+      this.Post = this.postFormBuilder.group({
+        title: new FormControl(''),
+        content: new FormControl(''),
+        image: new FormControl(''),
+        categories: new FormControl(''),
+        ispublic: new FormControl(this.isPublic),
+        user_id: localStorage.getItem("userID") as string
+      });
+    }
   }
 
   onFileChange(event: any): void {
@@ -75,6 +89,7 @@ export class CreatePostComponent implements OnInit {
       formData.append('content', this.Post.get('content')?.value);
       formData.append('categories', this.Post.get('categories')?.value);
       formData.append('privacy', this.Post.get('ispublic')?.value);
+      formData.append('groupid',this.Post.get('group_id')?.value)
       formData.append('file', this.selectedFile);
 
       let userId = JSON.parse(localStorage.getItem("userID") as string).toString()
@@ -85,6 +100,7 @@ export class CreatePostComponent implements OnInit {
             console.log("imageurl", response);
             this.apiservice.postData('CreatePost', response).subscribe((response: any) => {
               this.router.navigateByUrl("Acceuil")
+              console.log(this.Post.value)
             }, error => {
               console.error('Erreur lors de l\'envoi du post:', error);
             });

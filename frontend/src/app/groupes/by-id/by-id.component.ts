@@ -11,13 +11,14 @@ import { MatCardModule } from '@angular/material/card';
 import { AuthService } from '../../service/auth.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MainPageComponent } from '../../main-page/main-page.component';
 
 @Component({
   selector: 'app-by-id',
   standalone: true,
   imports: [ToolbarComponent, RouterLink, CommonModule, MatCardModule, HttpClientModule, ReactiveFormsModule, ToolbarComponent, MatCardModule,
     MatIconModule,
-    MatButtonModule,],
+    MatButtonModule,MainPageComponent],
   templateUrl: './by-id.component.html',
   styleUrl: './by-id.component.scss',
   providers: [DataService, AuthService]

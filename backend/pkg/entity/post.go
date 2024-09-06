@@ -19,6 +19,7 @@ type Post struct {
 	Image      string    `json:"image"`
 	Categories string    `json:"categories"`
 	IsPublic   string      `json:"is_public"`
+	GroupID 	int64     `json:"groupid"`
 	UserID     string    `json:"user_id"` // Change this to int64 if you're sending a number
 	CreatedAt  time.Time `json:"created_at"`
 }

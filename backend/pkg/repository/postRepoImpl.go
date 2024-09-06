@@ -17,15 +17,15 @@ func NewPostRepoImpl(db sqlite.Database) *PostRepoImpl {
 	return &PostRepoImpl{db: &db}
 }
 
-func (p *PostRepoImpl) CreatePost(userID string, title, content, Image string, IsPublic string) (string, error) {
+func (p *PostRepoImpl) CreatePost(userID string, title, content, Image string, IsPublic string,Groupid int64) (string, error) {
 	fmt.Println("ispublic :",IsPublic)
 
-	stmt := `INSERT INTO posts ( user_id, title, content,post_image, privacy, created_at) VALUES ( ?, ?, ?, ?, ?,?)`
+	stmt := `INSERT INTO posts ( user_id, title, content,post_image, privacy, group_id,created_at) VALUES ( ?, ?, ?, ?,?, ?,?)`
 	escapedTitle := html.EscapeString(title)
 	escapedContent := html.EscapeString(content)
 	// escapedImage := html.EscapeString(Image)
 	log.Println(escapedTitle)
-	id, err := p.db.GetDB().Exec(stmt, userID, escapedTitle, escapedContent,Image, IsPublic, time.Now())
+	id, err := p.db.GetDB().Exec(stmt, userID, escapedTitle, escapedContent,Image, IsPublic,Groupid ,time.Now())
 	if err != nil {
 		fmt.Println("err create", err)
 		return "", fmt.Errorf("CreatePost: %v", err)
@@ -50,6 +50,7 @@ func (p *PostRepoImpl) GetAllPosts() ([]entity.Post, error) {
 			&post.Title,
 			&post.Content,
 			&post.Image,
+			&post.GroupID,
 			&post.IsPublic,
 			&post.CreatedAt,
 		)
@@ -96,6 +97,7 @@ func (p *PostRepoImpl) DeletePostByID(id int) ([]entity.Post, error) {
 			&post.Title,
 			&post.Content,
 			&post.Image,
+			&post.GroupID,
 			&post.IsPublic,
 			&post.CreatedAt,
 		)

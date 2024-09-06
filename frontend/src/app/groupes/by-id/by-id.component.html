@@ -16,12 +16,12 @@
                         }
                         <button mat-button color="primary" (click)="handleClick('/event/create', $event)">Ajouter un
                             évènement</button>
-                        <button mat-button color="primary" (click)="handleClick('/event/create', $event)">Ajouter un
-                            Poste</button>
                     </div>
                 </div>
                 <div class="event-group">
-                    <h4>Évènements</h4>
+
+                    <h4>Posts</h4>
+                    <app-main-page></app-main-page>
                     <div class="events" *ngFor="let event of Events">
                         <mat-card class="example-card" appearance="outlined">
                             <mat-card-header>

@@ -10,7 +10,7 @@ type PostServiceImpl struct {
 }
 
 func (p *PostServiceImpl) CreatePost(post *dto.PostDTO) (string, error) {
-	return p.Repository.CreatePost(post.UserID, post.Title, post.Content, post.Image, post.IsPublic)
+	return p.Repository.CreatePost(post.UserID, post.Title, post.Content, post.Image,post.IsPublic,post.GroupID)
 }
 
 // GetAllPosts...
@@ -28,6 +28,7 @@ func (p *PostServiceImpl) GetAllPosts() ([]dto.PostDTO, error) {
 			Title:     post.Title,
 			Content:   post.Content,
 			Image:     post.Image,
+			GroupID: post.GroupID,
 			IsPublic:  post.IsPublic,
 			CreatedAt: post.CreatedAt,
 		})

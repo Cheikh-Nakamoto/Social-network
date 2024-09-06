@@ -32,7 +32,6 @@ func (c *PostController) RegisterRoutes(mux *http.ServeMux) *http.ServeMux {
 }
 
 func (p *PostController) createPostHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("upp")
 	var post dto.PostDTO
 	err := json.NewDecoder(r.Body).Decode(&post)
 	if err != nil {
