@@ -48,6 +48,11 @@ a {
   align-items: center;
   margin: 0 16px;
   width: 40%;
+  background: #f2f2f2;
+
+  mat-label {
+    margin-left: 12px;
+  }
 
   input {
     border: none;
@@ -56,9 +61,9 @@ a {
     border-radius: 15px;
     color: #005cbb;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 12px;
     letter-spacing: 2px;
-    padding: 10px 20px;
+    padding: 5px 10px;
     width: 100%;
   }
 }
