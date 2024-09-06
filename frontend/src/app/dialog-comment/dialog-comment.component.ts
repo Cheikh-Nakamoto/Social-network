@@ -28,6 +28,18 @@ export class DialogCommentComponent implements OnInit {
 
     this.comments = this.data.comments
     this.user = this.data.user;
-    console.log(this.comments, "c'est janel")
+    console.log(this.comments, "mmml")
   }
+ 
+  getImageUrl(comment: CommentDTO): string | null {
+    // Assurez-vous que le chemin commence par 'public/' et remplacez le './public/' par 'public/'
+    const imagePath = comment.image?.startsWith('./public/') ? comment.image.replace('./public/', 'public/') : comment.image;
+    console.log(imagePath);
+    
+    return imagePath ? `http://localhost:8080/${imagePath}` : null;
+  }
+  
+  
+  
+  
 }

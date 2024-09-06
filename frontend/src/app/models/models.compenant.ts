@@ -51,6 +51,7 @@ export interface CommentDTO {
   user_id: string;
   target_id: number;
   content: string;
+  image?: string;
   target_type: string;
   created_at: string;
 }

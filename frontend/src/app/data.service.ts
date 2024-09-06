@@ -50,16 +50,26 @@ export class DataService {
 
   // Méthode POST
   postData(endpoint: string, data: any): Observable<any> {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
-    return this.http.post(`${this.apiUrl}/${endpoint}`, data, httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
+    let httpOptions = {};
+  
+    if (data instanceof FormData) {
+      // Ne définissez pas le Content-Type, le navigateur le fera pour vous (avec les limites correctes)
+      httpOptions = {
+        headers: new HttpHeaders({}),
+      };
+    } else {
+      httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+        }),
+      };
+    }
+  
+    return this.http.post(`${this.apiUrl}/${endpoint}`, data, httpOptions).pipe(
+      catchError(this.handleError)
+    );
   }
+  
 
   // Méthode pour uploader une image
   uploadImage(formData: FormData): Observable<any> {
@@ -153,6 +163,10 @@ export class DataService {
     console.error('An error occurred:', error);
     throw error;
   }
+  postCommentWithImage(postId: number, formData: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}/comments`, formData);
+  }
+  
   
 }
 

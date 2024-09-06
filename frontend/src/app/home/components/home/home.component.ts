@@ -39,15 +39,14 @@ import { CommonModule } from '@angular/common'
     MatInputModule,
     HttpClientModule,
     MatDialogModule,
-    
+
     MainPageComponent
-],
+  ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   providers: [DataService, AuthService]
 })
 export class HomeComponent implements OnInit {
-  selectedFile: File | null = null;
   id!: number;
   AllUser: AllUsersDTO = {};
   posts: Post[] = [];
@@ -58,7 +57,7 @@ export class HomeComponent implements OnInit {
   token = localStorage.getItem('token');
   user: any;
   postAndButton!: Posts;
-  comlength : length = {}
+  comlength: length = {}
 
   constructor(private apiService: DataService, private authService: AuthService) { }
 
@@ -99,39 +98,52 @@ export class HomeComponent implements OnInit {
       this.loadDislikes(targetType);
     });
   }
-  onFileSelected(event: any) {
+  selectedFile: File | null = null;
+
+  onFileSelected(event: any): void {
     const file: File = event.target.files[0];
     if (file) {
       this.selectedFile = file;
+      console.log('Fichier sélectionné:', file);
     }
   }
 
   onComment(postId: number, targetType: string, event: Event) {
     event.preventDefault();
-
+  
     const target = event.target as HTMLFormElement;
     const content = (target.querySelector('input[name="comment"]') as HTMLInputElement).value;
-
+  
     if (!content) {
       return;
     }
-
+  
     const formData = new FormData();
     formData.append('user_id', this.id.toString());
     formData.append('target_id', postId.toString());
     formData.append('content', content);
     formData.append('target_type', targetType);
-
+  
     if (this.selectedFile) {
-      formData.append('image', this.selectedFile); // Ajoutez l'image au formulaire si elle existe
+      formData.append('image', this.selectedFile);
+    } else {
+      formData.append('image', '');
     }
-
+  
+    // Ajoutez ceci pour vérifier le contenu de formData
+    formData.forEach((value, key) => {
+      console.log(key + ': ' + value);
+    });
+  
     this.apiService.postData('CreateComment', formData).subscribe(() => {
       (target.querySelector('input[name="comment"]') as HTMLInputElement).value = '';
       this.loadComments();
-      this.selectedFile = null; // Réinitialiser après l'envoi
+      this.selectedFile = null;
+    }, error => {
+      console.error('Erreur lors de l\'envoi du commentaire:', error);
     });
   }
+  
 
   private loadComments(): void {
     this.apiService.getData('AllComments').subscribe(
