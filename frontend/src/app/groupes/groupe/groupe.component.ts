@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { DataService } from '../../data.service';
-import { Group, JoinGroupVerification, NotificationVerification } from '../../models/models.compenant';
+import { AllUsersDTO, CommentContent, CommentDTO, Group, JoinGroupVerification, NotificationVerification, Post, Posts,length } from '../../models/models.compenant';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ToolbarComponent } from '../../nav/toolbar/toolbar.component';
 import { AuthService } from '../../service/auth.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogCommentComponent } from '../../dialog-comment/dialog-comment.component';
 
 
 @Component({
@@ -27,6 +29,7 @@ export class GroupeComponent implements OnInit, OnDestroy {
   groupeForm!: FormGroup;
   id !: string;
   clear!: any;
+
 
   constructor(private fb: FormBuilder, private groupService: DataService, private router: Router, private authService: AuthService) { }
 
@@ -74,6 +77,8 @@ export class GroupeComponent implements OnInit, OnDestroy {
     );
   }
 
+ 
+
 
 
   ejectMember(groupId: number, userId: number): void {
@@ -96,6 +101,8 @@ export class GroupeComponent implements OnInit, OnDestroy {
       this.IsIn = res
     }, (error) => console.error('Error fetching ', error))
   }
+
+ 
 
   handleClick(route: string, event: Event, id?: number): void {
     event.preventDefault();

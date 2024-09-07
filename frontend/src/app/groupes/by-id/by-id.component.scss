@@ -1,8 +1,8 @@
 .group-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+ flex-direction: flex-start;
   padding: 20px;
-  max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
 
   h1 {
@@ -15,11 +15,12 @@
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
+  width: 100%;
   justify-content: center;
 }
 
 .group-card {
-  width: 300px;
+  width: 100%;
 }
 
 .onegroup {
@@ -31,8 +32,8 @@
   display: flex;
   flex-direction: column;
 }
-StatusInternalServerError
-.header-group h3 {
+
+StatusInternalServerError .header-group h3 {
   font-size: 24px;
   margin-bottom: 10px;
 }
@@ -147,4 +148,10 @@ button:not(.send) {
 
 mat-card-actions button {
   width: 90px;
+}
+
+.event-group{
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
 }

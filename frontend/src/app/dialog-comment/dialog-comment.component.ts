@@ -4,12 +4,13 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/d
 import { CommonModule } from '@angular/common';
 import { AllUsersDTO, CommentContent, CommentDTO } from '../models/models.compenant';
 import { AuthService } from '../service/auth.service';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @Component({
   selector: 'app-dialog-comment',
   standalone: true,
-  imports: [MatDialogModule, MatButtonModule, CommonModule],
+  imports: [MatDialogModule, MatButtonModule, CommonModule,HttpClientModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './dialog-comment.component.html',
   styleUrls: ['./dialog-comment.component.scss'],
@@ -28,7 +29,6 @@ export class DialogCommentComponent implements OnInit {
 
     this.comments = this.data.comments
     this.user = this.data.user;
-    console.log(this.comments, "mmml")
   }
  
   getImageUrl(comment: CommentDTO): string | null {
@@ -38,8 +38,5 @@ export class DialogCommentComponent implements OnInit {
     
     return imagePath ? `http://localhost:8080/${imagePath}` : null;
   }
-  
-  
-  
   
 }
