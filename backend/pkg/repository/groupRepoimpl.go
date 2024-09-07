@@ -187,6 +187,7 @@ func (repo *GroupRepoImpl) CreateEventsInGroup(event dto.Events) error {
 	// Execute the query
 	_, err := repo.db.GetDB().Exec(query, event.Name, event.Description, event.GroupId, event.UserID, event.HourStart,event.HourEnd)
 	if err != nil {
+		fmt.Println("failed to create event",err)
 		return errors.New("failed to create event: " + err.Error())
 	}
 
