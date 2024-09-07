@@ -20,7 +20,7 @@ export const routes: Routes = [
   { path: "groups", component: GroupeComponent , canActivate: [HomeGuard] },
   { path: "groups/:id", component:ByIdComponent,canActivate: [HomeGuard]},
   { path: "event/create", component:EventsComponent,canActivate: [HomeGuard]},
-  { path: 'profile/:id', component: ProfileComponent, canActivate: [HomeGuard] },
+  { path: 'profile/:id', component: ProfileComponent },
   {path: "CreateGroup", component: CreateGroupComponent, canActivate: [HomeGuard] },
   {path: "chat", component:ChatComponent },
   { path: '', redirectTo: 'Accueil', pathMatch: 'full' },

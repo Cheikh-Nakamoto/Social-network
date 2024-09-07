@@ -46,7 +46,7 @@ import { AuthService } from '../../service/auth.service';
 export class SidenavComponent implements OnInit {
   menuItems = [
     { name: 'Home', route: '/', icon: 'icofont-ui-home' },
-    { name: 'Profile', route: '/profile', icon: 'icofont-user' },
+    { name: 'Profile', route: '/profile/1', icon: 'icofont-user' },
     { name: 'Friends', route: '/followers', icon: 'icofont-users-alt-4' },
     { name: 'Groups', route: '/groups', icon: 'icofont-users-social' },
     { name: 'New Post', route: '/CreatePost', icon: 'icofont-pencil-alt-1' },
