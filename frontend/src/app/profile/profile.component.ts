@@ -13,6 +13,7 @@ import { User } from '../../entity/user';
 import { Post } from '../../entity/post';
 import { Group } from '../../entity/group';
 import { HttpClientModule } from '@angular/common/http';
+import { DataService } from '../data.service';
 
 
 
@@ -32,7 +33,7 @@ import { HttpClientModule } from '@angular/common/http';
     ],
     templateUrl: './profile.component.html',
     styleUrl: './profile.component.scss',
-    providers: [DatePipe, AuthService]
+    providers: [DatePipe,DataService, AuthService,FollowService,UtilsService]
     
 })
 export class ProfileComponent implements OnInit {
@@ -76,16 +77,17 @@ export class ProfileComponent implements OnInit {
             this.utilsService.setTitle(`${this.user.firstname} ${this.user.lastname}`)
         })
     }
-
     isOnline() {
         this.authService.isLoggedIn().subscribe(response => {
-            if (response) {
-                return
-            } else {
-                localStorage.removeItem('token')
-                localStorage.removeItem('userID')
-                this.router.navigate(['/login']).then()
-            }
+            console.log(response)
+            // if (response) {
+            //     console.log('You are online')
+            //     return
+            // } else {
+            //     console.log('You are offline')
+            //     // this.authService.removeSession()
+            //     // this.router.navigate(['/login']).then()
+            // }
         })
     }
 
@@ -174,7 +176,7 @@ export class ProfileComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        if (!this.authService.getToken()) {
+        if (!(this.authService.getToken()as string)) {
             this.router.navigate(['/login']).then()
             alert('You are not logged in')
             return
@@ -182,12 +184,12 @@ export class ProfileComponent implements OnInit {
 
         this.isOnline()
 
-        this.getFollowers()
-        this.getFollowings()
-        this.getFriends()
-        this.getFollowersCount()
-        this.getFollowingsCount()
-        this.getFriendsCount()
+        // this.getFollowers()
+        // this.getFollowings()
+        // this.getFriends()
+        // this.getFollowersCount()
+        // this.getFollowingsCount()
+        // this.getFriendsCount()
         this.getUser()
     }
 }
