@@ -4,12 +4,13 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/d
 import { CommonModule } from '@angular/common';
 import { AllUsersDTO, CommentContent, CommentDTO } from '../models/models.compenant';
 import { AuthService } from '../service/auth.service';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @Component({
   selector: 'app-dialog-comment',
   standalone: true,
-  imports: [MatDialogModule, MatButtonModule, CommonModule],
+  imports: [MatDialogModule, MatButtonModule, CommonModule,HttpClientModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './dialog-comment.component.html',
   styleUrls: ['./dialog-comment.component.scss'],
