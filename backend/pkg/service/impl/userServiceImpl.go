@@ -134,3 +134,52 @@ func (s *UserServiceImpl)AllUsers()([]*dto.UserDTO, error){
 	return userDTOs, nil
 
 }
+
+func (s *UserServiceImpl) GetFollowers(userID uint) ([]*dto.UserDTO, error) {
+	users, err := s.Repository.GetFollowers(userID)
+	if err != nil {
+		return nil, err
+	}
+	var userDTOs []*dto.UserDTO
+	for _, user := range users {
+		userDTOs = append(userDTOs, mapper.UserToDTO(user))
+	}
+
+	return userDTOs, nil
+}
+
+func (s *UserServiceImpl) GetFollowings(userID uint) ([]*dto.UserDTO, error) {
+	users, err := s.Repository.GetFollowings(userID)
+	if err != nil {
+		return nil, err
+	}
+	var userDTOs []*dto.UserDTO
+	for _, user := range users {
+		userDTOs = append(userDTOs, mapper.UserToDTO(user))
+	}
+	return userDTOs, nil
+}
+
+func (s *UserServiceImpl) GetFriends(userID uint) ([]*dto.UserDTO, error) {
+	users, err := s.Repository.GetFriends(userID)
+	if err != nil {
+		return nil, err
+	}
+	var userDTOs []*dto.UserDTO
+	for _, user := range users {
+		userDTOs = append(userDTOs, mapper.UserToDTO(user))
+	}
+	return userDTOs, nil
+}
+
+func (s *UserServiceImpl) GetFriendsCount(userID uint) (uint, error) {
+	return s.Repository.GetFriendsCount(userID)
+}
+
+func (s *UserServiceImpl) GetFollowerCount(userID uint) (uint, error) {
+	return s.Repository.GetFollowerCount(userID)
+}
+
+func (s *UserServiceImpl) GetFollowingCount(userID uint) (uint, error) {
+	return s.Repository.GetFollowingCount(userID)
+}

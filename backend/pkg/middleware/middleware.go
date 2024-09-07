@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 )
@@ -20,6 +21,7 @@ func ErrorMiddleware(next http.Handler) http.Handler {
 		defer func() {
 			if err := recover(); err != nil {
 				log.Println(err)
+				fmt.Println("midl1")
 				http.Error(w, "Internal server error", http.StatusInternalServerError)
 			}
 		}()
@@ -74,6 +76,7 @@ func PostMiddleware(next http.Handler) http.Handler {
 		defer func() {
 			if err := recover(); err != nil {
 				log.Println(err)
+				
 				http.Error(w, "Internal server error", http.StatusInternalServerError)
 			}
 		}()

@@ -13,4 +13,10 @@ type UserRepo interface {
 	GetUserID(token string) (uint, bool)
 	ClearSession(token string)
 	GetAllUsers()([]*entity.User, error)
+	GetFollowers(userID uint) ([]*entity.User, error)
+	GetFollowings(userID uint) ([]*entity.User, error)
+	GetFriends(userID uint) ([]*entity.User, error)
+	GetFriendsCount(userID uint) (uint, error)
+	GetFollowerCount(userID uint) (uint, error)
+	GetFollowingCount(userID uint) (uint, error)
 }
