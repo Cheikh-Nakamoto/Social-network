@@ -115,15 +115,23 @@ export class EventsComponent implements OnInit {
     const groupid = parseInt(localStorage.getItem('groupid') as string);
 
     if (this.groupeForm.valid) {
+      const dateStart = this.groupeForm.get('date_start')?.value;
+      const hourStart = this.groupeForm.get('hour_start')?.value;
+      const dateEnd = this.groupeForm.get('date_end')?.value;
+      const hourEnd = this.groupeForm.get('hour_end')?.value;
+       // Création des objets Date
+    const startDateTime = new Date(`${dateStart}T${hourStart}`);
+    const endDateTime = new Date(`${dateEnd}T${hourEnd}`);
       let body = {
         'name':this.groupeForm.get('name')?.value,
         'description':this.groupeForm.get('description')?.value,
         'user_id': this.groupeForm.get('user_id')?.value,
         'group_id': groupid,
-        'hour_start': this.startdate,
-        'hour_end': this.enddate,
+        'hour_start': startDateTime,
+        'hour_end': endDateTime,
 
       }
+      console.log(body);
       this.apiService.createEvent(body).subscribe(
         (res) => {
           this.groupeForm.reset();
