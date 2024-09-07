@@ -564,8 +564,6 @@ func (c *UserController) GetFollowerCount(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-    fmt.Println("ici janel", count)
-
 	w.Header().Set(os.Getenv("CONTENT_TYPE"), os.Getenv("APPLICATION_JSON"))
 	w.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(w).Encode(map[string]interface{}{
