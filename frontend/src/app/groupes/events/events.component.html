@@ -14,8 +14,39 @@
     <div class="form-group">
       <label for="description">Description</label>
       <textarea id="description" formControlName="description" class="form-control"></textarea>
-      <div *ngIf="groupeForm.get('description')?.invalid && groupeForm.get('description')?.touched" class="error-message">
+      <div *ngIf="groupeForm.get('description')?.invalid && groupeForm.get('description')?.touched"
+        class="error-message">
         La description est requise et ne doit pas dépasser 250 caractères.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="form-group">
+        <!-- Date de début -->
+        <mat-form-field>
+          <input matInput [matDatepicker]="startDatePicker" placeholder="Start Date" formControlName="hour_start">
+          <mat-datepicker #startDatePicker></mat-datepicker>
+        </mat-form-field>
+
+        <!-- Heure de début -->
+        <mat-form-field>
+          <input matInput [ngxTimepicker]="startTimePicker" placeholder="Start Time" formControlName="hour_start">
+          <ngx-material-timepicker #startTimePicker></ngx-material-timepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <!-- Date de fin -->
+        <mat-form-field>
+          <input matInput [matDatepicker]="endDatePicker" placeholder="End Date" formControlName="hour_end">
+          <mat-datepicker #endDatePicker></mat-datepicker>
+        </mat-form-field>
+
+        <!-- Heure de fin -->
+        <mat-form-field>
+          <input matInput [ngxTimepicker]="endTimePicker" placeholder="End Time" formControlName="hour_end">
+          <ngx-material-timepicker #endTimePicker></ngx-material-timepicker>
+        </mat-form-field>
       </div>
     </div>
 

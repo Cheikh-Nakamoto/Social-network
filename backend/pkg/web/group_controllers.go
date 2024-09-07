@@ -189,9 +189,6 @@ func (gc *GroupController) CreateEventsHandler(w http.ResponseWriter, r *http.Re
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-
-	event.CreatedAt = time.Now()
-
 	err := gc.GroupService.CreateEventsInGroup(event)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

@@ -182,10 +182,10 @@ func (repo *GroupRepoImpl) GetAllJoinGroupByID(userID int) (map[int]bool, error)
 // create Events in group by ID
 func (repo *GroupRepoImpl) CreateEventsInGroup(event dto.Events) error {
 	// SQL query to insert an event into the database
-	query := "INSERT INTO events (name, description, owner, image, group_id, user_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
+	query := "INSERT INTO events (name, description, group_id, user_id, hour_start,hour_end) VALUES (?, ?, ?, ?, ?, ?)"
 
 	// Execute the query
-	_, err := repo.db.GetDB().Exec(query, event.Name, event.Description, event.Owner, event.Image, event.GroupId, event.UserID, event.CreatedAt)
+	_, err := repo.db.GetDB().Exec(query, event.Name, event.Description, event.GroupId, event.UserID, event.HourStart,event.HourEnd)
 	if err != nil {
 		return errors.New("failed to create event: " + err.Error())
 	}
@@ -196,7 +196,7 @@ func (repo *GroupRepoImpl) CreateEventsInGroup(event dto.Events) error {
 // FetchAllEvents retrieves all events from the database
 func (repo *GroupRepoImpl) FetchAllEvents(id int) ([]dto.Events, error) {
 	// Définir la requête SQL pour sélectionner tous les événements
-	query := `SELECT id, name, description, owner, image, group_id, user_id, created_at FROM events WHERE group_id=?`
+	query := `SELECT id, name, description, group_id, user_id,  hour_start,hour_end FROM events WHERE group_id=?`
 
 	// Exécuter la requête pour récupérer les lignes de la table "events"
 	rows, err := repo.db.GetDB().Query(query,id)
@@ -212,7 +212,7 @@ func (repo *GroupRepoImpl) FetchAllEvents(id int) ([]dto.Events, error) {
 	for rows.Next() {
 		var event dto.Events
 		// Scanner les valeurs de chaque colonne dans la structure de l'événement
-		err := rows.Scan(&event.ID,&event.Name, &event.Description, &event.Owner, &event.Image, &event.GroupId, &event.UserID, &event.CreatedAt)
+		err := rows.Scan(&event.ID,&event.Name, &event.Description,&event.GroupId, &event.UserID, &event.HourStart,&event.HourEnd)
 		if err != nil {
 			return nil, fmt.Errorf("FetchAllEvents: %v", err)
 		}

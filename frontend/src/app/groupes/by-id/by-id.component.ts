@@ -51,6 +51,7 @@ export class ByIdComponent implements OnInit {
     this.id = JSON.parse(localStorage.getItem("userID") as string);
     this.groupId = this.rout.snapshot.params['id'];
     this.loadUser('users');
+    this.loadComments()
     this.getAllPosts(Number(this.id))
     this.loadGroups().then(data => {
       this.groups = this.groups.filter(group => group.id == this.groupId);
@@ -96,19 +97,6 @@ export class ByIdComponent implements OnInit {
   //   this.groupService.dislikeTarget(0, this.id, targetId, targetType, false).subscribe(() => {
   //     this.loadLikes(targetType);
   //     this.loadDislikes(targetType);
-  //   });
-  // }
-
-
-  // private loadLikes(targetType: string) {
-  //   this.groupService.getTargetLikes(targetType).subscribe((likes) => {
-  //     this.likemap = likes;
-  //   });
-  // }
-
-  // private loadDislikes(targetType: string) {
-  //   this.groupService.getTargetDislikes(targetType).subscribe((dislikes) => {
-  //     this.dislikemap = dislikes;
   //   });
   // }
 

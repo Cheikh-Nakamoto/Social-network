@@ -29,7 +29,6 @@ export class DialogCommentComponent implements OnInit {
 
     this.comments = this.data.comments
     this.user = this.data.user;
-    console.log(this.comments, "mmml")
   }
  
   getImageUrl(comment: CommentDTO): string | null {
@@ -39,8 +38,5 @@ export class DialogCommentComponent implements OnInit {
     
     return imagePath ? `http://localhost:8080/${imagePath}` : null;
   }
-  
-  
-  
   
 }
