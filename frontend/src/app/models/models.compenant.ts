@@ -140,12 +140,13 @@ export interface MessageData {
   datas: MessageBody;
 }
 
-export interface Eventtype {
-  id?: number; // L'ID peut être optionnel si vous n'avez pas encore l'événement créé
-  name: string; // Nom de l'événement
-  description?: string; // Description de l'événement (peut être optionnelle)
-  groupId: number; // Identifiant du groupe auquel appartient l'événement
-  userId: number; // Identifiant de l'utilisateur créateur de l'événement
-  hourStart: string; // Date et heure de création de l'événement (au format ISO string)
-  hourEnd?: string; // Date et heure de fin de l'événement (au format ISO string)
+export interface Eventtype{
+  id: number;
+  name: string;
+  description: string;
+  group_id: number;
+  hour_start: Date;
+  hour_end: Date;
+  user_id: number;
 }
+

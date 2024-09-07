@@ -131,7 +131,6 @@ export class EventsComponent implements OnInit {
         'hour_end': endDateTime,
 
       }
-      console.log(body);
       this.apiService.createEvent(body).subscribe(
         (res) => {
           this.groupeForm.reset();

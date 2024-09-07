@@ -19,6 +19,7 @@
   justify-content: center;
 }
 
+
 .group-card {
   width: 100%;
 }
@@ -52,7 +53,7 @@ img {
 
 .event-group {
   margin-top: 20px;
-  width: fit-content;
+  width: 100%;
 }
 
 
@@ -153,5 +154,9 @@ mat-card-actions button {
 .event-group{
   display: flex;
   flex-wrap: nowrap;
-  justify-content: space-between;
+  justify-content: space-around;
+}
+
+.post{
+  width: 60%;
 }

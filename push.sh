@@ -1,7 +1,7 @@
 #!/bin/bash
 
 while true; do
-    git add .
+    git add -u
     git commit -m "we can merge"
     git pull
     git push

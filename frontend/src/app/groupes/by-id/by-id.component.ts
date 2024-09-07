@@ -81,6 +81,7 @@ export class ByIdComponent implements OnInit {
   loadEvents() {
     this.groupService.getData(`events/?groupid=${this.groupId}`).subscribe((res: Eventtype[]) => {
       this.Events = res
+      console.log(res)
     })
   }
 
@@ -215,6 +216,7 @@ export class ByIdComponent implements OnInit {
   private loadUser(targetlink: string) {
     this.groupService.getData(targetlink).subscribe((user: AllUsersDTO) => {
       this.AllUser = user;
+      console.log('ici sont les utilisateurs', this.AllUser);
     });
   }
   handleClick(route: string, event: Event, id?: number): void {
