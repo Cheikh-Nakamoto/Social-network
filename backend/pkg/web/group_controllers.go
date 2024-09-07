@@ -189,6 +189,7 @@ func (gc *GroupController) CreateEventsHandler(w http.ResponseWriter, r *http.Re
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	fmt.Println("event received: ", event)
 	err := gc.GroupService.CreateEventsInGroup(event)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -203,8 +204,8 @@ func (gc *GroupController) CreateEventsHandler(w http.ResponseWriter, r *http.Re
 func (gc *GroupController) FetchAllEventsHandler(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get("groupid")
-	ID,err := strconv.Atoi(id)
-	if err != nil || r.Method != http.MethodGet{
+	ID, err := strconv.Atoi(id)
+	if err != nil || r.Method != http.MethodGet {
 		http.Error(w, err.Error(), http.StatusMethodNotAllowed)
 		return
 	}

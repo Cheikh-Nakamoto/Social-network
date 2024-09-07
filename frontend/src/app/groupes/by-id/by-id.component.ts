@@ -116,7 +116,8 @@ export class ByIdComponent implements OnInit {
   }
 
   getAllPosts(groupID: number): void {
-    this.groupService.getData('AllPost').subscribe(
+    let rout = `AllPost/groups/?groupid=${groupID}`
+    this.groupService.getData(rout).subscribe(
       (response: Post[]) => {
         this.posts = response;
         console.log('ici sont les posts', this.posts);

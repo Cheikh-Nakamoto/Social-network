@@ -17,7 +17,7 @@ type Events struct {
 	ID          int       `json:"id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description,omitempty"`
-	GroupId     int       `json:"groupid"`
+	GroupId     int       `json:"group_id"`
 	UserID      int       `json:"user_id"`
 	HourStart   time.Time `json:"hour_start"`
     HourEnd     time.Time `json:"hour_end"`
