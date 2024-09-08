@@ -12,4 +12,5 @@ type GroupService interface {
 	NotificationExists(userID int) ([]dto.Notification, error)
 	GetNotificationsByUserID(userID int) ([]dto.Notification, error)
 	GetAllEventsByGroup() ([]dto.Events, error)
+	AddMemberBasedOnNotification(notif dto.Notification) error
 }

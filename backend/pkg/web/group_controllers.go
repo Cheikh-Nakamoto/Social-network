@@ -35,6 +35,7 @@ func (gc *GroupController) RegisterRoutes(mux *http.ServeMux) *http.ServeMux {
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/groups/", gc.GetGroupByIDHandler)
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/notification", gc.NotificationExists)
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/notification/", gc.NotificationsByUserID)
+	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/accept-request", gc.AddMemberBasedOnNotification)
 
 	return mux
 }
@@ -264,3 +265,22 @@ func (gc *GroupController) NotificationsByUserID(w http.ResponseWriter, r *http.
 	json.NewEncoder(w).Encode(notif)
 
 }
+
+func (gc *GroupController) AddMemberBasedOnNotification(w http.ResponseWriter, r *http.Request) {
+
+	var notif dto.Notification
+	if err := json.NewDecoder(r.Body).Decode(&notif); err != nil {
+		fmt.Println("error: ", err, r.Body)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err := gc.GroupService.AddMemberBasedOnNotification(notif); 
+	if err != nil {
+		fmt.Println("error", err)
+		http.Error(w, "Invalid user ID", http.StatusBadRequest)
+		return
+	}
+
+}
+
