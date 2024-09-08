@@ -85,7 +85,6 @@ export class DataService {
       target_type: targetType,
       like: like
     };
-    console.log(JSON.stringify(body))
     return this.http.post<void>(`${this.apiUrl}/likeTarget`, JSON.stringify(body));
   }
 

@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { DataService } from '../../data.service';
+
 import { AllUsersDTO, CommentContent, CommentDTO, Eventtype, Group, Post, Posts, length } from '../../models/models.compenant';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ToolbarComponent } from '../../nav/toolbar/toolbar.component';
@@ -15,6 +15,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogCommentComponent } from '../../dialog-comment/dialog-comment.component';
 import { SharedserviceComponent } from '../../sharedservice/sharedservice.component';
 import { IconModule } from '../../icone.module';
+import { DataService } from '../../data.service';
 
 @Component({
   selector: 'app-by-id',
@@ -35,6 +36,7 @@ import { IconModule } from '../../icone.module';
   styleUrls: ['./by-id.component.scss'],
   providers: [DataService, AuthService]
 })
+
 export class ByIdComponent implements OnInit {
   groups: Group[] = [];
   groupeForm!: FormGroup;
@@ -92,7 +94,7 @@ export class ByIdComponent implements OnInit {
   addMember(groupId: number, userId: string, target_id: string, role: string): void {
     this.groupService.addMember(groupId, userId, target_id, role).subscribe(
       () => alert("Request sended succesfully !"),
-      (error) => console.error('Error adding member:', error)
+      (error: any) => console.error('Error adding member:', error)
     );
   }
 
@@ -106,7 +108,7 @@ export class ByIdComponent implements OnInit {
 
 
   onGoing(targetId: number, targetType: string) {
-    this.groupService.likeTarget(0, Number(this.id), targetId, targetType, true).subscribe((response) => {
+    this.groupService.likeTarget(0, Number(this.id), targetId, targetType, true).subscribe((response: any) => {
       this.LoadGoing(targetType)
       this.LoadNotGoing(targetType)
     });
@@ -120,8 +122,7 @@ export class ByIdComponent implements OnInit {
   }
 
   onLike(targetId: number, targetType: string) {
-    this.groupService.likeTarget(0, Number(this.id), targetId, targetType, true).subscribe((response) => {
-      console.log("like response ", response);
+    this.groupService.likeTarget(0, Number(this.id), targetId, targetType, true).subscribe((response: any) => {
       this.loadLikes(targetType);
       this.loadDislikes(targetType);
     });
@@ -143,7 +144,7 @@ export class ByIdComponent implements OnInit {
         this.loadLikes('post');
         this.loadDislikes('post');
       },
-      (error) => {
+      (error: any) => {
         console.error('Error fetching posts:', error);
       }
     );
@@ -192,32 +193,32 @@ export class ByIdComponent implements OnInit {
         this.comlength = comment.CommentsLength
         console.log('ici sont les commentaires', comment);
       },
-      error => {
+      (      error: any) => {
         console.error('Erreur lors du chargement des commentaires:', error);
       }
     );
   }
 
   private loadLikes(targetType: string) {
-    this.groupService.getTargetLikes(targetType).subscribe((likes) => {
+    this.groupService.getTargetLikes(targetType).subscribe((likes: never[]) => {
       this.likemap = likes;
     });
   }
 
   private loadDislikes(targetType: string) {
-    this.groupService.getTargetDislikes(targetType).subscribe((dislikes) => {
+    this.groupService.getTargetDislikes(targetType).subscribe((dislikes: never[]) => {
       this.dislikemap = dislikes;
     });
   }
 
   private LoadGoing(targetType: string) {
-    this.groupService.getTargetLikes(targetType).subscribe((likes) => {
+    this.groupService.getTargetLikes(targetType).subscribe((likes: never[]) => {
       this.goingmap = likes;
     });
   }
 
   private LoadNotGoing(targetType: string) {
-    this.groupService.getTargetDislikes(targetType).subscribe((dislikes) => {
+    this.groupService.getTargetDislikes(targetType).subscribe((dislikes: never[]) => {
       this.notgoingmap = dislikes;
     });
   }
