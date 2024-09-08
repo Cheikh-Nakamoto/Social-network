@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { DataService } from '../../data.service';
-import { AllUsersDTO, CommentContent, CommentDTO, Group, JoinGroupVerification, NotificationVerification, Post, Posts,length } from '../../models/models.compenant';
+import { AllUsersDTO, CommentContent, CommentDTO, Group, JoinGroupVerification, MessageBody, MessageData, NotificationVerification, Post, Posts,length } from '../../models/models.compenant';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
@@ -12,6 +12,7 @@ import { ToolbarComponent } from '../../nav/toolbar/toolbar.component';
 import { AuthService } from '../../service/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCommentComponent } from '../../dialog-comment/dialog-comment.component';
+import { WebSocketService } from '../../chat/services/chat.service';
 
 
 @Component({
@@ -31,7 +32,7 @@ export class GroupeComponent implements OnInit, OnDestroy {
   clear!: any;
 
 
-  constructor(private fb: FormBuilder, private groupService: DataService, private router: Router, private authService: AuthService) { }
+  constructor(private fb: FormBuilder, private groupService: DataService, private router: Router, private authService: AuthService, private websocketService: WebSocketService) { }
 
   ngOnInit(): void {
     this.authService.isOnline();
@@ -64,7 +65,19 @@ export class GroupeComponent implements OnInit, OnDestroy {
   addMember(groupId: number, userId: string, target_id: string, role: string): void {
     console.log('Adding member', userId, 'to group', groupId, 'with role', role, "target_id :", target_id);
     this.groupService.addMember(groupId, userId, target_id, role).subscribe(
-      () => console.log('Member added successfully'),
+      () => {
+        const messBody : MessageBody = {
+          senderId:Number(userId),
+          receiverId: Number(target_id),
+          message:"Vous avez une nouvelle notification"
+          
+        }
+        const message: MessageData = {
+          type: 'new_notification',
+          datas: messBody,
+        };
+        this.websocketService.sendMessage(messBody)
+    },
       (error) => {
         // Vérifiez la condition correctement avec '==='
         if (error.error == "Notification existe : true\n") {

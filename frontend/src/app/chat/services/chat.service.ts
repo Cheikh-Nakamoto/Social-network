@@ -37,7 +37,7 @@ export class Event {
     }
 
     connect(): void {
-     
+
 
       if (!this.userId) {
         console.log(this.userId)

@@ -48,4 +48,5 @@ const (
 	EventUpdateChatbarData = "update_chatbar_data"
 	EventTypingStart = "typing_start"
 	EventTypingStop  = "typing_stop"
+	EventGetNotification="new_notification"
 )
