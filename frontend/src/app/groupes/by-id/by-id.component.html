@@ -91,21 +91,23 @@
                                     <p><strong>Description : </strong>{{event.description}}</p>
                                 </mat-card-content>
                                 <mat-card-content>
-                                    <p><strong>Debut :</strong> {{event.hour_start | date:'mediumDate' }} a {{ event.hour_start | date : "hh:mm:ss"}}</p>
-                                   
+                                    <p><strong>Debut :</strong> {{event.hour_start | date:'mediumDate' }} a {{
+                                        event.hour_start | date : "hh:mm:ss"}}</p>
+
                                 </mat-card-content>
                                 <mat-card-content>
-                                    <p> <strong>Fin : </strong> {{event.hour_end | date:'mediumDate' }} a {{event.hour_end  | date : "hh:mm:ss"}}</p>
+                                    <p> <strong>Fin : </strong> {{event.hour_end | date:'mediumDate' }} a
+                                        {{event.hour_end | date : "hh:mm:ss"}}</p>
                                 </mat-card-content>
-                                
+
                                 <mat-card-actions>
                                     <button mat-icon-button (click)="onGoing(event.id,'event')">
                                         <span>{{goingmap[event.id] || 0}}</span>
-                                        <mat-icon>thumb_up_outline</mat-icon>
+                                        <lucide-icon name="calendar-check"></lucide-icon>
                                     </button>
-                                    <button mat-icon-button  (click)="notGoing(event.id,'event')">
+                                    <button mat-icon-button (click)="notGoing(event.id,'event')">
                                         <span>{{notgoingmap[event.id] || 0}}</span>
-                                        <mat-icon>thumb_down</mat-icon>
+                                        <lucide-icon name="calendar-x-2"></lucide-icon>
                                     </button>
                                     <span class="spacer"></span>
                                 </mat-card-actions>

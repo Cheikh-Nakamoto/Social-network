@@ -1,6 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
-
 import { DataService } from '../../data.service';
 import { AllUsersDTO, CommentContent, CommentDTO, Eventtype, Group, Post, Posts, length } from '../../models/models.compenant';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -15,15 +14,25 @@ import { MainPageComponent } from '../../main-page/main-page.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCommentComponent } from '../../dialog-comment/dialog-comment.component';
 import { SharedserviceComponent } from '../../sharedservice/sharedservice.component';
+import { IconModule } from '../../icone.module';
 
 @Component({
   selector: 'app-by-id',
   standalone: true,
-  imports: [ToolbarComponent, RouterLink, CommonModule, MatCardModule, HttpClientModule, ReactiveFormsModule, ToolbarComponent, MatCardModule,
+  imports: [
+    ToolbarComponent,
+    RouterLink,
+    CommonModule,
+    MatCardModule,
+    HttpClientModule,
+    ReactiveFormsModule,
     MatIconModule,
-    MatButtonModule, MainPageComponent],
+    MatButtonModule,
+    MainPageComponent,
+    IconModule  // Utilisez le module IconModule ici
+  ],
   templateUrl: './by-id.component.html',
-  styleUrl: './by-id.component.scss',
+  styleUrls: ['./by-id.component.scss'],
   providers: [DataService, AuthService]
 })
 export class ByIdComponent implements OnInit {
@@ -249,3 +258,5 @@ export class ByIdComponent implements OnInit {
     }
   }
 }
+
+
