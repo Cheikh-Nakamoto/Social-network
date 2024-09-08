@@ -30,10 +30,9 @@ $primaryColor: #005cbb;
   font-weight: 600;
 }
 
-.hidden{
+.hidden {
   display: none;
 }
-
 
 h2 {
   clear: none;
@@ -45,10 +44,33 @@ h2 {
   font-weight: 400;
 }
 
-#content-textarea {
-  font-size: 15px;
-  padding: 12px;
+.modern-input {
+  padding: 8px;
+  font-size: 16px;
+  margin-left: 16px;
   border: none;
+  background-color: transparent;
+  color: #000;
+  transition: border-color 0.3s ease;
+}
+
+.modern-input:focus {
+  outline: none;
+}
+
+.modern-input::placeholder,
+#content-textarea textarea::placeholder {
+  color: #000;
+}
+
+#content-textarea {
+  padding: 10px;
+  border: none;
+}
+#content-textarea textarea {
+  border: none;
+  resize: none;
+  font-size: 15px;
 }
 
 .close {
@@ -120,6 +142,20 @@ svg:not(:root) {
 #privacy > span,
 .group-ac-vi-active > span {
   margin-top: 2px;
+}
+#privacy select {
+  appearance: none;
+  border: none;
+  background: #fff;
+  padding: 0;
+  font-size: 14px;
+  color: #000;
+  margin-left: 6px;
+  cursor: pointer;
+}
+
+#privacy select:focus {
+  outline: none;
 }
 
 .content-form {
@@ -244,9 +280,9 @@ svg:not(:root) {
   font-size: 13px;
 }
 
-.previewer.previewer-toggle {
+.previewer .previewer-toggle {
   position: relative;
-  bottom: 1px;
+  bottom: -1px;
   margin: 0px 15px 15px;
   height: auto;
   display: block;
@@ -271,7 +307,9 @@ svg:not(:root) {
   position: relative;
   overflow: hidden;
 }
-
+.previewer.visible {
+  display: block;
+}
 .previewer .previewer-uploader label {
   padding: 18px 25px;
   margin: 0;
@@ -335,8 +373,6 @@ svg:not(:root) {
 #options > div:not(:last-child) {
   margin-right: 20px;
 }
-
-
 
 .privacy-container select {
   position: relative;

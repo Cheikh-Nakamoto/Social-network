@@ -42,6 +42,9 @@ export class CreatePostComponent implements OnInit {
 
   Post!: FormGroup;
   selectedFile!: File;
+  selectedFileName: string ="";
+  isPreviewerVisible: boolean = false;
+  
 
   constructor(private dialogRef: MatDialogRef<CreatePostComponent>, private postFormBuilder: FormBuilder, private apiservice: DataService, private router: Router, private authService: AuthService, private rout: ActivatedRoute,private shared : SharedserviceComponent) { }
 
@@ -72,11 +75,14 @@ export class CreatePostComponent implements OnInit {
       });
     }
   }
+  
 
   onFileChange(event: any): void {
     console.log(event.target.files.length)
     if (event.target.files.length > 0) {
       this.selectedFile = event.target.files[0];
+      this.selectedFileName = this.selectedFile.name; 
+      console.log('Fichier sélectionné:', this.selectedFileName);
     }
   }
 
@@ -127,6 +133,9 @@ export class CreatePostComponent implements OnInit {
   SelectImage() {
     let fileinput = document.getElementById("imageclick")
     fileinput?.click()
+  }
+  toggleLabel() {
+    this.isPreviewerVisible = !this.isPreviewerVisible;
   }
 
   SelectUsersView() {
