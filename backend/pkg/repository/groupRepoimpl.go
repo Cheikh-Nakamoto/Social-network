@@ -316,28 +316,60 @@ func (repo *GroupRepoImpl) GetNotificationsByUserID(userID int) ([]dto.Notificat
 	return notifications, nil
 }
 
-// AddMemberBasedOnNotification vérifie la notification et ajoute le membre au groupe si l'utilisateur accepte
+/// AddMemberBasedOnNotification vérifie la notification et ajoute le membre au groupe si l'utilisateur accepte, puis supprime la notification
 func (repo *GroupRepoImpl) AddMemberBasedOnNotification(notif dto.Notification) error {
+    var data dto.Notification
+
+    // Requête SQL pour vérifier l'existence de la notification
+    query := `SELECT group_id, user_id FROM notifications WHERE id = ? AND group_id = ? AND user_id = ?`
+    err := repo.db.GetDB().QueryRow(query, notif.ID, notif.GroupID, notif.UserID).Scan(&data.GroupID, &data.UserID)
+
+    if err != nil {
+        if err == sql.ErrNoRows {
+            fmt.Println("Notification non trouvée :", notif.ID, notif.GroupID, notif.UserID) // Affichage pour le débogage
+            return errors.New("notification non trouvée")
+        }
+        return err
+    }
+
+    // Insérer l'utilisateur dans la table group_members
+    insertQuery := `INSERT INTO group_members (group_id, user_id, role, joined_at) VALUES (?, ?, ?, ?)`
+    _, err = repo.db.GetDB().Exec(insertQuery, notif.GroupID, notif.UserID, "member", time.Now())
+    if err != nil {
+        return err
+    }
+
+    // Supprimer la notification après avoir ajouté l'utilisateur au groupe
+    deleteQuery := `DELETE FROM notifications WHERE id = ?`
+    _, err = repo.db.GetDB().Exec(deleteQuery, notif.ID)
+    if err != nil {
+        return err
+    }
+
+    return nil
+}
+
+
+func (repo *GroupRepoImpl)  DeclineNotification(notif dto.Notification) error{
 	var data dto.Notification
 
-	// Requête SQL corrigée pour correspondre aux champs de la table
-	query := `SELECT group_id, user_id FROM notifications WHERE group_id = ? AND user_id = ?`
-	err := repo.db.GetDB().QueryRow(query, notif.GroupID, notif.UserID).Scan(&data.GroupID, &data.UserID)
+    // Requête SQL pour vérifier l'existence de la notification
+    query := `SELECT group_id, user_id FROM notifications WHERE id = ? AND group_id = ? AND user_id = ?`
+    err := repo.db.GetDB().QueryRow(query, notif.ID, notif.GroupID, notif.UserID).Scan(&data.GroupID, &data.UserID)
 
-	if err != nil {
-		if err == sql.ErrNoRows {
-			fmt.Println("Notification non trouvée :", notif.ID, notif.GroupID, notif.UserID) // Affichage pour le debug
-			return errors.New("notification non trouvée")
-		}
-		return err
-	}
+    if err != nil {
+        if err == sql.ErrNoRows {
+            fmt.Println("Notification non trouvée :", notif.ID, notif.GroupID, notif.UserID) // Affichage pour le débogage
+            return errors.New("notification non trouvée")
+        }
+        return err
+    }
+    // Supprimer la notification après avoir ajouté l'utilisateur au groupe
+    deleteQuery := `DELETE FROM notifications WHERE id = ?`
+    _, err = repo.db.GetDB().Exec(deleteQuery, notif.ID)
+    if err != nil {
+        return err
+    }
 
-	// Insérer l'utilisateur dans la table group_members
-	insertQuery := `INSERT INTO group_members (group_id, user_id, role, joined_at) VALUES (?, ?, ?, ?)`
-	_, err = repo.db.GetDB().Exec(insertQuery, notif.GroupID, notif.UserID, "member", time.Now())
-	if err != nil {
-		return err
-	}
-
-	return nil
+    return nil
 }

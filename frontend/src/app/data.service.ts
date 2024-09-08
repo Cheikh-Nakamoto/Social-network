@@ -45,6 +45,11 @@ export class DataService {
       );
   }
   
+  accept_decline(routes : string,data :any){
+    return this.http.post(`${this.apiUrl}/${routes}`, data).pipe(
+      catchError(this.handleError)
+    );
+  }
 
   // Méthode POST
   postData(endpoint: string, data: any): Observable<any> {

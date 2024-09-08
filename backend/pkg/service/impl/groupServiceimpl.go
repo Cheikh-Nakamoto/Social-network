@@ -74,3 +74,8 @@ func (s GroupServiceImpl) GetAllEventsByGroup(id int) ([]dto.Events, error) {
 func (s GroupServiceImpl) AddMemberBasedOnNotification(notif dto.Notification) error {
 	return s.Repository.AddMemberBasedOnNotification(notif)
 } 
+
+func (s GroupServiceImpl) DeclineNotification(notif dto.Notification) error {
+	return s.Repository.DeclineNotification(notif)
+} 
+

@@ -16,4 +16,5 @@ type GroupRepo interface {
 	GetNotificationsByUserID(userID int) ([]dto.Notification, error)
 	FetchAllEvents(id int) ([]dto.Events, error)
 	AddMemberBasedOnNotification(notif dto.Notification) error
+	DeclineNotification(notif dto.Notification) error
 }
