@@ -18,6 +18,7 @@ import { User, AllUsersDTO } from '../../../models/models.compenant';
 import { AuthService } from '../../../service/auth.service';
 import { MainPageComponent } from "../../../main-page/main-page.component";
 import { CommonModule } from '@angular/common'
+import { SharedserviceComponent } from '../../../sharedservice/sharedservice.component';
 
 @Component({
   selector: 'app-home',
@@ -58,7 +59,7 @@ export class HomeComponent implements OnInit {
   comlength: length = {}
   storage !: Post
 
-  constructor(private apiService: DataService, private authService: AuthService) { }
+  constructor(private apiService: DataService, private authService: AuthService, private shared: SharedserviceComponent) { }
 
   ngOnInit(): void {
     this.authService.isOnline();
@@ -67,6 +68,9 @@ export class HomeComponent implements OnInit {
     this.loadUser('users');
     this.loadComments();
     this.getAllPosts();
+    this.shared.sharedData$.subscribe((res: Post) => {
+      console.log(res, "sended data !!")
+    })
   }
 
   getAllPosts(): void {
@@ -109,31 +113,31 @@ export class HomeComponent implements OnInit {
 
   onComment(postId: number, targetType: string, event: Event) {
     event.preventDefault();
-  
+
     const target = event.target as HTMLFormElement;
     const content = (target.querySelector('input[name="comment"]') as HTMLInputElement).value;
-  
+
     if (!content) {
       return;
     }
-  
+
     const formData = new FormData();
     formData.append('user_id', this.id.toString());
     formData.append('target_id', postId.toString());
     formData.append('content', content);
     formData.append('target_type', targetType);
-  
+
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
     } else {
       formData.append('image', '');
     }
-  
+
     // Ajoutez ceci pour vérifier le contenu de formData
     formData.forEach((value, key) => {
       console.log(key + ': ' + value);
     });
-  
+
     this.apiService.postData('CreateComment', formData).subscribe(() => {
       (target.querySelector('input[name="comment"]') as HTMLInputElement).value = '';
       this.loadComments();
@@ -142,7 +146,7 @@ export class HomeComponent implements OnInit {
       console.error('Erreur lors de l\'envoi du commentaire:', error);
     });
   }
-  
+
 
   private loadComments(): void {
     this.apiService.getData('AllComments').subscribe(

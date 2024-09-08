@@ -13,6 +13,7 @@ import { group } from '@angular/animations';
 
 import { MatDialogRef } from '@angular/material/dialog';
 import { Post } from '../models/models.compenant';
+import { SharedserviceComponent } from '../sharedservice/sharedservice.component';
 @Component({
   selector: 'app-create-post',
   standalone: true,
@@ -42,7 +43,7 @@ export class CreatePostComponent implements OnInit {
   Post!: FormGroup;
   selectedFile!: File;
 
-  constructor(private dialogRef: MatDialogRef<CreatePostComponent>, private postFormBuilder: FormBuilder, private apiservice: DataService, private router: Router, private authService: AuthService, private rout: ActivatedRoute) { }
+  constructor(private dialogRef: MatDialogRef<CreatePostComponent>, private postFormBuilder: FormBuilder, private apiservice: DataService, private router: Router, private authService: AuthService, private rout: ActivatedRoute,private shared : SharedserviceComponent) { }
 
   ngOnInit(): void {
     this.redirecte = "Acceuil"
@@ -110,6 +111,7 @@ export class CreatePostComponent implements OnInit {
         console.log("donne envoyer au api this.postFormBuilder", this.Post.value)
         this.apiservice.postData('CreatePost', this.Post.value).subscribe((response: Post) => {
           localStorage.setItem("post", JSON.stringify(response))
+          this.shared.setData(response)
         }, error => {
           console.error('Erreur lors de l\'envoi du post:', error);
         });
