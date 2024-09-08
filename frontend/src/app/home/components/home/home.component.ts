@@ -69,8 +69,11 @@ export class HomeComponent implements OnInit {
     this.loadComments();
     this.getAllPosts();
     this.shared.sharedData$.subscribe((res: Post) => {
-      console.log(res, "sended data !!")
+      if (this.storage?.id != res?.id){
+        this.storage = res
+      }
     })
+  
   }
 
   getAllPosts(): void {
