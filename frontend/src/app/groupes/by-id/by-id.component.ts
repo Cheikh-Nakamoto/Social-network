@@ -44,6 +44,8 @@ export class ByIdComponent implements OnInit {
   user: any;
   storage!: Post;
   comlength: length = {}
+  goingmap = [];
+  notgoingmap = [];
 
   constructor(private fb: FormBuilder, private groupService: DataService, private router: Router, private rout: ActivatedRoute, private authSrvice: AuthService, private shared: SharedserviceComponent) { }
 
@@ -59,7 +61,7 @@ export class ByIdComponent implements OnInit {
     })
     this.loadEvents()
     this.shared.sharedData$.subscribe((res: Post) => {
-      if (this.storage?.group_id != res?.group_id && res != null){
+      if (this.storage?.group_id != res?.group_id && res != null) {
         this.storage = res
         location.reload()
       }
@@ -88,25 +90,25 @@ export class ByIdComponent implements OnInit {
   loadEvents() {
     this.groupService.getData(`events/?groupid=${this.groupId}`).subscribe((res: Eventtype[]) => {
       this.Events = res
-      console.log(res)
+      this.LoadGoing("event")
+      this.LoadNotGoing("event")
     })
   }
 
 
-  // onGoing(targetId: number, targetType: string) {
-  //   this.groupService.likeTarget(0, this.id, targetId, targetType, true).subscribe((response) => {
-  //     console.log("like response ", response);
-  //     this.loadLikes(targetType);
-  //     this.loadDislikes(targetType);
-  //   });
-  // }
+  onGoing(targetId: number, targetType: string) {
+    this.groupService.likeTarget(0, Number(this.id), targetId, targetType, true).subscribe((response) => {
+      this.LoadGoing(targetType)
+      this.LoadNotGoing(targetType)
+    });
+  }
 
-  // notGoing(targetId: number, targetType: string) {
-  //   this.groupService.dislikeTarget(0, this.id, targetId, targetType, false).subscribe(() => {
-  //     this.loadLikes(targetType);
-  //     this.loadDislikes(targetType);
-  //   });
-  // }
+  notGoing(targetId: number, targetType: string) {
+    this.groupService.dislikeTarget(0, Number(this.id), targetId, targetType, false).subscribe(() => {
+      this.LoadGoing(targetType)
+      this.LoadNotGoing(targetType)
+    })
+  }
 
   onLike(targetId: number, targetType: string) {
     this.groupService.likeTarget(0, Number(this.id), targetId, targetType, true).subscribe((response) => {
@@ -196,6 +198,18 @@ export class ByIdComponent implements OnInit {
   private loadDislikes(targetType: string) {
     this.groupService.getTargetDislikes(targetType).subscribe((dislikes) => {
       this.dislikemap = dislikes;
+    });
+  }
+
+  private LoadGoing(targetType: string) {
+    this.groupService.getTargetLikes(targetType).subscribe((likes) => {
+      this.goingmap = likes;
+    });
+  }
+
+  private LoadNotGoing(targetType: string) {
+    this.groupService.getTargetDislikes(targetType).subscribe((dislikes) => {
+      this.notgoingmap = dislikes;
     });
   }
 

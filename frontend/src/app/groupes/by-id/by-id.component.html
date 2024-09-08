@@ -99,12 +99,12 @@
                                 </mat-card-content>
                                 
                                 <mat-card-actions>
-                                    <button mat-icon-button>
-                                        <span>0</span>
+                                    <button mat-icon-button (click)="onGoing(event.id,'event')">
+                                        <span>{{goingmap[event.id] || 0}}</span>
                                         <mat-icon>thumb_up_outline</mat-icon>
                                     </button>
-                                    <button mat-icon-button>
-                                        <span>0</span>
+                                    <button mat-icon-button  (click)="notGoing(event.id,'event')">
+                                        <span>{{notgoingmap[event.id] || 0}}</span>
                                         <mat-icon>thumb_down</mat-icon>
                                     </button>
                                     <span class="spacer"></span>
