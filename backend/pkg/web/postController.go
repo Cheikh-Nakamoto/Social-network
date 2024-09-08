@@ -39,7 +39,6 @@ func (p *PostController) createPostHandler(w http.ResponseWriter, r *http.Reques
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
 		return
 	}
-	fmt.Println("post envoyer :", post)
 	id, err := p.PostService.CreatePost(&post)
 	if err != nil {
 		fmt.Println("err")

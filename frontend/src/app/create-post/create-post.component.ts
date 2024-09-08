@@ -114,7 +114,6 @@ export class CreatePostComponent implements OnInit {
       }
     }
     this.Post.reset();
-    this.closeDialog()
     location.reload()
    
   }
