@@ -30,6 +30,7 @@ import { DataService } from '../../data.service';
     MatIconModule,
     MatButtonModule,
     MainPageComponent,
+    IconModule
   ],
   templateUrl: './by-id.component.html',
   styleUrls: ['./by-id.component.scss'],
