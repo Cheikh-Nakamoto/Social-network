@@ -316,22 +316,25 @@ func (repo *GroupRepoImpl) GetNotificationsByUserID(userID int) ([]dto.Notificat
 	return notifications, nil
 }
 
-// AddMemberBasedOnNotification checks the notification and adds the member to the group if the user accepts
+// AddMemberBasedOnNotification vérifie la notification et ajoute le membre au groupe si l'utilisateur accepte
 func (repo *GroupRepoImpl) AddMemberBasedOnNotification(notif dto.Notification) error {
-
 	var data dto.Notification
-	query := `SELECT groupe_id, user_id FROM notifications WHERE id = ? AND group_id = ? AND user_id = ?`
-	err := repo.db.GetDB().QueryRow(query, notif.ID, notif.GroupID, notif.UserID).Scan(&data.GroupID, &data.UserID)
+
+	// Requête SQL corrigée pour correspondre aux champs de la table
+	query := `SELECT group_id, user_id FROM notifications WHERE group_id = ? AND user_id = ?`
+	err := repo.db.GetDB().QueryRow(query, notif.GroupID, notif.UserID).Scan(&data.GroupID, &data.UserID)
+
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return errors.New("notification not found")
+			fmt.Println("Notification non trouvée :", notif.ID, notif.GroupID, notif.UserID) // Affichage pour le debug
+			return errors.New("notification non trouvée")
 		}
 		return err
 	}
 
-	// Step 3: Add the user to the group (assuming group_members table)
-	insertQuery := `INSERT INTO group_members (group_id, user_id) VALUES (?, ?)`
-	_, err = repo.db.GetDB().Exec(insertQuery, notif.GroupID, notif.UserID)
+	// Insérer l'utilisateur dans la table group_members
+	insertQuery := `INSERT INTO group_members (group_id, user_id, role, joined_at) VALUES (?, ?, ?, ?)`
+	_, err = repo.db.GetDB().Exec(insertQuery, notif.GroupID, notif.UserID, "member", time.Now())
 	if err != nil {
 		return err
 	}

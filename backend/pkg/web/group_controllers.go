@@ -267,20 +267,18 @@ func (gc *GroupController) NotificationsByUserID(w http.ResponseWriter, r *http.
 }
 
 func (gc *GroupController) AddMemberBasedOnNotification(w http.ResponseWriter, r *http.Request) {
-
 	var notif dto.Notification
 	if err := json.NewDecoder(r.Body).Decode(&notif); err != nil {
-		fmt.Println("error: ", err, r.Body)
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		fmt.Println("error de decodage: ", err)
+		http.Error(w,  "error de decodage ", http.StatusBadRequest)
 		return
 	}
-
+	
 	err := gc.GroupService.AddMemberBasedOnNotification(notif); 
 	if err != nil {
 		fmt.Println("error", err)
-		http.Error(w, "Invalid user ID", http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-
 }
 
