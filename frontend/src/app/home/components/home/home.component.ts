@@ -39,7 +39,6 @@ import { CommonModule } from '@angular/common'
     MatInputModule,
     HttpClientModule,
     MatDialogModule,
-
     MainPageComponent
   ],
   templateUrl: './home.component.html',

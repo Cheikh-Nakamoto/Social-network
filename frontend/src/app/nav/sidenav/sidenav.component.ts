@@ -49,7 +49,6 @@ export class SidenavComponent implements OnInit {
     { name: 'Profile', route: '/profile/1', icon: 'icofont-user' },
     { name: 'Friends', route: '/followers', icon: 'icofont-users-alt-4' },
     { name: 'Groups', route: '/groups', icon: 'icofont-users-social' },
-    { name: 'New Post', route: '/CreatePost', icon: 'icofont-pencil-alt-1' },
   ];
   users: model.UserDTO[] = [];
   constructor(
