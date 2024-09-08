@@ -1,6 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
-
 import { DataService } from '../../data.service';
 import { AllUsersDTO, CommentContent, CommentDTO, Eventtype, Group, Post, Posts, length } from '../../models/models.compenant';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -14,15 +13,26 @@ import { MatIconModule } from '@angular/material/icon';
 import { MainPageComponent } from '../../main-page/main-page.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCommentComponent } from '../../dialog-comment/dialog-comment.component';
+import { SharedserviceComponent } from '../../sharedservice/sharedservice.component';
+import { IconModule } from '../../icone.module';
 
 @Component({
   selector: 'app-by-id',
   standalone: true,
-  imports: [ToolbarComponent, RouterLink, CommonModule, MatCardModule, HttpClientModule, ReactiveFormsModule, ToolbarComponent, MatCardModule,
+  imports: [
+    ToolbarComponent,
+    RouterLink,
+    CommonModule,
+    MatCardModule,
+    HttpClientModule,
+    ReactiveFormsModule,
     MatIconModule,
-    MatButtonModule, MainPageComponent],
+    MatButtonModule,
+    MainPageComponent,
+    IconModule  // Utilisez le module IconModule ici
+  ],
   templateUrl: './by-id.component.html',
-  styleUrl: './by-id.component.scss',
+  styleUrls: ['./by-id.component.scss'],
   providers: [DataService, AuthService]
 })
 export class ByIdComponent implements OnInit {
@@ -41,10 +51,12 @@ export class ByIdComponent implements OnInit {
   dislikemap = [];
   token = localStorage.getItem('token');
   user: any;
-  postAndButton!: Posts;
+  storage!: Post;
   comlength: length = {}
+  goingmap = [];
+  notgoingmap = [];
 
-  constructor(private fb: FormBuilder, private groupService: DataService, private router: Router, private rout: ActivatedRoute, private authSrvice: AuthService) { }
+  constructor(private fb: FormBuilder, private groupService: DataService, private router: Router, private rout: ActivatedRoute, private authSrvice: AuthService, private shared: SharedserviceComponent) { }
 
   ngOnInit(): void {
     this.authSrvice.isOnline();
@@ -52,11 +64,17 @@ export class ByIdComponent implements OnInit {
     this.groupId = this.rout.snapshot.params['id'];
     this.loadUser('users');
     this.loadComments()
-    this.getAllPosts(Number(this.id))
+    this.getAllPosts(Number(this.groupId))
     this.loadGroups().then(data => {
       this.groups = this.groups.filter(group => group.id == this.groupId);
     })
     this.loadEvents()
+    this.shared.sharedData$.subscribe((res: Post) => {
+      if (this.storage?.group_id != res?.group_id && res != null) {
+        this.storage = res
+        location.reload()
+      }
+    })
   }
 
 
@@ -81,25 +99,25 @@ export class ByIdComponent implements OnInit {
   loadEvents() {
     this.groupService.getData(`events/?groupid=${this.groupId}`).subscribe((res: Eventtype[]) => {
       this.Events = res
-      console.log(res)
+      this.LoadGoing("event")
+      this.LoadNotGoing("event")
     })
   }
 
 
-  // onGoing(targetId: number, targetType: string) {
-  //   this.groupService.likeTarget(0, this.id, targetId, targetType, true).subscribe((response) => {
-  //     console.log("like response ", response);
-  //     this.loadLikes(targetType);
-  //     this.loadDislikes(targetType);
-  //   });
-  // }
+  onGoing(targetId: number, targetType: string) {
+    this.groupService.likeTarget(0, Number(this.id), targetId, targetType, true).subscribe((response) => {
+      this.LoadGoing(targetType)
+      this.LoadNotGoing(targetType)
+    });
+  }
 
-  // notGoing(targetId: number, targetType: string) {
-  //   this.groupService.dislikeTarget(0, this.id, targetId, targetType, false).subscribe(() => {
-  //     this.loadLikes(targetType);
-  //     this.loadDislikes(targetType);
-  //   });
-  // }
+  notGoing(targetId: number, targetType: string) {
+    this.groupService.dislikeTarget(0, Number(this.id), targetId, targetType, false).subscribe(() => {
+      this.LoadGoing(targetType)
+      this.LoadNotGoing(targetType)
+    })
+  }
 
   onLike(targetId: number, targetType: string) {
     this.groupService.likeTarget(0, Number(this.id), targetId, targetType, true).subscribe((response) => {
@@ -192,6 +210,18 @@ export class ByIdComponent implements OnInit {
     });
   }
 
+  private LoadGoing(targetType: string) {
+    this.groupService.getTargetLikes(targetType).subscribe((likes) => {
+      this.goingmap = likes;
+    });
+  }
+
+  private LoadNotGoing(targetType: string) {
+    this.groupService.getTargetDislikes(targetType).subscribe((dislikes) => {
+      this.notgoingmap = dislikes;
+    });
+  }
+
   readonly dialog = inject(MatDialog);
 
   openDialog(postId: number): void {
@@ -228,3 +258,5 @@ export class ByIdComponent implements OnInit {
     }
   }
 }
+
+

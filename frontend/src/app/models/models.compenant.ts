@@ -100,6 +100,7 @@ export interface Post {
   image: string;
   privacy: string;
   user_id: string;
+  group_id: number
 }
 
 // notification group et message
