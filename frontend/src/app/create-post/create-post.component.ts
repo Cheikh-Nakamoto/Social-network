@@ -12,6 +12,7 @@ import { ToolbarComponent } from "../nav/toolbar/toolbar.component";
 import { group } from '@angular/animations';
 
 import { MatDialogRef } from '@angular/material/dialog';
+import { Post } from '../models/models.compenant';
 @Component({
   selector: 'app-create-post',
   standalone: true,
@@ -89,11 +90,13 @@ export class CreatePostComponent implements OnInit {
 
       let userId = JSON.parse(localStorage.getItem("userID") as string).toString()
       formData.append('user_id', userId);
-      console.log(this.selectedFile)
+
       if (this.selectedFile) {
         this.apiservice.uploadImage(formData).subscribe(
           response => {
-            this.apiservice.postData('CreatePost', response).subscribe((response: any) => {
+            this.apiservice.postData('CreatePost', response).subscribe((responses: Post) => {
+              console.log("ceci est la reponse ", responses)
+              localStorage.setItem("post", JSON.stringify(responses))
             }, error => {
               alert('Erreur lors de l\'envoi du post:')
               console.error('Erreur lors de l\'envoi du post:', error);
@@ -105,17 +108,15 @@ export class CreatePostComponent implements OnInit {
         );
       } else {
         console.log("donne envoyer au api this.postFormBuilder", this.Post.value)
-        this.apiservice.postData('CreatePost', this.Post.value).subscribe((response: any) => {
-         
-
+        this.apiservice.postData('CreatePost', this.Post.value).subscribe((response: Post) => {
+          localStorage.setItem("post", JSON.stringify(response))
         }, error => {
           console.error('Erreur lors de l\'envoi du post:', error);
         });
       }
     }
     this.Post.reset();
-    location.reload()
-   
+    this.closeDialog()
   }
   closeDialog() {
     this.dialogRef.close();

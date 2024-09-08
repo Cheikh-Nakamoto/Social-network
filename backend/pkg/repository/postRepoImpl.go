@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"html"
 	"log"
+	"strconv"
 	"time"
 )
 
@@ -17,24 +18,25 @@ func NewPostRepoImpl(db sqlite.Database) *PostRepoImpl {
 	return &PostRepoImpl{db: &db}
 }
 
-func (p *PostRepoImpl) CreatePost(userID string, title, content, Image string, IsPublic string,Groupid int64) (string, error) {
+func (p *PostRepoImpl) CreatePost(userID string, title, content, Image string, IsPublic string, Groupid int64) (string, error) {
 
 	stmt := `INSERT INTO posts ( user_id, title, content,post_image, privacy, group_id,created_at) VALUES ( ?, ?, ?, ?,?, ?,?)`
 	escapedTitle := html.EscapeString(title)
 	escapedContent := html.EscapeString(content)
 	// escapedImage := html.EscapeString(Image)
 	log.Println(escapedTitle)
-	id, err := p.db.GetDB().Exec(stmt, userID, escapedTitle, escapedContent,Image, IsPublic,Groupid ,time.Now())
+	id, err := p.db.GetDB().Exec(stmt, userID, escapedTitle, escapedContent, Image, IsPublic, Groupid, time.Now())
 	if err != nil {
 		fmt.Println("err create", err)
 		return "", fmt.Errorf("CreatePost: %v", err)
 	}
 	nbr, _ := id.LastInsertId()
-	return string(nbr), nil
+
+	return strconv.Itoa(int(nbr)), nil
 }
 
 func (p *PostRepoImpl) GetAllPosts() ([]entity.Post, error) {
-	row, err := p.db.GetDB().Query(`SELECT * FROM posts WHERE group_id=?`,0)
+	row, err := p.db.GetDB().Query(`SELECT * FROM posts WHERE group_id=? ORDER BY created_at DESC`, 0)
 	if err != nil {
 		fmt.Println("erreur lors de la recuperation des post")
 		return nil, fmt.Errorf("GetAllPosts: %v", err)
@@ -61,8 +63,8 @@ func (p *PostRepoImpl) GetAllPosts() ([]entity.Post, error) {
 	}
 	return posts, nil
 }
-func (p *PostRepoImpl) GetAllPostsByGroupID(id  int) ([]entity.Post, error) {
-	row, err := p.db.GetDB().Query(`SELECT * FROM posts WHERE group_id=?`,id)
+func (p *PostRepoImpl) GetAllPostsByGroupID(id int) ([]entity.Post, error) {
+	row, err := p.db.GetDB().Query(`SELECT * FROM posts WHERE group_id=? ORDER BY created_at DESC`, id)
 	if err != nil {
 		fmt.Println("erreur lors de la recuperation des post")
 		return nil, fmt.Errorf("GetAllPosts: %v", err)

@@ -19,7 +19,6 @@ import { AuthService } from '../../../service/auth.service';
 import { MainPageComponent } from "../../../main-page/main-page.component";
 import { CommonModule } from '@angular/common'
 
-
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -57,13 +56,14 @@ export class HomeComponent implements OnInit {
   user: any;
   postAndButton!: Posts;
   comlength: length = {}
+  storage !: Post
 
   constructor(private apiService: DataService, private authService: AuthService) { }
 
   ngOnInit(): void {
     this.authService.isOnline();
     this.id = (JSON.parse(localStorage.getItem("userID") as string));
-
+    this.storage = localStorage.getItem("post") == null ? {} : JSON.parse(localStorage.getItem("post") as string)
     this.loadUser('users');
     this.loadComments();
     this.getAllPosts();
