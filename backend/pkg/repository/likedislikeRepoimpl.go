@@ -15,7 +15,7 @@ func NewLikeDislikeRepoImpl(db sqlite.Database) *LikeDislikeRepoImpl {
 }
 
 func (repo *LikeDislikeRepoImpl) IsUniqueLikeOrDislike(likeDislike *entity.LikeDislike) bool {
-	if likeDislike.TargetType != "post" && likeDislike.TargetType != "comment" {
+	if likeDislike.TargetType != "post" && likeDislike.TargetType != "comment" && likeDislike.TargetType != "event"  {
 		fmt.Println("Tu veux nous fail ou quoi ! Calm down ceci n'est pas autorisé !")
 		return true
 	}

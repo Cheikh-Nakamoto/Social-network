@@ -1,7 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
-import { DataService } from '../../data.service';
 import { AllUsersDTO, CommentContent, CommentDTO, Eventtype, Group, Post, Posts, length } from '../../models/models.compenant';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ToolbarComponent } from '../../nav/toolbar/toolbar.component';
@@ -15,17 +14,28 @@ import { MainPageComponent } from '../../main-page/main-page.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCommentComponent } from '../../dialog-comment/dialog-comment.component';
 import { SharedserviceComponent } from '../../sharedservice/sharedservice.component';
+import { IconModule } from '../../icone.module';
+import { DataService } from '../../data.service';
 
 @Component({
   selector: 'app-by-id',
   standalone: true,
-  imports: [ToolbarComponent, RouterLink, CommonModule, MatCardModule, HttpClientModule, ReactiveFormsModule, ToolbarComponent, MatCardModule,
+  imports: [
+    ToolbarComponent,
+    RouterLink,
+    CommonModule,
+    MatCardModule,
+    HttpClientModule,
+    ReactiveFormsModule,
     MatIconModule,
-    MatButtonModule, MainPageComponent],
+    MatButtonModule,
+    MainPageComponent,
+  ],
   templateUrl: './by-id.component.html',
-  styleUrl: './by-id.component.scss',
+  styleUrls: ['./by-id.component.scss'],
   providers: [DataService, AuthService]
 })
+
 export class ByIdComponent implements OnInit {
   groups: Group[] = [];
   groupeForm!: FormGroup;
@@ -44,6 +54,8 @@ export class ByIdComponent implements OnInit {
   user: any;
   storage!: Post;
   comlength: length = {}
+  goingmap = [];
+  notgoingmap = [];
 
   constructor(private fb: FormBuilder, private groupService: DataService, private router: Router, private rout: ActivatedRoute, private authSrvice: AuthService, private shared: SharedserviceComponent) { }
 
@@ -59,7 +71,7 @@ export class ByIdComponent implements OnInit {
     })
     this.loadEvents()
     this.shared.sharedData$.subscribe((res: Post) => {
-      if (this.storage?.group_id != res?.group_id && res != null){
+      if (this.storage?.group_id != res?.group_id && res != null) {
         this.storage = res
         location.reload()
       }
@@ -81,36 +93,35 @@ export class ByIdComponent implements OnInit {
   addMember(groupId: number, userId: string, target_id: string, role: string): void {
     this.groupService.addMember(groupId, userId, target_id, role).subscribe(
       () => alert("Request sended succesfully !"),
-      (error) => console.error('Error adding member:', error)
+      (error: any) => console.error('Error adding member:', error)
     );
   }
 
   loadEvents() {
     this.groupService.getData(`events/?groupid=${this.groupId}`).subscribe((res: Eventtype[]) => {
       this.Events = res
-      console.log(res)
+      this.LoadGoing("event")
+      this.LoadNotGoing("event")
     })
   }
 
 
-  // onGoing(targetId: number, targetType: string) {
-  //   this.groupService.likeTarget(0, this.id, targetId, targetType, true).subscribe((response) => {
-  //     console.log("like response ", response);
-  //     this.loadLikes(targetType);
-  //     this.loadDislikes(targetType);
-  //   });
-  // }
+  onGoing(targetId: number, targetType: string) {
+    this.groupService.likeTarget(0, Number(this.id), targetId, targetType, true).subscribe((response: any) => {
+      this.LoadGoing(targetType)
+      this.LoadNotGoing(targetType)
+    });
+  }
 
-  // notGoing(targetId: number, targetType: string) {
-  //   this.groupService.dislikeTarget(0, this.id, targetId, targetType, false).subscribe(() => {
-  //     this.loadLikes(targetType);
-  //     this.loadDislikes(targetType);
-  //   });
-  // }
+  notGoing(targetId: number, targetType: string) {
+    this.groupService.dislikeTarget(0, Number(this.id), targetId, targetType, false).subscribe(() => {
+      this.LoadGoing(targetType)
+      this.LoadNotGoing(targetType)
+    })
+  }
 
   onLike(targetId: number, targetType: string) {
-    this.groupService.likeTarget(0, Number(this.id), targetId, targetType, true).subscribe((response) => {
-      console.log("like response ", response);
+    this.groupService.likeTarget(0, Number(this.id), targetId, targetType, true).subscribe((response: any) => {
       this.loadLikes(targetType);
       this.loadDislikes(targetType);
     });
@@ -132,7 +143,7 @@ export class ByIdComponent implements OnInit {
         this.loadLikes('post');
         this.loadDislikes('post');
       },
-      (error) => {
+      (error: any) => {
         console.error('Error fetching posts:', error);
       }
     );
@@ -181,21 +192,33 @@ export class ByIdComponent implements OnInit {
         this.comlength = comment.CommentsLength
         console.log('ici sont les commentaires', comment);
       },
-      error => {
+      (      error: any) => {
         console.error('Erreur lors du chargement des commentaires:', error);
       }
     );
   }
 
   private loadLikes(targetType: string) {
-    this.groupService.getTargetLikes(targetType).subscribe((likes) => {
+    this.groupService.getTargetLikes(targetType).subscribe((likes: never[]) => {
       this.likemap = likes;
     });
   }
 
   private loadDislikes(targetType: string) {
-    this.groupService.getTargetDislikes(targetType).subscribe((dislikes) => {
+    this.groupService.getTargetDislikes(targetType).subscribe((dislikes: never[]) => {
       this.dislikemap = dislikes;
+    });
+  }
+
+  private LoadGoing(targetType: string) {
+    this.groupService.getTargetLikes(targetType).subscribe((likes: never[]) => {
+      this.goingmap = likes;
+    });
+  }
+
+  private LoadNotGoing(targetType: string) {
+    this.groupService.getTargetDislikes(targetType).subscribe((dislikes: never[]) => {
+      this.notgoingmap = dislikes;
     });
   }
 
@@ -235,3 +258,5 @@ export class ByIdComponent implements OnInit {
     }
   }
 }
+
+

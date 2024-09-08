@@ -10,7 +10,7 @@ import { MatMenu, MatMenuModule } from "@angular/material/menu";
 import { MatCardAvatar } from "@angular/material/card";
 import { NotificationVerification } from '../../models/models.compenant';
 import { AuthService } from '../../service/auth.service';
-import { NgForOf } from '@angular/common';
+import { NgForOf, NumberSymbol } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -61,7 +61,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     private dataService: DataService,
     private authService: AuthService,
     private router: Router
-  ) { 
+  ) {
     console.log('DataService:', this.dataService);
   }
 
@@ -83,18 +83,38 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
   notify() {
     this.dataService.getNotification(this.id).subscribe(res => {
-      this.IsNotify.notif = res
-      console.log(this.IsNotify, res)
+      this.IsNotify.notif = res == null ? [] : res
       this.notifylength = this.IsNotify.notif.length != 0 ? (this.IsNotify.notif.length).toString() : '0'
+      
     })
   }
 
-  InviteAccept(userID:number,groupID :number,targetID:number){}
-  InviteDecline(){}
-  AdminAddMembers(){}
-  AdminDeleteMembers(){}
-
-
+  InviteAccept(Id: number, groupID: number,userid : number) {
+    let body = {
+      'id': Id,
+      'user_id': userid,
+      'group_id': groupID
+    }
+    this.dataService.accept_decline("accept-request",body).subscribe((res)=>{
+      if (res == null){
+        this.IsNotify.notif = this.IsNotify.notif.filter((notif)=> notif.id != Id)
+        this.notifylength = String(Number(this.notifylength)-1)
+      }
+    })
+  }
+  InviteDecline(Id: number, groupID: number,userid : number) { 
+    let body = {
+      'id': Id,
+      'user_id':userid ,
+      'group_id': groupID
+    }
+    console.log(body)
+    this.dataService.accept_decline("decline-request",body).subscribe((res)=>{
+      this.IsNotify.notif = this.IsNotify.notif.filter((notif)=> notif.id != Id)
+      this.notifylength = String(Number(this.notifylength)-1)
+    })
+  }
+  AdminAddMembers() { }
   handleLogout() {
     this.authService.logout().subscribe({
       next: () => {
@@ -114,7 +134,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   visibilityMessage() {
     this.hiddenMessage = !this.hiddenMessage;
   }
- 
+
   onSearchChange(searchValue: string): void {
     console.log('Valeur de recherche:', searchValue);
     if (searchValue && searchValue.length > 0) {
@@ -126,15 +146,15 @@ export class ToolbarComponent implements OnInit, OnDestroy {
       this.filteredUsers = [];
     }
   }
-  
-  
+
+
   goToUserProfile(user: any): void {
     console.log('Navigating to profile of:', user); // Debug
     this.router.navigate(['/profile', user.id]);
   }
-  
-  
-  
+
+
+
   goToProfile(userId: string) {
     this.router.navigate(['/profile', userId]);
   }

@@ -11,9 +11,10 @@ import { AuthService } from '../service/auth.service';
 import { ToolbarComponent } from "../nav/toolbar/toolbar.component";
 import { group } from '@angular/animations';
 
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Post } from '../models/models.compenant';
 import { SharedserviceComponent } from '../sharedservice/sharedservice.component';
+import { AlmostPrivateComponent } from './almost-private/almost-private.component';
 @Component({
   selector: 'app-create-post',
   standalone: true,
@@ -46,7 +47,7 @@ export class CreatePostComponent implements OnInit {
   isPreviewerVisible: boolean = false;
   
 
-  constructor(private dialogRef: MatDialogRef<CreatePostComponent>, private postFormBuilder: FormBuilder, private apiservice: DataService, private router: Router, private authService: AuthService, private rout: ActivatedRoute,private shared : SharedserviceComponent) { }
+  constructor(private dialogRef: MatDialogRef<CreatePostComponent>, private postFormBuilder: FormBuilder, private apiservice: DataService, private router: Router, private authService: AuthService, private rout: ActivatedRoute,private shared : SharedserviceComponent,private dialog :MatDialog) { }
 
   ngOnInit(): void {
     this.redirecte = "Acceuil"
@@ -139,7 +140,10 @@ export class CreatePostComponent implements OnInit {
   }
 
   SelectUsersView() {
-    console.log("selecte user !!")
+    this.dialog.open(AlmostPrivateComponent, {
+      width: "auto"
+    });
   }
+
 }
 

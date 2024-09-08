@@ -45,6 +45,11 @@ export class DataService {
       );
   }
   
+  accept_decline(routes : string,data :any){
+    return this.http.post(`${this.apiUrl}/${routes}`, data).pipe(
+      catchError(this.handleError)
+    );
+  }
 
   // Méthode POST
   postData(endpoint: string, data: any): Observable<any> {
@@ -85,7 +90,6 @@ export class DataService {
       target_type: targetType,
       like: like
     };
-    console.log(JSON.stringify(body))
     return this.http.post<void>(`${this.apiUrl}/likeTarget`, JSON.stringify(body));
   }
 

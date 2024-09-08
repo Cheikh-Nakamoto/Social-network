@@ -45,9 +45,9 @@ func (repo *GroupRepoImpl) CreateGroup(name, description, owner, image string) (
 func (repo *GroupRepoImpl) AddMember(userID, groupID, targetID int, role, name string) error {
 	message := ""
 	if role == "member" {
-		message =  name + " want to join your group . Can you accept ?"
+		message = name + " want to join your group . Can you accept ?"
 	} else if role == "admin" {
-		message =name + " want to insert her group . Can you accept ?" 
+		message = name + " want to insert her group . Can you accept ?"
 	} else {
 		return fmt.Errorf("role : %s not allowed !", role)
 	}
@@ -185,9 +185,9 @@ func (repo *GroupRepoImpl) CreateEventsInGroup(event dto.Events) error {
 	query := "INSERT INTO events (name, description, group_id, user_id, hour_start,hour_end) VALUES (?, ?, ?, ?, ?, ?)"
 
 	// Execute the query
-	_, err := repo.db.GetDB().Exec(query, event.Name, event.Description, event.GroupId, event.UserID, event.HourStart,event.HourEnd)
+	_, err := repo.db.GetDB().Exec(query, event.Name, event.Description, event.GroupId, event.UserID, event.HourStart, event.HourEnd)
 	if err != nil {
-		fmt.Println("failed to create event",err)
+		fmt.Println("failed to create event", err)
 		return errors.New("failed to create event: " + err.Error())
 	}
 
@@ -200,7 +200,7 @@ func (repo *GroupRepoImpl) FetchAllEvents(id int) ([]dto.Events, error) {
 	query := `SELECT id, name, description, group_id, user_id,  hour_start,hour_end FROM events WHERE group_id=?`
 
 	// Exécuter la requête pour récupérer les lignes de la table "events"
-	rows, err := repo.db.GetDB().Query(query,id)
+	rows, err := repo.db.GetDB().Query(query, id)
 	if err != nil {
 		return nil, fmt.Errorf("FetchAllEvents: %v", err)
 	}
@@ -213,7 +213,7 @@ func (repo *GroupRepoImpl) FetchAllEvents(id int) ([]dto.Events, error) {
 	for rows.Next() {
 		var event dto.Events
 		// Scanner les valeurs de chaque colonne dans la structure de l'événement
-		err := rows.Scan(&event.ID,&event.Name, &event.Description,&event.GroupId, &event.UserID, &event.HourStart,&event.HourEnd)
+		err := rows.Scan(&event.ID, &event.Name, &event.Description, &event.GroupId, &event.UserID, &event.HourStart, &event.HourEnd)
 		if err != nil {
 			return nil, fmt.Errorf("FetchAllEvents: %v", err)
 		}
@@ -229,7 +229,6 @@ func (repo *GroupRepoImpl) FetchAllEvents(id int) ([]dto.Events, error) {
 	// Retourner la liste des événements et une valeur d'erreur nulle
 	return events, nil
 }
-
 
 // NotificationExists vérifie si une notification existe dans la base de données pour un user_id, target_id et/ou group_id spécifique
 func (repo *GroupRepoImpl) NotificationExists(userID int) ([]dto.Notification, error) {
@@ -315,4 +314,62 @@ func (repo *GroupRepoImpl) GetNotificationsByUserID(userID int) ([]dto.Notificat
 	}
 
 	return notifications, nil
+}
+
+/// AddMemberBasedOnNotification vérifie la notification et ajoute le membre au groupe si l'utilisateur accepte, puis supprime la notification
+func (repo *GroupRepoImpl) AddMemberBasedOnNotification(notif dto.Notification) error {
+    var data dto.Notification
+
+    // Requête SQL pour vérifier l'existence de la notification
+    query := `SELECT group_id, user_id FROM notifications WHERE id = ? AND group_id = ? AND user_id = ?`
+    err := repo.db.GetDB().QueryRow(query, notif.ID, notif.GroupID, notif.UserID).Scan(&data.GroupID, &data.UserID)
+
+    if err != nil {
+        if err == sql.ErrNoRows {
+            fmt.Println("Notification non trouvée :", notif.ID, notif.GroupID, notif.UserID) // Affichage pour le débogage
+            return errors.New("notification non trouvée")
+        }
+        return err
+    }
+
+    // Insérer l'utilisateur dans la table group_members
+    insertQuery := `INSERT INTO group_members (group_id, user_id, role, joined_at) VALUES (?, ?, ?, ?)`
+    _, err = repo.db.GetDB().Exec(insertQuery, notif.GroupID, notif.UserID, "member", time.Now())
+    if err != nil {
+        return err
+    }
+
+    // Supprimer la notification après avoir ajouté l'utilisateur au groupe
+    deleteQuery := `DELETE FROM notifications WHERE id = ?`
+    _, err = repo.db.GetDB().Exec(deleteQuery, notif.ID)
+    if err != nil {
+        return err
+    }
+
+    return nil
+}
+
+
+func (repo *GroupRepoImpl)  DeclineNotification(notif dto.Notification) error{
+	var data dto.Notification
+
+    // Requête SQL pour vérifier l'existence de la notification
+    query := `SELECT group_id, user_id FROM notifications WHERE id = ? AND group_id = ? AND user_id = ?`
+    err := repo.db.GetDB().QueryRow(query, notif.ID, notif.GroupID, notif.UserID).Scan(&data.GroupID, &data.UserID)
+
+    if err != nil {
+        if err == sql.ErrNoRows {
+            fmt.Println("Notification non trouvée :", notif.ID, notif.GroupID, notif.UserID) // Affichage pour le débogage
+            return errors.New("notification non trouvée")
+        }
+        return err
+    }
+    // Supprimer la notification après avoir ajouté l'utilisateur au groupe
+    deleteQuery := `DELETE FROM notifications WHERE id = ?`
+    _, err = repo.db.GetDB().Exec(deleteQuery, notif.ID)
+    if err != nil {
+        return err
+    }
+
+    return nil
 }

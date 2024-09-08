@@ -21,7 +21,7 @@
               class="example-icon" mat-icon-button matBadge="12">
         <mat-icon>chat</mat-icon>
       </button>
-      <button (click)="visibilityNotif()" [matMenuTriggerFor]="menu" [matBadgeHidden]="hiddenNotif"
+      <button  [matMenuTriggerFor]="menu" 
               aria-label="Example icon-button with heart icon" class="example-icon" mat-icon-button
               matBadge="{{notifylength}}">
         <mat-icon>notifications</mat-icon>
@@ -29,13 +29,13 @@
       <mat-menu #menu="matMenu">
         <div class="notif" *ngFor="let notif of IsNotify.notif">
           <div class="notif" mat-menu-item>
-            <p>{{ notif.message }}</p>
+            <p>{{ notif.message }}  </p>
             <div class="buttons">
-              <button class="btn btn-success" routerLink="/accept/">
+              <button class="btn btn-success" (click)="InviteAccept(notif.id,notif.group_id,notif.user_id)">
                 <span class="material-icons text-white">check_circle</span>
                 Accept
               </button>
-              <button class="btn btn-danger" routerLink="/decline/">
+              <button class="btn btn-danger"  (click)="InviteDecline(notif.id,notif.group_id,notif.user_id)">
                 <span class="material-icons text-white">cancel</span>
                 Decline
               </button>

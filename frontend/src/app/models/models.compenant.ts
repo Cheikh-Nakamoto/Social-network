@@ -108,12 +108,12 @@ export interface Post {
 // TypeScript type for Notification
 export interface Notification {
   id: number;          // Unique identifier for the notification
-  userId: number;      // ID of the user who created the notification
-  targetId: number;    // ID of the target user or entity (can be NULL in some cases)
-  groupId?: number;    // ID of the group (optional, can be NULL)
+  user_id: number;      // ID of the user who created the notification
+  target_id: number;    // ID of the target user or entity (can be NULL in some cases)
+  group_id: number;    // ID of the group (optional, can be NULL)
   message: string;     // The message content of the notification
-  isRead: boolean;     // Flag indicating whether the notification has been read
-  createdAt: string;   // Timestamp of when the notification was created (ISO 8601 string)
+  is_read: boolean;     // Flag indicating whether the notification has been read
+  created_at: string;   // Timestamp of when the notification was created (ISO 8601 string)
 }
 
 
