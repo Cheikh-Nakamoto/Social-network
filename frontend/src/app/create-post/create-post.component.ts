@@ -95,9 +95,10 @@ export class CreatePostComponent implements OnInit {
       if (this.selectedFile) {
         this.apiservice.uploadImage(formData).subscribe(
           response => {
+            response.group_id = Number(response.group_id)
             this.apiservice.postData('CreatePost', response).subscribe((responses: Post) => {
               console.log("ceci est la reponse ", responses)
-              localStorage.setItem("post", JSON.stringify(responses))
+              this.shared.setData(response)
             }, error => {
               alert('Erreur lors de l\'envoi du post:')
               console.error('Erreur lors de l\'envoi du post:', error);
@@ -110,7 +111,6 @@ export class CreatePostComponent implements OnInit {
       } else {
         console.log("donne envoyer au api this.postFormBuilder", this.Post.value)
         this.apiservice.postData('CreatePost', this.Post.value).subscribe((response: Post) => {
-          localStorage.setItem("post", JSON.stringify(response))
           this.shared.setData(response)
         }, error => {
           console.error('Erreur lors de l\'envoi du post:', error);

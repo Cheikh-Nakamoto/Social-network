@@ -14,6 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MainPageComponent } from '../../main-page/main-page.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCommentComponent } from '../../dialog-comment/dialog-comment.component';
+import { SharedserviceComponent } from '../../sharedservice/sharedservice.component';
 
 @Component({
   selector: 'app-by-id',
@@ -41,10 +42,10 @@ export class ByIdComponent implements OnInit {
   dislikemap = [];
   token = localStorage.getItem('token');
   user: any;
-  postAndButton!: Posts;
+  storage!: Post;
   comlength: length = {}
 
-  constructor(private fb: FormBuilder, private groupService: DataService, private router: Router, private rout: ActivatedRoute, private authSrvice: AuthService) { }
+  constructor(private fb: FormBuilder, private groupService: DataService, private router: Router, private rout: ActivatedRoute, private authSrvice: AuthService, private shared: SharedserviceComponent) { }
 
   ngOnInit(): void {
     this.authSrvice.isOnline();
@@ -52,11 +53,17 @@ export class ByIdComponent implements OnInit {
     this.groupId = this.rout.snapshot.params['id'];
     this.loadUser('users');
     this.loadComments()
-    this.getAllPosts(Number(this.id))
+    this.getAllPosts(Number(this.groupId))
     this.loadGroups().then(data => {
       this.groups = this.groups.filter(group => group.id == this.groupId);
     })
     this.loadEvents()
+    this.shared.sharedData$.subscribe((res: Post) => {
+      if (this.storage?.group_id != res?.group_id && res != null){
+        this.storage = res
+        location.reload()
+      }
+    })
   }
 
 
