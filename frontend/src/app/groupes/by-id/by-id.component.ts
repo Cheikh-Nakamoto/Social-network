@@ -26,7 +26,7 @@ export class ByIdComponent implements OnInit {
   groups: Group[] = [];
   groupeForm!: FormGroup;
   id !: string;
-  groupId!: number;
+  public groupId!: number;
   clear!: any;
   Events !: Eventtype[]
   AllUser: AllUsersDTO = {};

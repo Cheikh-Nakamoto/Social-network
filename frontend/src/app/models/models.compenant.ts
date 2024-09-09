@@ -134,6 +134,13 @@ export interface MessageBody {
   message: string;
 }
 
+export interface MessageGrBody {
+  type: string; 
+  senderId: number;
+  receiverId: number;
+  message: string;
+}
+
 export interface MessageData {
   type: string;
   datas: MessageBody;

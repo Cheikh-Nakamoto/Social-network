@@ -11,6 +11,7 @@ import { CreateGroupComponent } from './groupes/create-group/create-group.compon
 import { ByIdComponent } from './groupes/by-id/by-id.component';
 import { ProfileComponent } from './profile/profile.component';
 import { EventsComponent } from './groupes/events/events.component';
+import { GroupchatComponent } from './groupes/groupchat/groupchat.component';
 // import { EventsComponent } from './groupes/events/events.component';
 
 export const routes: Routes = [
@@ -22,7 +23,8 @@ export const routes: Routes = [
   { path: "event/create", component:EventsComponent,canActivate: [HomeGuard]},
   { path: 'profile', component: ProfileComponent, canActivate: [HomeGuard] },
   {path: "CreateGroup", component: CreateGroupComponent, canActivate: [HomeGuard] },
-  {path: "chat", component:ChatComponent },
+  { path: "chat", component: ChatComponent },
+  {path: "groupchat", component: GroupchatComponent},
   { path: '', redirectTo: 'Accueil', pathMatch: 'full' },
   { path: '**', redirectTo: 'Accueil' }
 
