@@ -82,13 +82,14 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     this.id = JSON.parse(localStorage.getItem('userID') as string);
     this.username = localStorage.getItem('firstname') as string;
 
-      this.notify();
-  
+    this.notify();
+
     this.websocketService.connect();
 
     this.messagesSubscription = this.websocketService.messages$.subscribe(
       (message) => {
-        if (message.type === 'new_message' && message.payload.messageId ==0) {
+        console.log("message de notification ",)
+        if (message.type === 'new_message' && message.payload.messageId == 0) {
           this.notify()
         }
       }
@@ -102,43 +103,43 @@ export class ToolbarComponent implements OnInit, OnDestroy {
       this.chatCountSubscription.unsubscribe();
     }
     clearTimeout(this.timerid);
-  } 
+  }
   notify() {
     this.dataService.getNotification(this.id).subscribe((res) => {
-      this.IsNotify.notif = res ? [] : res;
+      this.IsNotify.notif = res == null ? [] : res;
       this.notifylength =
         this.IsNotify.notif.length != 0
           ? this.IsNotify.notif.length.toString()
           : '0';
-      
+
     });
   }
 
-  
 
-  InviteAccept(Id: number, groupID: number,userid : number) {
+
+  InviteAccept(Id: number, groupID: number, userid: number) {
     let body = {
       'id': Id,
       'user_id': userid,
       'group_id': groupID
     }
-    this.dataService.accept_decline("accept-request",body).subscribe((res)=>{
-      if (res == null){
-        this.IsNotify.notif = this.IsNotify.notif.filter((notif)=> notif.id != Id)
-        this.notifylength = String(Number(this.notifylength)-1)
+    this.dataService.accept_decline("accept-request", body).subscribe((res) => {
+      if (res == null) {
+        this.IsNotify.notif = this.IsNotify.notif.filter((notif) => notif.id != Id)
+        this.notifylength = String(Number(this.notifylength) - 1)
       }
     })
   }
-  InviteDecline(Id: number, groupID: number,userid : number) { 
+  InviteDecline(Id: number, groupID: number, userid: number) {
     let body = {
       'id': Id,
-      'user_id':userid ,
+      'user_id': userid,
       'group_id': groupID
     }
     console.log(body)
-    this.dataService.accept_decline("decline-request",body).subscribe((res)=>{
-      this.IsNotify.notif = this.IsNotify.notif.filter((notif)=> notif.id != Id)
-      this.notifylength = String(Number(this.notifylength)-1)
+    this.dataService.accept_decline("decline-request", body).subscribe((res) => {
+      this.IsNotify.notif = this.IsNotify.notif.filter((notif) => notif.id != Id)
+      this.notifylength = String(Number(this.notifylength) - 1)
     })
   }
   AdminAddMembers() { }
