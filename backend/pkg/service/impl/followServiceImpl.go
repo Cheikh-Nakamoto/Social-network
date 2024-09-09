@@ -19,6 +19,11 @@ func (f *FollowServiceImpl) FollowUser(followerID, followeeID uint) error {
 
 	// Check if follow is existing
 	if isExists != nil {
+		// Cancel the follow request
+		if isExists.Status == "pending" {
+			return f.Repository.DeleteFollow(followerID, followeeID)
+		}
+
 		return errors.New("you already followed this user")
 	}
 
