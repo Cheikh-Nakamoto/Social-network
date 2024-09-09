@@ -1,11 +1,10 @@
-
-  <div class="userlist">
-    <mat-form-field>
-        <mat-label>Toppings</mat-label>
-        <mat-select [formControl]="toppings" multiple>
-          @for (topping of toppingList; track topping) {
-            <mat-option [value]="topping">{{topping}}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-  </div>
+<div class="userlist">
+  <mat-form-field>
+    <mat-label>Toppings</mat-label>
+    <mat-select [formControl]="toppings" multiple>
+      @for (topping of toppingList; track topping) {
+      <mat-option [value]="topping">{{topping}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</div>
