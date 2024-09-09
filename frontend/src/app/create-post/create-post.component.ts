@@ -112,8 +112,9 @@ export class CreatePostComponent implements OnInit {
         this.apiservice.uploadImage(formData).subscribe(
           response => {
             response.group_id = Number(response.group_id)
+
             this.apiservice.postData('CreatePost', response).subscribe((responses: Post) => {
-              console.log("ceci est la reponse ", responses)
+              console.log("ceci est la reponse ", response)
               this.shared.setData(response)
             }, error => {
               alert('Erreur lors de l\'envoi du post:')
