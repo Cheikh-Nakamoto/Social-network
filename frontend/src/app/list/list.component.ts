@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {AuthService} from "../service/auth.service";
 
 @Component({
   selector: 'app-list',
@@ -8,5 +9,19 @@ import { Component } from '@angular/core';
   styleUrl: './list.component.scss'
 })
 export class ListComponent {
+    users!: any[]
 
+    constructor(
+        private authService: AuthService,
+    ) {}
+
+    listUsers(): void {
+        this.
+    }
+
+    ngOnInit(): void {
+        this.authService.isOnline()
+
+
+    }
 }
