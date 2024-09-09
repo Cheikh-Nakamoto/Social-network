@@ -43,10 +43,14 @@ type UserDataEvent struct {
 const (
 	EventSendMessage       = "send_message"
 	EventNewMessage        = "new_message"
+	EventGrNewMessage        = "new_message_group"
 	EventGetMessages       = "get_messages"
 	EventGetChatbarData    = "get_chatbar_data"
 	EventUpdateChatbarData = "update_chatbar_data"
 	EventTypingStart = "typing_start"
 	EventTypingStop  = "typing_stop"
+	EventGetMessagesGroup="get_messages_groupes"
+	EventSendMessageGroup="send_message_groupes"
 	EventGetNotification="new_notification"
+
 )

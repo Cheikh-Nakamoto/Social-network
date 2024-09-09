@@ -19,6 +19,10 @@ import { AuthService } from '../../../service/auth.service';
 import { MainPageComponent } from "../../../main-page/main-page.component";
 import { CommonModule } from '@angular/common'
 import { SharedserviceComponent } from '../../../sharedservice/sharedservice.component';
+import { WebSocketService } from '../../../chat/services/chat.service';
+import { Subscription } from 'rxjs';
+import { GetUserService } from '../../../data.service';
+
 
 @Component({
   selector: 'app-home',
@@ -39,11 +43,11 @@ import { SharedserviceComponent } from '../../../sharedservice/sharedservice.com
     MatInputModule,
     HttpClientModule,
     MatDialogModule,
-    MainPageComponent
-  ],
+    MainPageComponent,
+    ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  providers: [DataService, AuthService]
+  providers: [DataService, AuthService],
 })
 export class HomeComponent implements OnInit {
   id!: number;
@@ -59,7 +63,12 @@ export class HomeComponent implements OnInit {
   comlength: length = {}
   storage !: Post
 
-  constructor(private apiService: DataService, private authService: AuthService, private shared: SharedserviceComponent) { }
+  constructor(
+    private apiService: DataService,
+    private authService: AuthService, private shared: SharedserviceComponent,
+    private websocketService: WebSocketService,
+    private userService: GetUserService
+  ) {}
 
   ngOnInit(): void {
     this.authService.isOnline();
@@ -93,18 +102,22 @@ export class HomeComponent implements OnInit {
   }
 
   onLike(targetId: number, targetType: string) {
-    this.apiService.likeTarget(0, this.id, targetId, targetType, true).subscribe((response) => {
-      console.log("like response ", response);
-      this.loadLikes(targetType);
-      this.loadDislikes(targetType);
-    });
+    this.apiService
+      .likeTarget(0, this.id, targetId, targetType, true)
+      .subscribe((response) => {
+        console.log('like response ', response);
+        this.loadLikes(targetType);
+        this.loadDislikes(targetType);
+      });
   }
 
   onDislike(targetId: number, targetType: string) {
-    this.apiService.dislikeTarget(0, this.id, targetId, targetType, false).subscribe(() => {
-      this.loadLikes(targetType);
-      this.loadDislikes(targetType);
-    });
+    this.apiService
+      .dislikeTarget(0, this.id, targetId, targetType, false)
+      .subscribe(() => {
+        this.loadLikes(targetType);
+        this.loadDislikes(targetType);
+      });
   }
   selectedFile: File | null = null;
 
@@ -156,14 +169,14 @@ export class HomeComponent implements OnInit {
   private loadComments(): void {
     this.apiService.getData('AllComments').subscribe(
       (comment: {
-        Comments: { [key: number]: CommentDTO[] }
-        CommentsLength: { [key: number]: number }
+        Comments: { [key: number]: CommentDTO[] };
+        CommentsLength: { [key: number]: number };
       }) => {
         this.comments.comments_by_post = comment.Comments;
-        this.comlength = comment.CommentsLength
+        this.comlength = comment.CommentsLength;
         console.log('ici sont les commentaires', comment);
       },
-      error => {
+      (error) => {
         console.error('Erreur lors du chargement des commentaires:', error);
       }
     );
@@ -199,11 +212,11 @@ export class HomeComponent implements OnInit {
       data: {
         postId: postId,
         user: this.AllUser,
-        comments: comment
-      }
+        comments: comment,
+      },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       console.log(`Dialog result: ${result}`);
     });
   }

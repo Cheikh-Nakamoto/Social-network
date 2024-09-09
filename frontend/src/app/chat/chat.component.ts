@@ -24,7 +24,7 @@ import { SidenavComponent } from '../nav/sidenav/sidenav.component';
     RouterOutlet,
     HttpClientModule,
     ToolbarComponent,
-    SidenavComponent
+    SidenavComponent,
  
   ], // Ajouter CommonModule ici
   templateUrl: 'chat.component.html',
@@ -293,3 +293,6 @@ const addHoverListeners = (): void => {
     });
   });
 };
+
+
+

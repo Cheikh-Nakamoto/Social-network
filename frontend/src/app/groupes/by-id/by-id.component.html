@@ -16,6 +16,8 @@
                         }
                         <button mat-button color="primary" (click)="handleClick('/event/create', $event)">Ajouter un
                             évènement</button>
+
+                        <a matListItemTitle [routerLink]="['/groupchat']" [queryParams]="{groupId}">discussion</a>
                     </div>
                 </div>
                 <div class="event-group">

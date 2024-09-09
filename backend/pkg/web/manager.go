@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"sync"
 	"time"
 
@@ -66,6 +67,8 @@ func (m *Manager) setupEventHandlers() {
 	m.handlers[EventUpdateChatbarData] = UpdateChatbarData
 	m.handlers[EventTypingStart] = TypingStartHandler
 	m.handlers[EventTypingStop] = TypingStopHandler
+	m.handlers[EventGetMessagesGroup]=GroupMessageHandler
+	m.handlers[EventSendMessageGroup]=SendMessageGrouopHandler
 	m.handlers[EventGetNotification] = SendMessageHandler
 }
 
@@ -114,6 +117,7 @@ func SendMessageHandler(event Event, c *Client) error {
 	returnMsg.ReceiverId = chatEvent.ReceiverId
 	returnMsg.SenderId = chatEvent.SenderId
 
+	
 	// Ajouter le message à une table ou base de données
 	addMessageToTable(returnMsg)
 
@@ -125,7 +129,42 @@ func SendMessageHandler(event Event, c *Client) error {
 
 	var outgoingEvent Event
 	outgoingEvent.Payload = data
+	
 	outgoingEvent.Type = EventNewMessage
+
+	// Envoyer le message au client destinataire
+	for client := range c.manager.clients {
+		if client.userId == returnMsg.ReceiverId {
+			client.egress <- outgoingEvent
+		}
+	}
+	return nil
+}
+func SendMessageGrouopHandler(event Event, c *Client) error {
+	var chatEvent SendMessageEvent
+	if err := json.Unmarshal(event.Payload, &chatEvent); err != nil {
+		return fmt.Errorf("bad payload in request: %v", err)
+	}
+
+	// Construire l'événement de message à retourner
+	var returnMsg ReturnMessageEvent
+	returnMsg.SentDate = time.Now().Format("2006-01-02 15:04:05")
+	returnMsg.Message = chatEvent.Message
+	returnMsg.ReceiverId = chatEvent.ReceiverId
+	returnMsg.SenderId = chatEvent.SenderId
+
+	// Ajouter le message à une table ou base de données
+	addGrMessageToTable(returnMsg)
+
+	// Marshal l'événement à retourner en JSON
+	data, err := json.Marshal(returnMsg)
+	if err != nil {
+		return fmt.Errorf("failed to marshal broadcast message: %v", err)
+	}
+
+	var outgoingEvent Event
+	outgoingEvent.Payload = data
+	outgoingEvent.Type = EventGrNewMessage
 
 	// Envoyer le message au client destinataire
 	for client := range c.manager.clients {
@@ -142,6 +181,23 @@ func addMessageToTable(messageData ReturnMessageEvent) {
 		panic(err) 
 	}
 	statement, err := db.GetDB().Prepare("INSERT INTO messages (senderId, receiverId, sentDate, message) VALUES (?, ?, ?, ?)")
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	_, err = statement.Exec(messageData.SenderId, messageData.ReceiverId, messageData.SentDate, messageData.Message)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+}
+func addGrMessageToTable(messageData ReturnMessageEvent) {
+	db, err := sqlite.Connect()
+	if err != nil {
+		panic(err) 
+	}
+	statement, err := db.GetDB().Prepare("INSERT INTO groupmessages (senderId, groupId, sentDate, message) VALUES (?, ?, ?, ?)")
 	if err != nil {
 		log.Println(err)
 		return
@@ -178,6 +234,29 @@ func GetMessagesHandler(event Event, c *Client) error {
 
 	return nil
 }
+func GroupMessageHandler(event Event, c *Client) error {
+
+	fmt.Println("contacct stablished...")
+	var chatDataEvent SendChatDataEvent
+	if err := json.Unmarshal(event.Payload, &chatDataEvent); err != nil {
+		return fmt.Errorf("bad payload in request: %v", err)
+	}
+
+	// Récupérer les données de chat entre deux utilisateurs
+	data, err := json.Marshal(getGroupChatData(chatDataEvent.CurrentChatterId, chatDataEvent.OtherChatterId, chatDataEvent.Amount))
+	if err != nil {
+		return fmt.Errorf("failed to marshal broadcast message: %v", err)
+	}	
+
+	fmt.Println("recup::::::::::::::::::::::::::::::::", string(data))
+
+	var outgoingEvent Event
+	outgoingEvent.Payload = data
+	outgoingEvent.Type = EventGetMessagesGroup
+	c.egress <- outgoingEvent
+
+	return nil
+}
 
 func getNicknameById(userId int) string {
 	db, err := sqlite.Connect()
@@ -204,6 +283,35 @@ func getChatData(currentChatterId, otherChatterId, amount int) ReturnChatDataEve
 		SELECT messageId, senderId, receiverId, message, sentDate FROM messages 
 		WHERE (senderId = ? AND receiverId = ?) OR (senderId = ? AND receiverId = ?)
 		ORDER BY sentDate DESC LIMIT ?`, currentChatterId, otherChatterId, otherChatterId, currentChatterId, amount)
+	if err != nil {
+		log.Println(err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var messageData ReturnMessageEvent
+
+		rows.Scan(&messageData.MessageId, &messageData.SenderId, &messageData.ReceiverId, &messageData.Message, &messageData.SentDate)
+		returnChatData.Messages = append(returnChatData.Messages, messageData)
+	}
+	reverseSlice(returnChatData.Messages)
+
+	return returnChatData
+}
+func getGroupChatData(currentChatterId, otherChatterId, amount int) ReturnChatDataEvent {
+	var returnChatData ReturnChatDataEvent
+	db, err := sqlite.Connect()
+	if err != nil {
+		panic(err) 
+	}
+
+	returnChatData.CurrentChatterNickname = getNicknameById(currentChatterId)
+	returnChatData.OtherChatterNickname = "group:"+strconv.Itoa(otherChatterId)
+
+	rows, err := db.GetDB().Query(`
+		SELECT messageId, senderId, groupId, message, sentDate 
+		FROM groupmessages 
+		ORDER BY sentDate DESC LIMIT ?`, amount)
 	if err != nil {
 		log.Println(err)
 	}

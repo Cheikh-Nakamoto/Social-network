@@ -1,0 +1,22 @@
+<div id="chat-container" class="chat-container">
+    <div class="chat-header">
+        <h5 id="header" *ngIf="groupId">Group: {{groupId}} <span><h6 id="typingMessage" class="typing-message"></h6></span></h5>
+        <div class="typing-indicator" id="typingIndicator">
+            <div class="inner-container">
+                <div class="dots-container">
+                    <span class="point"></span>
+                    <span class="point"></span>
+                    <span class="point"></span>
+                </div>
+            </div>
+        </div>
+        <div class="exit" id="exit">x</div>
+    </div>
+    <div class="chat-box" id="chatBox"></div>
+    <form id="sendMsg" class="message-form" (submit)="onSubmit($event)">
+        <div class="message-container"> 
+            <textarea  name="message" id="msgContent" class="message-input" placeholder="Message"></textarea>
+            <button id="submitBtn" class="send-button" type="submit" >Envoyer</button>
+        </div>
+    </form>
+</div>

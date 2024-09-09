@@ -185,11 +185,25 @@ export class GetUserService {
   private userSubject: BehaviorSubject<any>;
   public user: Observable<any>;
 
+  private chatCountSubject: BehaviorSubject<number> =
+    new BehaviorSubject<number>(0);
+
+  // Exposez chatCount en tant qu'Observable
+  public chatCount$: Observable<number> = this.chatCountSubject.asObservable();
+
   constructor() {
     // Récupère l'utilisateur depuis localStorage lors de la création du service
     const userId = JSON.parse(localStorage.getItem('userID') as string);
     this.userSubject = new BehaviorSubject<any>(userId);
     this.user = this.userSubject.asObservable();
+  }
+
+  public getChatAmount(): number {
+    return this.chatCountSubject.getValue();
+  }
+
+  public updateChatCount(newCount: number): void {
+    this.chatCountSubject.next(newCount);
   }
 
   // Méthode pour obtenir l'utilisateur actuel sous forme d'Observable
