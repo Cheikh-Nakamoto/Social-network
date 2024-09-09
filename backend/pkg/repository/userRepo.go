@@ -19,4 +19,5 @@ type UserRepo interface {
 	GetFriendsCount(userID uint) (uint, error)
 	GetFollowerCount(userID uint) (uint, error)
 	GetFollowingCount(userID uint) (uint, error)
+	GetPostsByUserID(id uint) ([]*entity.Post, error)
 }

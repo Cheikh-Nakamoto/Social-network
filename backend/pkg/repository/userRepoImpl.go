@@ -262,3 +262,21 @@ func (u *UserRepoImpl) GetFollowingCount(userID uint) (uint, error) {
 
 	return count, nil
 }
+func (r *UserRepoImpl) GetPostsByUserID(userID uint) ([]*entity.Post, error) {
+	rows, err := r.db.GetDB().Query("SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC LIMIT 10", userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var posts []*entity.Post
+	for rows.Next() {
+		var post entity.Post
+		if err := rows.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &post.Image, &post.GroupID, &post.IsPublic, &post.CreatedAt); err != nil {
+			return nil, err
+		}
+		posts = append(posts, &post)
+	}
+
+	return posts, nil
+}

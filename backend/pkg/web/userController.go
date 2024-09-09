@@ -654,6 +654,48 @@ func (c *UserController) GetFriendCount(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 }
+func (c *UserController) GetRecentPosts(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("postProfil")
+	err := utils.Environment()
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if r.Method != http.MethodGet {
+		http.Error(w, os.Getenv("METHOD_NOT_ALLOWED"), http.StatusMethodNotAllowed)
+		return
+	}
+
+	if !strings.HasPrefix(r.URL.Path, os.Getenv("DEFAULT_API_LINK")+"/post-profile/") {
+		http.Error(w, os.Getenv("NOT_FOUND"), http.StatusNotFound)
+		return
+	}
+
+	// Extraire l'ID de l'utilisateur à partir de l'URL
+	id, err := utils.ExtractIDFromRequest(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Récupérer les publications récentes de l'utilisateur
+	posts, err := c.UserService.GetRecentPosts(uint(id))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Envoyer les publications en réponse
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set(os.Getenv("CONTENT_TYPE"), os.Getenv("APPLICATION_JSON"))
+	err = json.NewEncoder(w).Encode(posts)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
 
 // UsersRoutes Register routes
 func (c *UserController) UsersRoutes(routes *http.ServeMux) *http.ServeMux {
@@ -676,6 +718,7 @@ func (c *UserController) UsersRoutes(routes *http.ServeMux) *http.ServeMux {
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/following-count/", c.GetFollowingCount)
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/friend-count/", c.GetFriendCount)
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/friends/", c.GetFriends)
+	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/post-profile/", c.GetRecentPosts)
 
 	return routes
 }

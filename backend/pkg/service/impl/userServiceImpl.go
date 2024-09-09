@@ -183,3 +183,17 @@ func (s *UserServiceImpl) GetFollowerCount(userID uint) (uint, error) {
 func (s *UserServiceImpl) GetFollowingCount(userID uint) (uint, error) {
 	return s.Repository.GetFollowingCount(userID)
 }
+func (s *UserServiceImpl) GetRecentPosts(userID uint) ([]dto.PostDTO, error) {
+	// Utilisation du repository pour obtenir les publications récentes
+	posts, err := s.Repository.GetPostsByUserID(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	postDTOs := make([]dto.PostDTO, len(posts))
+	for i, post := range posts {
+		postDTOs[i] = *mapper.PostToDTO(post)
+	}
+
+	return postDTOs, nil
+}
