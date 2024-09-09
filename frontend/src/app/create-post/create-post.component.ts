@@ -9,16 +9,15 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../service/auth.service';
 import { ToolbarComponent } from "../nav/toolbar/toolbar.component";
-import { group } from '@angular/animations';
-
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Post } from '../models/models.compenant';
 import { SharedserviceComponent } from '../sharedservice/sharedservice.component';
 import { AlmostPrivateComponent } from './almost-private/almost-private.component';
+
 @Component({
   selector: 'app-create-post',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, CommonModule, MatCardModule, MatButtonToggleModule, MatCheckboxModule, HttpClientModule, ToolbarComponent],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, MatCardModule, MatButtonToggleModule, MatCheckboxModule, HttpClientModule, ToolbarComponent,AlmostPrivateComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './create-post.component.html',
   styleUrls: ['./create-post.component.scss'],
@@ -33,6 +32,8 @@ export class CreatePostComponent implements OnInit {
   redirecte!: string
   groupid!: number
 
+  username = ""
+
   toggleSingleSelectionIndicator() {
     this.hideSingleSelectionIndicator.update(value => !value);
   }
@@ -43,17 +44,25 @@ export class CreatePostComponent implements OnInit {
 
   Post!: FormGroup;
   selectedFile!: File;
-  selectedFileName: string ="";
+  selectedFileName: string = "";
   isPreviewerVisible: boolean = false;
-  
+  UserSelected !: number[]
 
-  constructor(private dialogRef: MatDialogRef<CreatePostComponent>, private postFormBuilder: FormBuilder, private apiservice: DataService, private router: Router, private authService: AuthService, private rout: ActivatedRoute,private shared : SharedserviceComponent,private dialog :MatDialog) { }
+
+  constructor(
+    private dialogRef: MatDialogRef<CreatePostComponent>,
+    private postFormBuilder: FormBuilder, private apiservice: DataService,
+    private router: Router, private authService: AuthService,
+    private rout: ActivatedRoute, private shared: SharedserviceComponent,
+    private dialog: MatDialog
+  ) { }
 
   ngOnInit(): void {
     this.redirecte = "Acceuil"
     this.authService.isOnline();
+    this.username = localStorage.getItem('firstname') as string
+    
     let checkhref = location.href.split("/")
-    console.log(checkhref)
     if (checkhref[checkhref.length - 2] == "groups") {
       this.redirecte = "groups"
       this.groupid = Number(checkhref[checkhref.length - 1])
@@ -75,14 +84,20 @@ export class CreatePostComponent implements OnInit {
         user_id: localStorage.getItem("userID") as string
       });
     }
+
+    this.shared.sharedData$.subscribe((res:{"almost":number[]})=>{
+      if (res.almost){
+        this.UserSelected = res.almost
+      }
+    })
   }
-  
+
 
   onFileChange(event: any): void {
     console.log(event.target.files.length)
     if (event.target.files.length > 0) {
       this.selectedFile = event.target.files[0];
-      this.selectedFileName = this.selectedFile.name; 
+      this.selectedFileName = this.selectedFile.name;
       console.log('Fichier sélectionné:', this.selectedFileName);
     }
   }
@@ -103,8 +118,9 @@ export class CreatePostComponent implements OnInit {
         this.apiservice.uploadImage(formData).subscribe(
           response => {
             response.group_id = Number(response.group_id)
+
             this.apiservice.postData('CreatePost', response).subscribe((responses: Post) => {
-              console.log("ceci est la reponse ", responses)
+              console.log("ceci est la reponse ", response)
               this.shared.setData(response)
             }, error => {
               alert('Erreur lors de l\'envoi du post:')
@@ -143,6 +159,9 @@ export class CreatePostComponent implements OnInit {
     this.dialog.open(AlmostPrivateComponent, {
       width: "auto"
     });
+  }
+  almost_private(){
+    
   }
 
 }

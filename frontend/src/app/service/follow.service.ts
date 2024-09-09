@@ -44,7 +44,7 @@ export class FollowService {
         }
     }
 
-    getList(id: any, nature: string) {
+    getList(id: any, nature: string) : Observable<any> {
         switch (nature) {
             case 'followings':
                 return this.http.get(`${this.api}/followings/${id}`)
