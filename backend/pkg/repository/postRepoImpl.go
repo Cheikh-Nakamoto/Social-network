@@ -67,7 +67,9 @@ func (p *PostRepoImpl) CreatePost(userID string, title, content, Image string, I
 		return "", fmt.Errorf("CreatePost: %v", err)
 	}
 	nbr, _ := id.LastInsertId()
-	p.Almost(userID, strconv.Itoa(int(nbr)), almost)
+	if IsPublic == "almost private"{
+		p.Almost(userID, strconv.Itoa(int(nbr)), almost)
+	}
 	return strconv.Itoa(int(nbr)), nil
 }
 

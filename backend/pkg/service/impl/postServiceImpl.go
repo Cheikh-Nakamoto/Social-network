@@ -75,7 +75,15 @@ func (p *PostServiceImpl) GetAllPosts(id int) ([]dto.PostDTO, error) {
 			if err!= nil{
                 return nil, err
             }
-			fmt.Println("following", user)
+			for _, v := range user{
+				if v.ID == uint(id){
+                    bools = true
+                    break
+                }
+			}
+			if !bools{
+				continue
+			}
 		}
 		postDTOs = append(postDTOs, dto.PostDTO{
 			ID:        post.ID,
