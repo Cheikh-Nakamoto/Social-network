@@ -32,3 +32,8 @@ type Notification struct {
 	IsRead    bool      `json:"is_read"`
 	CreatedAt time.Time `json:"created_at"`
 }
+
+type Data struct{
+	UserID int `json:"user_id"`
+	GroupID int `json:"group_id"`
+}

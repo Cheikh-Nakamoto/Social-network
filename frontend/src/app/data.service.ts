@@ -50,7 +50,11 @@ export class DataService {
       catchError(this.handleError)
     );
   }
-
+  ItsMember(routes : string,data :any){
+    return this.http.post(`${this.apiUrl}/${routes}`, data).pipe(
+      catchError(this.handleError)
+    );
+  }
   // Méthode POST
   postData(endpoint: string, data: any): Observable<any> {
     let httpOptions = {};
