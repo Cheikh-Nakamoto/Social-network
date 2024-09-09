@@ -17,7 +17,7 @@ import { AlmostPrivateComponent } from './almost-private/almost-private.componen
 @Component({
   selector: 'app-create-post',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, CommonModule, MatCardModule, MatButtonToggleModule, MatCheckboxModule, HttpClientModule, ToolbarComponent,AlmostPrivateComponent],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, MatCardModule, MatButtonToggleModule, MatCheckboxModule, HttpClientModule, ToolbarComponent, AlmostPrivateComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './create-post.component.html',
   styleUrls: ['./create-post.component.scss'],
@@ -46,7 +46,7 @@ export class CreatePostComponent implements OnInit {
   selectedFile!: File;
   selectedFileName: string = "";
   isPreviewerVisible: boolean = false;
-  UserSelected !: number[]
+  UserSelected : number[] = []
 
 
   constructor(
@@ -61,7 +61,7 @@ export class CreatePostComponent implements OnInit {
     this.redirecte = "Acceuil"
     this.authService.isOnline();
     this.username = localStorage.getItem('firstname') as string
-    
+
     let checkhref = location.href.split("/")
     if (checkhref[checkhref.length - 2] == "groups") {
       this.redirecte = "groups"
@@ -73,7 +73,8 @@ export class CreatePostComponent implements OnInit {
         image: new FormControl(''),
         ispublic: new FormControl(this.isPublic),
         user_id: localStorage.getItem("userID") as string,
-        group_id: parseInt(checkhref[checkhref.length - 1], 10)
+        group_id: parseInt(checkhref[checkhref.length - 1], 10),
+
       });
     } else {
       this.Post = this.postFormBuilder.group({
@@ -85,9 +86,9 @@ export class CreatePostComponent implements OnInit {
       });
     }
 
-    this.shared.sharedData$.subscribe((res:{"almost":number[]})=>{
-      if (res.almost){
-        this.UserSelected = res.almost
+    this.shared.sharedData$.subscribe((res: { "almost": number[] }) => {
+      if (res.almost) {
+        this.UserSelected = (res.almost)
       }
     })
   }
@@ -118,7 +119,10 @@ export class CreatePostComponent implements OnInit {
         this.apiservice.uploadImage(formData).subscribe(
           response => {
             response.group_id = Number(response.group_id)
-
+            if (this.UserSelected.length != 0) {
+              response["almost"] = this.UserSelected
+              console.log(response, "response with image")
+            }
             this.apiservice.postData('CreatePost', response).subscribe((responses: Post) => {
               console.log("ceci est la reponse ", response)
               this.shared.setData(response)
@@ -133,6 +137,10 @@ export class CreatePostComponent implements OnInit {
         );
       } else {
         console.log("donne envoyer au api this.postFormBuilder", this.Post.value)
+        if (this.UserSelected.length != 0) {
+          this.Post.value["almost"] = this.UserSelected
+          console.log(this.Post.value, "never image")
+        }
         this.apiservice.postData('CreatePost', this.Post.value).subscribe((response: Post) => {
           this.shared.setData(response)
         }, error => {
@@ -159,9 +167,6 @@ export class CreatePostComponent implements OnInit {
     this.dialog.open(AlmostPrivateComponent, {
       width: "auto"
     });
-  }
-  almost_private(){
-    
   }
 
 }

@@ -14,6 +14,7 @@ import { Post } from '../../entity/post';
 import { Group } from '../../entity/group';
 import { HttpClientModule } from '@angular/common/http';
 import { DataService } from '../data.service';
+import { ToolbarComponent } from '../nav/toolbar/toolbar.component';
 
 
 
@@ -29,7 +30,8 @@ import { DataService } from '../data.service';
         MatTabsModule,
         MatIconModule,
         MatListModule,
-        NgForOf
+        NgForOf,
+        ToolbarComponent
     ],
     templateUrl: './profile.component.html',
     styleUrl: './profile.component.scss',
@@ -51,6 +53,7 @@ export class ProfileComponent implements OnInit {
     followingCount!: any
     friendCount!: any
     message!: string
+    
 
     constructor(
         private authService: AuthService,
@@ -59,6 +62,7 @@ export class ProfileComponent implements OnInit {
         private activatedRoute: ActivatedRoute,
         private router: Router,
         public datePipe: DatePipe
+        
     ) {
     }
 
@@ -174,6 +178,32 @@ export class ProfileComponent implements OnInit {
             this.getFollowersCount()
         })
     }
+    //     getPosts() {
+    //     this.id = this.activatedRoute.snapshot.params['id'];
+    //     this.authService.getUserPosts(this.id).subscribe((response: any) => {
+    //         this.posts = response.posts; // Assigner les posts récupérés
+    //     });
+    // }
+    getPosts() {
+        this.id = this.activatedRoute.snapshot.params['id'];
+        this.authService.getUserPosts(this.id).subscribe(
+            (response: any) => {
+                this.posts = response
+            }
+            /*(response: any) => {
+                if (response && response.posts) {  // Vérifie que la réponse contient bien les posts
+                    this.posts = response.posts;
+                } else {
+                    console.error("Erreur lors de la récupération des posts: ", response.message || "Pas de posts trouvés");
+                }
+            },
+            (error) => {
+                console.error("Erreur lors de la récupération des posts: ", error);
+            }*/
+        );
+    }
+    
+    
 
     ngOnInit(): void {
         if (!(this.authService.getToken()as string)) {
@@ -184,12 +214,13 @@ export class ProfileComponent implements OnInit {
 
         this.isOnline()
 
-        // this.getFollowers()
-        // this.getFollowings()
-        // this.getFriends()
-        // this.getFollowersCount()
-        // this.getFollowingsCount()
-        // this.getFriendsCount()
+        this.getFollowers()
+        this.getFollowings()
+        this.getFriends()
+        this.getFollowersCount()
+        this.getFollowingsCount()
+        this.getFriendsCount()
         this.getUser()
+        this.getPosts()
     }
 }

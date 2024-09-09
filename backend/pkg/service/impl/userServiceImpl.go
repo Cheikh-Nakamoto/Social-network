@@ -30,7 +30,7 @@ func (s *UserServiceImpl) CreateUser(user *dto.UserDTO) error {
 		return errors.New("missing required fields")
 	}
 
-	isExisted, err := s.Repository.FindByEmail(user.Email)
+	isExisted, err := s.Repository.FindByEmailOrUsername(user.Email, user.Nickname)
 	if err != nil {
 		fmt.Println("Erreur findbyemail")
 		return err
@@ -50,8 +50,8 @@ func (s *UserServiceImpl) CreateUser(user *dto.UserDTO) error {
 	return s.Repository.Save(mapper.DTOToUser(user))
 }
 
-func (s *UserServiceImpl) Connection(email, password string) (*dto.UserDTO, error) {
-	user, err := s.Repository.FindByEmail(email)
+func (s *UserServiceImpl) Connection(Identifiant, password string) (*dto.UserDTO, error) {
+	user, err := s.Repository.FindByEmailOrUsername(Identifiant, Identifiant)
 	if err != nil {
 		return nil, errors.New("invalid credentials")
 	}
@@ -116,16 +116,15 @@ func (s *UserServiceImpl) IsUserOnline(token string) (bool, error) {
 	return true, nil
 }
 
-
-func (s *UserServiceImpl)AllUsers()([]*dto.UserDTO, error){
-	users, err:=s.Repository.GetAllUsers()
-	if err!=nil{
+func (s *UserServiceImpl) AllUsers() ([]*dto.UserDTO, error) {
+	users, err := s.Repository.GetAllUsers()
+	if err != nil {
 		return nil, err
 
 	}
-	userDTOs := make([]*dto.UserDTO, len(users))
+	var userDTOs []*dto.UserDTO
 	for _, user := range users {
-		if user !=nil{
+		if user != nil {
 
 			userDTOs = append(userDTOs, mapper.UserToDTO(user))
 		}

@@ -5,22 +5,30 @@
 
 @import '../node_modules/@icon/icofont/icofont.css';
 
+$lightBlue: #B8DAFF;
+$danger: #F44336;
+$primaryColor: #005CBB;
+$background: #DEF3FF;
+$side: #2388FF;
+$textSuccess: #0A3622;
+$bgSuccess: #D1E7DD;
+$borderSuccess: #A3CFBB;
+$textInfo: #055160;
+$bgInfo: #CFF4FC;
+$borderInfo: #9EEAF9;
+$textWarning: #664D03;
+$bgWarning: #fff3cd;
+$borderWarning: #FFE69C;
+$textDanger: #58151C;
+$bgDanger: #F8D7DA;
+$borderDanger: #F1AEB5;
+$textPrimary: #052C65;
+$bgPrimary: #CFE2FF;
+$borderPrimary: #9EC5FE;
+
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
-height: 100vh;
-}
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; height: 100vh; background-color: $background;}
 
 .container{
   height: 100%;
 }
-
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
-
-
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

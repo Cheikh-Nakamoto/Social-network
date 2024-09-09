@@ -49,15 +49,21 @@ func (p *PostController) createPostHandler(w http.ResponseWriter, r *http.Reques
 	nbr, _ := strconv.Atoi(id)
 	post.ID = int64(nbr)
 	post.CreatedAt = time.Now()
-	fmt.Println("post inf :",post)
+	fmt.Println("post inf :", post)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(post)
 }
 
 func (p *PostController) getAllPostsHandler(w http.ResponseWriter, r *http.Request) {
-	posts, err := p.PostService.GetAllPosts()
+	id, err := strconv.Atoi(r.URL.Query().Get("user_id"))
 	if err != nil {
-		fmt.Println("Erreur lors de la recuperation des post !")
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	fmt.Println("user _id :", id)
+	posts, err := p.PostService.GetAllPosts(id)
+	if err != nil {
+		fmt.Println("Erreur lors de la recuperation des post !", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
