@@ -6,6 +6,7 @@ import { FollowService } from '../../service/follow.service';
 import { AllUsersDTO, UserDTO } from '../../models/models.compenant';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../../service/auth.service';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-almost-private',
@@ -16,7 +17,11 @@ import { AuthService } from '../../service/auth.service';
   providers: [FollowService, AuthService]
 })
 export class AlmostPrivateComponent implements OnInit {
-  constructor(private followservice: FollowService) {
+  constructor(
+    private followservice: FollowService,
+    private dialogRef: MatDialogRef<AlmostPrivateComponent>
+
+  ) {
 
   }
 
@@ -29,6 +34,9 @@ export class AlmostPrivateComponent implements OnInit {
     this.followservice.getList(id, "friends").subscribe((friends : UserDTO[]) => {
       this.toppingList = friends
     })
+  }
+  closeDialog() {
+    this.dialogRef.close();
   }
 
 }
