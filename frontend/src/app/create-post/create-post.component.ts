@@ -46,7 +46,7 @@ export class CreatePostComponent implements OnInit {
   selectedFile!: File;
   selectedFileName: string = "";
   isPreviewerVisible: boolean = false;
-  UserSelected !: number[]
+  UserSelected : number[] = []
 
 
   constructor(
@@ -88,7 +88,7 @@ export class CreatePostComponent implements OnInit {
 
     this.shared.sharedData$.subscribe((res: { "almost": number[] }) => {
       if (res.almost) {
-        this.UserSelected = res.almost
+        this.UserSelected = (res.almost)
       }
     })
   }
