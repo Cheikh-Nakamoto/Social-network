@@ -62,7 +62,6 @@ export class CreatePostComponent implements OnInit {
     this.username = localStorage.getItem('firstname') as string
     
     let checkhref = location.href.split("/")
-    console.log(checkhref)
     if (checkhref[checkhref.length - 2] == "groups") {
       this.redirecte = "groups"
       this.groupid = Number(checkhref[checkhref.length - 1])

@@ -6,6 +6,8 @@ import { FollowService } from '../../service/follow.service';
 import { AllUsersDTO, UserDTO } from '../../models/models.compenant';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../../service/auth.service';
+import { Key } from 'lucide-angular';
+import { SharedserviceComponent } from '../../sharedservice/sharedservice.component';
 
 @Component({
   selector: 'app-almost-private',
@@ -16,7 +18,7 @@ import { AuthService } from '../../service/auth.service';
   providers: [FollowService, AuthService]
 })
 export class AlmostPrivateComponent implements OnInit {
-  constructor(private followservice: FollowService) {
+  constructor(private followservice: FollowService, private shared: SharedserviceComponent) {
 
   }
 
@@ -26,9 +28,21 @@ export class AlmostPrivateComponent implements OnInit {
 
   ngOnInit(): void {
     let id = localStorage.getItem("userID") as string
-    this.followservice.getList(id, "friends").subscribe((friends : UserDTO[]) => {
-      this.toppingList = friends
+    this.followservice.getList(id, "friends").subscribe((friends : {friends:UserDTO[]
+      ,status : number}) => {
+      this.toppingList = friends.friends
+      console.log(friends)
+    },(error)=>{
+      console.log(error)
     })
+  }
+
+
+
+
+  
+  selectuser(){
+    this.shared.setData(this.toppings.value)
   }
 
 }
