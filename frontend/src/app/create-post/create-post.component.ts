@@ -9,16 +9,15 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../service/auth.service';
 import { ToolbarComponent } from "../nav/toolbar/toolbar.component";
-import { group } from '@angular/animations';
-
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Post } from '../models/models.compenant';
 import { SharedserviceComponent } from '../sharedservice/sharedservice.component';
 import { AlmostPrivateComponent } from './almost-private/almost-private.component';
+
 @Component({
   selector: 'app-create-post',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, CommonModule, MatCardModule, MatButtonToggleModule, MatCheckboxModule, HttpClientModule, ToolbarComponent],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, MatCardModule, MatButtonToggleModule, MatCheckboxModule, HttpClientModule, ToolbarComponent,AlmostPrivateComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './create-post.component.html',
   styleUrls: ['./create-post.component.scss'],
