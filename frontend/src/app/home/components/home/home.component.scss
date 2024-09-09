@@ -15,8 +15,8 @@ $primaryColor: #005cbb;
 mat-card {
     margin-bottom: 48px;
     border: none;
-    box-shadow: 0 0 4px 0 $primaryColor;
-    background: $lightBlue;
+    box-shadow: 0 0 4px 0 $lightBlue;
+    background: #fff;
 
     mat-cardn-header img {
         width: 50px;
@@ -59,6 +59,10 @@ button:not(.send) {
     mat-icon {
         font-size: 20px;
     }
+    &:hover {
+        background-color: $lightBlue;
+        color: white;
+    }
 }
 
 .comment-form {
@@ -78,26 +82,6 @@ button:not(.send) {
         }
     }
 }
-
-/*
-span.search {
-    width: 50vw;
-    border-radius: 24px;
-    border: 1px solid #1a1b1f;
-}
-
-input {
-    border: none;
-    outline: none;
-    background: #f2f2f2;
-    border-radius: 24px;
-    color: #005cbb;
-    font-weight: bold;
-    letter-spacing: 2px;
-    padding: 12px 24px;
-    width: 100%;
-}
- */
 
 .post-image {
     width: 100%;
