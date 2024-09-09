@@ -1,13 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import * as model from './../../models/models.compenant'
 import { CommonModule } from '@angular/common';
-import {
-  MatDrawer,
-  MatDrawerContainer,
-  MatDrawerContent,
-  MatSidenav,
-  MatSidenavContainer
-} from "@angular/material/sidenav";
+import {MatDrawer, MatDrawerContainer, MatDrawerContent, MatSidenav, MatSidenavContainer} from "@angular/material/sidenav";
 import { Router, RouterLink, RouterOutlet } from "@angular/router";
 import { MatListModule } from "@angular/material/list";
 import { MatIcon } from "@angular/material/icon";

@@ -30,7 +30,7 @@ func (s *UserServiceImpl) CreateUser(user *dto.UserDTO) error {
 		return errors.New("missing required fields")
 	}
 
-	isExisted, err := s.Repository.FindByEmail(user.Email)
+	isExisted, err := s.Repository.FindByEmailOrUsername(user.Email, user.Nickname)
 	if err != nil {
 		fmt.Println("Erreur findbyemail")
 		return err
@@ -50,8 +50,8 @@ func (s *UserServiceImpl) CreateUser(user *dto.UserDTO) error {
 	return s.Repository.Save(mapper.DTOToUser(user))
 }
 
-func (s *UserServiceImpl) Connection(email, password string) (*dto.UserDTO, error) {
-	user, err := s.Repository.FindByEmail(email)
+func (s *UserServiceImpl) Connection(Identifiant, password string) (*dto.UserDTO, error) {
+	user, err := s.Repository.FindByEmailOrUsername(Identifiant, Identifiant)
 	if err != nil {
 		return nil, errors.New("invalid credentials")
 	}
