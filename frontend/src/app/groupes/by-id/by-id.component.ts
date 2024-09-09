@@ -62,14 +62,19 @@ export class ByIdComponent implements OnInit {
 
   ngOnInit(): void {
     this.authSrvice.isOnline();
+
     this.id = JSON.parse(localStorage.getItem("userID") as string);
     this.groupId = this.rout.snapshot.params['id'];
     this.loadUser('users');
-    this.loadComments()
+
     this.getAllPosts(Number(this.groupId))
     this.loadGroups().then(data => {
       this.groups = this.groups.filter(group => group.id == this.groupId);
+      if (this.groups[0].owner != this.id) {
+        this.ItIsMember()
+     }
     })
+   
     this.loadEvents()
     this.shared.sharedData$.subscribe((res: Post) => {
       if (this.storage?.group_id != res?.group_id && res != null) {
@@ -135,6 +140,25 @@ export class ByIdComponent implements OnInit {
     });
   }
 
+  ItIsMember() {
+    let body = {
+      "user_id": Number(this.id),
+      "group_id": Number(this.groupId)
+    }
+    console.log(body)
+    this.groupService.ItsMember("group-member", body).subscribe((res) => {
+      console.log(res)
+      if (!res) {
+        this.router.navigateByUrl("/groups")
+        return
+      }
+    },
+      (error: any) => {
+        console.error('Error fetching posts:', error);
+      }
+    )
+  }
+
   getAllPosts(groupID: number): void {
     let rout = `AllPost/groups/?groupid=${groupID}`
     this.groupService.getData(rout).subscribe(
@@ -193,7 +217,7 @@ export class ByIdComponent implements OnInit {
         this.comlength = comment.CommentsLength
         console.log('ici sont les commentaires', comment);
       },
-      (      error: any) => {
+      (error: any) => {
         console.error('Erreur lors du chargement des commentaires:', error);
       }
     );

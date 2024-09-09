@@ -79,3 +79,6 @@ func (s GroupServiceImpl) DeclineNotification(notif dto.Notification) error {
 	return s.Repository.DeclineNotification(notif)
 } 
 
+func (s GroupServiceImpl)  ItsGroupMember(data dto.Data)(bool, error) {
+	return s.Repository.ItsGroupMember(data)
+}
