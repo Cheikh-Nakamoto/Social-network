@@ -14,6 +14,7 @@ import { WebSocketService } from '../../chat/services/chat.service';
 import { AuthService } from '../../service/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ChatComponent } from '../../chat/chat.component';
+
 @Component({
     selector: 'app-sidenav',
     standalone: true,
@@ -61,6 +62,7 @@ export class SidenavComponent implements OnInit {
                 // even.routeEvent(message)
                 if (message.type === 'get_chatbar_data') {
                     this.updateUsers(message.payload);
+
                     this.cdRef.detectChanges();
                 }
             },
@@ -70,6 +72,7 @@ export class SidenavComponent implements OnInit {
         );
     }
     readonly dialog = inject(MatDialog);
+
     getAllusers(): void {
         const userData = JSON.parse(localStorage.getItem('userID') as string);
         const iduser = userData;
@@ -85,9 +88,11 @@ export class SidenavComponent implements OnInit {
             }
         );
     }
+
     updateUsers(payloads: any[]): void {
         payloads.forEach((payload) => {
             let user = this.users.find((u) => u.id === payload.userId);
+
             if (user) {
                 user.email = payload.email ?? user.email;
                 user.nickname = payload.nickname ?? user.nickname;
@@ -113,11 +118,14 @@ export class SidenavComponent implements OnInit {
             }
         });
     }
+
     handleToolbarClick(event: Event) {
         console.log('Toolbar link clicked!', event);
     }
+
     handleMenuItemClick(item: any, event: Event) {
         this.router.navigate(item.route);
+
         // this.router.navigate(['/chat'], { queryParams: { userid: item.id } });
     }
     openCreatePostDialog(id: number) {
@@ -138,4 +146,3 @@ export class SidenavComponent implements OnInit {
         });
     }
 }
-
