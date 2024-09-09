@@ -3,7 +3,7 @@
 while true; do
     git stash
     git pull
-    git stash applyq
+    git stash apply
     git add .
     git commit -m "we can merge"
     git push
