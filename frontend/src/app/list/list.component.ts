@@ -5,6 +5,8 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { RouterLink } from '@angular/router';
 import { MatDividerModule } from '@angular/material/divider';
+import { User } from '../../entity/user';
+import { NgForOf } from '@angular/common';
 
 @Component({
   selector: 'app-list',
@@ -14,14 +16,14 @@ import { MatDividerModule } from '@angular/material/divider';
     HttpClientModule,
     MatCardModule,
     RouterLink,
-    MatDividerModule
+    MatDividerModule, NgForOf
 ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
   providers: [AuthService]
 })
 export class ListComponent {
-    users!: any[]
+    users!: User[]
 
     constructor(
         private authService: AuthService,
@@ -29,7 +31,8 @@ export class ListComponent {
 
     listUsers(): void {
         this.authService.getAll().subscribe((data: any) => {
-            console.log(data)
+            this.users = data
+            console.log(this.users)
         })
     }
 

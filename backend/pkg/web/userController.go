@@ -384,6 +384,17 @@ func (c *UserController) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set(os.Getenv("CONTENT_TYPE"), os.Getenv("APPLICATION_JSON"))
+	if users != nil {
+		err = json.NewEncoder(w).Encode(map[string]interface{}{
+			"status": http.StatusOK,
+			"users":  users,
+		})
+	} else {
+		err = json.NewEncoder(w).Encode(map[string]interface{}{
+			"status":  http.StatusNoContent,
+			"message": "No Users",
+		})
+	}
 	err = json.NewEncoder(w).Encode(users)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -391,7 +402,6 @@ func (c *UserController) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
-
 
 func (c *UserController) GetFollowers(w http.ResponseWriter, r *http.Request) {
 	err := utils.Environment()

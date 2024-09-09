@@ -92,7 +92,7 @@ export class AuthService {
     }
 
     getAll() {
-        return this.http.get(`${this.api}/users`)
+        return this.http.get(`${this.api}/allusers`)
     }
 
     getUser(id: any) {
