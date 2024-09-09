@@ -88,7 +88,7 @@ export class HomeComponent implements OnInit {
   }
 
   getAllPosts(): void {
-    this.apiService.getData('AllPost').subscribe(
+    this.apiService.getData(`AllPost?user_id=${this.id}`).subscribe(
       (response: Post[]) => {
         this.posts = response;
         console.log('ici sont les posts', this.posts);

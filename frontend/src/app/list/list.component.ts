@@ -6,7 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { RouterLink } from '@angular/router';
 import { MatDividerModule } from '@angular/material/divider';
 import { User } from '../../entity/user';
-import { NgForOf } from '@angular/common';
+import { NgForOf, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-list',
@@ -16,7 +16,7 @@ import { NgForOf } from '@angular/common';
     HttpClientModule,
     MatCardModule,
     RouterLink,
-    MatDividerModule, NgForOf
+    MatDividerModule, NgForOf,NgIf
 ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
