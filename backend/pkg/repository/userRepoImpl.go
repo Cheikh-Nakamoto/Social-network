@@ -29,10 +29,11 @@ func (u *UserRepoImpl) FindByID(id uint) (*entity.User, error) {
 	return user, err
 }
 
-// FindByEmail is a method to find a user by email
-func (u *UserRepoImpl) FindByEmail(email string) (*entity.User, error) {
+// FindByEmail is a method to find a user by email or nickname
+func (u *UserRepoImpl) FindByEmailOrUsername(email, nickname string) (*entity.User, error) {
 	user := new(entity.User)
-	err := u.db.GetDB().QueryRow(`SELECT id, email, password, firstname, lastname, date_of_birth, avatar, nickname, about_me, is_public, created_at, updated_at FROM users WHERE email = ?`, email).Scan(&user.ID, &user.Email, &user.Password, &user.Firstname, &user.Lastname, &user.DateOfBirth, &user.Avatar, &user.Nickname, &user.AboutMe, &user.IsPublic, &user.CreatedAt, &user.UpdatedAt)
+	//we write email = ? OR email = ?, email , nickname because user should be able to login with email or nickname
+	err := u.db.GetDB().QueryRow(`SELECT id, email, password, firstname, lastname, date_of_birth, avatar, nickname, about_me, is_public, created_at, updated_at FROM users WHERE email = ? OR nickname = ?`, email, nickname).Scan(&user.ID, &user.Email, &user.Password, &user.Firstname, &user.Lastname, &user.DateOfBirth, &user.Avatar, &user.Nickname, &user.AboutMe, &user.IsPublic, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil // No user found

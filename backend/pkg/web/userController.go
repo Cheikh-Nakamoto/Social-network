@@ -70,7 +70,7 @@ func (c *UserController) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var credentials struct {
-		Email    string `json:"email" db:"email"`
+		Identifiant    string `json:"email" db:"credential"`
 		Password string `json:"password" db:"password"`
 	}
 
@@ -79,7 +79,7 @@ func (c *UserController) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userDTO, err := c.UserService.Connection(credentials.Email, credentials.Password)
+	userDTO, err := c.UserService.Connection(credentials.Identifiant, credentials.Password)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
