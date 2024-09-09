@@ -14,6 +14,7 @@ import { Post } from '../../entity/post';
 import { Group } from '../../entity/group';
 import { HttpClientModule } from '@angular/common/http';
 import { DataService } from '../data.service';
+import { ToolbarComponent } from '../nav/toolbar/toolbar.component';
 
 
 
@@ -33,7 +34,7 @@ import { DataService } from '../data.service';
     ],
     templateUrl: './profile.component.html',
     styleUrl: './profile.component.scss',
-    providers: [DatePipe,DataService, AuthService,FollowService,UtilsService]
+    providers: [DatePipe,DataService, AuthService,FollowService,UtilsService, ToolbarComponent]
     
 })
 export class ProfileComponent implements OnInit {

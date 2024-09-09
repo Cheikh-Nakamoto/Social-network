@@ -7,7 +7,8 @@ import { ToolbarComponent } from '../nav/toolbar/toolbar.component';
   standalone: true,
   imports: [ToolbarComponent],
   templateUrl: './list.component.html',
-  styleUrl: './list.component.scss'
+  styleUrl: './list.component.scss',
+  providers: [AuthService]
 })
 export class ListComponent {
     users!: any[]
@@ -23,8 +24,6 @@ export class ListComponent {
     }
 
     ngOnInit(): void {
-        this.authService.isOnline()
-
-
+        console.log("I am here")
     }
 }
