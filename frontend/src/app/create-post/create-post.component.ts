@@ -33,6 +33,8 @@ export class CreatePostComponent implements OnInit {
   redirecte!: string
   groupid!: number
 
+  username = ""
+
   toggleSingleSelectionIndicator() {
     this.hideSingleSelectionIndicator.update(value => !value);
   }
@@ -43,15 +45,23 @@ export class CreatePostComponent implements OnInit {
 
   Post!: FormGroup;
   selectedFile!: File;
-  selectedFileName: string ="";
+  selectedFileName: string = "";
   isPreviewerVisible: boolean = false;
-  
 
-  constructor(private dialogRef: MatDialogRef<CreatePostComponent>, private postFormBuilder: FormBuilder, private apiservice: DataService, private router: Router, private authService: AuthService, private rout: ActivatedRoute,private shared : SharedserviceComponent,private dialog :MatDialog) { }
+
+  constructor(
+    private dialogRef: MatDialogRef<CreatePostComponent>,
+    private postFormBuilder: FormBuilder, private apiservice: DataService,
+    private router: Router, private authService: AuthService,
+    private rout: ActivatedRoute, private shared: SharedserviceComponent,
+    private dialog: MatDialog
+  ) { }
 
   ngOnInit(): void {
     this.redirecte = "Acceuil"
     this.authService.isOnline();
+    this.username = localStorage.getItem('firstname') as string
+    
     let checkhref = location.href.split("/")
     console.log(checkhref)
     if (checkhref[checkhref.length - 2] == "groups") {
@@ -76,13 +86,13 @@ export class CreatePostComponent implements OnInit {
       });
     }
   }
-  
+
 
   onFileChange(event: any): void {
     console.log(event.target.files.length)
     if (event.target.files.length > 0) {
       this.selectedFile = event.target.files[0];
-      this.selectedFileName = this.selectedFile.name; 
+      this.selectedFileName = this.selectedFile.name;
       console.log('Fichier sélectionné:', this.selectedFileName);
     }
   }
