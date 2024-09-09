@@ -119,3 +119,7 @@ func (f *FollowServiceImpl) AreFollowing(followerID, followeeID uint) (bool, err
 func (f *FollowServiceImpl) AreWeFriends(userID, friendID uint) (bool, error) {
 	return f.Repository.AreWeFriends(userID, friendID)
 }
+
+func (f *FollowServiceImpl) DeleteFollow(followerID, followeeID uint) error {
+	return f.Repository.DeleteFollow(followerID, followeeID)
+}
