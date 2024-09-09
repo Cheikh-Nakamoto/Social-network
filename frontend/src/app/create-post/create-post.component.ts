@@ -46,6 +46,7 @@ export class CreatePostComponent implements OnInit {
   selectedFile!: File;
   selectedFileName: string = "";
   isPreviewerVisible: boolean = false;
+  UserSelected !: number[]
 
 
   constructor(
@@ -83,6 +84,12 @@ export class CreatePostComponent implements OnInit {
         user_id: localStorage.getItem("userID") as string
       });
     }
+
+    this.shared.sharedData$.subscribe((res:{"almost":number[]})=>{
+      if (res.almost){
+        this.UserSelected = res.almost
+      }
+    })
   }
 
 
@@ -152,6 +159,9 @@ export class CreatePostComponent implements OnInit {
     this.dialog.open(AlmostPrivateComponent, {
       width: "auto"
     });
+  }
+  almost_private(){
+    
   }
 
 }

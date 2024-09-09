@@ -6,7 +6,7 @@ import { FollowService } from '../../service/follow.service';
 import { AllUsersDTO, UserDTO } from '../../models/models.compenant';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../../service/auth.service';
-import { Key } from 'lucide-angular';
+import { MatDialogRef } from '@angular/material/dialog';
 import { SharedserviceComponent } from '../../sharedservice/sharedservice.component';
 
 @Component({
@@ -18,7 +18,11 @@ import { SharedserviceComponent } from '../../sharedservice/sharedservice.compon
   providers: [FollowService, AuthService]
 })
 export class AlmostPrivateComponent implements OnInit {
-  constructor(private followservice: FollowService, private shared: SharedserviceComponent) {
+  constructor(
+    private followservice: FollowService,
+    private dialogRef: MatDialogRef<AlmostPrivateComponent>,
+    private share : SharedserviceComponent 
+  ) {
 
   }
 
@@ -28,21 +32,16 @@ export class AlmostPrivateComponent implements OnInit {
 
   ngOnInit(): void {
     let id = localStorage.getItem("userID") as string
-    this.followservice.getList(id, "friends").subscribe((friends : {friends:UserDTO[]
-      ,status : number}) => {
+    this.followservice.getList(id, "friends").subscribe((friends :{friends:UserDTO[],status:number}) => {
       this.toppingList = friends.friends
-      console.log(friends)
-    },(error)=>{
-      console.log(error)
     })
   }
 
-
-
-
-  
   selectuser(){
-    this.shared.setData(this.toppings.value)
+    this.share.setData({"almost":this.toppings.value})
+  }
+  closeDialog() {
+    this.dialogRef.close();
   }
 
 }
