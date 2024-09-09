@@ -51,4 +51,6 @@ const (
 	EventTypingStop  = "typing_stop"
 	EventGetMessagesGroup="get_messages_groupes"
 	EventSendMessageGroup="send_message_groupes"
+	EventGetNotification="new_notification"
+
 )

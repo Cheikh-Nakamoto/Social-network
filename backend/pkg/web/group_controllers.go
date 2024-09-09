@@ -35,6 +35,9 @@ func (gc *GroupController) RegisterRoutes(mux *http.ServeMux) *http.ServeMux {
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/groups/", gc.GetGroupByIDHandler)
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/notification", gc.NotificationExists)
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/notification/", gc.NotificationsByUserID)
+	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/accept-request", gc.AddMemberBasedOnNotification)
+	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/decline-request", gc.DeclineNotification)
+	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/group-member", gc.ItsGroupMemberhandler)
 
 	return mux
 }
@@ -189,9 +192,7 @@ func (gc *GroupController) CreateEventsHandler(w http.ResponseWriter, r *http.Re
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-
-	event.CreatedAt = time.Now()
-
+	fmt.Println("event received: ", event)
 	err := gc.GroupService.CreateEventsInGroup(event)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -206,8 +207,8 @@ func (gc *GroupController) CreateEventsHandler(w http.ResponseWriter, r *http.Re
 func (gc *GroupController) FetchAllEventsHandler(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get("groupid")
-	ID,err := strconv.Atoi(id)
-	if err != nil || r.Method != http.MethodGet{
+	ID, err := strconv.Atoi(id)
+	if err != nil || r.Method != http.MethodGet {
 		http.Error(w, err.Error(), http.StatusMethodNotAllowed)
 		return
 	}
@@ -266,3 +267,55 @@ func (gc *GroupController) NotificationsByUserID(w http.ResponseWriter, r *http.
 	json.NewEncoder(w).Encode(notif)
 
 }
+
+func (gc *GroupController) AddMemberBasedOnNotification(w http.ResponseWriter, r *http.Request) {
+	var notif dto.Notification
+	if err := json.NewDecoder(r.Body).Decode(&notif); err != nil {
+		fmt.Println("error de decodage: ", err)
+		http.Error(w,  "error de decodage ", http.StatusBadRequest)
+		return
+	}
+	
+	err := gc.GroupService.AddMemberBasedOnNotification(notif); 
+	if err != nil {
+		fmt.Println("error", err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+}
+
+func (gc *GroupController) DeclineNotification(w http.ResponseWriter, r *http.Request) {
+	var notif dto.Notification
+	if err := json.NewDecoder(r.Body).Decode(&notif); err != nil {
+		fmt.Println("error de decodage: ", err)
+		http.Error(w,  "error de decodage ", http.StatusBadRequest)
+		return
+	}
+	
+	err := gc.GroupService.DeclineNotification(notif); 
+	if err != nil {
+		fmt.Println("error", err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+}
+
+func (gc *GroupController) ItsGroupMemberhandler(w http.ResponseWriter, r *http.Request) {
+	var inf dto.Data
+	if err := json.NewDecoder(r.Body).Decode(&inf); err != nil {
+		http.Error(w,  "error de decodage ", http.StatusBadRequest)
+		return
+	}
+	bools,err := gc.GroupService.ItsGroupMember(inf);
+	if err != nil {
+		fmt.Println("error", err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(bools)
+}
+
+
+

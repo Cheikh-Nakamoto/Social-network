@@ -1,13 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import * as model from './../../models/models.compenant'
 import { CommonModule } from '@angular/common';
-import {
-  MatDrawer,
-  MatDrawerContainer,
-  MatDrawerContent,
-  MatSidenav,
-  MatSidenavContainer
-} from "@angular/material/sidenav";
+import {MatDrawer, MatDrawerContainer, MatDrawerContent, MatSidenav, MatSidenavContainer} from "@angular/material/sidenav";
 import { Router, RouterLink, RouterOutlet } from "@angular/router";
 import { MatListModule } from "@angular/material/list";
 import { MatIcon } from "@angular/material/icon";
@@ -46,10 +40,9 @@ import { AuthService } from '../../service/auth.service';
 export class SidenavComponent implements OnInit {
   menuItems = [
     { name: 'Home', route: '/', icon: 'icofont-ui-home' },
-    { name: 'Profile', route: '/profile', icon: 'icofont-user' },
+    { name: 'Profile', route: '/profile/1', icon: 'icofont-user' },
     { name: 'Friends', route: '/followers', icon: 'icofont-users-alt-4' },
     { name: 'Groups', route: '/groups', icon: 'icofont-users-social' },
-    { name: 'New Post', route: '/CreatePost', icon: 'icofont-pencil-alt-1' },
   ];
   users: model.UserDTO[] = [];
   constructor(

@@ -10,6 +10,29 @@ import { catchError, map } from 'rxjs/operators';
 })
 export class DataService {
   private apiUrl = 'http://localhost:8080/sn/api'; // l'URL de votre API
+  
+  searchUsers(query: string): Observable<any[]> {
+    console.log("datasearch");
+  
+    return this.http.get<any[]>(`${this.apiUrl}/allusers`).pipe(
+      map(users => {
+        console.log('Données de l\'API:', users);
+        const validUsers = users.filter(user => user !== null && user !== undefined);
+        console.log('Utilisateurs valides:', validUsers);
+        
+        return validUsers.filter(user =>
+          user.firstname.toLowerCase().includes(query.toLowerCase()) ||
+          user.lastname.toLowerCase().includes(query.toLowerCase()) ||
+          user.nickname.toLowerCase().includes(query.toLowerCase())
+        );
+      })
+    );
+  }
+  
+  getAll() {
+    throw new Error('Method not implemented.');
+  }
+  
 
   constructor(private http: HttpClient) { }
 
@@ -22,19 +45,38 @@ export class DataService {
       );
   }
   
-
+  accept_decline(routes : string,data :any){
+    return this.http.post(`${this.apiUrl}/${routes}`, data).pipe(
+      catchError(this.handleError)
+    );
+  }
+  ItsMember(routes : string,data :any){
+    return this.http.post(`${this.apiUrl}/${routes}`, data).pipe(
+      catchError(this.handleError)
+    );
+  }
   // Méthode POST
   postData(endpoint: string, data: any): Observable<any> {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
-    return this.http.post(`${this.apiUrl}/${endpoint}`, data, httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
+    let httpOptions = {};
+  
+    if (data instanceof FormData) {
+      // Ne définissez pas le Content-Type, le navigateur le fera pour vous (avec les limites correctes)
+      httpOptions = {
+        headers: new HttpHeaders({}),
+      };
+    } else {
+      httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+        }),
+      };
+    }
+  
+    return this.http.post(`${this.apiUrl}/${endpoint}`, data, httpOptions).pipe(
+      catchError(this.handleError)
+    );
   }
+  
 
   // Méthode pour uploader une image
   uploadImage(formData: FormData): Observable<any> {
@@ -52,7 +94,6 @@ export class DataService {
       target_type: targetType,
       like: like
     };
-    console.log(JSON.stringify(body))
     return this.http.post<void>(`${this.apiUrl}/likeTarget`, JSON.stringify(body));
   }
 
@@ -128,6 +169,11 @@ export class DataService {
     console.error('An error occurred:', error);
     throw error;
   }
+  postCommentWithImage(postId: number, formData: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}/comments`, formData);
+  }
+  
+  
 }
 
 

@@ -19,6 +19,7 @@ func (s *CommentServiceImpl) CreateComment(comment *dto.CommentDTO) (int64, erro
 		UserID:     comment.UserID,
 		TargetId:   comment.TargetId,
 		Content:    comment.Content,
+		Image: 		comment.Image,
 		TargetType: comment.TargetType,
 		CreatedAt:  comment.CreatedAt,
 	}
@@ -41,6 +42,7 @@ func (s *CommentServiceImpl) GetAllComments() (dto.SendCommentDTO, error) {
 				UserID:     v.UserID,
 				TargetId:   v.TargetId,
 				TargetType: v.TargetType,
+				Image:		v.Image,
 				Content:    v.Content,
 				CreatedAt:  v.CreatedAt,
 			}
@@ -66,6 +68,7 @@ func (s *CommentServiceImpl) GetCommentByID(id int64) (dto.CommentDTO, error) {
 		ID:        comment.ID,
 		UserID:    comment.UserID,
 		Content:   comment.Content,
+		Image:	   comment.Image,
 		CreatedAt: comment.CreatedAt,
 	}, nil
 }
@@ -79,6 +82,7 @@ func (s *CommentServiceImpl) UpdateComment(comment *dto.CommentDTO) error {
 		ID:        comment.ID,
 		UserID:    comment.UserID,
 		Content:   comment.Content,
+		Image:	   comment.Image,
 		CreatedAt: comment.CreatedAt,
 	}
 	return s.Repository.UpdateComment(entity)

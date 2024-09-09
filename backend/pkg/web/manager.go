@@ -69,6 +69,7 @@ func (m *Manager) setupEventHandlers() {
 	m.handlers[EventTypingStop] = TypingStopHandler
 	m.handlers[EventGetMessagesGroup]=GroupMessageHandler
 	m.handlers[EventSendMessageGroup]=SendMessageGrouopHandler
+	m.handlers[EventGetNotification] = SendMessageHandler
 }
 
 func TypingStartHandler(event Event, c *Client) error {

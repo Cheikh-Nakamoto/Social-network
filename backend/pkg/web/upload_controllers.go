@@ -75,20 +75,20 @@ func UploadImage(w http.ResponseWriter, r *http.Request) {
 	categories := r.FormValue("categories")
 	privacy := r.FormValue("privacy")
 	userID := r.FormValue("user_id")
-	
+	groupid := r.FormValue("group_id")
 
 	// Construct the response data
 	responseData := map[string]string{
 		"title":      title,
 		"content":    content,
-		"image":      "/assets/"+fileName,
+		"image":      "/assets/" + fileName,
 		"categories": categories,
-		"ispublic":    privacy,
+		"ispublic":   privacy,
 		"user_id":    userID,
-        
+		"group_id":   groupid,
 	}
 
-	fmt.Println("path:", filePath)
+	
 
 	// Send back the response data as JSON
 	w.Header().Set("Content-Type", "application/json")

@@ -125,6 +125,7 @@ func (c *UserController) UpdateProfile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id, err := utils.ExtractIDFromRequest(r)
+	fmt.Println("upd")
 	if err != nil {
 		http.Error(w, "User ID is required", http.StatusBadRequest)
 		return
@@ -355,9 +356,9 @@ func (c *UserController) Users(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (c *UserController) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 
-func (c *UserController) GetAllUsers( w http.ResponseWriter, r *http.Request){
-	
+	fmt.Println("sear")
 	err := utils.Environment()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -374,8 +375,7 @@ func (c *UserController) GetAllUsers( w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-
-	users, err:=c.UserService.AllUsers()
+	users, err := c.UserService.AllUsers()
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -390,6 +390,311 @@ func (c *UserController) GetAllUsers( w http.ResponseWriter, r *http.Request){
 		return
 	}
 
+}
+
+
+func (c *UserController) GetFollowers(w http.ResponseWriter, r *http.Request) {
+	err := utils.Environment()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if r.Method != http.MethodGet {
+		http.Error(w, os.Getenv("METHOD_NOT_ALLOWED"), http.StatusMethodNotAllowed)
+		return
+	}
+
+	if !strings.HasPrefix(r.URL.Path, os.Getenv("DEFAULT_API_LINK")+"/followers/") {
+		http.Error(w, os.Getenv("NOT_FOUND"), http.StatusNotFound)
+		return
+	}
+
+	userID, err := utils.ExtractIDFromRequest(r)
+	if err != nil {
+		http.Error(w, os.Getenv("USER_ID_REQUIRED"), http.StatusBadRequest)
+		return
+	}
+
+	followers, err := c.UserService.GetFollowers(userID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set(os.Getenv("CONTENT_TYPE"), os.Getenv("APPLICATION_JSON"))
+	w.WriteHeader(http.StatusOK)
+	if followers != nil {
+		err = json.NewEncoder(w).Encode(map[string]interface{}{
+			"status":    http.StatusOK,
+			"followers": followers,
+		})
+	} else {
+		err = json.NewEncoder(w).Encode(map[string]interface{}{
+			"status":  http.StatusNoContent,
+			"message": "No followers",
+		})
+	}
+	if err != nil {
+		return
+	}
+}
+
+func (c *UserController) GetFollowings(w http.ResponseWriter, r *http.Request) {
+	err := utils.Environment()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if r.Method != http.MethodGet {
+		http.Error(w, os.Getenv("METHOD_NOT_ALLOWED"), http.StatusMethodNotAllowed)
+		return
+	}
+
+	if !strings.HasPrefix(r.URL.Path, os.Getenv("DEFAULT_API_LINK")+"/followings/") {
+		http.Error(w, os.Getenv("NOT_FOUND"), http.StatusNotFound)
+		return
+	}
+
+	userID, err := utils.ExtractIDFromRequest(r)
+	if err != nil {
+		http.Error(w, os.Getenv("USER_ID_REQUIRED"), http.StatusBadRequest)
+		return
+	}
+
+	followings, err := c.UserService.GetFollowings(userID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set(os.Getenv("CONTENT_TYPE"), os.Getenv("APPLICATION_JSON"))
+	w.WriteHeader(http.StatusOK)
+	if followings != nil {
+		err = json.NewEncoder(w).Encode(map[string]interface{}{
+			"status":     http.StatusOK,
+			"followings": followings,
+		})
+	} else {
+		err = json.NewEncoder(w).Encode(map[string]interface{}{
+			"status":  http.StatusNoContent,
+			"message": "No followings",
+		})
+	}
+	if err != nil {
+		return
+	}
+}
+
+func (c *UserController) GetFriends(w http.ResponseWriter, r *http.Request) {
+	err := utils.Environment()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if r.Method != http.MethodGet {
+		http.Error(w, os.Getenv("METHOD_NOT_ALLOWED"), http.StatusMethodNotAllowed)
+		return
+	}
+
+	if !strings.HasPrefix(r.URL.Path, os.Getenv("DEFAULT_API_LINK")+"/friends/") {
+		http.Error(w, os.Getenv("NOT_FOUND"), http.StatusNotFound)
+		return
+	}
+
+	userID, err := utils.ExtractIDFromRequest(r)
+	if err != nil {
+		http.Error(w, os.Getenv("USER_ID_REQUIRED"), http.StatusBadRequest)
+		return
+	}
+
+	friends, err := c.UserService.GetFriends(userID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set(os.Getenv("CONTENT_TYPE"), os.Getenv("APPLICATION_JSON"))
+	w.WriteHeader(http.StatusOK)
+	if friends != nil {
+		err = json.NewEncoder(w).Encode(map[string]interface{}{
+			"status":  http.StatusOK,
+			"friends": friends,
+		})
+	} else {
+		err = json.NewEncoder(w).Encode(map[string]interface{}{
+			"status":  http.StatusNoContent,
+			"message": "No friends",
+		})
+	}
+	if err != nil {
+		return
+	}
+}
+
+func (c *UserController) GetFollowerCount(w http.ResponseWriter, r *http.Request) {
+	err := utils.Environment()
+	fmt.Println()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if r.Method != http.MethodGet {
+		http.Error(w, os.Getenv("METHOD_NOT_ALLOWED"), http.StatusMethodNotAllowed)
+		return
+	}
+
+	if !strings.HasPrefix(r.URL.Path, os.Getenv("DEFAULT_API_LINK")+"/follower-count/") {
+		http.Error(w, os.Getenv("NOT_FOUND"), http.StatusNotFound)
+		return
+	}
+
+	userID, err := utils.ExtractIDFromRequest(r)
+	if err != nil {
+		http.Error(w, os.Getenv("USER_ID_REQUIRED"), http.StatusBadRequest)
+		return
+	}
+
+	count, err := c.UserService.GetFollowerCount(userID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set(os.Getenv("CONTENT_TYPE"), os.Getenv("APPLICATION_JSON"))
+	w.WriteHeader(http.StatusOK)
+	err = json.NewEncoder(w).Encode(map[string]interface{}{
+		"status": http.StatusOK,
+		"count":  count,
+	})
+	if err != nil {
+		return
+	}
+}
+
+func (c *UserController) GetFollowingCount(w http.ResponseWriter, r *http.Request) {
+	err := utils.Environment()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if r.Method != http.MethodGet {
+		http.Error(w, os.Getenv("METHOD_NOT_ALLOWED"), http.StatusMethodNotAllowed)
+		return
+	}
+
+	if !strings.HasPrefix(r.URL.Path, os.Getenv("DEFAULT_API_LINK")+"/following-count/") {
+		http.Error(w, os.Getenv("NOT_FOUND"), http.StatusNotFound)
+		return
+	}
+
+	userID, err := utils.ExtractIDFromRequest(r)
+	if err != nil {
+		http.Error(w, os.Getenv("USER_ID_REQUIRED"), http.StatusBadRequest)
+		return
+	}
+
+	count, err := c.UserService.GetFollowingCount(userID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set(os.Getenv("CONTENT_TYPE"), os.Getenv("APPLICATION_JSON"))
+	w.WriteHeader(http.StatusOK)
+	err = json.NewEncoder(w).Encode(map[string]interface{}{
+		"status": http.StatusOK,
+		"count":  count,
+	})
+	if err != nil {
+		return
+	}
+}
+
+func (c *UserController) GetFriendCount(w http.ResponseWriter, r *http.Request) {
+	err := utils.Environment()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if r.Method != http.MethodGet {
+		http.Error(w, os.Getenv("METHOD_NOT_ALLOWED"), http.StatusMethodNotAllowed)
+		return
+	}
+
+	if !strings.HasPrefix(r.URL.Path, os.Getenv("DEFAULT_API_LINK")+"/friend-count/") {
+		http.Error(w, os.Getenv("NOT_FOUND"), http.StatusNotFound)
+		return
+	}
+
+	userID, err := utils.ExtractIDFromRequest(r)
+	if err != nil {
+		http.Error(w, os.Getenv("USER_ID_REQUIRED"), http.StatusBadRequest)
+		return
+	}
+
+	count, err := c.UserService.GetFriendsCount(userID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set(os.Getenv("CONTENT_TYPE"), os.Getenv("APPLICATION_JSON"))
+	w.WriteHeader(http.StatusOK)
+	err = json.NewEncoder(w).Encode(map[string]interface{}{
+		"status": http.StatusOK,
+		"count":  count,
+	})
+	if err != nil {
+		return
+	}
+}
+func (c *UserController) GetRecentPosts(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("postProfil")
+	err := utils.Environment()
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if r.Method != http.MethodGet {
+		http.Error(w, os.Getenv("METHOD_NOT_ALLOWED"), http.StatusMethodNotAllowed)
+		return
+	}
+
+	if !strings.HasPrefix(r.URL.Path, os.Getenv("DEFAULT_API_LINK")+"/post-profile/") {
+		http.Error(w, os.Getenv("NOT_FOUND"), http.StatusNotFound)
+		return
+	}
+
+	// Extraire l'ID de l'utilisateur à partir de l'URL
+	id, err := utils.ExtractIDFromRequest(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Récupérer les publications récentes de l'utilisateur
+	posts, err := c.UserService.GetRecentPosts(uint(id))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Envoyer les publications en réponse
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set(os.Getenv("CONTENT_TYPE"), os.Getenv("APPLICATION_JSON"))
+	err = json.NewEncoder(w).Encode(posts)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 // UsersRoutes Register routes
@@ -407,6 +712,13 @@ func (c *UserController) UsersRoutes(routes *http.ServeMux) *http.ServeMux {
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/profile/", c.GetProfile)
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/profile-update/", c.UpdateProfile)
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/allusers", c.GetAllUsers)
+	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/followers/", c.GetFollowers)
+	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/followings/", c.GetFollowings)
+	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/follower-count/", c.GetFollowerCount)
+	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/following-count/", c.GetFollowingCount)
+	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/friend-count/", c.GetFriendCount)
+	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/friends/", c.GetFriends)
+	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/post-profile/", c.GetRecentPosts)
 
 	return routes
 }

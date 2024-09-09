@@ -17,13 +17,11 @@ type Events struct {
 	ID          int       `json:"id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description,omitempty"`
-	Owner       string    `json:"owner"`
-	Image       string    `json:"image"`
-	GroupId     int       `json:"groupid"`
+	GroupId     int       `json:"group_id"`
 	UserID      int       `json:"user_id"`
-	CreatedAt   time.Time `json:"created_at"`
+	HourStart   time.Time `json:"hour_start"`
+    HourEnd     time.Time `json:"hour_end"`
 }
-
 
 type Notification struct {
 	ID        int       `json:"id"`
@@ -33,4 +31,9 @@ type Notification struct {
 	Message   string    `json:"message"`
 	IsRead    bool      `json:"is_read"`
 	CreatedAt time.Time `json:"created_at"`
+}
+
+type Data struct{
+	UserID int `json:"user_id"`
+	GroupID int `json:"group_id"`
 }

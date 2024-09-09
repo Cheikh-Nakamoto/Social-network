@@ -2,7 +2,7 @@
 <div class="posts" *ngFor="let post of posts">
   <mat-card class="example-card" appearance="outlined">
     <mat-card-header>
-      <img routerLink="/profile/{{post.user_id}}" mat-card-avatar src="logo.png" width="64" height="64" alt="profile">
+      <img routerLink="/profile/{{post.user_id}}" mat-card-avatar src="logo.png" alt="profile">
       <mat-card-title routerLink="/profile/{{post.user_id}}">
         {{ AllUser[post.user_id] && AllUser[post.user_id].firstname }}
       </mat-card-title>
@@ -34,6 +34,7 @@
       <span class="comment-form">
         <form (submit)="onComment(post.id, 'comment', $event)">
           <input matInput placeholder="Comment" name="comment">
+          <input type="file" name="image" accept="image/*" (change)="onFileSelected($event)">
           <button class="send" mat-icon-button type="submit">
             <mat-icon>send</mat-icon>
           </button>

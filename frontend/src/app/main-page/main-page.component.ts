@@ -25,7 +25,7 @@ export class MainPageComponent implements OnInit {
   
   openCreatePostDialog() {
     this.dialog.open(CreatePostComponent, {
-      width: '600px',
+      width: "auto"
     });
   }
 }

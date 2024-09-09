@@ -5,7 +5,7 @@ import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { CommonModule, NgForOf, NgOptimizedImage } from '@angular/common';
+import { NgForOf, NgOptimizedImage } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -17,6 +17,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { User, AllUsersDTO } from '../../../models/models.compenant';
 import { AuthService } from '../../../service/auth.service';
 import { MainPageComponent } from "../../../main-page/main-page.component";
+import { CommonModule } from '@angular/common'
+import { SharedserviceComponent } from '../../../sharedservice/sharedservice.component';
 import { WebSocketService } from '../../../chat/services/chat.service';
 import { Subscription } from 'rxjs';
 import { GetUserService } from '../../../data.service';
@@ -26,6 +28,7 @@ import { GetUserService } from '../../../data.service';
   selector: 'app-home',
   standalone: true,
   imports: [
+    CommonModule,
     MatSidenavContainer,
     MatSidenav,
     MatListModule,
@@ -40,9 +43,8 @@ import { GetUserService } from '../../../data.service';
     MatInputModule,
     HttpClientModule,
     MatDialogModule,
-    CommonModule,
     MainPageComponent,
-  ],
+    ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   providers: [DataService, AuthService],
@@ -58,43 +60,31 @@ export class HomeComponent implements OnInit {
   token = localStorage.getItem('token');
   user: any;
   postAndButton!: Posts;
-  comlength: length = {};
-  private messagesSubscription!: Subscription;
+  comlength: length = {}
+  storage !: Post
 
   constructor(
     private apiService: DataService,
-    private authService: AuthService,
+    private authService: AuthService, private shared: SharedserviceComponent,
     private websocketService: WebSocketService,
     private userService: GetUserService
   ) {}
 
   ngOnInit(): void {
     this.authService.isOnline();
-    this.id = JSON.parse(localStorage.getItem('userID') as string);
+    this.id = (JSON.parse(localStorage.getItem("userID") as string));
+    this.storage = localStorage.getItem("post") == null ? {} : JSON.parse(localStorage.getItem("post") as string)
     this.loadUser('users');
     this.loadComments();
     this.getAllPosts();
-    this.websocketService.connect();
-    this.messagesSubscription = this.websocketService.messages$.subscribe(
-      (message) => {
-        const fullPath = window.location.pathname + window.location.search;
-
-        if (message.type === 'new_message') {
-          if (fullPath !== `/chat?userid=${message.payload.senderId}`) {
-            alert('you get a new message');
-            this.userService.updateChatCount(this.userService.getChatAmount()+1)
-          }
-          //  const payload = {
-          //    currentChatterId: this.id,
-          //    otherChatterId: Number(this.id),
-          //    amount: this.amount,
-          //  };
-
-          //  const evenget = new Event('get_messages', payload);
-          //  sendEvent(this.websocketService, evenget);
-        }
+    this.shared.sharedData$.subscribe((res: Post) => {
+      console.log(res)
+      if (this.storage?.user_id != res?.user_id && res != null){
+        this.storage = res
+        location.reload()
       }
-    );
+    })
+  
   }
 
   getAllPosts(): void {
@@ -129,36 +119,52 @@ export class HomeComponent implements OnInit {
         this.loadDislikes(targetType);
       });
   }
+  selectedFile: File | null = null;
+
+  onFileSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      console.log('Fichier sélectionné:', file);
+    }
+  }
 
   onComment(postId: number, targetType: string, event: Event) {
     event.preventDefault();
 
     const target = event.target as HTMLFormElement;
-    const content = (
-      target.querySelector('input[name="comment"]') as HTMLInputElement
-    ).value;
-    console.log('ooo', content);
+    const content = (target.querySelector('input[name="comment"]') as HTMLInputElement).value;
+
     if (!content) {
       return;
     }
 
-    const body = {
-      id: 0,
-      user_id: this.id.toString(),
-      target_id: postId,
-      content: content,
-      target_type: targetType,
-    };
-    console.log('le body', body);
-    this.apiService
-      .postData('CreateComment', JSON.stringify(body))
-      .subscribe(() => {
-        (
-          target.querySelector('input[name="comment"]') as HTMLInputElement
-        ).value = '';
-        this.loadComments();
-      });
+    const formData = new FormData();
+    formData.append('user_id', this.id.toString());
+    formData.append('target_id', postId.toString());
+    formData.append('content', content);
+    formData.append('target_type', targetType);
+
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile);
+    } else {
+      formData.append('image', '');
+    }
+
+    // Ajoutez ceci pour vérifier le contenu de formData
+    formData.forEach((value, key) => {
+      console.log(key + ': ' + value);
+    });
+
+    this.apiService.postData('CreateComment', formData).subscribe(() => {
+      (target.querySelector('input[name="comment"]') as HTMLInputElement).value = '';
+      this.loadComments();
+      this.selectedFile = null;
+    }, error => {
+      console.error('Erreur lors de l\'envoi du commentaire:', error);
+    });
   }
+
 
   private loadComments(): void {
     this.apiService.getData('AllComments').subscribe(

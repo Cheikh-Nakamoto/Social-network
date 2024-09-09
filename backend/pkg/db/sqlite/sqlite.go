@@ -77,5 +77,27 @@ func Migrate(db *sql.DB) error {
 	}
 
 	log.Println("Database migrated")
+	AddFollow(db,1,2,"accepted")
+	AddFollow(db,2,1,"accepted")
 	return nil
+}
+
+func AddFollow(db *sql.DB, followerID, followeeID int, status string) error {
+    query := `
+    INSERT INTO follows (follower_id, followee_id, status)
+    VALUES (?, ?, ?)
+    `
+
+    // Si aucun statut n'est spécifié, définir à "pending"
+    if status == "" {
+        status = "pending"
+    }
+
+    // Exécute la requête d'insertion
+    _, err := db.Exec(query, followerID, followeeID, status)
+    if err != nil {
+        return fmt.Errorf("erreur lors de l'ajout du suivi : %v", err)
+    }
+
+    return nil
 }

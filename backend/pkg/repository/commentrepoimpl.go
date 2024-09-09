@@ -16,9 +16,9 @@ func NewCommentRepoImpl(db sqlite.Database) *CommentRepoImpl {
 }
 
 func (repo *CommentRepoImpl) CreateComment(comment *entity.Comment) (int64, error) {
-	stmt := `INSERT INTO comments (user_id,target_id, content,target_type, created_at) VALUES (?, ?, ?, ?,?)`
+	stmt := `INSERT INTO comments (user_id,target_id, content,target_type, created_at, image) VALUES (?, ?, ?, ?,?,?)`
 	fmt.Println("target type :", comment.TargetType)
-	result, err := repo.db.GetDB().Exec(stmt, comment.UserID, comment.TargetId, comment.Content, comment.TargetType, time.Now())
+	result, err := repo.db.GetDB().Exec(stmt, comment.UserID, comment.TargetId, comment.Content, comment.TargetType, time.Now(),comment.Image)
 	if err != nil {
 		return 0, fmt.Errorf("CreateComment: %v", err)
 	}
@@ -30,7 +30,7 @@ func (repo *CommentRepoImpl) CreateComment(comment *entity.Comment) (int64, erro
 }
 
 func (repo *CommentRepoImpl) GetAllComments() (map[int][]entity.Comment, error) {
-	stmt := `SELECT id ,user_id,target_id,content,target_type,created_at FROM comments`
+	stmt := `SELECT id ,user_id,target_id,content,target_type,created_at,image FROM comments`
 	rows, err := repo.db.GetDB().Query(stmt)
 	if err != nil {
 		return nil, fmt.Errorf("GetAllComments: %v", err)
@@ -41,7 +41,7 @@ func (repo *CommentRepoImpl) GetAllComments() (map[int][]entity.Comment, error) 
 
 	for rows.Next() {
 		var comment entity.Comment
-		err := rows.Scan(&comment.ID, &comment.UserID, &comment.TargetId, &comment.Content, &comment.TargetType, &comment.CreatedAt)
+		err := rows.Scan(&comment.ID, &comment.UserID, &comment.TargetId, &comment.Content, &comment.TargetType, &comment.CreatedAt,&comment.Image)
 		if err != nil {
 			return nil, fmt.Errorf("GetAllComments: %v", err)
 		}
@@ -52,11 +52,11 @@ func (repo *CommentRepoImpl) GetAllComments() (map[int][]entity.Comment, error) 
 }
 
 func (repo *CommentRepoImpl) GetCommentByID(id int64) (entity.Comment, error) {
-	stmt := `SELECT id, user_id, content, likes, dislikes, created_at FROM comments WHERE id = ?`
+	stmt := `SELECT id, user_id, content, likes, dislikes, created_at, image FROM comments WHERE id = ?`
 	row := repo.db.GetDB().QueryRow(stmt, id)
 
 	var comment entity.Comment
-	err := row.Scan(&comment.ID, &comment.UserID, &comment.Content, &comment.CreatedAt)
+	err := row.Scan(&comment.ID, &comment.UserID, &comment.Content, &comment.CreatedAt, &comment.Image)
 	if err != nil {
 		return comment, fmt.Errorf("GetCommentByID: %v", err)
 	}

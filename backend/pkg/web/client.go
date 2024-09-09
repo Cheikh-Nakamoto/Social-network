@@ -24,7 +24,7 @@ func NewClient(conn *websocket.Conn, manager *Manager, userId int) *Client {
 		userId:     userId,
 	}
 }
-// readMessages écoute les messages entrants du client.
+//readMessages écoute les messages entrants du client.
 func (c *Client) readMessages() {
 	defer func() {
 		// Nettoyage : Retirer le client de la liste du gestionnaire une fois terminé

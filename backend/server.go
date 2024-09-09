@@ -61,6 +61,7 @@ func StartServer(tab []string) error {
 	postRepo := repository.NewPostRepoImpl(*db)
 	commentRepo := repository.NewCommentRepoImpl(*db)
 	likeDislikeRepo := repository.NewLikeDislikeRepoImpl(*db)
+	followRepo := repository.NewFollowRepoImpl(*db)
 
 	// Initializing services
 	userService := impl.UserServiceImpl{
@@ -73,6 +74,7 @@ func StartServer(tab []string) error {
 	postService := impl.PostServiceImpl{
 		Repository: postRepo,
 	}
+	followService := impl.FollowServiceImpl{Repository: followRepo}
 	commentService := impl.CommentServiceImpl{
 		Repository: commentRepo,
 	}
@@ -98,10 +100,11 @@ func StartServer(tab []string) error {
 	likedislikeController := web.LikeDislikeController{
 		LikeDislikeService: likeDislikeService,
 	}
+	followController := web.FollowController{FollowService: followService}
 
 	// Routes
 	mux = userController.UsersRoutes(mux)
-	// mux = followController.FollowsRoutes(mux)
+	mux = followController.FollowsRoutes(mux)
 	mux = groupController.RegisterRoutes(mux)
 	mux = postController.RegisterRoutes(mux)
 	mux = web.RegisterRoutes(mux)
@@ -110,7 +113,7 @@ func StartServer(tab []string) error {
 	mux = chatControler.RegisterRoutes(mux)
 	// Serve static files from the public directory
 	mux.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./public"))))
-
+	mux.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("./public"))))
 	// Create a new handler
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/" {

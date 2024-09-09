@@ -37,6 +37,9 @@ export function routeEvent(event: Event): void {
     case 'typing_stop':
       handleTypingStop(event.payload);
       break;
+    case 'new_notification':
+      handleTypingStop(event.payload);
+      break;
     default:
       // alert("unsupported message type");
       break;

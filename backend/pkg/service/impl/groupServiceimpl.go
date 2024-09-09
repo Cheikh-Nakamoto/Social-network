@@ -70,3 +70,15 @@ func (s GroupServiceImpl) GetNotificationsByUserID(userID int) ([]dto.Notificati
 func (s GroupServiceImpl) GetAllEventsByGroup(id int) ([]dto.Events, error) {
     return s.Repository.FetchAllEvents(id)
 }
+
+func (s GroupServiceImpl) AddMemberBasedOnNotification(notif dto.Notification) error {
+	return s.Repository.AddMemberBasedOnNotification(notif)
+} 
+
+func (s GroupServiceImpl) DeclineNotification(notif dto.Notification) error {
+	return s.Repository.DeclineNotification(notif)
+} 
+
+func (s GroupServiceImpl)  ItsGroupMember(data dto.Data)(bool, error) {
+	return s.Repository.ItsGroupMember(data)
+}

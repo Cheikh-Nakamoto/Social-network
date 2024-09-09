@@ -51,6 +51,7 @@ export interface CommentDTO {
   user_id: string;
   target_id: number;
   content: string;
+  image?: string;
   target_type: string;
   created_at: string;
 }
@@ -97,9 +98,9 @@ export interface Post {
   title: string;
   content: string;
   image: string;
-  categories: string[];
   privacy: string;
   user_id: string;
+  group_id: number
 }
 
 // notification group et message
@@ -107,12 +108,12 @@ export interface Post {
 // TypeScript type for Notification
 export interface Notification {
   id: number;          // Unique identifier for the notification
-  userId: number;      // ID of the user who created the notification
-  targetId: number;    // ID of the target user or entity (can be NULL in some cases)
-  groupId?: number;    // ID of the group (optional, can be NULL)
+  user_id: number;      // ID of the user who created the notification
+  target_id: number;    // ID of the target user or entity (can be NULL in some cases)
+  group_id: number;    // ID of the group (optional, can be NULL)
   message: string;     // The message content of the notification
-  isRead: boolean;     // Flag indicating whether the notification has been read
-  createdAt: string;   // Timestamp of when the notification was created (ISO 8601 string)
+  is_read: boolean;     // Flag indicating whether the notification has been read
+  created_at: string;   // Timestamp of when the notification was created (ISO 8601 string)
 }
 
 
@@ -146,13 +147,13 @@ export interface MessageData {
   datas: MessageBody;
 }
 
-export interface Eventtype {
-  id?: number; // L'ID peut être optionnel si vous n'avez pas encore l'événement créé
-  name: string; // Nom de l'événement
-  description?: string; // Description de l'événement (peut être optionnelle)
-  owner: number; // Propriétaire de l'événement (peut être optionnel)
-  image?: string; // URL ou chemin de l'image de l'événement (peut être optionnel)
-  groupId: number; // Identifiant du groupe auquel appartient l'événement
-  userId: number; // Identifiant de l'utilisateur créateur de l'événement
-  created_at?: string; // Date et heure de création de l'événement (au format ISO string)
+export interface Eventtype{
+  id: number;
+  name: string;
+  description: string;
+  group_id: number;
+  hour_start: Date;
+  hour_end: Date;
+  user_id: number;
 }
+

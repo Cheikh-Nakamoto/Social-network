@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core'; import { environment } from "../../environments/environment.development";
+import { Injectable } from '@angular/core';
+ import { environment } from "../../environments/environment.development";
 import { HttpClient } from "@angular/common/http";
 import { map, Observable, of } from "rxjs";
 import { Router } from '@angular/router';
@@ -106,4 +107,15 @@ export class AuthService {
     updateUser(id: any, user: any) {
         return this.http.put(`${this.api}/update-profile/${id}`, user)
     }
+    searchUsers(query: string): Observable<any[]> {
+        return this.http.get<any[]>(`${this.api}/allusers`).pipe(
+            map(users => users.filter(user =>
+                user.firstname.toLowerCase().includes(query.toLowerCase()) ||
+                user.lastname.toLowerCase().includes(query.toLowerCase()) ||
+                user.nickname.toLowerCase().includes(query.toLowerCase())
+            ))
+        );
+    }
+    
+    
 }

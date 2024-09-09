@@ -11,7 +11,7 @@ import (
 
 func ExtractIDFromRequest(r *http.Request) (uint, error) {
 	pathSegments := strings.Split(r.URL.Path, "/")
-	if len(pathSegments) < 6 {
+	if len(pathSegments) < 4 {
 		return 0, fmt.Errorf("ID is missing in parameters")
 	}
 

@@ -24,7 +24,7 @@ import { SidenavComponent } from '../nav/sidenav/sidenav.component';
     RouterOutlet,
     HttpClientModule,
     ToolbarComponent,
-    SidenavComponent
+    SidenavComponent,
  
   ], // Ajouter CommonModule ici
   templateUrl: 'chat.component.html',
@@ -57,7 +57,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.userService.user.subscribe((user) => {
       this.sender = user;
-      console.log('rrrrrrrrrrrrrrrrrrrrr', this.sender);
     });
     this.getUserById(this.id);
     this.websocketService.connect();
