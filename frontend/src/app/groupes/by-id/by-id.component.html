@@ -16,8 +16,12 @@
                         }
                         <button mat-button color="primary" (click)="handleClick('/event/create', $event)">Ajouter un
                             évènement</button>
+                        <button mat-button color="primary" (click)="openCreatePostDialog()">hub
+                            </button>
+                        <!-- <div class="dialog-component" (click)="openCreatePostDialog()">
 
-                        <a matListItemTitle [routerLink]="['/groupchat']" [queryParams]="{groupId}">discussion</a>
+                            <!-- <a matListItemTitle [routerLink]="['/groupchat']" [queryParams]="{groupId}">discussion</a> -->
+                        <!-- </div>  -->
                     </div>
                 </div>
                 <div class="event-group">
