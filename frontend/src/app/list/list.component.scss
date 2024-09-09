@@ -26,9 +26,36 @@ mat-divider {
 .list {
     display: flex !important;
     flex-direction: column;
-}
 
-.user {
-    display: flex;
-    justify-content: space-between;
+    .user {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .info-img {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+
+            img {
+                border-radius: 50%;
+                border: 2px solid $side;
+            }
+
+            .info {
+                display: flex;
+                justify-content: center;
+                align-items: start;
+                flex-direction: column;
+            }
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: end;
+            align-items: end;
+            gap: 10px;
+        }
+    }
 }

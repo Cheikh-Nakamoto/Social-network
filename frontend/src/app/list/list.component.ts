@@ -6,7 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { RouterLink } from '@angular/router';
 import { MatDividerModule } from '@angular/material/divider';
 import { User } from '../../entity/user';
-import { NgForOf } from '@angular/common';
+import { NgForOf, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-list',
@@ -16,14 +16,19 @@ import { NgForOf } from '@angular/common';
     HttpClientModule,
     MatCardModule,
     RouterLink,
-    MatDividerModule, NgForOf
+    MatDividerModule,
+    NgForOf,
+    NgIf
 ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
   providers: [AuthService]
 })
 export class ListComponent {
-    users: User[] = []
+    suggestions: User[] = []
+    followers: User[] = []
+    size!: number
+    currentID: number = this.authService.getUserID()!
 
     constructor(
         private authService: AuthService,
@@ -31,9 +36,9 @@ export class ListComponent {
 
     listUsers(): void {
         this.authService.getAll().subscribe((data: any) => {
-            console.log(data.users)
-            // this.users = data.users.filter((user: User) => user.id !== this.authService.getUserID())
-            // console.log(this.users)
+            this.size = data.users.length
+            console.log("ORiginal", data.users)
+            this.suggestions = data.users.filter((user: any) => user.id !== this.currentID)
         })
     }
 

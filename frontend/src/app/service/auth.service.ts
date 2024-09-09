@@ -24,6 +24,7 @@ export class AuthService {
     register(user: any): Observable<any> {
         return this.http.post(`${this.api}/register`, user)
     }
+
     logout(): Observable<void> {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -87,13 +88,12 @@ export class AuthService {
     }
 
     getUserID(): number | null {
-        this.user = JSON.parse(localStorage.getItem('user') as string)
-        return localStorage.getItem('user') ? this.user.id : null
+        return localStorage.getItem('userID') ? parseInt(localStorage.getItem('userID')!) : null
     }
 
     getAll() {
         return this.http.get(`${this.api}/allusers`).pipe(
-            map((response:any) => response)
+            map(response => response)
         )
     }
 
@@ -104,6 +104,8 @@ export class AuthService {
     removeSession() {
         localStorage.removeItem('token')
         localStorage.removeItem('userID')
+        localStorage.removeItem('firstname')
+        localStorage.removeItem('lastname')
     }
 
     updateUser(id: any, user: any) {
