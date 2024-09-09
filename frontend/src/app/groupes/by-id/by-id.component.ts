@@ -331,10 +331,14 @@ export class ByIdComponent implements OnInit {
     this.dialog.open(GroupchatComponent, {
         width: '400px', // Largeur de la boîte de dialogue
         data: { groupId: this.groupId }, // Envoi de paramètres au composant de la boîte de dialogue
-        hasBackdrop: true,
-        backdropClass: 'custom-backdrop',
-        // Désactiver la fermeture en cliquant en dehors si vous voulez forcer la fermeture via bouton
-        disableClose: true,
+        // hasBackdrop: true,
+        // backdropClass: 'custom-backdrop',
+        // // Désactiver la fermeture en cliquant en dehors si vous voulez forcer la fermeture via bouton
+        // disableClose: true,
+        position: {
+            top: '0',
+            right: '0',
+        },
     });
     
   }
