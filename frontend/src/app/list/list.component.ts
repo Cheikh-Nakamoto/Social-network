@@ -31,8 +31,9 @@ export class ListComponent {
 
     listUsers(): void {
         this.authService.getAll().subscribe((data: any) => {
-            this.users = data
-            console.log(this.users)
+            // this.users = data
+            //console.log(this.users)
+            console.log(data.users)
         })
     }
 

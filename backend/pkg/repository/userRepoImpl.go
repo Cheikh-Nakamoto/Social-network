@@ -88,7 +88,7 @@ func (u *UserRepoImpl) FindAllUsers() ([]*entity.User, error) {
 	for rows.Next() {
 		online := false
 		user := new(entity.User)
-		err := rows.Scan(&user.ID, &user.Email, &user.Password, &user.Firstname, &user.Lastname, &user.DateOfBirth, &user.Avatar, &user.Nickname, &user.AboutMe, &user.IsPublic, &user.CreatedAt, &user.UpdatedAt,&online)
+		err := rows.Scan(&user.ID, &user.Email, &user.Password, &user.Firstname, &user.Lastname, &user.DateOfBirth, &user.Avatar, &user.Nickname, &user.AboutMe, &user.IsPublic, &user.CreatedAt, &user.UpdatedAt, &online)
 		if err != nil {
 			return nil, err
 		}
@@ -110,34 +110,33 @@ func (u *UserRepoImpl) ClearSession(token string) {
 	u.sessionStore.ClearSession(token)
 }
 
-
-func (s *UserRepoImpl)GetAllUsers()([]*entity.User, error){
-	 query := `
+func (s *UserRepoImpl) GetAllUsers() ([]*entity.User, error) {
+	query := `
         SELECT id, email, firstname, lastname, date_of_birth, avatar, nickname, about_me, is_public, created_at, updated_at,online
         FROM users
-    ` 
+    `
 	rows, err := s.db.GetDB().Query(query)
-    if err != nil {
-        return nil, fmt.Errorf("failed to execute query: %w", err)
-    }
-    defer rows.Close()
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute query: %w", err)
+	}
+	defer rows.Close()
 
-	 var users []*entity.User
+	var users []*entity.User
 
-	 for rows.Next() {
-        user:=new(entity.User)
-        err := rows.Scan(&user.ID, &user.Email, &user.Firstname, &user.Lastname, &user.DateOfBirth, &user.Avatar, &user.Nickname, &user.AboutMe, &user.IsPublic, &user.CreatedAt, &user.UpdatedAt,&user.IsOnline)
-        if err != nil {
-            return nil, fmt.Errorf("failed to scan row: %w", err)
-        }
-        users = append(users, user)
-    }
+	for rows.Next() {
+		user := new(entity.User)
+		err := rows.Scan(&user.ID, &user.Email, &user.Firstname, &user.Lastname, &user.DateOfBirth, &user.Avatar, &user.Nickname, &user.AboutMe, &user.IsPublic, &user.CreatedAt, &user.UpdatedAt, &user.IsOnline)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan row: %w", err)
+		}
+		users = append(users, user)
+	}
 
 	if err = rows.Err(); err != nil {
-        return nil, fmt.Errorf("row iteration error: %w", err)
-    }
+		return nil, fmt.Errorf("row iteration error: %w", err)
+	}
 
-    return users, nil
+	return users, nil
 }
 
 func (u *UserRepoImpl) GetFollowers(userID uint) ([]*entity.User, error) {
@@ -154,7 +153,7 @@ func (u *UserRepoImpl) GetFollowers(userID uint) ([]*entity.User, error) {
 		}
 	}(rows)
 
-	users := make([]*entity.User, 0)
+	var users []*entity.User
 	for rows.Next() {
 		user := new(entity.User)
 		err := rows.Scan(&user.ID, &user.Email, &user.Password, &user.Firstname, &user.Lastname, &user.DateOfBirth, &user.Avatar, &user.Nickname, &user.AboutMe, &user.IsPublic, &user.CreatedAt, &user.UpdatedAt)
@@ -182,7 +181,7 @@ func (u *UserRepoImpl) GetFollowings(userID uint) ([]*entity.User, error) {
 		}
 	}(rows)
 
-	users := make([]*entity.User, 0)
+	var users []*entity.User
 	for rows.Next() {
 		user := new(entity.User)
 		err := rows.Scan(&user.ID, &user.Email, &user.Password, &user.Firstname, &user.Lastname, &user.DateOfBirth, &user.Avatar, &user.Nickname, &user.AboutMe, &user.IsPublic, &user.CreatedAt, &user.UpdatedAt)
@@ -223,7 +222,7 @@ func (u *UserRepoImpl) GetFriends(userID uint) ([]*entity.User, error) {
 		}
 	}(rows)
 
-	users := make([]*entity.User, 0)
+	var users []*entity.User
 	for rows.Next() {
 		user := new(entity.User)
 		err := rows.Scan(&user.ID, &user.Email, &user.Password, &user.Firstname, &user.Lastname, &user.DateOfBirth, &user.Avatar, &user.Nickname, &user.AboutMe, &user.IsPublic, &user.CreatedAt, &user.UpdatedAt, &user.IsOnline)
