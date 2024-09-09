@@ -19,6 +19,16 @@ $textPrimary: #052C65;
 $bgPrimary: #CFE2FF;
 $borderPrimary: #9EC5FE;
 
-.row {
-    gap: 10px;
+mat-divider {
+    margin: 10px 0 !important;
+}
+
+.list {
+    display: flex !important;
+    flex-direction: column;
+}
+
+.user {
+    display: flex;
+    justify-content: space-between;
 }

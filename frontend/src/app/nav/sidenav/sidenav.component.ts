@@ -41,7 +41,7 @@ export class SidenavComponent implements OnInit {
   menuItems = [
     { name: 'Home', route: '/', icon: 'icofont-ui-home' },
     { name: 'Profile', route: '/profile/1', icon: 'icofont-user' },
-    { name: 'Suggestion', route: '/Suggestions', icon: 'icofont-users-alt-3' },
+    { name: 'Suggestion', route: '/suggestions', icon: 'icofont-users-alt-3' },
     { name: 'Friends', route: '/followers', icon: 'icofont-users-alt-4' },
     { name: 'Groups', route: '/groups', icon: 'icofont-users-social' },
   ];

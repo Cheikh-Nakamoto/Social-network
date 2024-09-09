@@ -31,13 +31,14 @@ export class ListComponent {
 
     listUsers(): void {
         this.authService.getAll().subscribe((data: any) => {
-            // this.users = data
-            //console.log(this.users)
-            console.log(data.users)
+            this.users = data.users
+            console.log(this.users)
         })
     }
 
     ngOnInit(): void {
+        this.authService.isOnline
+        
         this.listUsers()
     }
 }

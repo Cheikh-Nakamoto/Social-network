@@ -70,8 +70,8 @@ func (c *UserController) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var credentials struct {
-		Identifiant    string `json:"email" db:"credential"`
-		Password string `json:"password" db:"password"`
+		Identifiant string `json:"email" db:"credential"`
+		Password    string `json:"password" db:"password"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&credentials); err != nil {
@@ -382,6 +382,8 @@ func (c *UserController) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Println(users)
+
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set(os.Getenv("CONTENT_TYPE"), os.Getenv("APPLICATION_JSON"))
 	if users != nil {
@@ -395,7 +397,6 @@ func (c *UserController) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 			"message": "No Users",
 		})
 	}
-	err = json.NewEncoder(w).Encode(users)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

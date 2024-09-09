@@ -20,7 +20,7 @@ export const routes: Routes = [
   { path: 'Accueil', component: SidenavComponent, canActivate: [HomeGuard] },
   { path: 'CreatePost', component: CreatePostComponent, canActivate: [HomeGuard]  },
   { path: "groups", component: GroupeComponent , canActivate: [HomeGuard] },
-  { path: "Suggestions", component: ListComponent, canActivate: [HomeGuard] },
+  { path: "suggestions", component: ListComponent, canActivate: [HomeGuard] },
   { path: "groups/:id", component:ByIdComponent,canActivate: [HomeGuard]},
   { path: "event/create", component:EventsComponent,canActivate: [HomeGuard]},
   { path: 'profile/:id', component: ProfileComponent },

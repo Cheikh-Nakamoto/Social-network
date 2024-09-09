@@ -92,7 +92,9 @@ export class AuthService {
     }
 
     getAll() {
-        return this.http.get(`${this.api}/allusers`)
+        return this.http.get(`${this.api}/allusers`).pipe(
+            map((response:any) => response)
+        )
     }
 
     getUser(id: any) {
