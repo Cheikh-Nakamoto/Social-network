@@ -30,11 +30,12 @@ import { ToolbarComponent } from '../nav/toolbar/toolbar.component';
         MatTabsModule,
         MatIconModule,
         MatListModule,
-        NgForOf
+        NgForOf,
+        ToolbarComponent
     ],
     templateUrl: './profile.component.html',
     styleUrl: './profile.component.scss',
-    providers: [DatePipe,DataService, AuthService,FollowService,UtilsService, ToolbarComponent]
+    providers: [DatePipe,DataService, AuthService,FollowService,UtilsService]
     
 })
 export class ProfileComponent implements OnInit {
