@@ -1,9 +1,12 @@
 package impl
 
 import (
+	"backend/pkg/db/sqlite"
 	"backend/pkg/dto"
 	"backend/pkg/entity"
 	"backend/pkg/repository"
+	"fmt"
+	"strconv"
 )
 
 type PostServiceImpl struct {
@@ -11,7 +14,34 @@ type PostServiceImpl struct {
 }
 
 func (p *PostServiceImpl) CreatePost(post *dto.PostDTO) (string, error) {
-	return p.Repository.CreatePost(post.UserID, post.Title, post.Content, post.Image, post.IsPublic, post.GroupID)
+	db, err := sqlite.Connect()
+	if err != nil {
+		return "", err
+	}
+	defer db.Close()
+	userservice := repository.NewUserRepoImpl(*db)
+	nbr, err := strconv.Atoi(post.UserID)
+	if err != nil {
+		return "", nil
+	}
+	allfriends, err := userservice.GetFriends(uint(nbr))
+	if err != nil {
+		return "", nil
+	}
+	var li []int
+	for _, almost := range post.AlmostUser {
+		for _, user := range allfriends {
+			if int(user.ID) == almost {
+				li = append(li, almost)
+				break
+			}
+		}
+	}
+	fmt.Println("voicci les almost selectionner :", li)
+	if len(li) == 0 && post.IsPublic == "almost private" {
+		post.IsPublic = "public"
+	}
+	return p.Repository.CreatePost(post.UserID, post.Title, post.Content, post.Image, post.IsPublic, post.GroupID, post.AlmostUser)
 }
 
 // GetAllPosts...
