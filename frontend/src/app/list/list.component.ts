@@ -16,7 +16,9 @@ export class ListComponent {
     ) {}
 
     listUsers(): void {
-        this.
+        this.authService.getAll().subscribe((data: any) => {
+            console.log(data)
+        })
     }
 
     ngOnInit(): void {
