@@ -4,8 +4,8 @@
         <div class="col-md-12">
             <div class="user">
                 <div class="info-img">
-                    <div class="img">
-                        <img src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="user">
+                    <div class="img" style="width: 100px; height: 100px;">
+                        <img src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="user" style="width: 100%; height: 100%;">
                     </div>
                     <div class="info">
                         <span>John DOE</span>
@@ -14,9 +14,10 @@
                 </div>
                 <div class="buttons">
                     <button class="btn btn-warning">Follow</button>
-                    <button class="btn btn-info">Profile</button>
+                    <button class="btn btn-info" routerLink="/profile/1">Profile</button>
                 </div>
             </div>
         </div>
+        <mat-divider></mat-divider>
     </div>
 </div>

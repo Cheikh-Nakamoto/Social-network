@@ -3,6 +3,8 @@ import {AuthService} from "../service/auth.service";
 import { ToolbarComponent } from '../nav/toolbar/toolbar.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
+import { RouterLink } from '@angular/router';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-list',
@@ -10,7 +12,9 @@ import { MatCardModule } from '@angular/material/card';
   imports: [
     ToolbarComponent,
     HttpClientModule,
-    MatCardModule
+    MatCardModule,
+    RouterLink,
+    MatDividerModule
 ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
