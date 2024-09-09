@@ -84,8 +84,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
     this.messagesSubscription = this.websocketService.messages$.subscribe(
       (message) => {
-        if (message.type === 'new_message') {
-          console.log("ici new notification !!!")
+        if (message.type === 'new_message' && message.payload.messageId ==0) {
           this.notify()
         }
       }

@@ -41,13 +41,11 @@ export class GroupeComponent implements OnInit, OnDestroy {
       this.joinedgroup()
       this.loadGroups()
     }, 3000);
-    console.log("Loading groups...", this.groups);
     this.websocketService.connect()
   }
   ngOnDestroy(): void {
     if (this.clear) {
       clearInterval(this.clear);
-      console.log("Interval cleared");
     }
   }
   
@@ -65,10 +63,9 @@ export class GroupeComponent implements OnInit, OnDestroy {
   }
 
   addMember(groupId: number, userId: string, target_id: string, role: string): void {
-    console.log('Adding member', userId, 'to group', groupId, 'with role', role, "target_id :", target_id);
     this.groupService.addMember(groupId, userId, target_id, role).subscribe(
       () => {
-        console.log("envoi du signal socket comme notification !")
+        
         const messBody : MessageBody = {
           senderId:Number(userId),
           receiverId: Number(target_id),
@@ -94,36 +91,14 @@ export class GroupeComponent implements OnInit, OnDestroy {
     );
   }
 
- 
-
-
-
-  ejectMember(groupId: number, userId: number): void {
-    this.groupService.ejectMember(userId, groupId).subscribe(
-      () => console.log('Member ejected successfully'),
-      (error) => console.error('Error ejecting member:', error)
-    );
-  }
-
-  deleteGroup(groupId: number): void {
-    this.groupService.deleteGroup(groupId).subscribe(
-      () => this.groups = this.groups.filter(group => group.id !== groupId),
-      (error) => console.error('Error deleting group:', error)
-    );
-  }
-
   joinedgroup(): void {
     this.groupService.getGroupJoined().subscribe(res => {
-      console.log('Group joined', res);
       this.IsIn = res
     }, (error) => console.error('Error fetching ', error))
   }
 
- 
-
   handleClick(route: string, event: Event, id?: number): void {
     event.preventDefault();
-    console.log('Button clicked, navigating to:', route);
     if (id) {
       this.router.navigate([route, id]);
       localStorage.setItem('groupid', id.toString());
@@ -132,6 +107,7 @@ export class GroupeComponent implements OnInit, OnDestroy {
     }
   }
 }
+
 function sendEvent(websocketService: WebSocketService, datas: any) {
   websocketService.sendMessage(datas);
 }
