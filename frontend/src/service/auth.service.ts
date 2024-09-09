@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {map, Observable, of} from "rxjs";
 import { environment } from '../environments/environment';
+import { Post } from '../entity/post'
 
 @Injectable({
     providedIn: 'root'
@@ -45,7 +46,11 @@ export class AuthService {
     getToken(): string | null {
         return localStorage.getItem('token')
     }
-
+    getUserPosts(userId: number): Observable<any> {
+        return this.http.get(`${this.api}/post-profile/${userId}`).pipe(
+            map(response => response)
+        )
+      }
     getUserID(): number | null {
         return localStorage.getItem('userID') ? parseInt(localStorage.getItem('userID')!) : null
     }
@@ -69,6 +74,9 @@ export class AuthService {
     }
 
     updateUser(id: any, user: any) {
-        return this.http.put(`${this.api}/update-profile/${id}`, user)
+        return this.http.put(`${this.api}/profile-update/${id}`, user)
     }
+    updateUserProfile(userId: number, userData: any): Observable<any> {
+        return this.http.put<any>(`${this.api}/profile-update/${userId}`, userData);
+      }
 }
