@@ -14,10 +14,13 @@
                 </div>
                 <div class="buttons">
                     <button class="btn btn-warning">Follow</button>
-                    <button class="btn btn-info" routerLink="/profile/{{user.id}}">Profile</button>
+                    <button class="btn btn-info" routerLink="/profile/1">Profile</button>
                 </div>
             </div>
             <mat-divider></mat-divider>
+        </div>
+        <div class="col-md-12" *ngIf="users.length !== 0">
+            <h3>No Users</h3>
         </div>
     </div>
 </div>

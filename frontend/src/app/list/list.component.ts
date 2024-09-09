@@ -23,7 +23,7 @@ import { NgForOf } from '@angular/common';
   providers: [AuthService]
 })
 export class ListComponent {
-    users!: User[]
+    users: User[] = []
 
     constructor(
         private authService: AuthService,
@@ -31,8 +31,9 @@ export class ListComponent {
 
     listUsers(): void {
         this.authService.getAll().subscribe((data: any) => {
-            this.users = data.users
-            console.log(this.users)
+            console.log(data.users)
+            // this.users = data.users.filter((user: User) => user.id !== this.authService.getUserID())
+            // console.log(this.users)
         })
     }
 
