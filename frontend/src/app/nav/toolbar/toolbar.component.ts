@@ -18,6 +18,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { DataService } from '../../data.service';
 import { CommonModule } from '@angular/common';
+import { WebSocketService } from '../../chat/services/chat.service';
 
 
 
@@ -57,10 +58,12 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   hiddenMessage = false;
   timerid !: any
   notifylength: string = '0';
+  messagesSubscription: any;
   constructor(
     private dataService: DataService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private websocketService: WebSocketService,
   ) {
     console.log('DataService:', this.dataService);
   }
@@ -74,9 +77,19 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     this.authService.isOnline();
     this.id = JSON.parse(localStorage.getItem('userID') as string);
     this.username = localStorage.getItem('firstname') as string
-    this.timerid = setTimeout(() => {
+
       this.notify()
-    }, 2000)
+  
+    this.websocketService.connect();
+
+    this.messagesSubscription = this.websocketService.messages$.subscribe(
+      (message) => {
+        if (message.type === 'new_message') {
+          console.log("ici new notification !!!")
+          this.notify()
+        }
+      }
+    );
   }
   ngOnDestroy(): void {
     clearTimeout(this.timerid)

@@ -47,8 +47,6 @@ func (m *Manager) ServeWS(w http.ResponseWriter, r *http.Request) {
 
 	// Ajouter le client à la liste des clients gérés par le Manager
 	 m.addClient(client)
-
-	log.Print("ddddddddddddddddd")
 	// Démarrer les goroutines pour la lecture et l'écriture des messages
 	go client.readMessages()
 	go client.writeMessages()

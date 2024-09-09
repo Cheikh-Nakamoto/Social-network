@@ -42,6 +42,7 @@ export class GroupeComponent implements OnInit, OnDestroy {
       this.loadGroups()
     }, 3000);
     console.log("Loading groups...", this.groups);
+    this.websocketService.connect()
   }
   ngOnDestroy(): void {
     if (this.clear) {
@@ -49,6 +50,7 @@ export class GroupeComponent implements OnInit, OnDestroy {
       console.log("Interval cleared");
     }
   }
+  
 
   async loadGroups(): Promise<void> {
     try {
@@ -66,6 +68,7 @@ export class GroupeComponent implements OnInit, OnDestroy {
     console.log('Adding member', userId, 'to group', groupId, 'with role', role, "target_id :", target_id);
     this.groupService.addMember(groupId, userId, target_id, role).subscribe(
       () => {
+        console.log("envoi du signal socket comme notification !")
         const messBody : MessageBody = {
           senderId:Number(userId),
           receiverId: Number(target_id),
@@ -76,7 +79,8 @@ export class GroupeComponent implements OnInit, OnDestroy {
           type: 'new_notification',
           datas: messBody,
         };
-        this.websocketService.sendMessage(messBody)
+        const even = new Events(message.type, message.datas);
+        sendEvent(this.websocketService, even);
     },
       (error) => {
         // Vérifiez la condition correctement avec '==='
@@ -126,5 +130,18 @@ export class GroupeComponent implements OnInit, OnDestroy {
     } else {
       this.router.navigateByUrl(route);
     }
+  }
+}
+function sendEvent(websocketService: WebSocketService, datas: any) {
+  websocketService.sendMessage(datas);
+}
+
+class Events {
+  type: string;
+  payload: any;
+
+  constructor(type: string, payload: any) {
+    this.type = type;
+    this.payload = payload;
   }
 }

@@ -66,6 +66,7 @@ func (m *Manager) setupEventHandlers() {
 	m.handlers[EventUpdateChatbarData] = UpdateChatbarData
 	m.handlers[EventTypingStart] = TypingStartHandler
 	m.handlers[EventTypingStop] = TypingStopHandler
+	m.handlers[EventGetNotification] = SendMessageHandler
 }
 
 func TypingStartHandler(event Event, c *Client) error {
