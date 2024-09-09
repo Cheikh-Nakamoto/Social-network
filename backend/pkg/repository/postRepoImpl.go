@@ -7,6 +7,7 @@ import (
 	"html"
 	"log"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -18,8 +19,22 @@ func NewPostRepoImpl(db sqlite.Database) *PostRepoImpl {
 	return &PostRepoImpl{db: &db}
 }
 
-func (p *PostRepoImpl) CreatePost(userID string, title, content, Image string, IsPublic string, Groupid int64) (string, error) {
+func (p *PostRepoImpl) Almost(userID string,postid string, almost []int) error {
+	var str []string
+	for _, v := range almost {
+		str = append(str, strconv.Itoa(v))
+	}
+	userchain := strings.Join(str, ".")
+	stmt := `INSERT INTO almost_private ( owner, views ,post_id,created_at) VALUES ( ?, ?, ?,?)`
+	_, err := p.db.GetDB().Exec(stmt, userID, userchain,postid, time.Now())
+	if err != nil {
+		fmt.Println("err create", err)
+		return fmt.Errorf("CreatePost: %v", err)
+	}
+	return nil
+}
 
+func (p *PostRepoImpl) CreatePost(userID string, title, content, Image string, IsPublic string, Groupid int64 ,almost []int) (string, error) {
 	stmt := `INSERT INTO posts ( user_id, title, content,post_image, privacy, group_id,created_at) VALUES ( ?, ?, ?, ?,?, ?,?)`
 	escapedTitle := html.EscapeString(title)
 	escapedContent := html.EscapeString(content)
@@ -31,7 +46,7 @@ func (p *PostRepoImpl) CreatePost(userID string, title, content, Image string, I
 		return "", fmt.Errorf("CreatePost: %v", err)
 	}
 	nbr, _ := id.LastInsertId()
-
+	p.Almost(userID,strconv.Itoa(int(nbr)),almost)
 	return strconv.Itoa(int(nbr)), nil
 }
 

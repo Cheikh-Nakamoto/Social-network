@@ -47,9 +47,9 @@ func (p *PostController) createPostHandler(w http.ResponseWriter, r *http.Reques
 	}
 
 	nbr, _ := strconv.Atoi(id)
-	fmt.Println("nbr e id :",nbr,id)
 	post.ID = int64(nbr)
 	post.CreatedAt = time.Now()
+	fmt.Println("post inf :",post)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(post)
 }

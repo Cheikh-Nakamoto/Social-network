@@ -15,8 +15,9 @@ mat-drawer-container {
 
 mat-drawer {
   width: 18vw;
-  background-color: $lightBlue;
+  background-color: #fff;
   padding: 24px 12px;
+  box-shadow: 1px 2px 2px 2px #b8daff;
 }
 
 mat-drawer-content {
@@ -46,11 +47,16 @@ a {
   background: none;
   border: none;
   box-shadow: none;
-  padding: 0 12px;
-  border-radius: 24px;
+  padding: 10px 24px;
+  border-radius: 10px;
   font-weight: bold;
-  color: #005cbb;
+  color: #000;
   text-decoration: none;
+
+  &:hover {
+    background-color: $lightBlue;
+    color: #fff !important;
+  }
 }
 .menu {
   display: flex;
@@ -60,6 +66,7 @@ a {
     font-size: 16px;
   }
 }
+
 
 .status {
   position: absolute;

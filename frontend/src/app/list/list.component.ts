@@ -1,10 +1,11 @@
 import {Component} from '@angular/core';
 import {AuthService} from "../service/auth.service";
+import { ToolbarComponent } from '../nav/toolbar/toolbar.component';
 
 @Component({
   selector: 'app-list',
   standalone: true,
-  imports: [],
+  imports: [ToolbarComponent],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })

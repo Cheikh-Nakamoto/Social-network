@@ -55,10 +55,26 @@ func (u *UserRepoImpl) Save(user *entity.User) error {
 }
 
 func (u *UserRepoImpl) Update(user *entity.User) error {
-	_, err := u.db.GetDB().Exec(`UPDATE users SET firstname = ?, lastname = ?, avatar = ?, nickname = ?, about_me = ?, updated_at = ? WHERE id = ?`, user.Firstname, user.Lastname, user.Avatar, user.Nickname, user.AboutMe, user.ID, time.Now())
-
-	return err
+    _, err := u.db.GetDB().Exec(`
+        UPDATE users 
+        SET firstname = ?, 
+            lastname = ?, 
+            avatar = ?, 
+            nickname = ?, 
+            about_me = ?, 
+            updated_at = ? 
+        WHERE id = ?`,
+        user.Firstname, 
+        user.Lastname, 
+        user.Avatar, 
+        user.Nickname, 
+        user.AboutMe, 
+        time.Now(), // Assure-toi que la mise à jour de l'heure est en dernier.
+        user.ID,
+    )
+    return err
 }
+
 
 func (u *UserRepoImpl) CountUsers() (uint, error) {
 	var count uint
