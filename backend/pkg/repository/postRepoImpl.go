@@ -19,22 +19,43 @@ func NewPostRepoImpl(db sqlite.Database) *PostRepoImpl {
 	return &PostRepoImpl{db: &db}
 }
 
-func (p *PostRepoImpl) Almost(userID string,postid string, almost []int) error {
+func (p *PostRepoImpl) Almost(userID string, postid string, almost []int) error {
 	var str []string
 	for _, v := range almost {
 		str = append(str, strconv.Itoa(v))
 	}
 	userchain := strings.Join(str, ".")
+	userchain+="."+userID
 	stmt := `INSERT INTO almost_private ( owner, views ,post_id,created_at) VALUES ( ?, ?, ?,?)`
-	_, err := p.db.GetDB().Exec(stmt, userID, userchain,postid, time.Now())
+	_, err := p.db.GetDB().Exec(stmt, userID, userchain, postid, time.Now())
 	if err != nil {
 		fmt.Println("err create", err)
 		return fmt.Errorf("CreatePost: %v", err)
 	}
 	return nil
 }
+func (repo *PostRepoImpl) GetAlmost(userID, postid string) ([]int, error) {
+	stmt := `SELECT views FROM almost_private WHERE post_id = ? AND owner = ?`
+	var liststring string
+	err := repo.db.GetDB().QueryRow(stmt, postid, userID).Scan(&liststring)
+	if err != nil {
+		fmt.Println("error getting list", err)
+		return nil, nil
+	}
+	
+	var users []int
+	list := strings.Split(liststring, ".")
+	for _, v := range list {
+		nbr, err := strconv.Atoi(v)
+		if err != nil {
+			return nil, fmt.Errorf("GetAlmost: %v", err)
+		}
+		users = append(users, nbr)
+	}
+	return users, nil
+}
 
-func (p *PostRepoImpl) CreatePost(userID string, title, content, Image string, IsPublic string, Groupid int64 ,almost []int) (string, error) {
+func (p *PostRepoImpl) CreatePost(userID string, title, content, Image string, IsPublic string, Groupid int64, almost []int) (string, error) {
 	stmt := `INSERT INTO posts ( user_id, title, content,post_image, privacy, group_id,created_at) VALUES ( ?, ?, ?, ?,?, ?,?)`
 	escapedTitle := html.EscapeString(title)
 	escapedContent := html.EscapeString(content)
@@ -46,7 +67,9 @@ func (p *PostRepoImpl) CreatePost(userID string, title, content, Image string, I
 		return "", fmt.Errorf("CreatePost: %v", err)
 	}
 	nbr, _ := id.LastInsertId()
-	p.Almost(userID,strconv.Itoa(int(nbr)),almost)
+	if IsPublic == "almost private"{
+		p.Almost(userID, strconv.Itoa(int(nbr)), almost)
+	}
 	return strconv.Itoa(int(nbr)), nil
 }
 

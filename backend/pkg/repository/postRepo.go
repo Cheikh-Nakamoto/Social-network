@@ -9,4 +9,5 @@ type PostRepo interface {
 	GetAllPosts() ([]entity.Post, error)
 	DeletePostByID(id int) ([]entity.Post, error)
 	GetAllPostsByGroupID(id  int) ([]entity.Post, error)
+	GetAlmost(userID, postid string) ([]int, error) 
 }

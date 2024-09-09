@@ -7,6 +7,6 @@ import (
 
 type PostService interface {
 	CreatePost(post *dto.PostDTO) (string, error)
-	GetAllPosts() ([]dto.PostDTO, error)
+	GetAllPosts(id int) ([]dto.PostDTO, error)
 	GetAllPostsByGroupID(id int) ([]entity.Post, error)
 }

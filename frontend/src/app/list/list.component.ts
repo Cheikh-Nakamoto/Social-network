@@ -16,9 +16,13 @@ import { NgForOf, NgIf } from '@angular/common';
     HttpClientModule,
     MatCardModule,
     RouterLink,
+<<<<<<< HEAD
     MatDividerModule,
     NgForOf,
     NgIf
+=======
+    MatDividerModule, NgForOf,NgIf
+>>>>>>> 167e1c7fb40fb5b57ad4dd462c9e34561b8714ca
 ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
