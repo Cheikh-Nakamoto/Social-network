@@ -325,14 +325,21 @@ export class ByIdComponent implements OnInit {
     }
 
   openCreatePostDialog() {
-       this.router.navigate(['/groupchat'], {
-           queryParams: { groupId: this.groupId },
-       });
+      //  this.router.navigate(['/groupchat'], {
+      //      queryParams: { groupId: this.groupId },
+      //  });
     this.dialog.open(GroupchatComponent, {
         width: '400px', // Largeur de la boîte de dialogue
         data: { groupId: this.groupId }, // Envoi de paramètres au composant de la boîte de dialogue
+        hasBackdrop: true,
+        backdropClass: 'custom-backdrop',
+        // Désactiver la fermeture en cliquant en dehors si vous voulez forcer la fermeture via bouton
+        disableClose: true,
     });
+    
   }
+
+  
 }
 
 
