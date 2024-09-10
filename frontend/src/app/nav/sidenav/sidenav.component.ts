@@ -140,7 +140,7 @@ export class SidenavComponent implements OnInit {
             // // Désactiver la fermeture en cliquant en dehors si vous voulez forcer la fermeture via bouton
             // disableClose: true,
             position: {
-                top: '0',
+                bottom: '12px',
                 right: '0',
             },
         });
