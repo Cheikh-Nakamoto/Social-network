@@ -7,6 +7,7 @@ import { RouterLink } from '@angular/router';
 import { MatDividerModule } from '@angular/material/divider';
 import { User } from '../../entity/user';
 import { NgForOf, NgIf } from '@angular/common';
+import { FollowService } from '../service/follow.service';
 
 @Component({
   selector: 'app-list',
@@ -23,7 +24,7 @@ import { NgForOf, NgIf } from '@angular/common';
 ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
-  providers: [AuthService]
+  providers: [AuthService, FollowService]
 })
 export class ListComponent {
     suggestions: User[] = []
@@ -32,7 +33,8 @@ export class ListComponent {
     currentID: number = this.authService.getUserID()!
 
     constructor(
-        private authService: AuthService
+        private authService: AuthService,
+        private followService: FollowService
     ) {}
 
     listUsers(): void {
@@ -42,9 +44,12 @@ export class ListComponent {
         })
     }
 
+    listFollowers(): void {}
+
     ngOnInit(): void {
         this.authService.isOnline
         
         this.listUsers()
+        this.listFollowers()
     }
 }
