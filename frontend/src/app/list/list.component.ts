@@ -38,7 +38,6 @@ export class ListComponent {
     listUsers(): void {
         this.authService.getAll().subscribe((data: any) => {
             this.size = data.users.length
-            console.log("ORiginal", data.users)
             this.suggestions = data.users.filter((user: any) => user.id !== this.currentID)
         })
     }
