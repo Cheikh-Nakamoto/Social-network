@@ -106,6 +106,10 @@ export class ByIdComponent implements OnInit {
         }
     }
 
+
+    InviterYourFollowers(){
+        
+    }
     addMember(
         groupId: number,
         userId: string,

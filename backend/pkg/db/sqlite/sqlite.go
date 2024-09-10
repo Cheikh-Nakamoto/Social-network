@@ -77,8 +77,6 @@ func Migrate(db *sql.DB) error {
 	}
 
 	log.Println("Database migrated")
-	AddFollow(db,1,2,"accepted")
-	AddFollow(db,3,1,"accepted")
 	return nil
 }
 

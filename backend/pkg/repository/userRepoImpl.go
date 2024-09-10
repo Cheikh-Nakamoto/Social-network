@@ -55,7 +55,7 @@ func (u *UserRepoImpl) Save(user *entity.User) error {
 }
 
 func (u *UserRepoImpl) Update(user *entity.User) error {
-    _, err := u.db.GetDB().Exec(`
+	_, err := u.db.GetDB().Exec(`
         UPDATE users 
         SET firstname = ?, 
             lastname = ?, 
@@ -64,17 +64,16 @@ func (u *UserRepoImpl) Update(user *entity.User) error {
             about_me = ?, 
             updated_at = ? 
         WHERE id = ?`,
-        user.Firstname, 
-        user.Lastname, 
-        user.Avatar, 
-        user.Nickname, 
-        user.AboutMe, 
-        time.Now(), // Assure-toi que la mise à jour de l'heure est en dernier.
-        user.ID,
-    )
-    return err
+		user.Firstname,
+		user.Lastname,
+		user.Avatar,
+		user.Nickname,
+		user.AboutMe,
+		time.Now(), // Assure-toi que la mise à jour de l'heure est en dernier.
+		user.ID,
+	)
+	return err
 }
-
 
 func (u *UserRepoImpl) CountUsers() (uint, error) {
 	var count uint
@@ -226,7 +225,7 @@ func (u *UserRepoImpl) GetFollowerCount(userID uint) (uint, error) {
 }
 
 func (u *UserRepoImpl) GetFriends(userID uint) ([]*entity.User, error) {
-	query := `SELECT u.id, u.email, u.password, u.firstname, u.lastname, u.date_of_birth, u.avatar, u.nickname, u.about_me, u.is_public, u.created_at, u.updated_at, u.online FROM users u JOIN follows f ON u.id = f.followee_id WHERE f.follower_id = ? AND f.status = 'accepted'`
+	query := `SELECT u.id, u.email, u.password, u.firstname, u.lastname, u.date_of_birth, u.avatar, u.nickname, u.about_me, u.is_public, u.created_at, u.updated_at, u.online FROM users u JOIN follows f ON u.id = f.follower_id WHERE f.followee_id = ? AND f.status = 'accepted'`
 	rows, err := u.db.GetDB().Query(query, userID)
 	if err != nil {
 		return nil, err
