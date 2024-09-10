@@ -18,11 +18,12 @@ mat-card {
     box-shadow: 2px 2px 2px 2px $lightBlue;
     background: #fff;
 
-    mat-cardn-header img {
+    mat-card-header img {
         width: 50px;
         height: 50px;
         border-radius: 50%;
-        margin-right: 16px;
+        margin-right: 8px;
+        cursor: pointer;
     }
     mat-card-content {
         max-height: 200px;
@@ -35,6 +36,8 @@ mat-card {
     mat-card-title {
         font-size: 18px;
         text-transform: capitalize;
+        font-weight: 600;
+        margin-top: 3px;
     }
 
     mat-card-subtitle {

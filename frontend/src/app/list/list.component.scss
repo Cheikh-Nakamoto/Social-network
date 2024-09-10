@@ -21,6 +21,11 @@ $borderPrimary: #9EC5FE;
 
 mat-divider {
     margin: 10px 0 !important;
+    border-color: $primaryColor;
+}
+
+.no-user {
+    font-size: 15px;
 }
 
 .list {
@@ -48,6 +53,22 @@ mat-divider {
                 justify-content: center;
                 align-items: start;
                 flex-direction: column;
+                
+                .name {
+                    font-weight: bold;
+                    font-size: 17px;
+                    letter-spacing: 3px;
+                    color: $primaryColor;
+                }
+
+                .state {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 10px;
+                    font-size: 12px;
+                    color: $textPrimary;
+                }
             }
         }
 

@@ -18,6 +18,7 @@ import { IconModule } from '../../icone.module';
 import { DataService } from '../../data.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { GroupchatComponent } from '../groupchat/groupchat.component';
+import { AlmostPrivateComponent } from '../../create-post/almost-private/almost-private.component';
 
 @Component({
     selector: 'app-by-id',
@@ -58,6 +59,7 @@ export class ByIdComponent implements OnInit {
     comlength: length = {};
     goingmap = [];
     notgoingmap = [];
+    UserSelected: number[] = [];
 
     constructor(
         private fb: FormBuilder,
@@ -66,8 +68,9 @@ export class ByIdComponent implements OnInit {
         private rout: ActivatedRoute,
         private authSrvice: AuthService,
         private shared: SharedserviceComponent,
-        
-    ) {}
+        private dialog: MatDialog
+
+    ) { }
 
     ngOnInit(): void {
         this.authSrvice.isOnline();
@@ -87,10 +90,12 @@ export class ByIdComponent implements OnInit {
         });
 
         this.loadEvents();
-        this.shared.sharedData$.subscribe((res: Post) => {
+        this.shared.sharedData$.subscribe((res: any) => {
             if (this.storage?.group_id != res?.group_id && res != null) {
                 this.storage = res;
                 location.reload();
+            } else if (res?.almost) {
+                this.UserSelected = res == null ? [] : res.almost
             }
         });
     }
@@ -107,8 +112,18 @@ export class ByIdComponent implements OnInit {
     }
 
 
-    InviterYourFollowers(){
-        
+    InviterYourFollowers() {
+        this.dialog.open(AlmostPrivateComponent, {
+            width: "auto"
+        });
+        if (this.UserSelected.length != 0) {
+            let timerid
+            for (let i = 0; i < this.UserSelected.length; i++) {
+              timerid =  setTimeout(() => this.addMember(this.groupId, this.id, this.UserSelected[i].toString(), 'Member'), 3000)
+            }
+            clearTimeout(timerid)
+        }
+
     }
     addMember(
         groupId: number,
@@ -173,7 +188,6 @@ export class ByIdComponent implements OnInit {
             user_id: Number(this.id),
             group_id: Number(this.groupId),
         };
-        console.log(body);
         this.groupService.ItsMember('group-member', body).subscribe(
             (res) => {
                 console.log(res);
@@ -277,6 +291,7 @@ export class ByIdComponent implements OnInit {
             });
     }
 
+
     private LoadGoing(targetType: string) {
         this.groupService
             .getTargetLikes(targetType)
@@ -293,7 +308,6 @@ export class ByIdComponent implements OnInit {
             });
     }
 
-    readonly dialog = inject(MatDialog);
 
     openDialog(postId: number): void {
         // Récupérer les commentaires pour le post spécifié
@@ -328,26 +342,26 @@ export class ByIdComponent implements OnInit {
         }
     }
 
-  openCreatePostDialog() {
-      //  this.router.navigate(['/groupchat'], {
-      //      queryParams: { groupId: this.groupId },
-      //  });
-    this.dialog.open(GroupchatComponent, {
-        width: '400px', // Largeur de la boîte de dialogue
-        data: { groupId: this.groupId }, // Envoi de paramètres au composant de la boîte de dialogue
-        // hasBackdrop: true,
-        // backdropClass: 'custom-backdrop',
-        // // Désactiver la fermeture en cliquant en dehors si vous voulez forcer la fermeture via bouton
-        // disableClose: true,
-        position: {
-            top: '0',
-            right: '0',
-        },
-    });
-    
-  }
+    openCreatePostDialog() {
+        //  this.router.navigate(['/groupchat'], {
+        //      queryParams: { groupId: this.groupId },
+        //  });
+        this.dialog.open(GroupchatComponent, {
+            width: '400px', // Largeur de la boîte de dialogue
+            data: { groupId: this.groupId }, // Envoi de paramètres au composant de la boîte de dialogue
+            // hasBackdrop: true,
+            // backdropClass: 'custom-backdrop',
+            // // Désactiver la fermeture en cliquant en dehors si vous voulez forcer la fermeture via bouton
+            // disableClose: true,
+            position: {
+                top: '0',
+                right: '0',
+            },
+        });
 
-  
+    }
+
+
 }
 
 

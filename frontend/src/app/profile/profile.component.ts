@@ -56,7 +56,7 @@ export class ProfileComponent implements OnInit {
     followingCount!: any
     friendCount!: any
     message!: string
-    editMode: boolean = false;
+    editMode: boolean = true;
 
 
     constructor(
