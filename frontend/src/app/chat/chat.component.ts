@@ -53,14 +53,15 @@ export class ChatComponent implements OnInit, OnDestroy {
         // route.queryParams.subscribe((params) => {
         //   this.id = params['userid'];
         // });
-        this.id = data.userId;
+        this.id = Number(data.userId);
     }
 
     ngOnInit(): void {
         this.userService.user.subscribe((user) => {
             this.sender = user;
         });
-        this.getUserById(this.id);
+      this.getUserById(this.id);
+      console.log("ttttttttttttttttt", this.user, this.id)
         this.websocketService.connect();
 
         this.messagesSubscription = this.websocketService.messages$.subscribe(
@@ -107,10 +108,11 @@ export class ChatComponent implements OnInit, OnDestroy {
         }
 
         this.apiservice.getData('allusers').subscribe(
-            (response: model.UserDTO[]) => {
+          (response: any) => {
+            console.log("ddddddddddddddddddd",response)
                 // Utilisez `find` pour rechercher directement l'utilisateur avec l'ID correspondant
-                const foundUser = response.find(
-                    (user) => user != null && user.id === Number(id)
+                const foundUser = response.users.find(
+                    (user: any) => user != null && user.id === Number(id)
                 );
 
                 if (foundUser) {

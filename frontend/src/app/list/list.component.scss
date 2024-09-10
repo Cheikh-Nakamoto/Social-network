@@ -26,6 +26,11 @@ mat-divider {
 
 .no-user {
     font-size: 15px;
+    color: $primaryColor;
+}
+
+.title {
+    color: $primaryColor;
 }
 
 .list {
@@ -56,7 +61,7 @@ mat-divider {
                 
                 .name {
                     font-weight: bold;
-                    font-size: 17px;
+                    font-size: 15px;
                     letter-spacing: 3px;
                     color: $primaryColor;
                 }
@@ -77,6 +82,10 @@ mat-divider {
             justify-content: end;
             align-items: end;
             gap: 10px;
+
+            .btn {
+                padding: 3px 12px !important;
+            }
         }
     }
 }
