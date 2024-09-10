@@ -17,7 +17,7 @@ import { AlmostPrivateComponent } from './almost-private/almost-private.componen
 @Component({
   selector: 'app-create-post',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, CommonModule, MatCardModule, MatButtonToggleModule, MatCheckboxModule, HttpClientModule, ToolbarComponent, AlmostPrivateComponent,NgIf],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, MatCardModule, MatButtonToggleModule, MatCheckboxModule, HttpClientModule, ToolbarComponent, AlmostPrivateComponent, NgIf],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './create-post.component.html',
   styleUrls: ['./create-post.component.scss'],
@@ -29,10 +29,10 @@ export class CreatePostComponent implements OnInit {
   hideMultipleSelectionIndicator = signal(false);
 
   isPublic: string = "public";
-  redirecte: string ="Acceuil"
-  groupid : number = 0
-
+  redirecte: string = "Acceuil"
+  groupid: number = 0
   username = ""
+  avatar: string = ""
 
   toggleSingleSelectionIndicator() {
     this.hideSingleSelectionIndicator.update(value => !value);
@@ -46,7 +46,7 @@ export class CreatePostComponent implements OnInit {
   selectedFile!: File;
   selectedFileName: string = "";
   isPreviewerVisible: boolean = false;
-  UserSelected : number[] = []
+  UserSelected: number[] = []
   page_group = false;
 
 
@@ -59,14 +59,15 @@ export class CreatePostComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    
+
     this.authService.isOnline();
     this.username = localStorage.getItem('firstname') as string
+    this.avatar = localStorage.getItem("avatar") as string == "" ? "female.svg" : localStorage.getItem("avatar") as string
 
     let checkhref = location.href.split("/")
     if (checkhref[checkhref.length - 2] == "groups") {
       this.redirecte = "groups"
-      this.page_group =true
+      this.page_group = true
       this.groupid = Number(checkhref[checkhref.length - 1])
       console.log("ici groupid :", checkhref[checkhref.length - 1])
       this.Post = this.postFormBuilder.group({
@@ -88,7 +89,7 @@ export class CreatePostComponent implements OnInit {
         user_id: localStorage.getItem("userID") as string
       });
     }
-    console.log("page actuelle pour nature post ",this.page_group)
+    console.log("page actuelle pour nature post ", this.page_group)
     this.shared.sharedData$.subscribe((res: { "almost": number[] }) => {
       if (res?.almost) {
         this.UserSelected = res == null ? [] : res.almost

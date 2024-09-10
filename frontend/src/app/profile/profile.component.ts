@@ -1,12 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router, RouterLink} from "@angular/router";
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 
-import {AuthService} from "../../service/auth.service";
-import {CommonModule, DatePipe, NgForOf, NgIf} from "@angular/common";
-import {MatTabGroup, MatTabsModule} from "@angular/material/tabs";
-import {MatIconModule} from "@angular/material/icon";
+import { AuthService } from "../../service/auth.service";
+import { CommonModule, DatePipe, NgForOf, NgIf } from "@angular/common";
+import { MatTabGroup, MatTabsModule } from "@angular/material/tabs";
+import { MatIconModule } from "@angular/material/icon";
 
-import {MatListModule} from "@angular/material/list";
+import { MatListModule } from "@angular/material/list";
 import { FollowService } from '../../service/follow.service';
 import { UtilsService } from '../../service/utils.service';
 import { User } from '../../entity/user';
@@ -22,7 +22,7 @@ import { ToolbarComponent } from '../nav/toolbar/toolbar.component';
     selector: 'app-profile',
     standalone: true,
     imports: [
-      HttpClientModule,
+        HttpClientModule,
         CommonModule,
         RouterLink,
         NgIf,
@@ -35,13 +35,14 @@ import { ToolbarComponent } from '../nav/toolbar/toolbar.component';
     ],
     templateUrl: './profile.component.html',
     styleUrl: './profile.component.scss',
-    providers: [DatePipe,DataService, AuthService,FollowService,UtilsService]
-    
+    providers: [DatePipe, DataService, AuthService, FollowService, UtilsService]
+
 })
 export class ProfileComponent implements OnInit {
     title: string = 'Profile'
     id!: number
     user: User = new User()
+    avatar = "";
     currentID: number = this.authService.getUserID()!
     userAge: number = 0
     followers!: User[]
@@ -53,7 +54,7 @@ export class ProfileComponent implements OnInit {
     followingCount!: any
     friendCount!: any
     message!: string
-    
+
 
     constructor(
         private authService: AuthService,
@@ -62,12 +63,13 @@ export class ProfileComponent implements OnInit {
         private activatedRoute: ActivatedRoute,
         private router: Router,
         public datePipe: DatePipe
-        
+
     ) {
     }
 
     getUser() {
         this.id = this.activatedRoute.snapshot.params['id']
+        this.avatar = localStorage.getItem("avatar") as string == "" ? "female.svg" : localStorage.getItem("avatar") as string
         this.authService.getUser(this.id).subscribe((response: any) => {
             if (response.status !== "success" && response.status !== 200) {
                 alert(response.message)
@@ -202,11 +204,11 @@ export class ProfileComponent implements OnInit {
             }*/
         );
     }
-    
-    
+
+
 
     ngOnInit(): void {
-        if (!(this.authService.getToken()as string)) {
+        if (!(this.authService.getToken() as string)) {
             this.router.navigate(['/login']).then()
             alert('You are not logged in')
             return

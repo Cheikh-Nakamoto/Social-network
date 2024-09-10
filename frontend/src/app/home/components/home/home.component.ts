@@ -49,6 +49,7 @@ import { GetUserService } from '../../../data.service';
   styleUrls: ['./home.component.scss'],
   providers: [DataService, AuthService],
 })
+
 export class HomeComponent implements OnInit {
   id!: number;
   AllUser: AllUsersDTO = {};
@@ -62,6 +63,7 @@ export class HomeComponent implements OnInit {
   postAndButton!: Posts;
   comlength: length = {}
   storage !: Post
+  avatar: string = ""
 
   constructor(
     private apiService: DataService,
@@ -197,6 +199,8 @@ export class HomeComponent implements OnInit {
   private loadUser(targetlink: string) {
     this.apiService.getData(targetlink).subscribe((user: AllUsersDTO) => {
       this.AllUser = user;
+      this.avatar = this.AllUser[this.id].avatar == ""  ? "female.svg" : this.AllUser[this.id].avatar
+      localStorage.setItem("avatar", this.avatar)
       console.log('ici sont les utilisateurs', this.AllUser);
     });
   }

@@ -54,6 +54,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   title = 'Social Network';
   id!: string;
   username = '';
+  avatar = "";
   hiddenNotif = false;
   NotifyLength!: number;
   hiddenMessage = false;
@@ -81,6 +82,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     this.authService.isOnline();
     this.id = JSON.parse(localStorage.getItem('userID') as string);
     this.username = localStorage.getItem('firstname') as string;
+    this.avatar = localStorage.getItem("avatar") as string == "" ? "female.svg" : localStorage.getItem("avatar") as string
 
     this.notify();
 

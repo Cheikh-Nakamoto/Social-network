@@ -14,6 +14,8 @@ import { CreatePostComponent } from '../create-post/create-post.component';
 })
 export class MainPageComponent implements OnInit {
 
+  avatar: string = ""
+
   constructor(
     private authService: AuthService,
     private dialog: MatDialog
@@ -21,6 +23,7 @@ export class MainPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.isOnline();
+    this.avatar = localStorage.getItem("avatar") as string == "" ? "female.svg" : localStorage.getItem("avatar") as string
   }
   
   openCreatePostDialog() {

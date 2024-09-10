@@ -7,7 +7,7 @@
     </div>
     <div class="row p-3 profile-basic">
         <div class="col-lg-6 picture-infos">
-            <img alt="Profile Picture" class="rounded-circle avatar" height="150" src="{{user.avatar}}" width="150">
+            <img alt="Profile Picture" class="rounded-circle avatar" height="150" [src]="avatar" width="150">
             <div class="info p-3">
                 <span class="name">
                     {{ user.firstname }} {{ user.lastname }}
