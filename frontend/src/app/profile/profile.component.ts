@@ -34,7 +34,12 @@ import { HomeComponent } from '../home/components/home/home.component';
         MatListModule,
         NgForOf,
         ToolbarComponent,
+<<<<<<< Updated upstream
         FormsModule, 
+=======
+        FormsModule,
+        ToolbarComponent, 
+>>>>>>> Stashed changes
         HomeComponent
     ],
     templateUrl: './profile.component.html',

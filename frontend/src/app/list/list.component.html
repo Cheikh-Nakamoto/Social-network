@@ -11,11 +11,11 @@
                     </div>
                     <div class="info">
                         <span class="name">{{user.firstname}}&nbsp;{{user.lastname}}</span>
-                        <div class="state">
+                        <!--<div class="state">
                             <span>Friends: <b>10.3k</b></span>|
                             <span>Followers: <b>10.3k</b></span>|
                             <span>Followings: <b>10.3k</b></span>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
                 <div class="buttons">
@@ -41,15 +41,15 @@
                     </div>
                     <div class="info">
                         <span class="name">{{user.firstname}}&nbsp;{{user.lastname}}</span>
-                        <div class="state">
+                        <!--<div class="state">
                             <span>Friends: <b>10.3k</b></span>|
                             <span>Followers: <b>10.3k</b></span>|
                             <span>Followings: <b>10.3k</b></span>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
                 <div class="buttons">
-                    <button class="btn btn-warning">Follow</button>
+                    <button class="btn btn-warning" (click)="onFollow(user.id)">Follow</button>
                     <button class="btn btn-info" routerLink="/profile/{{user.id}}">Profile</button>
                 </div>
             </div>
