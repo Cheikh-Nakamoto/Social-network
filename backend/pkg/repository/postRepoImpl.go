@@ -25,7 +25,7 @@ func (p *PostRepoImpl) Almost(userID string, postid string, almost []int) error 
 		str = append(str, strconv.Itoa(v))
 	}
 	userchain := strings.Join(str, ".")
-	userchain+="."+userID
+	userchain += "." + userID
 	stmt := `INSERT INTO almost_private ( owner, views ,post_id,created_at) VALUES ( ?, ?, ?,?)`
 	_, err := p.db.GetDB().Exec(stmt, userID, userchain, postid, time.Now())
 	if err != nil {
@@ -42,7 +42,7 @@ func (repo *PostRepoImpl) GetAlmost(userID, postid string) ([]int, error) {
 		fmt.Println("error getting list", err)
 		return nil, nil
 	}
-	
+
 	var users []int
 	list := strings.Split(liststring, ".")
 	for _, v := range list {
@@ -67,7 +67,8 @@ func (p *PostRepoImpl) CreatePost(userID string, title, content, Image string, I
 		return "", fmt.Errorf("CreatePost: %v", err)
 	}
 	nbr, _ := id.LastInsertId()
-	if IsPublic == "almost private"{
+	fmt.Println("verify : ", IsPublic == "almost private", IsPublic, "almost private")
+	if IsPublic == "almost private" {
 		p.Almost(userID, strconv.Itoa(int(nbr)), almost)
 	}
 	return strconv.Itoa(int(nbr)), nil

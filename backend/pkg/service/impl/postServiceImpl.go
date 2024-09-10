@@ -71,15 +71,22 @@ func (p *PostServiceImpl) GetAllPosts(id int) ([]dto.PostDTO, error) {
 			}
 		}else if  post.IsPublic == "private"{
 			userService := repository.NewUserRepoImpl(*db)
-			user, err := userService.GetFriends(uint(id))
+			ID ,_ := strconv.Atoi((post.UserID))
+			user, err := userService.GetFriends(uint(ID))
 			if err!= nil{
+				fmt.Println("error getting friends", err)
                 return nil, err
             }
-			for _, v := range user{
-				if v.ID == uint(id){
-                    bools = true
-                    break
-                }
+			if len(user) != 0{
+				for _, v := range user{
+					fmt.Println("friends : ", v.ID,"-", post.UserID)
+					if v.ID == uint(id)|| ID == id{
+						bools = true
+						break
+					}
+				}
+			}else if ID == id{
+				bools = true
 			}
 			if !bools{
 				continue
