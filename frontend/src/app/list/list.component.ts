@@ -33,6 +33,7 @@ export class ListComponent {
 
     constructor(
         private authService: AuthService,
+        private followService: FolloSer
     ) {}
 
     listUsers(): void {
