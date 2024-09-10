@@ -18,6 +18,7 @@
     </div>
   </mat-drawer-content>
   <mat-drawer mode="side" opened position="end">
+    <h2 class="text-header">Members</h2>
     <mat-list *ngFor="let user of users" role="list">
       <mat-list-item role="listitem">
         <a matListItemTitle href="javascript:void(0)" (click)="openCreatePostDialog(user.id)">
