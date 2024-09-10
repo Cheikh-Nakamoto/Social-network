@@ -25,7 +25,7 @@ mat-card {
         margin-right: 16px;
     }
     mat-card-content {
-        max-height: 200px; 
+        max-height: 200px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: normal;
@@ -65,20 +65,53 @@ button:not(.send) {
     }
 }
 
+.comments-media-icons {
+    position: absolute;
+    bottom: 15px;
+    right: 20%;
+}
+.comments-media-icons p {
+    display: inline-block;
+    margin: 0 4px;
+    cursor: pointer;
+}
+.comments-media-icons svg {
+    width: 24px;
+}
+
+label {
+    color: #252525;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+}
+.comments-media-icons p.comments-image-uploader input {
+    display: none;
+}
 .comment-form {
-    width: 70%;
+    width: 80%;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-left: 48px;
+    margin-bottom: 18px;
 
     form {
         display: flex;
-        justify-content: center;
-        align-items: center;
         width: 100%;
+        margin-left: 48px;
 
         input {
             width: 100%;
+            border: 1px solid #ddd;
+            height: 36px;
+            border-radius: 10px;
+            padding: 2px 8px;
+
+            &:focus {
+                border: 1px solid #ddd;
+                outline: none;
+            }
         }
     }
 }

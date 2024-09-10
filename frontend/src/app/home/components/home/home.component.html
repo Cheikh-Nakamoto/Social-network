@@ -30,17 +30,30 @@
         <span>{{ !comlength[post.id] ? 0 : comlength[post.id]}}</span>
         <mat-icon>forum</mat-icon>
       </button>
-
-      <span class="comment-form">
-        <form (submit)="onComment(post.id, 'comment', $event)">
-          <input matInput placeholder="Comment" name="comment">
-          <input type="file" name="image" accept="image/*" (change)="onFileSelected($event)">
-          <button class="send" mat-icon-button type="submit">
-            <mat-icon>send</mat-icon>
-          </button>
-        </form>
-      </span>
-      <span class="spacer"></span>
     </mat-card-actions>
+    <span class="comment-form">
+      <form (submit)="onComment(post.id, 'comment', $event)">
+        <input matInput placeholder="Type a comment..." name="comment">
+        <div class="comments-media-icons">
+          <p class="comments-image-uploader">
+            <label for="image">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                stroke="#999999" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <path d="M20.4 14.5L16 10 4 20"></path>
+              </svg>
+            </label>
+            <input type="file" class="comment-upload-media" id="image" name="image" (change)="onFileSelected($event)">
+          </p>
+        </div>
+        <button class="send" mat-icon-button type="submit">
+          <mat-icon>send</mat-icon>
+        </button>
+      </form>
+    </span>
+    <span class="spacer"></span>
+
   </mat-card>
+
 </div>
