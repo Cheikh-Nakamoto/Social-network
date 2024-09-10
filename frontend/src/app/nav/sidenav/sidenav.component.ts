@@ -9,7 +9,7 @@ import { NgForOf, NgIf } from "@angular/common";
 import { MatFabAnchor } from "@angular/material/button";
 import { HomeComponent } from '../../home/components/home/home.component';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
-import { DataService, VisibilityService } from '../../data.service';
+import { DataService } from '../../data.service';
 import { WebSocketService } from '../../chat/services/chat.service';
 import { AuthService } from '../../service/auth.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -61,7 +61,7 @@ export class SidenavComponent implements OnInit {
         private visibilityService: VisibilityService
     ) {}
     ngOnInit(): void {
-        this.visibilityService.visibility$.subscribe((visible) => {
+        this.visibilityService.visibility$.subscribe((visible: any) => {
             this.isVisible = visible; // Met à jour l'état de visibilité
         });
         this.getAllusers();

@@ -333,13 +333,19 @@ func (repo *GroupRepoImpl) AddMemberBasedOnNotification(notif dto.Notification) 
 		}
 		return err
 	}
-
+var targetid int
+	if notif.Role == "member" {
+		targetid = notif.UserID
+	}else if notif.Role == "admin" {
+		targetid = notif.TargetID
+	}
 	// Insérer l'utilisateur dans la table group_members
 	insertQuery := `INSERT INTO group_members (group_id, user_id, role, joined_at) VALUES (?, ?, ?, ?)`
-	_, err = repo.db.GetDB().Exec(insertQuery, notif.GroupID, notif.UserID, "member", time.Now())
+	_, err = repo.db.GetDB().Exec(insertQuery, notif.GroupID, targetid, "member", time.Now())
 	if err != nil {
 		return err
 	}
+
 
 	// Supprimer la notification après avoir ajouté l'utilisateur au groupe
 	deleteQuery := `DELETE FROM notifications WHERE id = ?`
