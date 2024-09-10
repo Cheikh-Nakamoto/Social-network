@@ -58,18 +58,10 @@ export class ListComponent {
         })
     }
 
-    getCount(id: number) {
-        this.followService.getCount(id, "followers").subscribe((data: any) => {
-            console.log("Followers", data)
-        })
-
-        this.followService.getCount(id, "followings").subscribe((data: any) => {
-            console.log("Followings", data)
-        })
-
-        this.followService.getCount(id, "friends").subscribe((data: any) => {
-            console.log("Friends", data)
-        })
+    followerCount(id: number) {
+        return this.followService.getCount(id, "followers").pipe(
+            (data: any) => data
+        )
     }
 
     onFollow() {}
@@ -79,6 +71,5 @@ export class ListComponent {
         
         this.listUsers()
         this.listFollowers()
-        this.getCount(1)
     }
 }
