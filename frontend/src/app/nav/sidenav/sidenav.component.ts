@@ -14,27 +14,29 @@ import { WebSocketService } from '../../chat/services/chat.service';
 import { AuthService } from '../../service/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ChatComponent } from '../../chat/chat.component';
+import { AppComponent } from "../../app.component";
 
 @Component({
     selector: 'app-sidenav',
     standalone: true,
     imports: [
-        MatDrawer,
-        MatDrawerContainer,
-        MatDrawerContent,
-        MatListModule,
-        MatIcon,
-        NgForOf,
-        MatFabAnchor,
-        RouterLink,
-        NgIf,
-        MatSidenavContainer,
-        MatSidenav,
-        HomeComponent,
-        ToolbarComponent,
-        RouterOutlet,
-        CommonModule,
-    ],
+    MatDrawer,
+    MatDrawerContainer,
+    MatDrawerContent,
+    MatListModule,
+    MatIcon,
+    NgForOf,
+    MatFabAnchor,
+    RouterLink,
+    NgIf,
+    MatSidenavContainer,
+    MatSidenav,
+    HomeComponent,
+    ToolbarComponent,
+    RouterOutlet,
+    CommonModule,
+    AppComponent
+],
     templateUrl: './sidenav.component.html',
     styleUrl: './sidenav.component.scss',
     providers: [DataService, AuthService], // Add any additional services you need to this component.

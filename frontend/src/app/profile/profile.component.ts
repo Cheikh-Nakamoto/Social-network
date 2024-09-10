@@ -15,7 +15,11 @@ import { Group } from '../../entity/group';
 import { HttpClientModule } from '@angular/common/http';
 import { DataService } from '../data.service';
 import { ToolbarComponent } from '../nav/toolbar/toolbar.component';
+<<<<<<< Updated upstream
 import { FormsModule } from '@angular/forms';
+=======
+import { HomeComponent } from '../home/components/home/home.component';
+>>>>>>> Stashed changes
 
 
 
@@ -32,8 +36,13 @@ import { FormsModule } from '@angular/forms';
         MatIconModule,
         MatListModule,
         NgForOf,
+<<<<<<< Updated upstream
         ToolbarComponent,
         FormsModule
+=======
+        ToolbarComponent, 
+        HomeComponent
+>>>>>>> Stashed changes
     ],
     templateUrl: './profile.component.html',
     styleUrl: './profile.component.scss',
@@ -73,6 +82,7 @@ export class ProfileComponent implements OnInit {
     getUser() {
         this.id = this.activatedRoute.snapshot.params['id']
         this.avatar = localStorage.getItem("avatar") as string == "" ? "female.svg" : localStorage.getItem("avatar") as string
+
         this.authService.getUser(this.id).subscribe((response: any) => {
             if (response.status !== "success" && response.status !== 200) {
                 alert(response.message)

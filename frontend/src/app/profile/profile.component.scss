@@ -22,6 +22,21 @@ $borderPrimary: #9ec5fe;
 $dark: rgb(33, 37, 41);
 $white: #fefefe;
 
+
+mat-drawer-container {
+    height: 93vh;
+    display: flex;
+}
+mat-drawer-content {
+    background: #fff;
+    padding: 6px;
+    flex-grow: 1;
+}
+
+.content-wrapper {
+    margin: 0 32px;
+}
+
 .cover {
     display: flex;
     justify-content: start;
