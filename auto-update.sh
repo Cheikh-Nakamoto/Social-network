@@ -26,5 +26,5 @@ update_and_push() {
 # Boucle infinie
 while true; do
     update_and_push
-    sleep 300
+    sleep 900
 done
