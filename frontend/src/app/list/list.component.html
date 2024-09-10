@@ -9,8 +9,8 @@
                         <img src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="user" style="width: 100%; height: 100%;">
                     </div>
                     <div class="info">
-                        <span>{{user.firstname}}&nbsp;{{user.lastname}}</span>
-                        <span>Followers: 10 k | Followings 100 k</span>
+                        <span class="name">{{user.firstname}}&nbsp;{{user.lastname}}</span>
+                        <span class="followers">Followers: 10 k | Followings 100 k</span>
                     </div>
                 </div>
                 <div class="buttons">
@@ -22,7 +22,7 @@
         </div>
 
         <div class="col-md-12" *ngIf="size === 1">
-            <h6>No Followers</h6>
+            <span>No Followers</span>
         </div>
     </div>
 

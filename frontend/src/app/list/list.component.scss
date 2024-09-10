@@ -48,6 +48,12 @@ mat-divider {
                 justify-content: center;
                 align-items: start;
                 flex-direction: column;
+                
+                .name {
+                    font-weight: bold;
+                    font-size: 17px;
+                    letter-spacing: 3px;
+                }
             }
         }
 
