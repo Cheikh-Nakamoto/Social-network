@@ -55,12 +55,8 @@
             <mat-divider></mat-divider>
         </div>
 
-        <div class="col-md-12 no-user" *ngIf="size === 1">
+        <div class="col-md-12 no-user" *ngIf="followers.length === 0">
             <span>No Suggestion</span>
         </div>
-        <div class="col-md-12" *ngIf="followers.length === 0">
-            <span>No Suggestion</span>
-        </div>
-
     </div>
 </div>
