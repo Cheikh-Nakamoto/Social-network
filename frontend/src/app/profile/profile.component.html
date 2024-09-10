@@ -36,14 +36,42 @@
                 <span class="material-icons">how_to_reg</span>
                 Friends
             </button>
-            <button *ngIf="currentID === user.id" class="btn btn-warning">
+            <button *ngIf="currentID === user.id" class="btn btn-warning" (click)="toggleEditMode()">
                 <span class="material-icons">edit</span>
-                Edit Profile
+                {{ editMode ? 'Cancel' : 'Edit' }}
             </button>
+
             <button *ngIf="currentID !== user.id" class="btn btn-info">
                 <span class="material-icons">sms</span>
                 Send Message
             </button>
+        </div>
+        <!-- Formulaire d'édition du profil -->
+        <div *ngIf="editMode">
+            <form (ngSubmit)="onUpdateProfile()">
+                <div class="form-group">
+                    <label for="firstname">Prénom</label>
+                    <input type="text" id="firstname" [(ngModel)]="user.firstname" name="firstname"
+                        class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="lastname">Nom</label>
+                    <input type="text" id="lastname" [(ngModel)]="user.lastname" name="lastname" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="aboutMe">À propos de moi</label>
+                    <textarea id="aboutMe" [(ngModel)]="user.about_me" name="aboutMe" class="form-control"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="nickname">Nickname:</label>
+                    <input type="text" id="nickname" [(ngModel)]="user.nickname" name="nickname" class="form-control">
+                </div>
+                <!-- <div class="form-group">
+                <label for="avatar">Avatar</label>
+                <input type="text" id="avatar" [(ngModel)]="user.avatar" name="avatar" class="form-control">
+            </div> -->
+                <button type="submit" class="btn btn-primary">Mettre à jour le profil</button>
+            </form>
         </div>
     </div>
 
@@ -56,33 +84,34 @@
     <div class="row">
         <div class="col-md-12 profile-menu">
             <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="false" animationDuration="0ms">
-               <mat-tab>
-    <div class="tab-title">
-        <ng-template mat-tab-label>
-            <span class="material-icons">article</span>
-            <span class="title">Posts</span>
-        </ng-template>
-    </div>
-    <div class="tab-content">
-        <div class="row block">
-            <div class="col-md-12 message" *ngIf="!posts || posts.length === 0">
-                <img src="fail.png" width="64" height="64">
-                <span *ngIf="currentID === id">You have no posts</span>
-                <span *ngIf="currentID !== id">{{ user.firstname }} has no posts</span>
-            </div>
+                <mat-tab>
+                    <div class="tab-title">
+                        <ng-template mat-tab-label>
+                            <span class="material-icons">article</span>
+                            <span class="title">Posts</span>
+                        </ng-template>
+                    </div>
+                    <div class="tab-content">
+                        <div class="row block">
+                            <div class="col-md-12 message" *ngIf="!posts || posts.length === 0">
+                                <img src="fail.png" width="64" height="64">
+                                <span *ngIf="currentID === id">You have no posts</span>
+                                <span *ngIf="currentID !== id">{{ user.firstname }} has no posts</span>
+                            </div>
 
-            <!-- Display posts -->
-            <div class="col-md-12" *ngIf="posts && posts.length > 0">
-                <div *ngFor="let post of posts" class="post-item">
-                    <h3>{{ post.title }}</h3>
-                    <p>{{ post.content }}</p>
-                    <img *ngIf="post.image" [src]="post.image" alt="Post image" width="150" height="150">
-                    <p><strong>Published on:</strong> {{ post.created_at | date:'medium' }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</mat-tab>
+                            <!-- Display posts -->
+                            <div class="col-md-12" *ngIf="posts && posts.length > 0">
+                                <div *ngFor="let post of posts" class="post-item">
+                                    <h3>{{ post.title }}</h3>
+                                    <p>{{ post.content }}</p>
+                                    <img *ngIf="post.image" [src]="post.image" alt="Post image" width="150"
+                                        height="150">
+                                    <p><strong>Published on:</strong> {{ post.created_at | date:'medium' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
 
 
                 <mat-tab>
@@ -105,10 +134,10 @@
                                     <h5>Identity</h5>
                                     <span class="d-flex"><strong>Firstname:</strong>&nbsp;{{ user.firstname }}</span>
                                     <span class="d-flex"><strong>Lastname:</strong>&nbsp;{{ user.lastname }}</span>
-                                    <span
-                                        class="d-flex"><strong>Date of Birth:</strong>&nbsp;{{ user.date_of_birth }}</span>
-                                    <span
-                                        class="d-flex"><strong>Member since:</strong>&nbsp;{{ user.created_at }}</span>
+                                    <span class="d-flex"><strong>Date of Birth:</strong>&nbsp;{{ user.date_of_birth
+                                        }}</span>
+                                    <span class="d-flex"><strong>Member since:</strong>&nbsp;{{ user.created_at
+                                        }}</span>
                                     <span class="d-flex"><strong>Age:</strong>&nbsp;{{ userAge }}</span>
                                 </div>
 
@@ -143,7 +172,8 @@
                                     <li class="list-group-item">
                                         <div class="info">
                                             <div class="avatar">
-                                                <img alt="avatar" src="{{friend.avatar || null}}" width="50" height="50">
+                                                <img alt="avatar" src="{{friend.avatar || null}}" width="50"
+                                                    height="50">
                                             </div>
                                             <div class="info-profile">
                                                 <span class="name">{{friend.firstname}}&nbsp;{{friend.lastname}}</span>
@@ -151,12 +181,15 @@
                                             </div>
                                         </div>
                                         <div class="buttons">
-                                            <button class="btn btn-secondary dropdown rounded-pill" data-bs-toggle="dropdown">
+                                            <button class="btn btn-secondary dropdown rounded-pill"
+                                                data-bs-toggle="dropdown">
                                                 <span class="material-icons">how_to_reg</span>
                                                 Friends
                                                 <ul class="dropdown-menu">
-                                                    <li><a class="dropdown-item" routerLink="/profile/{{friend.id}}">Profile</a></li>
-                                                    <li><a class="dropdown-item text-danger" routerLink="/unfollow">Unfollow</a></li>
+                                                    <li><a class="dropdown-item"
+                                                            routerLink="/profile/{{friend.id}}">Profile</a></li>
+                                                    <li><a class="dropdown-item text-danger"
+                                                            routerLink="/unfollow">Unfollow</a></li>
                                                 </ul>
                                             </button>
                                         </div>
@@ -186,10 +219,12 @@
                                     <li class="list-group-item">
                                         <div class="info">
                                             <div class="avatar">
-                                                <img alt="avatar" src="{{follower.avatar || null}}" width="50" height="50">
+                                                <img alt="avatar" src="{{follower.avatar || null}}" width="50"
+                                                    height="50">
                                             </div>
                                             <div class="info-profile">
-                                                <span class="name">{{follower.firstname}}&nbsp;{{follower.lastname}}</span>
+                                                <span
+                                                    class="name">{{follower.firstname}}&nbsp;{{follower.lastname}}</span>
                                                 <span class="username">&#64;{{follower.nickname || null}}</span>
                                             </div>
                                         </div>
@@ -229,10 +264,12 @@
                                     <li class="list-group-item">
                                         <div class="info">
                                             <div class="avatar">
-                                                <img alt="avatar" src="{{following.avatar || null}}" width="50" height="50">
+                                                <img alt="avatar" src="{{following.avatar || null}}" width="50"
+                                                    height="50">
                                             </div>
                                             <div class="info-profile">
-                                                <span class="name">{{following.firstname}}&nbsp;{{following.lastname}}</span>
+                                                <span
+                                                    class="name">{{following.firstname}}&nbsp;{{following.lastname}}</span>
                                                 <span class="username">&#64;{{following.nickname || null}}</span>
                                             </div>
                                         </div>
@@ -272,7 +309,8 @@
                             <div class="col-md.12 message" *ngIf="groups === undefined">
                                 <img src="fail.png" width="64" height="64">
                                 <span *ngIf="currentID == id">You do not belong to any group</span>
-                                <span *ngIf="currentID != id">{{user.firstname}}&nbsp;does not belong to any group</span>
+                                <span *ngIf="currentID != id">{{user.firstname}}&nbsp;does not belong to any
+                                    group</span>
                             </div>
                             <div class="col-md.12" *ngIf="groups">
                                 The Groups I Belong To Here
@@ -284,3 +322,9 @@
         </div>
     </div>
 </div>
+<!-- nfnnkjc,
+mdfkvperkof
+fojcoifjef
+fkcriofj,rljg,objn
+kvjnifkj
+iunhgviu -->

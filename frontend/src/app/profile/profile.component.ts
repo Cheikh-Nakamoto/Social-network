@@ -15,6 +15,7 @@ import { Group } from '../../entity/group';
 import { HttpClientModule } from '@angular/common/http';
 import { DataService } from '../data.service';
 import { ToolbarComponent } from '../nav/toolbar/toolbar.component';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -31,7 +32,8 @@ import { ToolbarComponent } from '../nav/toolbar/toolbar.component';
         MatIconModule,
         MatListModule,
         NgForOf,
-        ToolbarComponent
+        ToolbarComponent,
+        FormsModule
     ],
     templateUrl: './profile.component.html',
     styleUrl: './profile.component.scss',
@@ -54,6 +56,7 @@ export class ProfileComponent implements OnInit {
     followingCount!: any
     friendCount!: any
     message!: string
+    editMode: boolean = false;
 
 
     constructor(
@@ -180,12 +183,7 @@ export class ProfileComponent implements OnInit {
             this.getFollowersCount()
         })
     }
-    //     getPosts() {
-    //     this.id = this.activatedRoute.snapshot.params['id'];
-    //     this.authService.getUserPosts(this.id).subscribe((response: any) => {
-    //         this.posts = response.posts; // Assigner les posts récupérés
-    //     });
-    // }
+
     getPosts() {
         this.id = this.activatedRoute.snapshot.params['id'];
         this.authService.getUserPosts(this.id).subscribe(
@@ -204,7 +202,34 @@ export class ProfileComponent implements OnInit {
             }*/
         );
     }
-
+    onUpdateProfile() {
+        this.id = this.activatedRoute.snapshot.params['id']
+        const updatedUser = {
+            firstname: this.user.firstname,
+            lastname: this.user.lastname,
+            about_me: this.user.about_me,
+            nickname: this.user.nickname
+            // avatar: this.user.avatar
+        };
+    
+        this.authService.updateUserProfile(this.id, updatedUser).subscribe(
+            (response: any) => {
+                if (response.status === 'success' || response.status === 200) {
+                    alert('Profil mis à jour avec succès');
+                    this.getUser(); // Rafraîchir les données de l'utilisateur
+                } else {
+                    alert('Erreur lors de la mise à jour du profil');
+                }
+            },
+            (error: any) => {
+                console.error('Erreur lors de la mise à jour du profil:', error);
+                alert('Une erreur s\'est produite');
+            }
+        );
+    }
+    toggleEditMode() {
+        this.editMode = !this.editMode;
+      }
 
 
     ngOnInit(): void {
@@ -214,8 +239,9 @@ export class ProfileComponent implements OnInit {
             return
         }
 
+        this.toggleEditMode()
         this.isOnline()
-
+        this.onUpdateProfile
         this.getFollowers()
         this.getFollowings()
         this.getFriends()

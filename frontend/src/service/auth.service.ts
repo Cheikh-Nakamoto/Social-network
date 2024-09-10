@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import {HttpClient} from "@angular/common/http";
-import {map, Observable, of} from "rxjs";
+import { HttpClient } from "@angular/common/http";
+import { map, Observable, of } from "rxjs";
 import { environment } from '../environments/environment';
 import { Post } from '../entity/post'
 
@@ -11,7 +11,7 @@ import { Post } from '../entity/post'
 export class AuthService {
     api: string = environment.api
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     login(credentials: any): Observable<any> {
         return this.http.post(`${this.api}/login`, credentials)
@@ -50,7 +50,7 @@ export class AuthService {
         return this.http.get(`${this.api}/post-profile/${userId}`).pipe(
             map(response => response)
         )
-      }
+    }
     getUserID(): number | null {
         return localStorage.getItem('userID') ? parseInt(localStorage.getItem('userID')!) : null
     }
@@ -73,10 +73,17 @@ export class AuthService {
         localStorage.setItem('userID', userID)
     }
 
-    updateUser(id: any, user: any) {
-        return this.http.put(`${this.api}/profile-update/${id}`, user)
-    }
+    // updateUser(id: any, user: any) {
+    //     return this.http.put(`${this.api}/profile-update/${id}`, user)
+    // }
     updateUserProfile(userId: number, userData: any): Observable<any> {
+        
+        
         return this.http.put<any>(`${this.api}/profile-update/${userId}`, userData);
+        console.log("updateuserproooo");
       }
+    // updateUserProfile(id: number, updatedUser: any) {
+    //     return this.http.put(`http://localhost:8080/sn/api/profile-update/${id}`, updatedUser);
+    // }
+
 }

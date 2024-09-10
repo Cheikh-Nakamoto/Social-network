@@ -40,9 +40,10 @@ import { ChatComponent } from '../../chat/chat.component';
     providers: [DataService, AuthService], // Add any additional services you need to this component.
 })
 export class SidenavComponent implements OnInit {
+    currentID: number = this.AuthService.getUserID()!
     menuItems = [
         { name: 'Home', route: '/', icon: 'icofont-ui-home' },
-        { name: 'Profile', route: '/profile/1', icon: 'icofont-user' },
+        { name: 'Profile', route: '/profile/'+this.currentID, icon: 'icofont-user' },
         { name: 'Friends', route: '/followers', icon: 'icofont-users-alt-4' },
         { name: 'Groups', route: '/groups', icon: 'icofont-users-social' },
     ];
@@ -51,7 +52,8 @@ export class SidenavComponent implements OnInit {
         private router: Router,
         private apiservice: DataService,
         private websocketService: WebSocketService,
-        private cdRef: ChangeDetectorRef
+        private cdRef: ChangeDetectorRef,
+        private AuthService: AuthService
     ) {}
     ngOnInit(): void {
         this.getAllusers();
