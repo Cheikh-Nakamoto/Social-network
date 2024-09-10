@@ -29,6 +29,7 @@ import { FollowService } from '../service/follow.service';
 export class ListComponent {
     suggestions: User[] = []
     followers: User[] = []
+    messages!: string
     size!: number
     currentID: number = this.authService.getUserID()!
 
@@ -44,7 +45,15 @@ export class ListComponent {
         })
     }
 
-    listFollowers(): void {}
+    listFollowers(): void {
+        this.followService.getList(this.currentID, "").subscribe((data: any) => {
+            if (data.status !== 200) {
+                this.messages = "No Followers"
+                return
+            }
+            console.log(data)
+        })
+    }
 
     ngOnInit(): void {
         this.authService.isOnline
