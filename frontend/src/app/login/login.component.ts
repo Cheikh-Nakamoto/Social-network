@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild  } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MatTabsModule, MatTabGroup } from '@angular/material/tabs'; // Importer MatTabsModule
@@ -14,7 +14,7 @@ import { tap } from 'rxjs';
   imports: [
     ReactiveFormsModule,
     HttpClientModule,
-    MatTabsModule, 
+    MatTabsModule,
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
@@ -23,6 +23,8 @@ import { tap } from 'rxjs';
 export class LoginComponent implements OnInit {
   @ViewChild(MatTabGroup) tabGroup!: MatTabGroup;
   age!: number
+  selectedFile!: File;
+  selectedFileName: string = "";
 
   loginForm: FormGroup = this.formbuilder.group({
     email: [null, [Validators.required]],
@@ -35,7 +37,6 @@ export class LoginComponent implements OnInit {
     firstname: [null, [Validators.required]],
     lastname: [null, [Validators.required]],
     date_of_birth: [null, [Validators.required]],
-    avatar: [null],
     nickname: [null],
     about_me: [null]
   })
@@ -65,7 +66,7 @@ export class LoginComponent implements OnInit {
       alert('Please fill in the form correctly');
       return;
     }
-   
+
     this.login(this.loginForm.value).subscribe(() => {
       console.log('Logged in');
       this.router.navigateByUrl('/home').then();
@@ -85,8 +86,8 @@ export class LoginComponent implements OnInit {
         this.authService.getUser
         localStorage.setItem("token", res.token)
         localStorage.setItem("userID", res.user.id)
-        localStorage.setItem("firstname",res.user.firstname)
-        localStorage.setItem("lastname",res.user.lastname)
+        localStorage.setItem("firstname", res.user.firstname)
+        localStorage.setItem("lastname", res.user.lastname)
 
       })
     )
@@ -96,6 +97,8 @@ export class LoginComponent implements OnInit {
     const data = { ...this.registerForm.value };
     this.age = this.checkAge(data.date_of_birth);
 
+
+
     if (this.age < 12 || this.age > 120) {
       alert('You must be between 12 and 120 years old to register');
       return;
@@ -104,13 +107,37 @@ export class LoginComponent implements OnInit {
     if (this.registerForm.invalid) {
       alert('Please fill all the required fields');
       return;
-    } else {
-      this.authService.register(data).subscribe(() => {
-        console.log("User registered");
-        this.tabGroup.selectedIndex = 0; // Définit l'onglet "Login" comme actif
-      }, (error) => {
-        console.log(error);
-      });
+    } else if (this.registerForm.valid) {
+
+
+      if (this.selectedFile) {
+        data.avatar = this.selectedFile;
+        let formData = new FormData();
+        formData.append('file', this.selectedFile);
+        this.apiservice.uploadImage(formData).subscribe((response: any) => {
+          console.log("Image uploaded", response);
+          data.avatar = response.image;
+          console.log("registering...", data);
+          this.authService.register(data).subscribe(() => {
+            alert("User registered");
+            this.tabGroup.selectedIndex = 0; // Définit l'onglet "Login" comme actif
+          }, (error) => {
+            alert("Erreur lors de l'inscription")
+            this.registerForm.reset();
+            alert(error);
+          });
+        });
+      } else {
+        console.log("registering...", data);
+        this.authService.register(data).subscribe(() => {
+          console.log("User registered");
+          this.tabGroup.selectedIndex = 0; // Définit l'onglet "Login" comme actif
+        }, (error) => {
+          alert("Erreur lors de l'inscription")
+          this.registerForm.reset();
+          console.log(error);
+        });
+      }
     }
   }
 
@@ -118,7 +145,19 @@ export class LoginComponent implements OnInit {
     return Math.floor(Math.abs(Date.now() - new Date(data).getTime()) / (1000 * 3600 * 24 * 365))
   }
 
-  
+  OnselectedFile() {
+    let file = document.getElementById("file-input") as HTMLInputElement;
+    file.click();
+  }
+
+  onFileChange(event: any): void {
+    console.log(event.target.files.length)
+    if (event.target.files.length > 0) {
+      this.selectedFile = event.target.files[0];
+      this.selectedFileName = this.selectedFile.name;
+      console.log('Fichier sélectionné:', this.selectedFileName);
+    }
+  }
 
   /*onregister() {
     console.log("ici c'est :", this.registerForm.value);
