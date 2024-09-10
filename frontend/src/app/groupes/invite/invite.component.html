@@ -8,9 +8,9 @@
         </svg>
     </span>
     <div class="user-invite" *ngIf="toppingList.length != 0;else follower">
-        @for (topping of toppingList; track topping) {*
+        @for (topping of toppingList; track topping) {
         <div class="invite">
-            <h2>{{topping.firstname}} {{topping.lastname}}</h2>
+            <h6>{{topping.firstname}} {{topping.lastname}}</h6>
             <button (click)="addMember(groupId,id,topping.id,'member')">Inviter</button>
         </div>
         }

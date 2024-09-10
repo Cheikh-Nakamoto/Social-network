@@ -45,10 +45,11 @@ export class InviteComponent {
 
   ngOnInit(): void {
     this.id = (JSON.parse(localStorage.getItem('userID') as string));
-    this.groupId = this.rout.snapshot.params['id'].toString();
+    this.groupId = (JSON.parse(localStorage.getItem('groupid') as string))
     this.followservice.getList(this.id, "friends").subscribe((friends :{friends:UserDTO[],status:number}) => {
       this.toppingList = friends.friends
     })
+    console.log(this.toppingList,"this toppings list")
   }
 
   closeDialog() {
