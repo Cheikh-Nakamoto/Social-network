@@ -15,11 +15,8 @@ import { Group } from '../../entity/group';
 import { HttpClientModule } from '@angular/common/http';
 import { DataService } from '../data.service';
 import { ToolbarComponent } from '../nav/toolbar/toolbar.component';
-<<<<<<< Updated upstream
 import { FormsModule } from '@angular/forms';
-=======
 import { HomeComponent } from '../home/components/home/home.component';
->>>>>>> Stashed changes
 
 
 
@@ -36,13 +33,9 @@ import { HomeComponent } from '../home/components/home/home.component';
         MatIconModule,
         MatListModule,
         NgForOf,
-<<<<<<< Updated upstream
         ToolbarComponent,
-        FormsModule
-=======
-        ToolbarComponent, 
+        FormsModule, 
         HomeComponent
->>>>>>> Stashed changes
     ],
     templateUrl: './profile.component.html',
     styleUrl: './profile.component.scss',

@@ -22,21 +22,6 @@ $borderPrimary: #9ec5fe;
 $dark: rgb(33, 37, 41);
 $white: #fefefe;
 
-
-mat-drawer-container {
-    height: 93vh;
-    display: flex;
-}
-mat-drawer-content {
-    background: #fff;
-    padding: 6px;
-    flex-grow: 1;
-}
-
-.content-wrapper {
-    margin: 0 32px;
-}
-
 .cover {
     display: flex;
     justify-content: start;
@@ -157,9 +142,9 @@ mat-drawer-content {
         }
     }
 }
-.profile-menu[_ngcontent-ng-c2943873335]
-    .tab-content[_ngcontent-ng-c2943873335]
-    .block[_ngcontent-ng-c2943873335] {
+.profile-menu[_ngcontent-ng-c539452686]
+    .tab-content[_ngcontent-ng-c539452686]
+    .block[_ngcontent-ng-c539452686] {
     height: auto;
 }
 .profile-menu {
