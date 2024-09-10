@@ -28,6 +28,10 @@ mat-divider {
     font-size: 15px;
 }
 
+.title {
+    color: $primaryColor;
+}
+
 .list {
     display: flex !important;
     flex-direction: column;
@@ -79,7 +83,7 @@ mat-divider {
             gap: 10px;
 
             .btn {
-                padding: 5px !important;
+                padding: 3px 12px !important;
             }
         }
     }
