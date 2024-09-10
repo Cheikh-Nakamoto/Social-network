@@ -32,8 +32,7 @@ export class ListComponent {
     currentID: number = this.authService.getUserID()!
 
     constructor(
-        private authService: AuthService,
-        private followService: FolloSer
+        private authService: AuthService
     ) {}
 
     listUsers(): void {
