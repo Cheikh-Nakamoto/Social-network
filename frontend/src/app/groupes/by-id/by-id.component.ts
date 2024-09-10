@@ -19,6 +19,7 @@ import { DataService } from '../../data.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { GroupchatComponent } from '../groupchat/groupchat.component';
 import { AlmostPrivateComponent } from '../../create-post/almost-private/almost-private.component';
+import { InviteComponent } from '../invite/invite.component';
 
 @Component({
     selector: 'app-by-id',
@@ -113,16 +114,9 @@ export class ByIdComponent implements OnInit {
 
 
     InviterYourFollowers() {
-        this.dialog.open(AlmostPrivateComponent, {
+        this.dialog.open(InviteComponent, {
             width: "auto"
         });
-        if (this.UserSelected.length != 0) {
-            let timerid
-            for (let i = 0; i < this.UserSelected.length; i++) {
-              timerid =  setTimeout(() => this.addMember(this.groupId, this.id, this.UserSelected[i].toString(), 'Member'), 3000)
-            }
-            clearTimeout(timerid)
-        }
 
     }
     addMember(
@@ -346,7 +340,7 @@ export class ByIdComponent implements OnInit {
         //  this.router.navigate(['/groupchat'], {
         //      queryParams: { groupId: this.groupId },
         //  });
-        this.dialog.open(GroupchatComponent, {
+        this.dialog.open(InviteComponent, {
             width: '400px', // Largeur de la boîte de dialogue
             data: { groupId: this.groupId }, // Envoi de paramètres au composant de la boîte de dialogue
             // hasBackdrop: true,
