@@ -1,3 +1,7 @@
+$lightBlue: #b8daff;
+$danger: #f44336;
+$primaryColor: #005cbb;
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f5f8fa;
@@ -24,6 +28,21 @@ body {
     padding: 10px 15px;
     background-color: #1da1f2;
     color: white;
+}
+
+.close {
+    cursor: pointer;
+    font-size: 18px;
+    background: #fff;
+    color: #333;
+    border-radius: 50%;
+}
+.close svg {
+    width: 25px;
+    height: 25px;
+    background: #fff;
+    border-radius: 50%;
+    color: #333;
 }
 
 .chat-header h5 {
@@ -73,7 +92,9 @@ body {
 }
 
 @keyframes blink {
-    0%, 80%, 100% {
+    0%,
+    80%,
+    100% {
         opacity: 0;
     }
     40% {
@@ -84,7 +105,6 @@ body {
 .message-form {
     display: flex;
     padding: 10px;
-    background-color: #f1f1f1;
 }
 
 .message-container {
@@ -94,37 +114,56 @@ body {
 
 .message-input {
     width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 20px;
+    padding: 6px 15px;
+    border: 1px solid #f0f0f0;
+    border-radius: 30px;
     resize: none;
+    height: 40px;
+    min-height: 38px;
+    overflow: hidden;
+}
+.message-input:focus {
+    outline: none;
+    border: 2px solid $lightBlue;
 }
 
 .send-button {
     margin-left: 10px;
 }
-
-
+.send-button svg {
+    width: 27px;
+    height: 40px;
+    background: none !important;
+}
+svg:not(:root) {
+    overflow: hidden;
+    vertical-align: middle;
+}
+button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
 
 /* Cache la date par défaut */
-.timeBoxReceived, .timeBoxSent {
-  display: none;
-  font-size: 12px;
-  color: #888;
-  margin-top: 5px;
+.timeBoxReceived,
+.timeBoxSent {
+    display: none;
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
 }
 
 /* Affiche la date au survol du message */
 .messageContainer:hover .timeBoxReceived,
 .messageContainer:hover .timeBoxSent {
-  display: block;
-  color: #555;
+    display: block;
+    color: #555;
 }
 
-
-
 .msgBoxSent {
-    background-color: #07A1BD; /* Couleur de fond bleu éclatant pour les messages envoyés */
+    background-color: #07a1bd; /* Couleur de fond bleu éclatant pour les messages envoyés */
     border: none; /* Supprimez la bordure pour un look plus net */
     border-radius: 18px; /* Coins plus arrondis */
     width: fit-content; /* Adapte la largeur au contenu */
@@ -134,11 +173,10 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ajoute une légère ombre pour de la profondeur */
     text-align: left;
     overflow-wrap: break-word; /* Pour gérer le texte qui dépasse */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Une police lisible et moderne */
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Une police lisible et moderne */
     font-size: 14px; /* Taille de police standard */
     color: white; /* Couleur du texte pour contraster avec le fond bleu */
 }
-
 
 .msgBoxReceived {
     background-color: #f0f0f0; /* Une couleur de fond douce et claire */
@@ -151,13 +189,10 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ajoute une légère ombre pour de la profondeur */
     text-align: left;
     overflow-wrap: break-word; /* Pour gérer le texte qui dépasse */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Une police lisible et moderne */
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Une police lisible et moderne */
     font-size: 14px; /* Taille de police standard */
     color: #333; /* Couleur du texte */
 }
-
-
-
 
 .messageContainer {
     display: flex;

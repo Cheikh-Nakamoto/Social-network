@@ -5,6 +5,7 @@ import { WebSocketService } from './services/chat.service';
 import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { MatDialogRef } from '@angular/material/dialog';
 // import { Event } from './services/events';
 import { ActivatedRoute } from '@angular/router';
 import * as model from '../models/models.compenant';
@@ -45,6 +46,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     constructor(
         private websocketService: WebSocketService,
+        private dialogRef: MatDialogRef<ChatComponent>,
         private route: ActivatedRoute,
         private apiservice: DataService,
         private userService: GetUserService,
@@ -132,6 +134,9 @@ export class ChatComponent implements OnInit, OnDestroy {
             }
         );
     }
+    closeDialog() {
+      this.dialogRef.close();
+    }
 
     onSubmit(event: SubmitEvent) {
         event.preventDefault(); // Empêche le rechargement de la page
@@ -195,6 +200,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         }
     }
 }
+
 
 class Event {
   type: string;
