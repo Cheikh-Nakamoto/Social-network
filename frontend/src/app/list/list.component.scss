@@ -53,12 +53,15 @@ mat-divider {
                     font-weight: bold;
                     font-size: 17px;
                     letter-spacing: 3px;
+                    color: $primaryColor;
                 }
 
                 .state {
                     display: flex;
-                    ju
+                    justify-content: center;
+                    align-items: center;
                     gap: 10px;
+                    font-size: 12px;
                 }
             }
         }
