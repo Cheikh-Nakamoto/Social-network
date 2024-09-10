@@ -23,8 +23,6 @@
     "@angular/platform-browser-dynamic": "^18.0.0",
     "@angular/router": "^18.0.0",
     "@icon/icofont": "^1.0.1-alpha.1",
-    "@nebular/eva-icons": "14.0.0",
-    "@nebular/theme": "^14.0.0",
     "eva-icons": "^1.1.3",
     "lucide-angular": "^0.439.0",
     "ngx-material-timepicker": "^13.1.1",

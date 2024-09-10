@@ -42,7 +42,6 @@ $white: #fefefe;
         justify-content: end;
         align-items: end;
         padding: 0 24px 12px 0;
-        color: $lightBlue;
     }
 }
 
@@ -88,7 +87,6 @@ $white: #fefefe;
             color: #000;
             gap: 6px;
             text-transform: capitalize;
-
         }
 
         .username {
@@ -144,10 +142,15 @@ $white: #fefefe;
         }
     }
 }
-
+.profile-menu[_ngcontent-ng-c2943873335]
+    .tab-content[_ngcontent-ng-c2943873335]
+    .block[_ngcontent-ng-c2943873335] {
+    height: auto;
+}
 .profile-menu {
     padding: 0;
     background-color: $white;
+    height: auto;
 
     .tab-content {
         background-color: $background !important;
@@ -262,4 +265,8 @@ $white: #fefefe;
             color: $primaryColor;
         }
     }
+}
+
+app-home {
+    margin-top: 12px !important;
 }

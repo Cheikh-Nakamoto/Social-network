@@ -44,6 +44,7 @@ import { GetUserService } from '../../../data.service';
     HttpClientModule,
     MatDialogModule,
     MainPageComponent,
+    MatCardModule,
     ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],

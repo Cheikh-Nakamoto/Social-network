@@ -15,6 +15,7 @@ import { Group } from '../../entity/group';
 import { HttpClientModule } from '@angular/common/http';
 import { DataService } from '../data.service';
 import { ToolbarComponent } from '../nav/toolbar/toolbar.component';
+import { HomeComponent } from "../home/components/home/home.component";
 
 
 
@@ -22,17 +23,18 @@ import { ToolbarComponent } from '../nav/toolbar/toolbar.component';
     selector: 'app-profile',
     standalone: true,
     imports: [
-        HttpClientModule,
-        CommonModule,
-        RouterLink,
-        NgIf,
-        MatTabGroup,
-        MatTabsModule,
-        MatIconModule,
-        MatListModule,
-        NgForOf,
-        ToolbarComponent
-    ],
+    HttpClientModule,
+    CommonModule,
+    RouterLink,
+    NgIf,
+    MatTabGroup,
+    MatTabsModule,
+    MatIconModule,
+    MatListModule,
+    NgForOf,
+    ToolbarComponent,
+    HomeComponent
+],
     templateUrl: './profile.component.html',
     styleUrl: './profile.component.scss',
     providers: [DatePipe, DataService, AuthService, FollowService, UtilsService]
