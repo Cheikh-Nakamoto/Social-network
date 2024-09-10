@@ -69,6 +69,7 @@ export class ChatComponent implements OnInit, OnDestroy {
                 this.messages.push(message);
 
                 if (message.type === 'get_messages') {
+                  
                     console.log('hlllllllllllllllll', message);
                     updateMessages(message.payload.messages, Number(this.id));
                 }
@@ -109,7 +110,6 @@ export class ChatComponent implements OnInit, OnDestroy {
 
         this.apiservice.getData('allusers').subscribe(
           (response: any) => {
-            console.log("ddddddddddddddddddd",response)
                 // Utilisez `find` pour rechercher directement l'utilisateur avec l'ID correspondant
                 const foundUser = response.users.find(
                     (user: any) => user != null && user.id === Number(id)

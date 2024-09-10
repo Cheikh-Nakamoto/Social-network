@@ -11,7 +11,7 @@ import { MatCardAvatar } from "@angular/material/card";
 import { NotificationVerification } from '../../models/models.compenant';
 import { AuthService } from '../../service/auth.service';
 import { NgForOf, NumberSymbol } from '@angular/common';
-import { count, firstValueFrom, Subscription } from 'rxjs';
+import { count, distinctUntilChanged, firstValueFrom, Subscription } from 'rxjs';
 import { GetUserService } from '../../data.service';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -48,7 +48,7 @@ import { WebSocketService } from '../../chat/services/chat.service';
   ],
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',
-  providers: [DataService, AuthService],
+  providers: [DataService, AuthService, GetUserService],
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
   title = 'Social Network';
@@ -69,6 +69,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private router: Router,
     private websocketService: WebSocketService,
+    private userservice: GetUserService,
   ) {
     console.log('DataService:', this.dataService);
   }
@@ -79,6 +80,11 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   filteredUsers: any[] = [];
 
   ngOnInit() {
+    this.chatCountSubscription = this.userservice.chatCount$.subscribe(
+        (count) => {
+            this.chatCount = count;
+        }
+    );
     this.authService.isOnline();
     this.id = JSON.parse(localStorage.getItem('userID') as string);
     this.username = localStorage.getItem('firstname') as string;
@@ -88,17 +94,30 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
     this.websocketService.connect();
 
-    this.messagesSubscription = this.websocketService.messages$.subscribe(
-      (message) => {
-        console.log("message de notification ",)
-        if (message.type === 'new_message' && message.payload.messageId == 0) {
-          this.notify()
-        }
-      }
-    );;
-    // this.chatCountSubscription = this.userService.chatCount$.subscribe(count => {
-    //   this.chatCount=count
-    // })
+    this.messagesSubscription = this.websocketService.messages$
+        .pipe(
+            distinctUntilChanged(
+                (prev, curr) =>
+                    prev.payload.messageId === curr.payload.messageId &&
+                prev.payload.message === curr.payload.message &&
+                prev.type===curr.type
+              
+            )
+        )
+        .subscribe((message) => {
+            console.log('message de notification ');
+            if (
+                message.type === 'new_message' &&
+                message.payload.messageId == 0
+            ) {
+                this.userservice.updateChatCount(1);
+                this.notify();
+            } else if (message.type === 'get_messages') {
+              this.userservice.updateChatCount(-1)
+            }
+        });
+
+    
   }
   ngOnDestroy(): void {
     if (this.chatCountSubscription) {

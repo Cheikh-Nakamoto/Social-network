@@ -116,6 +116,7 @@ func SendMessageHandler(event Event, c *Client) error {
 	returnMsg.Message = chatEvent.Message
 	returnMsg.ReceiverId = chatEvent.ReceiverId
 	returnMsg.SenderId = chatEvent.SenderId
+	returnMsg.Status= chatEvent.Status
 
 	
 	// Ajouter le message à une table ou base de données
@@ -180,13 +181,13 @@ func addMessageToTable(messageData ReturnMessageEvent) {
 	if err != nil {
 		panic(err) 
 	}
-	statement, err := db.GetDB().Prepare("INSERT INTO messages (senderId, receiverId, sentDate, message) VALUES (?, ?, ?, ?)")
+	statement, err := db.GetDB().Prepare("INSERT INTO messages (senderId, receiverId, sentDate, message, status) VALUES (?, ?, ?, ?, ?)")
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	_, err = statement.Exec(messageData.SenderId, messageData.ReceiverId, messageData.SentDate, messageData.Message)
+	_, err = statement.Exec(messageData.SenderId, messageData.ReceiverId, messageData.SentDate, messageData.Message, messageData.Status)
 	if err != nil {
 		log.Println(err)
 		return

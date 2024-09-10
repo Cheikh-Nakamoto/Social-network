@@ -25,205 +25,231 @@ import { GetUserService } from '../../../data.service';
 
 
 @Component({
-  selector: 'app-home',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatSidenavContainer,
-    MatSidenav,
-    MatListModule,
-    RouterLink,
-    MatCardModule,
-    MatIconModule,
-    MatButtonModule,
-    NgOptimizedImage,
-    NgForOf,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    HttpClientModule,
-    MatDialogModule,
-    MainPageComponent,
-    MatCardModule,
+    selector: 'app-home',
+    standalone: true,
+    imports: [
+        CommonModule,
+        MatSidenavContainer,
+        MatSidenav,
+        MatListModule,
+        RouterLink,
+        MatCardModule,
+        MatIconModule,
+        MatButtonModule,
+        NgOptimizedImage,
+        NgForOf,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        HttpClientModule,
+        MatDialogModule,
+        MainPageComponent,
+        MatCardModule,
     ],
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
-  providers: [DataService, AuthService],
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.scss'],
+    providers: [DataService, AuthService],
 })
-
 export class HomeComponent implements OnInit {
-  id!: number;
-  AllUser: AllUsersDTO = {};
-  posts: Post[] = [];
-  share: number = 0;
-  comments: CommentContent = { comments_by_post: {} };
-  likemap = [];
-  dislikemap = [];
-  token = localStorage.getItem('token');
-  user: any;
-  postAndButton!: Posts;
-  comlength: length = {}
-  storage !: Post
-  avatar: string = ""
+    private messagesSubscription!: Subscription;
+    id!: number;
+    AllUser: AllUsersDTO = {};
+    posts: Post[] = [];
+    share: number = 0;
+    comments: CommentContent = { comments_by_post: {} };
+    likemap = [];
+    dislikemap = [];
+    token = localStorage.getItem('token');
+    user: any;
+    postAndButton!: Posts;
+    comlength: length = {};
+    storage!: Post;
+    avatar: string = '';
 
-  constructor(
-    private apiService: DataService,
-    private authService: AuthService, private shared: SharedserviceComponent,
-    private websocketService: WebSocketService,
-    private userService: GetUserService
-  ) {}
+    constructor(
+        private apiService: DataService,
+        private authService: AuthService,
+        private shared: SharedserviceComponent,
+        private websocketService: WebSocketService,
+        private userService: GetUserService
+    ) {}
 
-  ngOnInit(): void {
-    this.authService.isOnline();
-    this.id = (JSON.parse(localStorage.getItem("userID") as string));
-    this.storage = localStorage.getItem("post") == null ? {} : JSON.parse(localStorage.getItem("post") as string)
-    this.loadUser('users');
-    this.loadComments();
-    this.getAllPosts();
-    this.shared.sharedData$.subscribe((res: Post) => {
-      console.log(res)
-      if (this.storage?.user_id != res?.user_id && res != null){
-        this.storage = res
-        location.reload()
-      }
-    })
-  
-  }
+    ngOnInit(): void {
+        this.authService.isOnline();
+        this.id = JSON.parse(localStorage.getItem('userID') as string);
+        this.storage =
+            localStorage.getItem('post') == null
+                ? {}
+                : JSON.parse(localStorage.getItem('post') as string);
+        this.loadUser('users');
+        this.loadComments();
+        this.getAllPosts();
+        this.websocketService.connect();
 
-  getAllPosts(): void {
-    this.apiService.getData(`AllPost?user_id=${this.id}`).subscribe(
-      (response: Post[]) => {
-        this.posts = response;
-        console.log('ici sont les posts', this.posts);
-        this.loadLikes('post');
-        this.loadDislikes('post');
-      },
-      (error) => {
-        console.error('Error fetching posts:', error);
-      }
-    );
-  }
-
-  onLike(targetId: number, targetType: string) {
-    this.apiService
-      .likeTarget(0, this.id, targetId, targetType, true)
-      .subscribe((response) => {
-        console.log('like response ', response);
-        this.loadLikes(targetType);
-        this.loadDislikes(targetType);
-      });
-  }
-
-  onDislike(targetId: number, targetType: string) {
-    this.apiService
-      .dislikeTarget(0, this.id, targetId, targetType, false)
-      .subscribe(() => {
-        this.loadLikes(targetType);
-        this.loadDislikes(targetType);
-      });
-  }
-  selectedFile: File | null = null;
-
-  onFileSelected(event: any): void {
-    const file: File = event.target.files[0];
-    if (file) {
-      this.selectedFile = file;
-      console.log('Fichier sélectionné:', file);
-    }
-  }
-
-  onComment(postId: number, targetType: string, event: Event) {
-    event.preventDefault();
-
-    const target = event.target as HTMLFormElement;
-    const content = (target.querySelector('input[name="comment"]') as HTMLInputElement).value;
-
-    if (!content) {
-      return;
+        this.messagesSubscription = this.websocketService.messages$.subscribe(
+          (message) => {
+            if (message.type === 'new_message') {
+                // alert('a new message is coming for you');
+            }  
+          
+            }
+        );
+        this.shared.sharedData$.subscribe((res: Post) => {
+            console.log(res);
+            if (this.storage?.user_id != res?.user_id && res != null) {
+                this.storage = res;
+                location.reload();
+            }
+        });
     }
 
-    const formData = new FormData();
-    formData.append('user_id', this.id.toString());
-    formData.append('target_id', postId.toString());
-    formData.append('content', content);
-    formData.append('target_type', targetType);
-
-    if (this.selectedFile) {
-      formData.append('image', this.selectedFile);
-    } else {
-      formData.append('image', '');
+    getAllPosts(): void {
+        this.apiService.getData(`AllPost?user_id=${this.id}`).subscribe(
+            (response: Post[]) => {
+                this.posts = response;
+                console.log('ici sont les posts', this.posts);
+                this.loadLikes('post');
+                this.loadDislikes('post');
+            },
+            (error) => {
+                console.error('Error fetching posts:', error);
+            }
+        );
     }
 
-    // Ajoutez ceci pour vérifier le contenu de formData
-    formData.forEach((value, key) => {
-      console.log(key + ': ' + value);
-    });
+    onLike(targetId: number, targetType: string) {
+        this.apiService
+            .likeTarget(0, this.id, targetId, targetType, true)
+            .subscribe((response) => {
+                console.log('like response ', response);
+                this.loadLikes(targetType);
+                this.loadDislikes(targetType);
+            });
+    }
 
-    this.apiService.postData('CreateComment', formData).subscribe(() => {
-      (target.querySelector('input[name="comment"]') as HTMLInputElement).value = '';
-      this.loadComments();
-      this.selectedFile = null;
-    }, error => {
-      console.error('Erreur lors de l\'envoi du commentaire:', error);
-    });
-  }
+    onDislike(targetId: number, targetType: string) {
+        this.apiService
+            .dislikeTarget(0, this.id, targetId, targetType, false)
+            .subscribe(() => {
+                this.loadLikes(targetType);
+                this.loadDislikes(targetType);
+            });
+    }
+    selectedFile: File | null = null;
 
+    onFileSelected(event: any): void {
+        const file: File = event.target.files[0];
+        if (file) {
+            this.selectedFile = file;
+            console.log('Fichier sélectionné:', file);
+        }
+    }
 
-  private loadComments(): void {
-    this.apiService.getData('AllComments').subscribe(
-      (comment: {
-        Comments: { [key: number]: CommentDTO[] };
-        CommentsLength: { [key: number]: number };
-      }) => {
-        this.comments.comments_by_post = comment.Comments;
-        this.comlength = comment.CommentsLength;
-        console.log('ici sont les commentaires', comment);
-      },
-      (error) => {
-        console.error('Erreur lors du chargement des commentaires:', error);
-      }
-    );
-  }
+    onComment(postId: number, targetType: string, event: Event) {
+        event.preventDefault();
 
-  private loadLikes(targetType: string) {
-    this.apiService.getTargetLikes(targetType).subscribe((likes) => {
-      this.likemap = likes;
-    });
-  }
+        const target = event.target as HTMLFormElement;
+        const content = (
+            target.querySelector('input[name="comment"]') as HTMLInputElement
+        ).value;
 
-  private loadDislikes(targetType: string) {
-    this.apiService.getTargetDislikes(targetType).subscribe((dislikes) => {
-      this.dislikemap = dislikes;
-    });
-  }
+        if (!content) {
+            return;
+        }
 
-  private loadUser(targetlink: string) {
-    this.apiService.getData(targetlink).subscribe((user: AllUsersDTO) => {
-      this.AllUser = user;
-      this.avatar = this.AllUser[this.id].avatar == ""  ? "female.svg" : this.AllUser[this.id].avatar
-      localStorage.setItem("avatar", this.avatar)
-      console.log('ici sont les utilisateurs', this.AllUser);
-    });
-  }
+        const formData = new FormData();
+        formData.append('user_id', this.id.toString());
+        formData.append('target_id', postId.toString());
+        formData.append('content', content);
+        formData.append('target_type', targetType);
 
-  readonly dialog = inject(MatDialog);
+        if (this.selectedFile) {
+            formData.append('image', this.selectedFile);
+        } else {
+            formData.append('image', '');
+        }
 
-  openDialog(postId: number): void {
-    // Récupérer les commentaires pour le post spécifié
-    const comment = this.comments.comments_by_post[postId] || [];
+        // Ajoutez ceci pour vérifier le contenu de formData
+        formData.forEach((value, key) => {
+            console.log(key + ': ' + value);
+        });
 
-    // Ouvrir le dialogue avec les commentaires pour le post
-    const dialogRef = this.dialog.open(DialogCommentComponent, {
-      data: {
-        postId: postId,
-        user: this.AllUser,
-        comments: comment,
-      },
-    });
+        this.apiService.postData('CreateComment', formData).subscribe(
+            () => {
+                (
+                    target.querySelector(
+                        'input[name="comment"]'
+                    ) as HTMLInputElement
+                ).value = '';
+                this.loadComments();
+                this.selectedFile = null;
+            },
+            (error) => {
+                console.error("Erreur lors de l'envoi du commentaire:", error);
+            }
+        );
+    }
 
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}`);
-    });
-  }
- 
+    private loadComments(): void {
+        this.apiService.getData('AllComments').subscribe(
+            (comment: {
+                Comments: { [key: number]: CommentDTO[] };
+                CommentsLength: { [key: number]: number };
+            }) => {
+                this.comments.comments_by_post = comment.Comments;
+                this.comlength = comment.CommentsLength;
+                console.log('ici sont les commentaires', comment);
+            },
+            (error) => {
+                console.error(
+                    'Erreur lors du chargement des commentaires:',
+                    error
+                );
+            }
+        );
+    }
+
+    private loadLikes(targetType: string) {
+        this.apiService.getTargetLikes(targetType).subscribe((likes) => {
+            this.likemap = likes;
+        });
+    }
+
+    private loadDislikes(targetType: string) {
+        this.apiService.getTargetDislikes(targetType).subscribe((dislikes) => {
+            this.dislikemap = dislikes;
+        });
+    }
+
+    private loadUser(targetlink: string) {
+        this.apiService.getData(targetlink).subscribe((user: AllUsersDTO) => {
+            this.AllUser = user;
+            this.avatar =
+                this.AllUser[this.id].avatar == ''
+                    ? 'female.svg'
+                    : this.AllUser[this.id].avatar;
+            localStorage.setItem('avatar', this.avatar);
+            console.log('ici sont les utilisateurs', this.AllUser);
+        });
+    }
+
+    readonly dialog = inject(MatDialog);
+
+    openDialog(postId: number): void {
+        // Récupérer les commentaires pour le post spécifié
+        const comment = this.comments.comments_by_post[postId] || [];
+
+        // Ouvrir le dialogue avec les commentaires pour le post
+        const dialogRef = this.dialog.open(DialogCommentComponent, {
+            data: {
+                postId: postId,
+                user: this.AllUser,
+                comments: comment,
+            },
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+            console.log(`Dialog result: ${result}`);
+        });
+    }
 }
