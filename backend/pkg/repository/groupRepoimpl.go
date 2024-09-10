@@ -61,9 +61,9 @@ func (repo *GroupRepoImpl) AddMember(userID, groupID, targetID int, role, name s
 		return fmt.Errorf("Notification existe : %v", check)
 	}
 
-	stmt := `INSERT INTO notifications (user_id, group_id, target_id, message, is_read, created_at)
-	VALUES (?, ?, ?,?,?,?);`
-	_, err := repo.db.GetDB().Exec(stmt, userID, groupID, targetID, message, false, time.Now())
+	stmt := `INSERT INTO notifications (user_id, group_id, target_id, message, is_read, created_at,role)
+	VALUES (?, ?, ?,?,?,?,?);`
+	_, err := repo.db.GetDB().Exec(stmt, userID, groupID, targetID, message, false, time.Now(),role)
 	if err != nil {
 		return fmt.Errorf("Add Notification: %v", err)
 	}
