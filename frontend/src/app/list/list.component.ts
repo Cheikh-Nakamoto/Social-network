@@ -29,6 +29,9 @@ import { FollowService } from '../service/follow.service';
 export class ListComponent {
     suggestions: User[] = []
     followers: User[] = []
+    followersCount!: number
+    followingsCount!: number
+    friendsCount!: number
     messages!: string
     size!: number
     currentID: number = this.authService.getUserID()!
@@ -55,10 +58,27 @@ export class ListComponent {
         })
     }
 
+    getCount(id: number) {
+        this.followService.getCount(id, "followers").subscribe((data: any) => {
+            console.log("Followers", data)
+        })
+
+        this.followService.getCount(id, "followings").subscribe((data: any) => {
+            console.log("Followings", data)
+        })
+
+        this.followService.getCount(id, "friends").subscribe((data: any) => {
+            console.log("Friends", data)
+        })
+    }
+
+    onFollow() {}
+
     ngOnInit(): void {
         this.authService.isOnline
         
         this.listUsers()
         this.listFollowers()
+        this.getCount(1)
     }
 }
