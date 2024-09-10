@@ -1,0 +1,83 @@
+.userlist {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    overflow: hidden;
+
+    .close {
+        position: absolute;
+        float: right;
+        background: #eee !important;
+        color: #555 !important;
+        margin: 0px 5px;
+        right: 6px;
+        top: 10px;
+        border-radius: 50%;
+        padding: 4px;
+    }
+    .close svg {
+        width: 25px;
+        height: 25px;
+        background: #eee;
+        border-radius: 50%;
+        color: #000;
+        cursor: pointer;
+    }
+
+    .toppings-field {
+        width: 100%;
+        max-width: 400px;
+
+        mat-form-field {
+            width: 100%;
+            margin: 0 auto;
+
+            .mat-form-field-wrapper {
+                padding: 0.5rem;
+                border-radius: 8px;
+                border: 1px solid #ddd;
+                transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+                &:hover {
+                    border-color: #007bff;
+                    box-shadow: 0 2px 12px rgba(0, 123, 255, 0.2);
+                }
+
+                .mat-form-field-flex {
+                    background-color: #fff;
+                    border-radius: 8px;
+                }
+
+                .mat-form-field-infix {
+                    padding: 0.5rem;
+                }
+            }
+
+            mat-select {
+                .mat-select-trigger {
+                    font-size: 1rem;
+                    color: #333;
+                    padding: 0.5rem;
+                }
+
+                .mat-option {
+                    padding: 0.75rem 1rem;
+                    transition: background-color 0.3s ease, color 0.3s ease;
+
+                    &:hover {
+                        background-color: #007bff;
+                        color: #fff;
+                    }
+
+                    &.mat-active {
+                        background-color: #0056b3;
+                        color: #fff;
+                    }
+                }
+            }
+        }
+    }
+}
