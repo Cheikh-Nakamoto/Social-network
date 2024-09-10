@@ -135,7 +135,12 @@ export class DataService {
     let userId = JSON.parse(localStorage.getItem('userID') as string);
     return this.http.get(`${this.apiUrl}/joined/groups/?user_id=${userId}`);
   }
-
+  getGroupJoinedByID(userId:string,group_id : string) : Observable<any> {
+    let params = new HttpParams()
+    .set('user_id', userId).set('group_id', group_id)
+    return this.http.get(`${this.apiUrl}/joined/groups/?user_id=${userId}`);
+  }
+  
   getGroupById(id: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/groups/${id}`);
   }
@@ -153,7 +158,7 @@ export class DataService {
     let firstname = localStorage.getItem('firstname') as string
     let lastname =  localStorage.getItem('lastname') as string
     let name = firstname + " "+ lastname
-    return this.http.post(`${this.apiUrl}/groups/add_member`, JSON.stringify({ 'group_id':groupId, 'user_id':userId, 'role':role ,'target_id':parseInt(target_id),'username':name}));
+    return this.http.post(`${this.apiUrl}/groups/add_member`, JSON.stringify({ 'group_id':groupId, 'user_id':Number(userId), 'role':role ,'target_id':parseInt(target_id),'username':name}));
   }
 
   ejectMember(groupId: number, userId: number): Observable<any> {

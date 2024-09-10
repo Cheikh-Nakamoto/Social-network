@@ -7,5 +7,6 @@ type NotificationDto struct {
     TargetID  *int   `json:"target_id,omitempty"` // Optional, use pointer to indicate null
     Message   string `json:"message"`
     IsRead    bool   `json:"is_read"`
+    Role      string `json:"role"`  // role of the user in the notification (admin, member)
     CreatedAt string `json:"created_at"` 
 }

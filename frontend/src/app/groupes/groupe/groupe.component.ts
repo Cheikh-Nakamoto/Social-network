@@ -65,7 +65,6 @@ export class GroupeComponent implements OnInit, OnDestroy {
   addMember(groupId: number, userId: string, target_id: string, role: string): void {
     this.groupService.addMember(groupId, userId, target_id, role).subscribe(
       () => {
-        
         const messBody : MessageBody = {
           senderId:Number(userId),
           receiverId: Number(target_id),
@@ -90,6 +89,7 @@ export class GroupeComponent implements OnInit, OnDestroy {
       }
     );
   }
+
 
   joinedgroup(): void {
     this.groupService.getGroupJoined().subscribe(res => {

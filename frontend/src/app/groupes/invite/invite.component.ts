@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FollowService } from '../../service/follow.service';
 import { FormControl } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { AllUsersDTO, UserDTO } from '../../models/models.compenant';
+import { AllUsersDTO, JoinGroupVerification, UserDTO } from '../../models/models.compenant';
 import { SharedserviceComponent } from '../../sharedservice/sharedservice.component';
 import { DataService } from '../../data.service';
 import { AuthService } from '../../service/auth.service';
@@ -42,18 +42,28 @@ export class InviteComponent {
   toppingList: UserDTO[] = []
   id !: string
   groupId!: number
+  IsIn: JoinGroupVerification = {};
 
   ngOnInit(): void {
     this.id = (JSON.parse(localStorage.getItem('userID') as string));
     this.groupId = (JSON.parse(localStorage.getItem('groupid') as string))
+    this.groupMember()
     this.followservice.getList(this.id, "friends").subscribe((friends :{friends:UserDTO[],status:number}) => {
       this.toppingList = friends.friends
     })
-    console.log(this.toppingList,"this toppings list")
+    
   }
 
   closeDialog() {
     this.dialogRef.close();
+  }
+
+
+  groupMember(){
+    this.dataservice.getData(`member?group_id=${this.groupId}`).subscribe((data:{[key:number]:boolean})=>{
+        this.IsIn = data
+        console.log("this is group elemen,t ",this.IsIn)
+    })  
   }
 
   addMember(

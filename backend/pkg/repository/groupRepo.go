@@ -18,4 +18,5 @@ type GroupRepo interface {
 	AddMemberBasedOnNotification(notif dto.Notification) error
 	DeclineNotification(notif dto.Notification) error
 	ItsGroupMember(data dto.Data)(bool, error)
+	GetUsersInGroup(groupID int) (map[int]bool, error)
 }

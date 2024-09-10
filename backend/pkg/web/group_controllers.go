@@ -38,6 +38,7 @@ func (gc *GroupController) RegisterRoutes(mux *http.ServeMux) *http.ServeMux {
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/accept-request", gc.AddMemberBasedOnNotification)
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/decline-request", gc.DeclineNotification)
 	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/group-member", gc.ItsGroupMemberhandler)
+	mux.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/member", gc.GetUsersInGroup)
 
 	return mux
 }
@@ -319,3 +320,27 @@ func (gc *GroupController) ItsGroupMemberhandler(w http.ResponseWriter, r *http.
 
 
 
+
+
+func (s GroupController) GetUsersInGroup(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Query().Get("group_id")
+    idInt, err := strconv.Atoi(id)
+    if err!= nil || r.Method!= http.MethodGet {
+        http.Error(w, err.Error(), http.StatusMethodNotAllowed)
+        return
+    }
+
+    users, err := s.GroupService.GetUsersInGroup(idInt)
+    if err!= nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+
+    if len(users) == 0 {
+        http.Error(w, "No users found", http.StatusNotFound)
+        return
+    }
+
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(users)
+}

@@ -29,6 +29,8 @@ func NewGroupRepoImpl(db sqlite.Database) *GroupRepoImpl {
 	return &GroupRepoImpl{db: &db}
 }
 
+
+
 // CreateGroup creates a new group in the database
 func (repo *GroupRepoImpl) CreateGroup(name, description, owner, image string) (int, error) {
 	stmt := `INSERT INTO groups (name, description, owner,image, created_at) VALUES (?, ?, ?, ?,?) RETURNING id`
@@ -382,4 +384,37 @@ func (repo *GroupRepoImpl) ItsGroupMember(data dto.Data) (bool, error) {
 		return false, err
 	}
 	return count > 0, nil
+}
+
+
+// GetUsersInGroup renvoie une map des IDs des utilisateurs présents dans un groupe spécifique, avec une valeur booléenne indiquant leur statut d'adhésion
+func (repo *GroupRepoImpl) GetUsersInGroup(groupID int) (map[int]bool, error) {
+    // Initialisation de la map qui stockera les utilisateurs et leur statut d'adhésion
+    usersInGroup := make(map[int]bool)
+
+    // Requête SQL pour sélectionner tous les utilisateurs appartenant au groupe donné
+    query := `SELECT user_id FROM group_members WHERE group_id = ?`
+
+    // Exécution de la requête
+    rows, err := repo.db.GetDB().Query(query, groupID)
+    if err != nil {
+        return nil, fmt.Errorf("GetUsersInGroup: %v", err)
+    }
+    defer rows.Close()
+
+    // Remplir la map avec les IDs des utilisateurs et leur statut d'adhésion
+    for rows.Next() {
+        var userID int
+        if err := rows.Scan(&userID); err != nil {
+            return nil, fmt.Errorf("GetUsersInGroup: %v", err)
+        }
+        usersInGroup[userID] = true
+    }
+
+    // Vérification des erreurs potentielles lors de l'itération des lignes
+    if err = rows.Err(); err != nil {
+        return nil, fmt.Errorf("GetUsersInGroup: %v", err)
+    }
+
+    return usersInGroup, nil
 }
