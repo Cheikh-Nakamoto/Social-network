@@ -146,7 +146,7 @@ export class SidenavComponent implements OnInit {
             // disableClose: true,
             position: {
                 bottom: '12px',
-                right: '0',
+                right: '6px',
             },
         });
     }
