@@ -13,12 +13,14 @@ type SendMessageEvent struct {
 	Message    string `json:"message"`
 	SenderId   int    `json:"senderId"`
 	ReceiverId int    `json:"receiverId"`
+	Status	bool 	`json:status`
 }
 
 type ReturnMessageEvent struct {
 	MessageId int `json:"messageId"`
 	SendMessageEvent
 	SentDate string `json:"sentDate"`
+	Status bool	`json:status`
 }
 
 type ReturnChatDataEvent struct {
