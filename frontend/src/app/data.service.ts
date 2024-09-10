@@ -221,3 +221,16 @@ export class GetUserService {
     }
 }
 
+
+
+@Injectable({
+    providedIn: 'root',
+})
+export class VisibilityService {
+    private visibilitySubject = new BehaviorSubject<boolean>(false); // État initial : masqué
+    visibility$ = this.visibilitySubject.asObservable();
+
+    toggleVisibility(): void {
+        this.visibilitySubject.next(!this.visibilitySubject.value); // Inverse l'état
+    }
+}

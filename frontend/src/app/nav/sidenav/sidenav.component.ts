@@ -9,7 +9,7 @@ import { NgForOf, NgIf } from "@angular/common";
 import { MatFabAnchor } from "@angular/material/button";
 import { HomeComponent } from '../../home/components/home/home.component';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
-import { DataService } from '../../data.service';
+import { DataService, VisibilityService } from '../../data.service';
 import { WebSocketService } from '../../chat/services/chat.service';
 import { AuthService } from '../../service/auth.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -40,10 +40,15 @@ import { ChatComponent } from '../../chat/chat.component';
     providers: [DataService, AuthService], // Add any additional services you need to this component.
 })
 export class SidenavComponent implements OnInit {
-    currentID: number = this.AuthService.getUserID()!
+    isVisible: boolean = false;
+    currentID: number = this.AuthService.getUserID()!;
     menuItems = [
         { name: 'Home', route: '/', icon: 'icofont-ui-home' },
-        { name: 'Profile', route: '/profile/'+this.currentID, icon: 'icofont-user' },
+        {
+            name: 'Profile',
+            route: '/profile/' + this.currentID,
+            icon: 'icofont-user',
+        },
         { name: 'Friends', route: '/followers', icon: 'icofont-users-alt-4' },
         { name: 'Groups', route: '/groups', icon: 'icofont-users-social' },
     ];
@@ -53,9 +58,13 @@ export class SidenavComponent implements OnInit {
         private apiservice: DataService,
         private websocketService: WebSocketService,
         private cdRef: ChangeDetectorRef,
-        private AuthService: AuthService
+        private AuthService: AuthService,
+        private visibilityService: VisibilityService
     ) {}
     ngOnInit(): void {
+        this.visibilityService.visibility$.subscribe((visible) => {
+            this.isVisible = visible; // Met à jour l'état de visibilité
+        });
         this.getAllusers();
         this.websocketService.connect();
         this.websocketService.messages$.subscribe(
@@ -89,6 +98,9 @@ export class SidenavComponent implements OnInit {
                 console.error('Error fetching posts:', error);
             }
         );
+    }
+    toggleVisibility(): void {
+        this.isVisible = !this.isVisible; // Change l'état de visibilité
     }
 
     updateUsers(payloads: any[]): void {
