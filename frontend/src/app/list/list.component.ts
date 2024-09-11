@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Injectable } from '@angular/core';
 import { AuthService } from "../service/auth.service";
 import { ToolbarComponent } from '../nav/toolbar/toolbar.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -26,10 +26,14 @@ import { UtilService } from '../service/util.service';
     styleUrl: './list.component.scss',
     providers: [AuthService, FollowService]
 })
+@Injectable({
+    providedIn: "root"
+})
 export class ListComponent {
     suggestions: User[] = []
     followers: User[] = []
     followings: User[] = []
+    friends: User[] = []
     messages!: string
     size!: number
     currentID: number = this.authService.getUserID()!
@@ -42,24 +46,25 @@ export class ListComponent {
 
     listUsers(): void {
         this.listFollowers()
+        this.listFriends()
         
         this.authService.getAll().subscribe((data: any) => {
             const users = data.users.filter((user: any) => user.id !== this.currentID);
             const existingFollowers = this.followers.map(follower => follower.id);
+            const existingFriends = this.friends.map(friend => friend.id)
             
-            this.suggestions = users.filter((user: any) => !existingFollowers.includes(user.id));
+            this.suggestions = users.filter((user: any) => !existingFollowers.includes(user.id) && !existingFriends.includes(user.id));
         });
     }
 
     listFollowers(): void {
         this.followService.getList(this.currentID, "followers").subscribe((data: any) => {
-            console.log(data)
             if (data.status !== 200) {
                 this.messages = "No Followers"
                 console.log("Follower's list is empty")
                 return
             }
-            console.log("Follower's list:", data)
+            console.log("Follower's list:", data.followers)
             this.followers = data.followers
         })
     }
@@ -70,17 +75,18 @@ export class ListComponent {
                 console.log("Friend's list is empty!")
                 return
             }
-            console.log("Friend's list:", data)
+            console.log("Friend's list:", data.friends)
+            this.friends = data.friends
         })
     }
 
     listFollowings(): void {
         this.followService.getList(this.currentID, "followings").subscribe((data:any) => {
-            console.log("Following's list:",data)
             if (data.status != 200) {
                 console.log("Following's list is empty!")
                 return
             }
+            console.log("Following's list:", data.followings)
             this.followings = data.followings
         })
     }
