@@ -56,9 +56,14 @@ export class ListComponent {
     } */
 
     listUsers(): void {
+        this.listFollowers()
+        
         this.authService.getAll().subscribe((data: any) => {
-            this.suggestions = data.users.filter((user:any) => user.id !== this.currentID)
-        })
+            const users = data.users.filter((user: any) => user.id !== this.currentID);
+            const existingFollowers = this.followers.map(follower => follower.id);
+            
+            this.suggestions = users.filter((user: any) => !existingFollowers.includes(user.id));
+        });
     }
 
     listFollowers(): void {
@@ -71,6 +76,12 @@ export class ListComponent {
             }
             console.log("Follower's list:", data)
             this.followers = data.followers
+        })
+    }
+
+    listFollowings(): void {
+        this.followService.getList(this.currentID, "followings").subscribe((data:any) => {
+            console.log("Following's list:",data)
         })
     }
 
@@ -113,6 +124,6 @@ export class ListComponent {
     ngOnInit(): void {
         this.authService.isOnline
         this.listUsers()
-        this.listFollowers()
+        // this.listFollowers()
     }
 }
