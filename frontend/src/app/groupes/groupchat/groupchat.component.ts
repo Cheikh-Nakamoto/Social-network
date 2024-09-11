@@ -75,8 +75,19 @@ export class GroupchatComponent {
                     this.updateMessages(
                         message.payload.messages,
                         Number(this.groupId),
-                        'fallou'
+                        this.sender
                     );
+                }
+                if (message.type === 'new_message_group') {
+                     const payload = {
+                         currentChatterId: this.sender,
+                         otherChatterId: Number(this.groupId),
+                         amount: this.amount,
+                     };
+
+                     const evenget = new Event('get_messages_groupes', payload);
+                     sendEvent(this.websocketService, evenget);
+                    
                 }
             }
         );
@@ -178,27 +189,39 @@ export class GroupchatComponent {
     updateMessages = (
         messages: any,
         receiverId: number,
-        nicknameSender: string
+        iduser: number
     ) => {
         const chatBox = document.getElementById('chatBox');
         if (chatBox) {
             chatBox.innerHTML = '';
 
             var prevMsg, prevMsgType;
-            var msgType: string;
+            
 
             messages.forEach((message: any) => {
-                if (message.receiverId != receiverId) {
-                    msgType = 'Received';
-                } else {
+                var msgType: string;
+                console.log(
+                    message.senderId,
+                    iduser,
+                    'kkkkkkkkkk',
+                    Number(message.senderId) == iduser
+                );
+                if (Number(message.senderId) == iduser) {
+                    
                     msgType = 'Sent';
+                } else {
+                    
+                    msgType = 'Received';
                 }
+                console.log("llllllll", msgType)
+                console.log("bbbb",msgType === 'Received' ? 'received' : 'sent');
 
                 let username: string;
                 this.getNicknameById(message.senderId, (nickname) => {
                     if (nickname) {
                         // console.log('Nickname:', nickname);
                         username = nickname;
+
 
                         chatBox.innerHTML += `
       <div class="messageContainer ${
