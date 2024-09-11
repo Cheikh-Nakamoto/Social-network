@@ -185,7 +185,6 @@ export class ByIdComponent implements OnInit {
         };
         this.groupService.ItsMember('group-member', body).subscribe(
             (res) => {
-                console.log(res);
                 if (!res) {
                     this.router.navigateByUrl('/groups');
                     return;
@@ -202,7 +201,6 @@ export class ByIdComponent implements OnInit {
         this.groupService.getData(rout).subscribe(
             (response: Post[]) => {
                 this.posts = response;
-                console.log('ici sont les posts', this.posts);
                 this.loadLikes('post');
                 this.loadDislikes('post');
             },
@@ -259,7 +257,6 @@ export class ByIdComponent implements OnInit {
             }) => {
                 this.comments.comments_by_post = comment.Comments;
                 this.comlength = comment.CommentsLength;
-                console.log('ici sont les commentaires', comment);
             },
             (error: any) => {
                 console.error(
@@ -318,14 +315,12 @@ export class ByIdComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe((result) => {
-            console.log(`Dialog result: ${result}`);
         });
     }
 
     private loadUser(targetlink: string) {
         this.groupService.getData(targetlink).subscribe((user: AllUsersDTO) => {
             this.AllUser = user;
-            console.log('ici sont les utilisateurs', this.AllUser);
         });
     }
     handleClick(route: string, event: Event, id?: number): void {

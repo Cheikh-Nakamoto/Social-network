@@ -43,7 +43,6 @@ export class CreateGroupComponent implements OnInit {
     if (file) {
       const formData = new FormData();
       formData.append('image', file);
-      console.log(formData);
       this.selectedFile = file;
       this.selectedFileName = file.name;
     }
@@ -65,7 +64,6 @@ export class CreateGroupComponent implements OnInit {
             // Créez le groupe avec les données du formulaire mises à jour
             this.apiService.createGroup(this.groupeForm.value).subscribe(
               (res) => {
-                console.log('Group created successfully');
                 this.groupeForm.reset();
                 this.router.navigateByUrl('groups');
               },
@@ -81,7 +79,6 @@ export class CreateGroupComponent implements OnInit {
       }else {
         this.apiService.createGroup(this.groupeForm.value).subscribe(
           (res) => {
-            console.log('Group created successfully');
             this.groupeForm.reset();
             this.router.navigateByUrl('groups');
           },
@@ -104,7 +101,7 @@ export class CreateGroupComponent implements OnInit {
       sendEvent(this.websocketService, even);
 
     } else {
-      console.log('Formulaire invalide');
+      alert("Erreur lors de la creation dee group !")
     }
 
   }

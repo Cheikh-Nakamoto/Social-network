@@ -50,7 +50,6 @@ export class LoginComponent implements OnInit {
   }
 
   onlogin() {
-    // console.log("ici c'est :", this.loginForm.value);
     // this.apiservice.postData('login', this.loginForm.value).subscribe((response: any) => {
     //   localStorage.setItem("status", response.status)
     //   localStorage.setItem("token", response.token)
@@ -68,17 +67,14 @@ export class LoginComponent implements OnInit {
     }
 
     this.login(this.loginForm.value).subscribe(() => {
-      console.log('Logged in');
       this.router.navigateByUrl('/home').then();
       // this.router.navigate(['/home']);
     })
-    console.log('Form submitted');
   }
 
   login(credentials: { email: string, password: string }) {
     return this.authService.login(credentials).pipe(
       tap((res: any) => {
-        console.log("Login response", res);
         if (!res.status || res.status !== 'success') {
           alert(res.message);
           return;
@@ -96,12 +92,6 @@ export class LoginComponent implements OnInit {
   onregister() {
     const data = { ...this.registerForm.value };
     this.age = this.checkAge(data.date_of_birth);
-
-
-    if (this.loginForm.get('password')?.value.trim() === '' || this.loginForm.get('password')?.value.trim()) {
-      
-    }
-
     if (this.age < 12 || this.age > 120) {
       alert('You must be between 12 and 120 years old to register');
       return;
@@ -118,9 +108,7 @@ export class LoginComponent implements OnInit {
         let formData = new FormData();
         formData.append('file', this.selectedFile);
         this.apiservice.uploadImage(formData).subscribe((response: any) => {
-          console.log("Image uploaded", response);
           data.avatar = response.image;
-          console.log("registering...", data);
           this.authService.register(data).subscribe(() => {
             alert("User registered");
             this.tabGroup.selectedIndex = 0; // Définit l'onglet "Login" comme actif
@@ -131,14 +119,11 @@ export class LoginComponent implements OnInit {
           });
         });
       } else {
-        console.log("registering...", data);
         this.authService.register(data).subscribe(() => {
-          console.log("User registered");
           this.tabGroup.selectedIndex = 0; // Définit l'onglet "Login" comme actif
         }, (error) => {
           alert("Erreur lors de l'inscription")
           this.registerForm.reset();
-          console.log(error);
         });
       }
     }
@@ -154,16 +139,13 @@ export class LoginComponent implements OnInit {
   }
 
   onFileChange(event: any): void {
-    console.log(event.target.files.length)
     if (event.target.files.length > 0) {
       this.selectedFile = event.target.files[0];
       this.selectedFileName = this.selectedFile.name;
-      console.log('Fichier sélectionné:', this.selectedFileName);
     }
   }
 
   /*onregister() {
-    console.log("ici c'est :", this.registerForm.value);
     this.apiservice.postData('register', this.registerForm.value).subscribe((response: any) => {
       alert("Inscription reussi !")
     }, error => {

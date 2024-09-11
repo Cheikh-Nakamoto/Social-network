@@ -65,7 +65,6 @@ export class HomeComponent implements OnInit {
     comlength: length = {};
     storage!: Post;
    
-
     constructor(
         private apiService: DataService,
         private authService: AuthService,
@@ -97,7 +96,6 @@ export class HomeComponent implements OnInit {
             }
         );
         this.shared.sharedData$.subscribe((res: Post) => {
-            console.log(res);
             if (this.storage?.user_id != res?.user_id && res != null) {
                 this.storage = res;
                 location.reload();
@@ -109,7 +107,6 @@ export class HomeComponent implements OnInit {
         this.apiService.getData(`AllPost?user_id=${this.id}`).subscribe(
             (response: Post[]) => {
                 this.posts = response;
-                console.log('ici sont les posts', this.posts);
                 this.loadLikes('post');
                 this.loadDislikes('post');
             },
@@ -123,7 +120,6 @@ export class HomeComponent implements OnInit {
         this.apiService
             .likeTarget(0, this.id, targetId, targetType, true)
             .subscribe((response) => {
-                console.log('like response ', response);
                 this.loadLikes(targetType);
                 this.loadDislikes(targetType);
             });
@@ -143,7 +139,6 @@ export class HomeComponent implements OnInit {
         const file: File = event.target.files[0];
         if (file) {
             this.selectedFile = file;
-            console.log('Fichier sélectionné:', file);
         }
     }
 
@@ -173,7 +168,6 @@ export class HomeComponent implements OnInit {
 
         // Ajoutez ceci pour vérifier le contenu de formData
         formData.forEach((value, key) => {
-            console.log(key + ': ' + value);
         });
 
         this.apiService.postData('CreateComment', formData).subscribe(
@@ -200,7 +194,6 @@ export class HomeComponent implements OnInit {
             }) => {
                 this.comments.comments_by_post = comment.Comments;
                 this.comlength = comment.CommentsLength;
-                console.log('ici sont les commentaires', comment);
             },
             (error) => {
                 console.error(
@@ -226,7 +219,6 @@ export class HomeComponent implements OnInit {
     private loadUser(targetlink: string) {
         this.apiService.getData(targetlink).subscribe((user: AllUsersDTO) => {
             this.AllUser = user;
-            console.log('ici sont les utilisateurs', this.AllUser);
         });
     }
 
@@ -246,7 +238,6 @@ export class HomeComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe((result) => {
-            console.log(`Dialog result: ${result}`);
         });
     }
 }

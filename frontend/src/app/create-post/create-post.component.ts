@@ -71,7 +71,6 @@ export class CreatePostComponent implements OnInit {
       this.redirecte = "groups"
       this.page_group = true
       this.groupid = Number(checkhref[checkhref.length - 1])
-      console.log("ici groupid :", checkhref[checkhref.length - 1])
       this.Post = this.postFormBuilder.group({
         title: new FormControl(''),
         content: new FormControl(''),
@@ -91,7 +90,6 @@ export class CreatePostComponent implements OnInit {
         user_id: localStorage.getItem("userID") as string
       });
     }
-    console.log("page actuelle pour nature post ", this.page_group)
     this.shared.sharedData$.subscribe((res: { "almost": number[] }) => {
       if (res?.almost) {
         this.UserSelected = res == null ? [] : res.almost
@@ -101,11 +99,9 @@ export class CreatePostComponent implements OnInit {
 
 
   onFileChange(event: any): void {
-    console.log(event.target.files.length)
     if (event.target.files.length > 0) {
       this.selectedFile = event.target.files[0];
       this.selectedFileName = this.selectedFile.name;
-      console.log('Fichier sélectionné:', this.selectedFileName);
     }
   }
 
@@ -132,10 +128,8 @@ export class CreatePostComponent implements OnInit {
             response.group_id = Number(response.group_id)
             if (this.UserSelected.length != 0) {
               response["almost"] = this.UserSelected
-              console.log(response, "response with image")
             }
             this.apiservice.postData('CreatePost', response).subscribe((responses: Post) => {
-              console.log("ceci est la reponse ", response)
               this.shared.setData(response)
             }, error => {
               alert('Erreur lors de l\'envoi du post:')
@@ -147,10 +141,8 @@ export class CreatePostComponent implements OnInit {
           }
         );
       } else {
-        console.log("donne envoyer au api this.postFormBuilder", this.Post.value)
         if (this.UserSelected.length != 0) {
           this.Post.value["almost"] = this.UserSelected
-          console.log(this.Post.value, "never image")
         }
         this.apiservice.postData('CreatePost', this.Post.value).subscribe((response: Post) => {
           this.shared.setData(response)

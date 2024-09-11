@@ -31,7 +31,7 @@
               <input type="password" placeholder="Password" formControlName="password" required />
               <input type="date" placeholder="Date of Birth" formControlName="date_of_birth" required />
               <div class="file-input-container" (click)="OnselectedFile()" >
-                <input type="file" id="file-input" (change)="onFileChange($event)" formControlName="avatar"/>
+                <input type="file" id="file-input" (change)="onFileChange($event)"/>
                 <label class="file-input-label">Choose an avatar</label>
               </div>
               <textarea placeholder="About Me" formControlName="about_me"></textarea>

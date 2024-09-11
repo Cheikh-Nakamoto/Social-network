@@ -72,7 +72,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         private userservice: GetUserService,
         private visibilityService: VisibilityService
     ) {
-        console.log('DataService:', this.dataService);
     }
 
     IsNotify: NotificationVerification = { notif: [] };
@@ -100,7 +99,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
         this.messagesSubscription = this.websocketService.messages$
             .subscribe((message) => {
-                console.log(message)
                 if (
                     message.type === 'new_notification' &&
                     message.payload.messageId == 0
@@ -136,7 +134,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
             target_id: targetid,
             role: role
         };
-        console.log(body);
         this.dataService
             .accept_decline('accept-request', body)
             .subscribe((res) => {
@@ -156,19 +153,19 @@ export class ToolbarComponent implements OnInit, OnDestroy {
                     };
                     let even = new Events(message.type, message.datas);
                     sendEvent(this.websocketService, even);
-                  if (role == "admin"){
-                    messBody = {
-                        senderId: Number(targetid),
-                        receiverId: Number(userid),
-                        message:""
+                    if (role == "admin") {
+                        messBody = {
+                            senderId: Number(targetid),
+                            receiverId: Number(userid),
+                            message: ""
+                        }
+                        message = {
+                            type: 'new_invitation',
+                            datas: messBody,
+                        };
+                        even = new Events(message.type, message.datas);
+                        sendEvent(this.websocketService, even);
                     }
-                    message = {
-                        type: 'new_invitation',
-                        datas: messBody,
-                    };
-                    even = new Events(message.type, message.datas);
-                    sendEvent(this.websocketService, even);
-                  }
                 }
             });
     }
@@ -179,7 +176,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
             group_id: groupID,
             target_id: targetid
         };
-        console.log(body);
         this.dataService
             .accept_decline('decline-request', body)
             .subscribe((res) => {
@@ -209,12 +205,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     }
 
     onSearchChange(searchValue: string): void {
-        console.log('Valeur de recherche:', searchValue);
         if (searchValue && searchValue.length > 0) {
             this.dataService
                 .searchUsers(searchValue)
                 .subscribe((users: any[]) => {
-                    console.log('Utilisateurs filtrés:', users);
                     this.filteredUsers = users;
                 });
         } else {
@@ -223,7 +217,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     }
 
     goToUserProfile(user: any): void {
-        console.log('Navigating to profile of:', user); // Debug
         this.router.navigate(['/profile', user.id]);
     }
 

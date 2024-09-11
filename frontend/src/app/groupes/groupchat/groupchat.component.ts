@@ -64,14 +64,12 @@ export class GroupchatComponent {
     ngOnInit(): void {
         this.userService.user.subscribe((user) => {
             this.sender = user;
-            console.log('rrrrrrrrrrrrrrrrrrrrr', this.sender);
         });
         this.websocketService.connect();
 
         this.messagesSubscription = this.websocketService.messages$.subscribe(
             (message) => {
                 if (message.type === 'get_messages_groupes') {
-                    console.log('hlllllllllllllllll', message);
                     this.updateMessages(
                         message.payload.messages,
                         Number(this.groupId),
@@ -96,10 +94,7 @@ export class GroupchatComponent {
     }
 
     loadAdditionalMessages() {
-        console.log('contacted');
         const chatBox = document.getElementById('chatBox');
-        console.log('cccccccccc', chatBox);
-
         if (
             chatBox &&
             chatBox.scrollTop === 0 &&
@@ -141,7 +136,6 @@ export class GroupchatComponent {
             type: 'send_message_groupes',
             datas: messBody,
         };
-
         const even = new Event(message.type, message.datas);
 
         sendEvent(this.websocketService, even);
@@ -172,7 +166,6 @@ export class GroupchatComponent {
                 );
 
                 if (foundUser) {
-                    console.log('Utilisateur trouvé:', foundUser);
                     callback(foundUser.nickname); // Appelle le callback avec le nickname
                 } else {
                     console.warn('Utilisateur non trouvé avec ID:', id);
@@ -203,12 +196,6 @@ export class GroupchatComponent {
 
             messages.forEach((message: any) => {
                 var msgType: string;
-                console.log(
-                    message.senderId,
-                    iduser,
-                    'kkkkkkkkkk',
-                    Number(message.senderId) == iduser
-                );
                 if (Number(message.senderId) == iduser) {
                     
                     msgType = 'Sent';
@@ -216,13 +203,10 @@ export class GroupchatComponent {
                     
                     msgType = 'Received';
                 }
-                console.log("llllllll", msgType)
-                console.log("bbbb",msgType === 'Received' ? 'received' : 'sent');
 
                 let username: string;
                 this.getNicknameById(message.senderId, (nickname) => {
                     if (nickname) {
-                        // console.log('Nickname:', nickname);
                         username = nickname;
 
 
@@ -250,7 +234,6 @@ export class GroupchatComponent {
                 </div>
             `;
                     } else {
-                        console.log('Utilisateur non trouvé');
                     }
                 });
 

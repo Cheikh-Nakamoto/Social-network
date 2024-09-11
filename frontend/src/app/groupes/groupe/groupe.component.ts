@@ -43,10 +43,8 @@ export class GroupeComponent implements OnInit {
       this.loadGroups()
 
     this.websocketService.connect()
-
         this.messagesSubscription = this.websocketService.messages$
             .subscribe((message) => {
-                console.log(message)
                 if (
                     message.type === 'new_group' &&
                     message.payload.messageId == 0 

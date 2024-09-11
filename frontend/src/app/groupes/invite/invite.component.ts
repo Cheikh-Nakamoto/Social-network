@@ -46,7 +46,6 @@ export class InviteComponent {
   id !: string
   groupId!: number
   IsIn: StatusMap = {};
-
   ngOnInit(): void {
     this.id = (JSON.parse(localStorage.getItem('userID') as string));
     this.groupId = (JSON.parse(localStorage.getItem('groupid') as string))
@@ -56,7 +55,6 @@ export class InviteComponent {
     })
     this.messagesSubscription = this.websocketService.messages$
     .subscribe((message) => {
-        console.log(message)
         if (
             message.type === 'new_invitation' &&
             message.payload.senderId == this.id
@@ -75,7 +73,6 @@ export class InviteComponent {
   groupMember() {
     this.dataservice.getData(`member?group_id=${this.groupId}`).subscribe((data: { [key: number]: boolean }) => {
       this.IsIn = data
-      console.log("this is group elemen,t ", this.IsIn)
     })
   }
 
