@@ -85,12 +85,11 @@ export class SidenavComponent implements OnInit {
         const userData = JSON.parse(localStorage.getItem('userID') as string);
         const iduser = userData;
         this.apiservice.getData('allusers').subscribe(
-            (response: model.UserDTO[]) => {
+            (response: any) => {
                 // Typage de la réponse comme un tleau de Post
-                console.log(response)
-                this.users = response.filter(
-                
-                    (user) => user !== null && user.id !== Number(iduser)
+
+                this.users = response.users.filter(
+                    (user: any) => user !== null && user.id !== Number(iduser)
                 );
             },
             (error) => {
@@ -102,6 +101,9 @@ export class SidenavComponent implements OnInit {
         this.isVisible = !this.isVisible; // Change l'état de visibilité
     }
     updateUsers(payloads: any[]): void {
+        if (payloads == null) {
+            return
+        }
         payloads.forEach((payload) => {
             let user = this.users.find((u) => u.id === payload.userId);
             if (user) {
@@ -131,7 +133,6 @@ export class SidenavComponent implements OnInit {
         });
     }
     handleToolbarClick(event: Event) {
-        console.log('Toolbar link clicked!', event);
     }
     handleMenuItemClick(item: any, event: Event) {
         this.router.navigate(item.route);

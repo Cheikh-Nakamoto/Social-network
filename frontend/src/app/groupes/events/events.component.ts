@@ -77,7 +77,6 @@ export class EventsComponent implements OnInit {
 
     // Vérifiez que toutes les valeurs sont définies
     if (!dateStart || !hourStart || !dateEnd || !hourEnd) {
-      console.log("Une ou plusieurs valeurs de date/heure sont non définies.");
       return { dateTimeOrder: true }; // ou null si vous voulez que cela soit valide tant que tout n'est pas rempli
     }    
 
@@ -87,20 +86,17 @@ export class EventsComponent implements OnInit {
 
     // Vérifiez si les dates sont invalides
     if (isNaN(startDateTime.getTime()) || isNaN(endDateTime.getTime())) {
-      console.log("Date de début ou de fin invalide:", startDateTime, endDateTime);
       return { dateTimeOrder: true };
     }
 
     // Vérification de l'ordre des dates
     if (startDateTime >= endDateTime) {
-      console.log("La date de début est postérieure ou égale à la date de fin.");
       return { dateTimeOrder: true };
     }
     this.startdate = startDateTime
     this.enddate = endDateTime
     return null;
   }
-
   getFormattedDate() {
     const today = new Date();
 
@@ -147,7 +143,6 @@ export class EventsComponent implements OnInit {
       );
 
     } else {
-      console.log('Formulaire invalide');
     }
   }
 }

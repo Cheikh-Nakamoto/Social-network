@@ -34,7 +34,6 @@ export class DialogCommentComponent implements OnInit {
   getImageUrl(comment: CommentDTO): string | null {
     // Assurez-vous que le chemin commence par 'public/' et remplacez le './public/' par 'public/'
     const imagePath = comment.image?.startsWith('./public/') ? comment.image.replace('./public/', 'public/') : comment.image;
-    console.log(imagePath);
     
     return imagePath ? `http://localhost:8080/${imagePath}` : null;
   }

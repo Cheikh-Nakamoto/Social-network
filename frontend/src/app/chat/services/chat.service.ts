@@ -27,14 +27,12 @@ export class WebSocketService {
 
   constructor() {
     this.userId = JSON.parse(localStorage.getItem('userID') || '{}');
-    // console.log(this.userData);
   }
 
   connect(): void {
 
 
     if (!this.userId) {
-      console.log(this.userId)
       console.error('User data is missing or invalid');
       return;
     }
@@ -45,7 +43,6 @@ export class WebSocketService {
 
     this.socket$.subscribe(
       (message) => {
-        console.log('Received message: ', message);
         const parsedMessage =
           typeof message === 'string' ? JSON.parse(message) : message;
 
@@ -53,8 +50,6 @@ export class WebSocketService {
         const messageType = parsedMessage.type;
         const messagePayload = parsedMessage.payload;
 
-        //  console.log('Type:', messageType);
-        //  console.log('Payload:', messagePayload);
 
         // Si vous avez besoin de transformer ce message en un Event pour le routage
         const event = new Event(messageType);
@@ -69,12 +64,10 @@ export class WebSocketService {
         this.reconnect();
       },
       () => {
-        console.log('WebSocket connection closed');
         this.reconnect();
       }
     );
 
-    console.log('Attempting websocket connection');
   }
 
   private reconnect(): void {

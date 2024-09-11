@@ -28,7 +28,6 @@ export class AuthService {
     logout(): Observable<void> {
         const token = localStorage.getItem('token');
         if (!token) {
-            console.log('No token found, redirecting to login.');
             this.removeSession();
             this.router.navigateByUrl('/login')
         }
@@ -61,7 +60,6 @@ export class AuthService {
         }
 
         if (!localStorage.getItem('token')) {
-            console.log('No token or user id')
             return of(false)
         } else {
             return this.checkOnlineStatus(data).pipe(
@@ -73,10 +71,8 @@ export class AuthService {
     isOnline() {
         this.isLoggedIn().subscribe(response => {
             if (response) {
-                console.log('You are online')
                 return
             } else {
-                console.log('You are offline')
                 this.removeSession()
                 this.router.navigate(['/login']).then()
             }

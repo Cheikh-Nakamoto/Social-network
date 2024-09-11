@@ -61,10 +61,8 @@ export class ListComponent {
         this.followService.getList(this.currentID, "followers").subscribe((data: any) => {
             if (data.status !== 200) {
                 this.messages = "No Followers"
-                console.log("Follower's list is empty")
                 return
             }
-            console.log("Follower's list:", data.followers)
             this.followers = data.followers
         })
     }
@@ -72,10 +70,8 @@ export class ListComponent {
     listFriends(): void {
         this.followService.getList(this.currentID, "friends").subscribe((data:any) => {
             if (data.status != 200) {
-                console.log("Friend's list is empty!")
                 return
             }
-            console.log("Friend's list:", data.friends)
             this.friends = data.friends
         })
     }
@@ -83,10 +79,8 @@ export class ListComponent {
     listFollowings(): void {
         this.followService.getList(this.currentID, "followings").subscribe((data:any) => {
             if (data.status != 200) {
-                console.log("Following's list is empty!")
                 return
             }
-            console.log("Following's list:", data.followings)
             this.followings = data.followings
         })
     }

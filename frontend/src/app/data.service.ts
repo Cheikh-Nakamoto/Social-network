@@ -13,13 +13,10 @@ export class DataService {
   
   
   searchUsers(query: string): Observable<any[]> {
-    console.log("datasearch");
   
     return this.http.get<any[]>(`${this.apiUrl}/allusers`).pipe(
       map(users => {
-        console.log('Données de l\'API:', users);
         const validUsers = users.filter(user => user !== null && user !== undefined);
-        console.log('Utilisateurs valides:', validUsers);
         
         return validUsers.filter(user =>
           user.firstname.toLowerCase().includes(query.toLowerCase()) ||
@@ -149,7 +146,6 @@ export class DataService {
   }
 
   createGroup(group: any): Observable<any> {
-    console.log(group)
     return this.http.post(`${this.apiUrl}/groups/create`, group);
   }
 
@@ -216,7 +212,6 @@ export class GetUserService {
     }
 
     public getChatAmount(): number {
-      // console.log('jjjjjjjjjjjjjjjjjjjjj', this.chatCountSubject.getValue());
       return this.chatCountSubject.getValue();
     }
 

@@ -57,13 +57,11 @@ export class ChatComponent implements OnInit, OnDestroy {
         // });
         this.id = Number(data.userId);
     }
-
     ngOnInit(): void {
         this.userService.user.subscribe((user) => {
             this.sender = user;
         });
       this.getUserById(this.id);
-      console.log("ttttttttttttttttt", this.user, this.id)
         this.websocketService.connect();
 
         this.messagesSubscription = this.websocketService.messages$.subscribe(
@@ -72,7 +70,6 @@ export class ChatComponent implements OnInit, OnDestroy {
 
                 if (message.type === 'get_messages') {
                   
-                    console.log('hlllllllllllllllll', message);
                     updateMessages(message.payload.messages, Number(this.id));
                 }
 
@@ -119,7 +116,6 @@ export class ChatComponent implements OnInit, OnDestroy {
 
                 if (foundUser) {
                     this.user = foundUser;
-                    console.log('Utilisateur trouvé:', this.user);
                 } else {
                     console.warn('Utilisateur non trouvé avec ID:', id);
                     // Gérez le cas où l'utilisateur n'est pas trouvé
@@ -178,9 +174,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
 
     loadAdditionalMessages() {
-        console.log('contacted');
         const chatBox = document.getElementById('chatBox');
-        console.log('cccccccccc', chatBox);
 
         if (
             chatBox &&

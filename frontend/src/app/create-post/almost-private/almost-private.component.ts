@@ -25,7 +25,6 @@ export class AlmostPrivateComponent implements OnInit {
   ) {
 
   }
-
   Alluser!: AllUsersDTO
   toppings = new FormControl('');
   toppingList: UserDTO[] = []
