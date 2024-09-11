@@ -21,7 +21,6 @@ import { UtilService } from '../service/util.service';
         MatDividerModule,
         NgForOf,
         NgIf
-
     ],
     templateUrl: './list.component.html',
     styleUrl: './list.component.scss',
