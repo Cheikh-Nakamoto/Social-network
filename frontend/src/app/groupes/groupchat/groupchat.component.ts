@@ -116,6 +116,9 @@ export class GroupchatComponent {
             '#msgContent'
         ) as HTMLTextAreaElement;
         const messageContent = messagetag.value;
+        if (messageContent.trim() === '') {
+            return;
+        }
 
         const messBody: model.MessageBody = {
             senderId: this.sender,

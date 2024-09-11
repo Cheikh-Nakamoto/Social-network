@@ -85,7 +85,7 @@ export class InviteComponent {
     target_id: number,
     role: string
   ): void {
-   
+    this.groupService.addMember(groupId, userId, target_id.toString(), role)
   }
 
 }

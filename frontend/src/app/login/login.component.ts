@@ -98,6 +98,9 @@ export class LoginComponent implements OnInit {
     this.age = this.checkAge(data.date_of_birth);
 
 
+    if (this.loginForm.get('password')?.value.trim() === '' || this.loginForm.get('password')?.value.trim()) {
+      
+    }
 
     if (this.age < 12 || this.age > 120) {
       alert('You must be between 12 and 120 years old to register');

@@ -111,12 +111,17 @@ export class CreatePostComponent implements OnInit {
 
   onSubmit(): void {
     if (this.Post.valid) {
+
       const formData = new FormData();
       formData.append('title', this.Post.get('title')?.value);
       formData.append('content', this.Post.get('content')?.value);
       formData.append('privacy', this.Post.get('ispublic')?.value);
       formData.append('group_id', this.Post.get('group_id')?.value)
       formData.append('file', this.selectedFile);
+      if (this.Post.get('title')?.value.trim() =='' ||  this.Post.get('content')?.value.trim() == '') {
+        alert('Les champs titles et content sont vide')
+        return;
+      }
 
       let userId = JSON.parse(localStorage.getItem("userID") as string).toString()
       formData.append('user_id', userId);
