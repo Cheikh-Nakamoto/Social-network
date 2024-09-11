@@ -151,10 +151,10 @@ export class GroupchatComponent {
         callback: (nickname: string | null) => void
     ): void {
         this.apiService.getData('allusers').subscribe(
-            (response: model.UserDTO[]) => {
+            (response: any) => {
                 // Recherche l'utilisateur correspondant à l'ID
-                const foundUser = response.find(
-                    (user) => user != null && user.id === id
+                const foundUser = response.users.find(
+                    (user : any) => user != null && user.id === id
                 );
 
                 if (foundUser) {

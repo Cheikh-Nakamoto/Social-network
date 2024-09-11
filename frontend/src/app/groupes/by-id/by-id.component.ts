@@ -20,6 +20,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { GroupchatComponent } from '../groupchat/groupchat.component';
 import { AlmostPrivateComponent } from '../../create-post/almost-private/almost-private.component';
 import { InviteComponent } from '../invite/invite.component';
+import { ChatComponent } from '../../chat/chat.component';
 
 @Component({
     selector: 'app-by-id',
@@ -340,7 +341,7 @@ export class ByIdComponent implements OnInit {
         //  this.router.navigate(['/groupchat'], {
         //      queryParams: { groupId: this.groupId },
         //  });
-        this.dialog.open(InviteComponent, {
+        this.dialog.open(GroupchatComponent, {
             width: '400px', // Largeur de la boîte de dialogue
             data: { groupId: this.groupId }, // Envoi de paramètres au composant de la boîte de dialogue
             // hasBackdrop: true,
