@@ -72,6 +72,8 @@ func (m *Manager) setupEventHandlers() {
 	m.handlers[EventGetNotification] = SendNotificationHandler
 	m.handlers[EventGroup] = SendGroupHandler
 	m.handlers[EventPost] = SendPostHandler
+	m.handlers[EventInvite] = SendInviteHandler
+
 }
 
 func TypingStartHandler(event Event, c *Client) error {
@@ -167,6 +169,39 @@ func SendNotificationHandler(event Event, c *Client) error {
 	outgoingEvent.Payload = data
 
 	outgoingEvent.Type = EventGetNotification
+
+	// Envoyer le message au client destinataire
+	for client := range c.manager.clients {
+		if client.userId == returnMsg.ReceiverId {
+			client.egress <- outgoingEvent
+		}
+	}
+	return nil
+}
+func SendInviteHandler(event Event, c *Client) error {
+	var chatEvent SendMessageEvent
+	if err := json.Unmarshal(event.Payload, &chatEvent); err != nil {
+		return fmt.Errorf("bad payload in request: %v", err)
+	}
+
+	// Construire l'événement de message à retourner
+	var returnMsg ReturnMessageEvent
+	returnMsg.SentDate = time.Now().Format("2006-01-02 15:04:05")
+	returnMsg.Message = chatEvent.Message
+	returnMsg.ReceiverId = chatEvent.ReceiverId
+	returnMsg.SenderId = chatEvent.SenderId
+	returnMsg.Status = chatEvent.Status
+
+	// Marshal l'événement à retourner en JSON
+	data, err := json.Marshal(returnMsg)
+	if err != nil {
+		return fmt.Errorf("failed to marshal broadcast message: %v", err)
+	}
+
+	var outgoingEvent Event
+	outgoingEvent.Payload = data
+
+	outgoingEvent.Type = EventInvite
 
 	// Envoyer le message au client destinataire
 	for client := range c.manager.clients {
