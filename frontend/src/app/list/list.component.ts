@@ -29,6 +29,7 @@ import { UtilService } from '../service/util.service';
 export class ListComponent {
     suggestions: User[] = []
     followers: User[] = []
+    followings: User[] = []
     messages!: string
     size!: number
     currentID: number = this.authService.getUserID()!
@@ -38,22 +39,6 @@ export class ListComponent {
         private followService: FollowService,
         private utilService: UtilService
     ) { }
-
-    /* listUsers(): void {
-        this.listFollowers()
-        this.authService.getAll().subscribe((data: any) => {
-            this.size = data.users.length
-            let mape : {[key:number] :boolean} = {}
-            for (let i = 0; i < data.users.length; i++) {
-                for (let j = 0; j < this.followers.length; j++) {
-                    if (this.followers[j] !== data.users[i] && !mape.hasOwnProperty(data.users[i].id)) {
-                        this.suggestions.push(data.users[i]);
-                        mape[data.users[i].id] = true
-                    }
-                }
-            }
-        })
-    } */
 
     listUsers(): void {
         this.listFollowers()
@@ -79,9 +64,24 @@ export class ListComponent {
         })
     }
 
+    listFriends(): void {
+        this.followService.getList(this.currentID, "friends").subscribe((data:any) => {
+            if (data.status != 200) {
+                console.log("Friend's list is empty!")
+                return
+            }
+            console.log("Friend's list:", data)
+        })
+    }
+
     listFollowings(): void {
         this.followService.getList(this.currentID, "followings").subscribe((data:any) => {
             console.log("Following's list:",data)
+            if (data.status != 200) {
+                console.log("Following's list is empty!")
+                return
+            }
+            this.followings = data.followings
         })
     }
 
@@ -93,7 +93,7 @@ export class ListComponent {
 
         this.followService.follow(data, "follow").subscribe((response: any) => {
             this.utilService.onSnackBar(response.message, "info")
-            this.listUsers()
+            this.getSuggestionsData()
         })
     }
 
@@ -106,6 +106,7 @@ export class ListComponent {
         this.followService.request(data, "accept").subscribe((response: any) => {
             this.utilService.onSnackBar(response.message, "info")
             this.listFollowers()
+            this.listUsers()
         })
     }
 
@@ -121,9 +122,16 @@ export class ListComponent {
         })
     }
 
+    getSuggestionsData(): void {
+        this.listUsers()
+        this.listFollowers()
+        this.listFollowings()
+        this.listFriends()
+    }
+
     ngOnInit(): void {
         this.authService.isOnline
         this.listUsers()
-        // this.listFollowers()
+        this.getSuggestionsData()
     }
 }
