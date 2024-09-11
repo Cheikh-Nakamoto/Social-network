@@ -67,9 +67,11 @@ func (m *Manager) setupEventHandlers() {
 	m.handlers[EventUpdateChatbarData] = UpdateChatbarData
 	m.handlers[EventTypingStart] = TypingStartHandler
 	m.handlers[EventTypingStop] = TypingStopHandler
-	m.handlers[EventGetMessagesGroup]=GroupMessageHandler
-	m.handlers[EventSendMessageGroup]=SendMessageGrouopHandler
-	m.handlers[EventGetNotification] = SendMessageHandler
+	m.handlers[EventGetMessagesGroup] = GroupMessageHandler
+	m.handlers[EventSendMessageGroup] = SendMessageGrouopHandler
+	m.handlers[EventGetNotification] = SendNotificationHandler
+	m.handlers[EventGroup] = SendGroupHandler
+	m.handlers[EventPost] = SendPostHandler
 }
 
 func TypingStartHandler(event Event, c *Client) error {
@@ -116,9 +118,8 @@ func SendMessageHandler(event Event, c *Client) error {
 	returnMsg.Message = chatEvent.Message
 	returnMsg.ReceiverId = chatEvent.ReceiverId
 	returnMsg.SenderId = chatEvent.SenderId
-	returnMsg.Status= chatEvent.Status
+	returnMsg.Status = chatEvent.Status
 
-	
 	// Ajouter le message à une table ou base de données
 	addMessageToTable(returnMsg)
 
@@ -130,7 +131,7 @@ func SendMessageHandler(event Event, c *Client) error {
 
 	var outgoingEvent Event
 	outgoingEvent.Payload = data
-	
+
 	outgoingEvent.Type = EventNewMessage
 
 	// Envoyer le message au client destinataire
@@ -141,6 +142,104 @@ func SendMessageHandler(event Event, c *Client) error {
 	}
 	return nil
 }
+
+func SendNotificationHandler(event Event, c *Client) error {
+	var chatEvent SendMessageEvent
+	if err := json.Unmarshal(event.Payload, &chatEvent); err != nil {
+		return fmt.Errorf("bad payload in request: %v", err)
+	}
+
+	// Construire l'événement de message à retourner
+	var returnMsg ReturnMessageEvent
+	returnMsg.SentDate = time.Now().Format("2006-01-02 15:04:05")
+	returnMsg.Message = chatEvent.Message
+	returnMsg.ReceiverId = chatEvent.ReceiverId
+	returnMsg.SenderId = chatEvent.SenderId
+	returnMsg.Status = chatEvent.Status
+
+	// Marshal l'événement à retourner en JSON
+	data, err := json.Marshal(returnMsg)
+	if err != nil {
+		return fmt.Errorf("failed to marshal broadcast message: %v", err)
+	}
+
+	var outgoingEvent Event
+	outgoingEvent.Payload = data
+
+	outgoingEvent.Type = EventGetNotification
+
+	// Envoyer le message au client destinataire
+	for client := range c.manager.clients {
+		if client.userId == returnMsg.ReceiverId {
+			client.egress <- outgoingEvent
+		}
+	}
+	return nil
+}
+func SendGroupHandler(event Event, c *Client) error {
+	var chatEvent SendMessageEvent
+	if err := json.Unmarshal(event.Payload, &chatEvent); err != nil {
+		return fmt.Errorf("bad payload in request: %v", err)
+	}
+
+	// Construire l'événement de message à retourner
+	var returnMsg ReturnMessageEvent
+	returnMsg.SentDate = time.Now().Format("2006-01-02 15:04:05")
+	returnMsg.Message = chatEvent.Message
+	returnMsg.ReceiverId = chatEvent.ReceiverId
+	returnMsg.SenderId = chatEvent.SenderId
+	returnMsg.Status = chatEvent.Status
+
+	// Marshal l'événement à retourner en JSON
+	data, err := json.Marshal(returnMsg)
+	if err != nil {
+		return fmt.Errorf("failed to marshal broadcast message: %v", err)
+	}
+
+	var outgoingEvent Event
+	outgoingEvent.Payload = data
+
+	outgoingEvent.Type = EventGroup
+
+	// Envoyer le message au client destinataire
+	for client := range c.manager.clients {
+		client.egress <- outgoingEvent
+	}
+	return nil
+}
+func SendPostHandler(event Event, c *Client) error {
+	var chatEvent SendMessageEvent
+	if err := json.Unmarshal(event.Payload, &chatEvent); err != nil {
+		return fmt.Errorf("bad payload in request: %v", err)
+	}
+
+	// Construire l'événement de message à retourner
+	var returnMsg ReturnMessageEvent
+	returnMsg.SentDate = time.Now().Format("2006-01-02 15:04:05")
+	returnMsg.Message = chatEvent.Message
+	returnMsg.ReceiverId = chatEvent.ReceiverId
+	returnMsg.SenderId = chatEvent.SenderId
+	returnMsg.Status = chatEvent.Status
+
+	// Marshal l'événement à retourner en JSON
+	data, err := json.Marshal(returnMsg)
+	if err != nil {
+		return fmt.Errorf("failed to marshal broadcast message: %v", err)
+	}
+
+	var outgoingEvent Event
+	outgoingEvent.Payload = data
+
+	outgoingEvent.Type = EventPost
+
+	// Envoyer le message au client destinataire
+	for client := range c.manager.clients {
+		client.egress <- outgoingEvent
+	}
+	return nil
+}
+
+
 func SendMessageGrouopHandler(event Event, c *Client) error {
 	var chatEvent SendMessageEvent
 	if err := json.Unmarshal(event.Payload, &chatEvent); err != nil {
@@ -179,7 +278,7 @@ func SendMessageGrouopHandler(event Event, c *Client) error {
 func addMessageToTable(messageData ReturnMessageEvent) {
 	db, err := sqlite.Connect()
 	if err != nil {
-		panic(err) 
+		panic(err)
 	}
 	statement, err := db.GetDB().Prepare("INSERT INTO messages (senderId, receiverId, sentDate, message, status) VALUES (?, ?, ?, ?, ?)")
 	if err != nil {
@@ -196,7 +295,7 @@ func addMessageToTable(messageData ReturnMessageEvent) {
 func addGrMessageToTable(messageData ReturnMessageEvent) {
 	db, err := sqlite.Connect()
 	if err != nil {
-		panic(err) 
+		panic(err)
 	}
 	statement, err := db.GetDB().Prepare("INSERT INTO groupmessages (senderId, groupId, sentDate, message) VALUES (?, ?, ?, ?)")
 	if err != nil {
@@ -247,7 +346,7 @@ func GroupMessageHandler(event Event, c *Client) error {
 	data, err := json.Marshal(getGroupChatData(chatDataEvent.CurrentChatterId, chatDataEvent.OtherChatterId, chatDataEvent.Amount))
 	if err != nil {
 		return fmt.Errorf("failed to marshal broadcast message: %v", err)
-	}	
+	}
 
 	fmt.Println("recup::::::::::::::::::::::::::::::::", string(data))
 
@@ -262,7 +361,7 @@ func GroupMessageHandler(event Event, c *Client) error {
 func getNicknameById(userId int) string {
 	db, err := sqlite.Connect()
 	if err != nil {
-		panic(err) 
+		panic(err)
 	}
 	var nickname string
 
@@ -274,7 +373,7 @@ func getChatData(currentChatterId, otherChatterId, amount int) ReturnChatDataEve
 	var returnChatData ReturnChatDataEvent
 	db, err := sqlite.Connect()
 	if err != nil {
-		panic(err) 
+		panic(err)
 	}
 
 	returnChatData.CurrentChatterNickname = getNicknameById(currentChatterId)
@@ -303,11 +402,11 @@ func getGroupChatData(currentChatterId, otherChatterId, amount int) ReturnChatDa
 	var returnChatData ReturnChatDataEvent
 	db, err := sqlite.Connect()
 	if err != nil {
-		panic(err) 
+		panic(err)
 	}
 
 	returnChatData.CurrentChatterNickname = getNicknameById(currentChatterId)
-	returnChatData.OtherChatterNickname = "group:"+strconv.Itoa(otherChatterId)
+	returnChatData.OtherChatterNickname = "group:" + strconv.Itoa(otherChatterId)
 
 	rows, err := db.GetDB().Query(`
 		SELECT messageId, senderId, groupId, message, sentDate 
@@ -360,7 +459,7 @@ func getChatbarData(currentUserId int) []UserDataEvent {
 	var userDataSlc []UserDataEvent
 	db, err := sqlite.Connect()
 	if err != nil {
-		panic(err) 
+		panic(err)
 	}
 
 	rows, err := db.GetDB().Query(`SELECT id, nickname, online FROM users WHERE id != ? ORDER BY nickname COLLATE NOCASE ASC`, currentUserId)
@@ -384,7 +483,7 @@ func getLastMsgData(currentUserId, senderId int) ReturnMessageEvent {
 	var lastMsgData ReturnMessageEvent
 	db, err := sqlite.Connect()
 	if err != nil {
-		panic(err) 
+		panic(err)
 	}
 	err = db.GetDB().QueryRow(`
 		SELECT message, senderId, receiverId, sentDate FROM messages
@@ -413,7 +512,7 @@ func UpdateChatbarData(event Event, c *Client) error {
 }
 
 // broadcastUpdate diffuse les données mises à jour de la barre de chat à tous les clients connectés.
-func 	broadcastUpdate(c *Client) error {
+func broadcastUpdate(c *Client) error {
 	for client := range c.manager.clients {
 		data, err := json.Marshal(getChatbarData(client.userId))
 		if err != nil {
@@ -450,7 +549,7 @@ func (m *Manager) addClient(client *Client) {
 func updateUserStatus(newStatus bool, userId int) {
 	db, err := sqlite.Connect()
 	if err != nil {
-		panic(err) 
+		panic(err)
 	}
 	statement, err := db.GetDB().Prepare("UPDATE users SET online = ? WHERE id = ?")
 	if err != nil {
@@ -469,9 +568,9 @@ func hasSession(userId int) bool {
 	var exists bool
 	db, err := sqlite.Connect()
 	if err != nil {
-		panic(err) 
+		panic(err)
 	}
-	
+
 	err = db.GetDB().QueryRow("SELECT EXISTS(SELECT 1 FROM sessions WHERE userId = ?)", userId).Scan(&exists)
 	if err != nil {
 		log.Println(err)

@@ -24,7 +24,7 @@ import { WebSocketService } from '../../chat/services/chat.service';
   providers: [DataService, AuthService],
 
 })
-export class GroupeComponent implements OnInit, OnDestroy {
+export class GroupeComponent implements OnInit {
   IsIn: JoinGroupVerification = {};
   groups: Group[] = [];
   groupeForm!: FormGroup;
@@ -37,16 +37,11 @@ export class GroupeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.authService.isOnline();
     this.id = JSON.parse(localStorage.getItem("userID") as string);
-    this.clear = setInterval(() => {
+
       this.joinedgroup()
       this.loadGroups()
-    }, 3000);
+
     this.websocketService.connect()
-  }
-  ngOnDestroy(): void {
-    if (this.clear) {
-      clearInterval(this.clear);
-    }
   }
   
 

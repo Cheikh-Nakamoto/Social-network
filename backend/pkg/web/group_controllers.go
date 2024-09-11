@@ -249,15 +249,13 @@ func (gc *GroupController) NotificationExists(w http.ResponseWriter, r *http.Req
 }
 
 func (gc *GroupController) NotificationsByUserID(w http.ResponseWriter, r *http.Request) {
-	userIDStr := r.URL.Query().Get("user_id")
-	userID, err := strconv.Atoi(userIDStr)
+	Id ,err:= strconv.Atoi(r.URL.Query().Get("user_id"))
 	if err != nil {
 		fmt.Println("error", err)
 		http.Error(w, "Invalid user ID", http.StatusBadRequest)
 		return
 	}
-
-	notif, err := gc.GroupService.GetNotificationsByUserID(userID)
+	notif, err := gc.GroupService.GetNotificationsByUserID(Id)
 
 	if err != nil {
 		fmt.Println("error", err)
@@ -276,7 +274,7 @@ func (gc *GroupController) AddMemberBasedOnNotification(w http.ResponseWriter, r
 		http.Error(w,  "error de decodage ", http.StatusBadRequest)
 		return
 	}
-	
+	fmt.Println("notification   ",notif)
 	err := gc.GroupService.AddMemberBasedOnNotification(notif); 
 	if err != nil {
 		fmt.Println("error", err)

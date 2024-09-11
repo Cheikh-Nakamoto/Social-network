@@ -29,8 +29,6 @@ func NewGroupRepoImpl(db sqlite.Database) *GroupRepoImpl {
 	return &GroupRepoImpl{db: &db}
 }
 
-
-
 // CreateGroup creates a new group in the database
 func (repo *GroupRepoImpl) CreateGroup(name, description, owner, image string) (int, error) {
 	stmt := `INSERT INTO groups (name, description, owner,image, created_at) VALUES (?, ?, ?, ?,?) RETURNING id`
@@ -63,7 +61,7 @@ func (repo *GroupRepoImpl) AddMember(userID, groupID, targetID int, role, name s
 
 	stmt := `INSERT INTO notifications (user_id, group_id, target_id, message, is_read, created_at,role)
 	VALUES (?, ?, ?,?,?,?,?);`
-	_, err := repo.db.GetDB().Exec(stmt, userID, groupID, targetID, message, false, time.Now(),role)
+	_, err := repo.db.GetDB().Exec(stmt, userID, groupID, targetID, message, false, time.Now(), role)
 	if err != nil {
 		return fmt.Errorf("Add Notification: %v", err)
 	}
@@ -290,7 +288,7 @@ func (repo *GroupRepoImpl) GetNotificationsByUserID(userID int) ([]dto.Notificat
 		var groupID sql.NullInt64  // Pour gérer les valeurs NULL de group_id
 		var targetID sql.NullInt64 // Pour gérer les valeurs NULL de target_id
 
-		err := rows.Scan(&notif.ID, &notif.UserID, &groupID, &targetID, &notif.Message, &notif.IsRead, &notif.CreatedAt)
+		err := rows.Scan(&notif.ID, &notif.UserID, &groupID, &targetID, &notif.Message, &notif.IsRead, &notif.Role, &notif.CreatedAt)
 		if err != nil {
 			return nil, fmt.Errorf("GetNotificationsByUserID: %v", err)
 		}
@@ -321,7 +319,7 @@ func (repo *GroupRepoImpl) GetNotificationsByUserID(userID int) ([]dto.Notificat
 // / AddMemberBasedOnNotification vérifie la notification et ajoute le membre au groupe si l'utilisateur accepte, puis supprime la notification
 func (repo *GroupRepoImpl) AddMemberBasedOnNotification(notif dto.Notification) error {
 	var data dto.Notification
-
+	fmt.Println("Les donne avant acceptation : ", notif)
 	// Requête SQL pour vérifier l'existence de la notification
 	query := `SELECT group_id, user_id FROM notifications WHERE id = ? AND group_id = ? AND user_id = ?`
 	err := repo.db.GetDB().QueryRow(query, notif.ID, notif.GroupID, notif.UserID).Scan(&data.GroupID, &data.UserID)
@@ -333,19 +331,19 @@ func (repo *GroupRepoImpl) AddMemberBasedOnNotification(notif dto.Notification) 
 		}
 		return err
 	}
-var targetid int
+	var targetid int
 	if notif.Role == "member" {
 		targetid = notif.UserID
-	}else if notif.Role == "admin" {
+	} else if notif.Role == "admin" {
 		targetid = notif.TargetID
 	}
+	fmt.Println("target id  : ", notif.TargetID)
 	// Insérer l'utilisateur dans la table group_members
 	insertQuery := `INSERT INTO group_members (group_id, user_id, role, joined_at) VALUES (?, ?, ?, ?)`
-	_, err = repo.db.GetDB().Exec(insertQuery, notif.GroupID, targetid, "member", time.Now())
+	if targetid != 0{_, err = repo.db.GetDB().Exec(insertQuery, notif.GroupID, targetid, "member", time.Now())
 	if err != nil {
 		return err
-	}
-
+	}}
 
 	// Supprimer la notification après avoir ajouté l'utilisateur au groupe
 	deleteQuery := `DELETE FROM notifications WHERE id = ?`
@@ -392,35 +390,34 @@ func (repo *GroupRepoImpl) ItsGroupMember(data dto.Data) (bool, error) {
 	return count > 0, nil
 }
 
-
 // GetUsersInGroup renvoie une map des IDs des utilisateurs présents dans un groupe spécifique, avec une valeur booléenne indiquant leur statut d'adhésion
 func (repo *GroupRepoImpl) GetUsersInGroup(groupID int) (map[int]bool, error) {
-    // Initialisation de la map qui stockera les utilisateurs et leur statut d'adhésion
-    usersInGroup := make(map[int]bool)
+	// Initialisation de la map qui stockera les utilisateurs et leur statut d'adhésion
+	usersInGroup := make(map[int]bool)
 
-    // Requête SQL pour sélectionner tous les utilisateurs appartenant au groupe donné
-    query := `SELECT user_id FROM group_members WHERE group_id = ?`
+	// Requête SQL pour sélectionner tous les utilisateurs appartenant au groupe donné
+	query := `SELECT user_id FROM group_members WHERE group_id = ?`
 
-    // Exécution de la requête
-    rows, err := repo.db.GetDB().Query(query, groupID)
-    if err != nil {
-        return nil, fmt.Errorf("GetUsersInGroup: %v", err)
-    }
-    defer rows.Close()
+	// Exécution de la requête
+	rows, err := repo.db.GetDB().Query(query, groupID)
+	if err != nil {
+		return nil, fmt.Errorf("GetUsersInGroup: %v", err)
+	}
+	defer rows.Close()
 
-    // Remplir la map avec les IDs des utilisateurs et leur statut d'adhésion
-    for rows.Next() {
-        var userID int
-        if err := rows.Scan(&userID); err != nil {
-            return nil, fmt.Errorf("GetUsersInGroup: %v", err)
-        }
-        usersInGroup[userID] = true
-    }
+	// Remplir la map avec les IDs des utilisateurs et leur statut d'adhésion
+	for rows.Next() {
+		var userID int
+		if err := rows.Scan(&userID); err != nil {
+			return nil, fmt.Errorf("GetUsersInGroup: %v", err)
+		}
+		usersInGroup[userID] = true
+	}
 
-    // Vérification des erreurs potentielles lors de l'itération des lignes
-    if err = rows.Err(); err != nil {
-        return nil, fmt.Errorf("GetUsersInGroup: %v", err)
-    }
+	// Vérification des erreurs potentielles lors de l'itération des lignes
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("GetUsersInGroup: %v", err)
+	}
 
-    return usersInGroup, nil
+	return usersInGroup, nil
 }

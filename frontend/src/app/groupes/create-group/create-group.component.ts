@@ -6,6 +6,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../../service/auth.service';
 import { ToolbarComponent } from "../../nav/toolbar/toolbar.component";
+import { MessageBody, MessageData } from '../../models/models.compenant';
+import { WebSocketService } from '../../chat/services/chat.service';
 
 @Component({
   selector: 'app-create-group',
@@ -19,19 +21,20 @@ export class CreateGroupComponent implements OnInit {
   groupeForm!: FormGroup;
   selectedFile: File | null = null;
   selectedFileName: string = '';
+  userID!: string 
 
 
-  constructor(private fb: FormBuilder, private apiService: DataService, private router: Router, private authService: AuthService) { }
+  constructor(private fb: FormBuilder, private apiService: DataService, private router: Router, private authService: AuthService, private websocketService: WebSocketService) { }
 
   ngOnInit(): void {
     this.authService.isOnline();
 
-    let userID = localStorage.getItem('userID');
+    this.userID = localStorage.getItem('userID') as string;
     this.groupeForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(50)]],
       description: ['', [Validators.required, Validators.maxLength(250)]],
       isPublic: [true, Validators.required],
-      owner: [(JSON.parse(userID as string)).toString(), Validators.required],
+      owner: [(JSON.parse(this.userID as string)).toString(), Validators.required],
       image: ['', null]
     });
   }
@@ -87,10 +90,37 @@ export class CreateGroupComponent implements OnInit {
           }
         );
       }
+      const messBody : MessageBody = {
+        senderId:0,
+        receiverId: Number(0),
+        message:"Nouveau group created successfully"
+        
+      }
+      const message: MessageData = {
+        type: 'new_notification',
+        datas: messBody,
+      };
+      const even = new Events(message.type, message.datas);
+      sendEvent(this.websocketService, even);
 
     } else {
       console.log('Formulaire invalide');
     }
 
+  }
+}
+
+
+function sendEvent(websocketService: WebSocketService, datas: any) {
+  websocketService.sendMessage(datas);
+}
+
+class Events {
+  type: string;
+  payload: any;
+
+  constructor(type: string, payload: any) {
+    this.type = type;
+    this.payload = payload;
   }
 }

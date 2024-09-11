@@ -99,24 +99,13 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         this.websocketService.connect();
 
         this.messagesSubscription = this.websocketService.messages$
-            .pipe(
-                distinctUntilChanged(
-                    (prev, curr) =>
-                        prev.payload.messageId === curr.payload.messageId &&
-                        prev.payload.message === curr.payload.message &&
-                        prev.type === curr.type
-                )
-            )
             .subscribe((message) => {
-                console.log('message de notification ');
+                console.log(message)
                 if (
-                    message.type === 'new_message' &&
+                    message.type === 'new_notification' &&
                     message.payload.messageId == 0
                 ) {
-                    this.userservice.updateChatCount(1);
                     this.notify();
-                } else if (message.type === 'get_messages') {
-                    // this.userservice.updateChatCount(-1);
                 }
             });
     }
@@ -139,12 +128,14 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         });
     }
 
-    InviteAccept(Id: number, groupID: number, userid: number) {
+    InviteAccept(Id: number, groupID: number, userid: number,targetid :number) {
         let body = {
             id: Id,
             user_id: userid,
             group_id: groupID,
+            target_id : targetid
         };
+        console.log(body);
         this.dataService
             .accept_decline('accept-request', body)
             .subscribe((res) => {
@@ -156,11 +147,12 @@ export class ToolbarComponent implements OnInit, OnDestroy {
                 }
             });
     }
-    InviteDecline(Id: number, groupID: number, userid: number) {
+    InviteDecline(Id: number, groupID: number, userid: number,targetid :number) {
         let body = {
             id: Id,
             user_id: userid,
             group_id: groupID,
+            target_id : targetid
         };
         console.log(body);
         this.dataService
