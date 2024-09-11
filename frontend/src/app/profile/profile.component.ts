@@ -79,6 +79,7 @@ export class ProfileComponent implements OnInit {
     likemap = [];
     dislikemap = [];
     comlength: length = {};
+    isPublic: boolean = false; 
 
 
     constructor(
@@ -109,6 +110,14 @@ export class ProfileComponent implements OnInit {
             response.user.date_of_birth = this.datePipe.transform(response.user.date_of_birth, 'longDate', '', 'en-US')
             this.userAge = this.calculateAge(response.user.date_of_birth)
             this.user = response.user
+            
+            // Mettre à jour la variable isPublic
+            this.isPublic = this.user.is_public;
+            
+            // Optionnel : Si vous souhaitez afficher cette information directement
+            this.nature = this.isPublic ? "Public" : "Private";
+            console.log(this.nature);
+            
 
             this.utilsService.setTitle(`${this.user.firstname} ${this.user.lastname}`)
         })
