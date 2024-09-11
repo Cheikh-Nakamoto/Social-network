@@ -152,30 +152,53 @@ func (c *FollowController) AcceptFollowRequest(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	if !strings.HasPrefix(r.URL.Path, os.Getenv("DEFAULT_API_LINK")+"/accept/") {
+	if r.URL.Path != os.Getenv("DEFAULT_API_LINK")+"/accept" {
 		http.Error(w, os.Getenv("NOT_FOUND"), http.StatusNotFound)
 		return
 	}
 
-	id, err := utils.ExtractIDFromRequest(r)
-	if err != nil {
-		http.Error(w, "Follow ID is required", http.StatusBadRequest)
+	var follow struct {
+		FollowerID uint `json:"follower_id"`
+		FolloweeID uint `json:"followee_id"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&follow); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	limit, err := c.FollowService.CountAllFollows()
+	if follow.FollowerID == follow.FolloweeID {
+		err = json.NewEncoder(w).Encode(map[string]interface{}{
+			"status":  http.StatusNoContent,
+			"message": "You cannot accept your own request",
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		return
+	}
+
+	check, err := c.FollowService.FindFollow(follow.FollowerID, follow.FolloweeID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	if id > limit {
-		http.Error(w, os.Getenv("NOT_FOUND"), http.StatusNotFound)
+	if check.Status != "pending" {
+		err = json.NewEncoder(w).Encode(map[string]interface{}{
+			"status":  http.StatusNoContent,
+			"message": "Request is not pending",
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 		return
 	}
 
 	//err = c.FollowService.AcceptFollowRequest(follow.ID)
-	err = c.FollowService.AcceptFollowRequest(id)
+	err = c.FollowService.AcceptFollowRequest(check.ID)
 	if err != nil {
 		err = json.NewEncoder(w).Encode(map[string]interface{}{
 			"status":  http.StatusNoContent,
@@ -211,29 +234,52 @@ func (c *FollowController) DeclineFollowRequest(w http.ResponseWriter, r *http.R
 		return
 	}
 
-	if !strings.HasPrefix(r.URL.Path, os.Getenv("DEFAULT_API_LINK")+"/decline/") {
+	if r.URL.Path != os.Getenv("DEFAULT_API_LINK")+"/decline" {
 		http.Error(w, os.Getenv("NOT_FOUND"), http.StatusNotFound)
 		return
 	}
 
-	id, err := utils.ExtractIDFromRequest(r)
-	if err != nil {
-		http.Error(w, "Follow request ID is required", http.StatusBadRequest)
+	var follow struct {
+		FollowerID uint `json:"follower_id"`
+		FolloweeID uint `json:"followee_id"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&follow); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	limit, err := c.FollowService.CountAllFollows()
+	if follow.FollowerID == follow.FolloweeID {
+		err = json.NewEncoder(w).Encode(map[string]interface{}{
+			"status":  http.StatusNoContent,
+			"message": "You cannot accept your own request",
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		return
+	}
+
+	check, err := c.FollowService.FindFollow(follow.FollowerID, follow.FolloweeID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	if id > limit {
-		http.Error(w, os.Getenv("NOT_FOUND"), http.StatusNotFound)
+	if check.Status != "pending" {
+		err = json.NewEncoder(w).Encode(map[string]interface{}{
+			"status":  http.StatusNoContent,
+			"message": "Request is not pending",
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 		return
 	}
 
-	err = c.FollowService.DeclineFollowRequest(id)
+	err = c.FollowService.DeclineFollowRequest(check.ID)
 	if err != nil {
 		err = json.NewEncoder(w).Encode(map[string]interface{}{
 			"status":  http.StatusNoContent,
@@ -455,8 +501,8 @@ func (c *FollowController) FollowsRoutes(routes *http.ServeMux) *http.ServeMux {
 
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/follow", c.FollowUser)
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/unfollow", c.UnfollowUser)
-	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/accept/", c.AcceptFollowRequest)
-	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/decline/", c.DeclineFollowRequest)
+	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/accept", c.AcceptFollowRequest)
+	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/decline", c.DeclineFollowRequest)
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/pending/", c.GetPendingFollowRequest)
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/follow-count", c.CountAllFollows)
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/are-following", c.AreFollowing)

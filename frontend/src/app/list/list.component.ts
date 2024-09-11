@@ -8,6 +8,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { User } from '../../entity/user';
 import { NgForOf, NgIf } from '@angular/common';
 import { FollowService } from '../service/follow.service';
+import { UtilService } from '../service/util.service';
 
 @Component({
     selector: 'app-list',
@@ -35,7 +36,8 @@ export class ListComponent {
 
     constructor(
         private authService: AuthService,
-        private followService: FollowService
+        private followService: FollowService,
+        private utilService: UtilService
     ) { }
 
     /* listUsers(): void {
@@ -61,14 +63,15 @@ export class ListComponent {
     }
 
     listFollowers(): void {
-        this.followService.getList(this.currentID, "friends").subscribe((data: any) => {
+        this.followService.getList(this.currentID, "followers").subscribe((data: any) => {
+            console.log(data)
             if (data.status !== 200) {
                 this.messages = "No Followers"
                 console.log("Follower's list is empty")
                 return
             }
             console.log("Follower's list:", data)
-            this.followers = data.friends
+            this.followers = data.followers
         })
     }
 
@@ -78,11 +81,33 @@ export class ListComponent {
             "followee_id": id
         }
 
-        console.log(this.currentID, "Follows", id)
-        console.log(data)
-
         this.followService.follow(data, "follow").subscribe((response: any) => {
-            console.log(response)
+            this.utilService.onSnackBar(response.message, "info")
+            this.listUsers()
+        })
+    }
+
+    onAccept(id: number) {
+        const data = {
+            "follower_id": id,
+            "followee_id": this.currentID
+        }
+
+        this.followService.request(data, "accept").subscribe((response: any) => {
+            this.utilService.onSnackBar(response.message, "info")
+            this.listFollowers()
+        })
+    }
+
+    onDecline(id: number) {
+        const data = {
+            "follower_id": id,
+            "followee_id": this.currentID
+        }
+
+        this.followService.request(data, "decline").subscribe((response: any) => {
+            this.utilService.onSnackBar(response.message, "info")
+            this.listFollowers()
         })
     }
 

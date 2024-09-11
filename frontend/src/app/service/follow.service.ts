@@ -35,12 +35,12 @@ export class FollowService {
         return this.http.post(`${this.api}/unfollow`, data)
     }
 
-    request(id: any, nature: string): Observable<any> {
+    request(data: any, nature: string): Observable<any> {
         switch (nature) {
             case "decline":
-                return this.http.delete(`${this.api}/decline/${id}`, {})
+                return this.http.delete(`${this.api}/decline`, data)
             default:
-                return this.http.put(`${this.api}/accept/${id}`, {})
+                return this.http.put(`${this.api}/accept`, data)
         }
     }
 
