@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import * as model from './../../models/models.compenant'
 import { CommonModule } from '@angular/common';
-import {MatDrawer, MatDrawerContainer, MatDrawerContent, MatSidenav, MatSidenavContainer} from "@angular/material/sidenav";
+import { MatDrawer, MatDrawerContainer, MatDrawerContent, MatSidenav, MatSidenavContainer } from "@angular/material/sidenav";
 import { Router, RouterLink, RouterOutlet } from "@angular/router";
 import { MatListModule } from "@angular/material/list";
 import { MatIcon } from "@angular/material/icon";
@@ -59,7 +59,7 @@ export class SidenavComponent implements OnInit {
         private cdRef: ChangeDetectorRef,
         private AuthService: AuthService,
         private visibilityService: VisibilityService
-    ) {}
+    ) { }
     ngOnInit(): void {
         this.visibilityService.visibility$.subscribe((visible: any) => {
             this.isVisible = visible; // Met à jour l'état de visibilité
@@ -105,6 +105,7 @@ export class SidenavComponent implements OnInit {
             if (user) {
                 user.email = payload.email ?? user.email;
                 user.nickname = payload.nickname ?? user.nickname;
+                user.firstname = payload.firstname ?? user.firstname;
                 user.isOnline = payload.online ?? user.isOnline;
                 // Ajoutez d'autres mises à jour de champs si nécessaire
             } else {
@@ -112,7 +113,7 @@ export class SidenavComponent implements OnInit {
                     id: payload.userId,
                     email: payload.email ?? '',
                     password: '', // Définissez une valeur par défaut ou gérez comme nécessaire
-                    firstname: '', // Définissez une valeur par défaut ou gérez comme nécessaire
+                    firstname: payload.firstname ?? '', // Définissez une valeur par défaut ou gérez comme nécessaire
                     lastname: '', // Définissez une valeur par défaut ou gérez comme nécessaire
                     date_of_birth: '', // Définissez une valeur par défaut ou gérez comme nécessaire
                     avatar: '', // Définissez une valeur par défaut ou gérez comme nécessaire
@@ -141,13 +142,9 @@ export class SidenavComponent implements OnInit {
         this.dialog.open(ChatComponent, {
             width: '400px', // Largeur de la boîte de dialogue
             data: { userId: id }, // Envoi de paramètres au composant de la boîte de dialogue
-            // hasBackdrop: true,
-            // backdropClass: 'custom-backdrop',
-            // // Désactiver la fermeture en cliquant en dehors si vous voulez forcer la fermeture via bouton
-            // disableClose: true,
             position: {
                 bottom: '12px',
-                right: '0',
+                right: '6px',
             },
         });
     }

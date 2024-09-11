@@ -2,37 +2,40 @@ import { Component } from '@angular/core';
 import { FollowService } from '../../service/follow.service';
 import { FormControl } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { AllUsersDTO, JoinGroupVerification, UserDTO } from '../../models/models.compenant';
+import { AllUsersDTO, JoinGroupVerification, MessageBody, MessageData, StatusMap, UserDTO } from '../../models/models.compenant';
 import { SharedserviceComponent } from '../../sharedservice/sharedservice.component';
 import { DataService } from '../../data.service';
 import { AuthService } from '../../service/auth.service';
 import { GroupchatComponent } from '../groupchat/groupchat.component';
 import { GroupeComponent } from '../groupe/groupe.component';
-import { ActivatedRoute ,Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule, NgIf } from '@angular/common';
+import { WebSocketService } from '../../chat/services/chat.service';
 
 
 @Component({
   selector: 'app-invite',
   standalone: true,
-  imports: [HttpClientModule,GroupeComponent,NgIf],
+  imports: [HttpClientModule, GroupeComponent, NgIf],
   templateUrl: './invite.component.html',
   styleUrl: './invite.component.scss',
-  providers: [DataService,FollowService ,AuthService, GroupeComponent],
+  providers: [DataService, FollowService, AuthService, GroupeComponent],
 
 })
+
 export class InviteComponent {
+  messagesSubscription: any;
   constructor(
     private followservice: FollowService,
     private dialogRef: MatDialogRef<InviteComponent>,
-    private share : SharedserviceComponent ,
-    private dataservice : DataService,
+    private share: SharedserviceComponent,
+    private dataservice: DataService,
     private authService: AuthService,
     private groupService: GroupeComponent,
     private router: Router,
-    private rout: ActivatedRoute
-   
+    private rout: ActivatedRoute,
+    private websocketService: WebSocketService
   ) {
 
   }
@@ -42,16 +45,26 @@ export class InviteComponent {
   toppingList: UserDTO[] = []
   id !: string
   groupId!: number
-  IsIn: JoinGroupVerification = {};
+  IsIn: StatusMap = {};
 
   ngOnInit(): void {
     this.id = (JSON.parse(localStorage.getItem('userID') as string));
     this.groupId = (JSON.parse(localStorage.getItem('groupid') as string))
     this.groupMember()
-    this.followservice.getList(this.id, "friends").subscribe((friends :{friends:UserDTO[],status:number}) => {
+    this.followservice.getList(this.id, "friends").subscribe((friends: { friends: UserDTO[], status: number }) => {
       this.toppingList = friends.friends
     })
-    
+    this.messagesSubscription = this.websocketService.messages$
+    .subscribe((message) => {
+        console.log(message)
+        if (
+            message.type === 'new_invitation' &&
+            message.payload.senderId == this.id
+        ) {
+          this.groupMember()
+        }
+    });
+
   }
 
   closeDialog() {
@@ -59,11 +72,11 @@ export class InviteComponent {
   }
 
 
-  groupMember(){
-    this.dataservice.getData(`member?group_id=${this.groupId}`).subscribe((data:{[key:number]:boolean})=>{
-        this.IsIn = data
-        console.log("this is group elemen,t ",this.IsIn)
-    })  
+  groupMember() {
+    this.dataservice.getData(`member?group_id=${this.groupId}`).subscribe((data: { [key: number]: boolean }) => {
+      this.IsIn = data
+      console.log("this is group elemen,t ", this.IsIn)
+    })
   }
 
   addMember(
@@ -71,8 +84,8 @@ export class InviteComponent {
     userId: string,
     target_id: number,
     role: string
-): void {
+  ): void {
     this.groupService.addMember(groupId, userId, target_id.toString(), role)
-}
+  }
 
 }

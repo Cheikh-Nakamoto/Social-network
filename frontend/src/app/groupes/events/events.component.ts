@@ -79,7 +79,7 @@ export class EventsComponent implements OnInit {
     if (!dateStart || !hourStart || !dateEnd || !hourEnd) {
       console.log("Une ou plusieurs valeurs de date/heure sont non définies.");
       return { dateTimeOrder: true }; // ou null si vous voulez que cela soit valide tant que tout n'est pas rempli
-    }
+    }    
 
     // Création des objets Date
     const startDateTime = new Date(`${dateStart}T${hourStart}`);
@@ -113,7 +113,8 @@ export class EventsComponent implements OnInit {
 
   onSubmit(): void {
     const groupid = parseInt(localStorage.getItem('groupid') as string);
-
+    // Vérifiez qu'il  n'y a pas de chaine vide dans les variable string a envoyer
+   
     if (this.groupeForm.valid) {
       const dateStart = this.groupeForm.get('date_start')?.value;
       const hourStart = this.groupeForm.get('hour_start')?.value;
@@ -130,6 +131,10 @@ export class EventsComponent implements OnInit {
         'hour_start': startDateTime,
         'hour_end': endDateTime,
 
+      }
+      if (body.description.trim() == '' ||  body.name.trim() == '') {
+        alert('Les champs description et nom ne doivent pas être vides');
+        return;
       }
       this.apiService.createEvent(body).subscribe(
         (res) => {

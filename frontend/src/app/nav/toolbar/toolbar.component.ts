@@ -8,7 +8,7 @@ import { Router, RouterLink } from "@angular/router";
 import { MatBadge } from "@angular/material/badge";
 import { MatMenu, MatMenuModule } from "@angular/material/menu";
 import { MatCardAvatar } from "@angular/material/card";
-import { NotificationVerification } from '../../models/models.compenant';
+import { MessageBody, MessageData, NotificationVerification } from '../../models/models.compenant';
 import { AuthService } from '../../service/auth.service';
 import { NgForOf, NumberSymbol } from '@angular/common';
 import { count, distinctUntilChanged, firstValueFrom, Subscription } from 'rxjs';
@@ -128,12 +128,12 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         });
     }
 
-    InviteAccept(Id: number, groupID: number, userid: number,targetid :number,role :string) {
+    InviteAccept(Id: number, groupID: number, userid: number, targetid: number, role: string) {
         let body = {
             id: Id,
             user_id: userid,
             group_id: groupID,
-            target_id : targetid,
+            target_id: targetid,
             role: role
         };
         console.log(body);
@@ -145,15 +145,39 @@ export class ToolbarComponent implements OnInit, OnDestroy {
                         (notif) => notif.id != Id
                     );
                     this.notifylength = String(Number(this.notifylength) - 1);
+                    let messBody: MessageBody = {
+                        senderId: Number(0),
+                        receiverId: Number(0),
+                        message: "Nouveau group created successfully"
+                    }
+                    let message: MessageData = {
+                        type: 'new_group',
+                        datas: messBody,
+                    };
+                    let even = new Events(message.type, message.datas);
+                    sendEvent(this.websocketService, even);
+                  if (role == "admin"){
+                    messBody = {
+                        senderId: Number(targetid),
+                        receiverId: Number(userid),
+                        message:""
+                    }
+                    message = {
+                        type: 'new_invitation',
+                        datas: messBody,
+                    };
+                    even = new Events(message.type, message.datas);
+                    sendEvent(this.websocketService, even);
+                  }
                 }
             });
     }
-    InviteDecline(Id: number, groupID: number, userid: number,targetid :number,role :string) {
+    InviteDecline(Id: number, groupID: number, userid: number, targetid: number, role: string) {
         let body = {
             id: Id,
             user_id: userid,
             group_id: groupID,
-            target_id : targetid
+            target_id: targetid
         };
         console.log(body);
         this.dataService
@@ -207,4 +231,22 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         this.router.navigate(['/profile', userId]);
     }
 }
+
+
+
+
+function sendEvent(websocketService: WebSocketService, datas: any) {
+    websocketService.sendMessage(datas);
+}
+
+class Events {
+    type: string;
+    payload: any;
+
+    constructor(type: string, payload: any) {
+        this.type = type;
+        this.payload = payload;
+    }
+}
+
 

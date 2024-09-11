@@ -5,12 +5,14 @@ import { AuthService } from "../../service/auth.service";
 import { CommonModule, DatePipe, NgForOf, NgIf } from "@angular/common";
 import { MatTabGroup, MatTabsModule } from "@angular/material/tabs";
 import { MatIconModule } from "@angular/material/icon";
+import { MatCard, MatCardActions, MatCardHeader, MatCardContent } from '@angular/material/card';
 
 import { MatListModule } from "@angular/material/list";
 import { FollowService } from '../../service/follow.service';
 import { UtilsService } from '../../service/utils.service';
 import { User } from '../../entity/user';
 import { Post } from '../../entity/post';
+import { CommentContent, length } from '../models/models.compenant';
 import { Group } from '../../entity/group';
 import { HttpClientModule } from '@angular/common/http';
 import { DataService } from '../data.service';
@@ -34,6 +36,10 @@ import { ReactiveFormsModule } from '@angular/forms';
         MatTabsModule,
         MatIconModule,
         MatListModule,
+        MatCard,
+        MatCardActions,
+        MatCardHeader,
+        MatCardContent,
         NgForOf,
         ToolbarComponent,
         FormsModule,
@@ -68,6 +74,10 @@ export class ProfileComponent implements OnInit {
     check!: any
     formGroup: any;
     nature !: string
+    comments: CommentContent = { comments_by_post: {} };
+    likemap = [];
+    dislikemap = [];
+    comlength: length = {};
 
 
     constructor(
@@ -129,6 +139,7 @@ export class ProfileComponent implements OnInit {
         return Math.floor(Math.abs(Date.now() - new Date(data).getTime()) / (1000 * 3600 * 24 * 365))
     }
 
+
     ChangeProfile() {
         const span = document.getElementById('nature');
         let nature: boolean = true
@@ -139,8 +150,6 @@ export class ProfileComponent implements OnInit {
         this.datasevice.ChangeNatureAccountStatus(this.user.id, nature).subscribe((response: any) => {
             this.getUser()
         })
-
-
     }
 
     showSection(section: string) {
@@ -292,5 +301,31 @@ export class ProfileComponent implements OnInit {
         this.getFriendsCount()
         this.getPosts()
         this.Nature(this.user)
+    }
+    timeAgo(date: Date | string): string {
+        const now = new Date();
+        const pastDate = new Date(date);
+        const difference = now.getTime() - pastDate.getTime();
+
+        const seconds = Math.floor(difference / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+        const months = Math.floor(days / 30); // Approximation
+        const years = Math.floor(days / 365); // Approximation
+
+        if (years > 0) {
+            return `${years} year${years > 1 ? 's' : ''} ago`;
+        } else if (months > 0) {
+            return `${months} month${months > 1 ? 's' : ''} ago`;
+        } else if (days > 0) {
+            return `${days} day${days > 1 ? 's' : ''} ago`;
+        } else if (hours > 0) {
+            return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+        } else if (minutes > 0) {
+            return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+        } else {
+            return `${seconds} second${seconds > 1 ? 's' : ''} ago`;
+        }
     }
 }

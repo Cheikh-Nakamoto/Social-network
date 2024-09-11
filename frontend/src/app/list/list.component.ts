@@ -8,6 +8,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { User } from '../../entity/user';
 import { NgForOf, NgIf } from '@angular/common';
 import { FollowService } from '../service/follow.service';
+import { UtilService } from '../service/util.service';
 
 @Component({
     selector: 'app-list',
@@ -20,7 +21,6 @@ import { FollowService } from '../service/follow.service';
         MatDividerModule,
         NgForOf,
         NgIf
-
     ],
     templateUrl: './list.component.html',
     styleUrl: './list.component.scss',
@@ -35,7 +35,8 @@ export class ListComponent {
 
     constructor(
         private authService: AuthService,
-        private followService: FollowService
+        private followService: FollowService,
+        private utilService: UtilService
     ) { }
 
     /* listUsers(): void {
@@ -55,20 +56,32 @@ export class ListComponent {
     } */
 
     listUsers(): void {
+        this.listFollowers()
+        
         this.authService.getAll().subscribe((data: any) => {
-            this.suggestions = data.users.filter((user:any) => user.id !== this.currentID)
-        })
+            const users = data.users.filter((user: any) => user.id !== this.currentID);
+            const existingFollowers = this.followers.map(follower => follower.id);
+            
+            this.suggestions = users.filter((user: any) => !existingFollowers.includes(user.id));
+        });
     }
 
     listFollowers(): void {
-        this.followService.getList(this.currentID, "friends").subscribe((data: any) => {
+        this.followService.getList(this.currentID, "followers").subscribe((data: any) => {
+            console.log(data)
             if (data.status !== 200) {
                 this.messages = "No Followers"
                 console.log("Follower's list is empty")
                 return
             }
             console.log("Follower's list:", data)
-            this.followers = data.friends
+            this.followers = data.followers
+        })
+    }
+
+    listFollowings(): void {
+        this.followService.getList(this.currentID, "followings").subscribe((data:any) => {
+            console.log("Following's list:",data)
         })
     }
 
@@ -78,17 +91,39 @@ export class ListComponent {
             "followee_id": id
         }
 
-        console.log(this.currentID, "Follows", id)
-        console.log(data)
-
         this.followService.follow(data, "follow").subscribe((response: any) => {
-            console.log(response)
+            this.utilService.onSnackBar(response.message, "info")
+            this.listUsers()
+        })
+    }
+
+    onAccept(id: number) {
+        const data = {
+            "follower_id": id,
+            "followee_id": this.currentID
+        }
+
+        this.followService.request(data, "accept").subscribe((response: any) => {
+            this.utilService.onSnackBar(response.message, "info")
+            this.listFollowers()
+        })
+    }
+
+    onDecline(id: number) {
+        const data = {
+            "follower_id": id,
+            "followee_id": this.currentID
+        }
+
+        this.followService.request(data, "decline").subscribe((response: any) => {
+            this.utilService.onSnackBar(response.message, "info")
+            this.listFollowers()
         })
     }
 
     ngOnInit(): void {
         this.authService.isOnline
         this.listUsers()
-        this.listFollowers()
+        // this.listFollowers()
     }
 }

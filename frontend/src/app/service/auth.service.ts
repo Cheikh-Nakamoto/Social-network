@@ -106,6 +106,7 @@ export class AuthService {
         localStorage.removeItem('userID')
         localStorage.removeItem('firstname')
         localStorage.removeItem('lastname')
+        localStorage.removeItem('avatar')
     }
 
     updateUser(id: any, user: any) {

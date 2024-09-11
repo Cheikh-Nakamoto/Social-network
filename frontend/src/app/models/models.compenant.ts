@@ -127,7 +127,9 @@ export interface JoinGroupVerification {
 export interface NotificationVerification {
   notif: Notification[];
 }
-
+ export interface StatusMap {
+  [key: string]: boolean;
+}
 
 
 export interface MessageBody {

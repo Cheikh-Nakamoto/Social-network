@@ -144,6 +144,9 @@ export class ChatComponent implements OnInit, OnDestroy {
             '#msgContent'
         ) as HTMLTextAreaElement;
         const messageContent = messagetag.value;
+        if (messageContent.trim() === '') {
+            return;
+        }
 
         const messBody: model.MessageBody = {
             senderId: this.sender,

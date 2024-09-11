@@ -49,7 +49,7 @@ export class GroupeComponent implements OnInit {
                 console.log(message)
                 if (
                     message.type === 'new_group' &&
-                    message.payload.messageId == 0 && Number(message.payload.senderId) != Number(this.id)
+                    message.payload.messageId == 0 
                 ) {
                   this.joinedgroup()
                   this.loadGroups()
@@ -97,7 +97,6 @@ export class GroupeComponent implements OnInit {
       }
     );
   }
-
 
   joinedgroup(): void {
     this.groupService.getGroupJoined().subscribe(res => {

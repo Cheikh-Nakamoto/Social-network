@@ -219,11 +219,6 @@ func (gc *GroupController) FetchAllEventsHandler(w http.ResponseWriter, r *http.
 		return
 	}
 
-	if len(events) == 0 {
-		http.Error(w, "No events found", http.StatusNotFound)
-		return
-	}
-
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(events)
 }
@@ -328,14 +323,9 @@ func (s GroupController) GetUsersInGroup(w http.ResponseWriter, r *http.Request)
         return
     }
 
-    users, err := s.GroupService.GetUsersInGroup(idInt)
+    users, _ := s.GroupService.GetUsersInGroup(idInt)
     if err!= nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
-        return
-    }
-
-    if len(users) == 0 {
-        http.Error(w, "No users found", http.StatusNotFound)
         return
     }
 

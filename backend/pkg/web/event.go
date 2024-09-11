@@ -56,5 +56,6 @@ const (
 	EventGetNotification="new_notification"
 	EventGroup="new_group"
 	EventPost="new_post"
+	EventInvite="new_invitation"
 
 )
