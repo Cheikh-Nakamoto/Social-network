@@ -124,6 +124,12 @@ $white: #fefefe;
         }
     }
 }
+.profile-menu[_ngcontent-ng-c2724926812]
+    .tab-content[_ngcontent-ng-c2724926812]
+    .block[_ngcontent-ng-c2724926812] {
+    height: auto;
+    box-shadow: 0 0 1px 0 $lightBlue;
+}
 
 .buttons-info {
     display: flex;
@@ -263,6 +269,50 @@ $white: #fefefe;
         span.title {
             font-size: 15px;
             color: $primaryColor;
+        }
+    }
+    .post-item {
+        mat-card {
+            margin-top: 12px;
+            border: none;
+            box-shadow: 2px 2px 2px 2px $lightBlue;
+            background: #fff;
+
+            mat-card-header img {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                margin-right: 8px;
+            }
+            mat-card-title {
+                display: block;
+                font-size: 16px;
+                text-transform: capitalize;
+                font-weight: 600;
+                margin-top: 2px;
+                
+            }
+            mat-card-subtitle {
+                display: block;
+                font-size: 12px;
+            }
+            mat-card-content {
+                max-height: 100px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: normal;
+                word-break: break-word;
+                h3 {
+                    font-size: 14px;
+                    font-weight: 500;
+                    margin-top: 12px;
+                }
+                p {
+                    font-size: 12px;
+                    margin-top: 6px;
+                }
+            }
+            
         }
     }
 }
