@@ -165,7 +165,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
                 this.notifylength = String(Number(this.notifylength) - 1);
             });
     }
-    AdminAddMembers() {}
     handleLogout() {
         this.authService.logout().subscribe({
             next: () => {
