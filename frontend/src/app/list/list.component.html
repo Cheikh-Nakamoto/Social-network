@@ -20,7 +20,7 @@
                 </div>
                 <div class="buttons">
                     <button class="btn btn-success" (click)="onAccept(user.id)">Follow back</button>
-                    <button class="btn btn-danger" routerLink="/profile/{{user.id}}">Decline</button>
+                    <button class="btn btn-danger" (click)="onDecline(user.id)">Decline</button>
                 </div>
             </div>
         </div>
