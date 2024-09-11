@@ -20,4 +20,5 @@ type UserRepo interface {
 	GetFollowerCount(userID uint) (uint, error)
 	GetFollowingCount(userID uint) (uint, error)
 	GetPostsByUserID(id uint) ([]*entity.Post, error)
+	ChangeNatureProfile (nature bool, userid int) (bool,error)
 }

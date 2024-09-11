@@ -9,4 +9,5 @@ type UserServcie interface {
 	UpdateProfile(id uint, userDTO *dto.UserDTO) error
 	GetFollowers(userID uint) ([]*dto.UserDTO, error)
 	CreateSession(user *dto.UserDTO) (string, error)
+	ChangeNatureProfile(nature string, userid int) (bool,error)
 }

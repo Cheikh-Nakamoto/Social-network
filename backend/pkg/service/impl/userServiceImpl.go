@@ -24,6 +24,23 @@ func (s *UserServiceImpl) GetUserById(id uint) (*dto.UserDTO, error) {
 	return mapper.UserToDTO(user), nil
 }
 
+func (s *UserServiceImpl) ChangeNatureProfile(nature bool, userid int) (bool, error) {
+	user, err := s.Repository.FindByID(uint(userid))
+	if err != nil {
+		fmt.Println("get user", err)
+		return false, err
+	}
+	if user == nil {
+		return false, errors.New("user not found")
+	}
+	bools, err := s.Repository.ChangeNatureProfile(nature, userid)
+	if err != nil {
+		fmt.Println("error repository in service", err)
+		return false, err
+	}
+	return bools, nil
+}
+
 func (s *UserServiceImpl) CreateUser(user *dto.UserDTO) error {
 	if user.Email == "" || user.Password == "" || user.Firstname == "" || user.Lastname == "" || user.DateOfBirth == "" {
 		fmt.Println("missing required fields")

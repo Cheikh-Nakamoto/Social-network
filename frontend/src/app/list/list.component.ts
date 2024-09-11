@@ -39,19 +39,29 @@ export class ListComponent {
     ) {}
 
     listUsers(): void {
+        this.listFollowers()
         this.authService.getAll().subscribe((data: any) => {
             this.size = data.users.length
-            this.suggestions = data.users.filter((user: any) => user.id !== this.currentID)
+            let mape : {[key:number] :boolean} = {}
+            for (let i = 0; i < data.users.length; i++) {
+                for (let j = 0; j < this.followers.length; j++) {
+                    if (this.followers[j] !== data.users[i] && !mape.hasOwnProperty(data.users[i].id)) {
+                        this.suggestions.push(data.users[i]);
+                        mape[data.users[i].id] = true
+                    }
+                }
+            }
         })
     }
 
     listFollowers(): void {
-        this.followService.getList(this.currentID, "").subscribe((data: any) => {
+        this.followService.getList(this.currentID, "friends").subscribe((data: any) => {
             if (data.status !== 200) {
                 this.messages = "No Followers"
                 return
             }
             console.log("Follower's list:", data)
+            this.followers = data.friends
         })
     }
 
@@ -71,8 +81,6 @@ export class ListComponent {
 
     ngOnInit(): void {
         this.authService.isOnline
-        
         this.listUsers()
-        this.listFollowers()
     }
 }

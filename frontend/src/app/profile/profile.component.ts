@@ -15,8 +15,10 @@ import { Group } from '../../entity/group';
 import { HttpClientModule } from '@angular/common/http';
 import { DataService } from '../data.service';
 import { ToolbarComponent } from '../nav/toolbar/toolbar.component';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule } from '@angular/forms';
 import { HomeComponent } from '../home/components/home/home.component';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -34,10 +36,12 @@ import { HomeComponent } from '../home/components/home/home.component';
         MatListModule,
         NgForOf,
         ToolbarComponent,
-        FormsModule, 
         FormsModule,
-        ToolbarComponent, 
-        HomeComponent
+        FormsModule,
+        ToolbarComponent,
+        HomeComponent,
+        ReactiveFormsModule,
+        InputSwitchModule
     ],
     templateUrl: './profile.component.html',
     styleUrl: './profile.component.scss',
@@ -61,6 +65,9 @@ export class ProfileComponent implements OnInit {
     friendCount!: any
     message!: string
     editMode: boolean = true;
+    check!: any
+    formGroup: any;
+    nature !: string
 
 
     constructor(
@@ -68,6 +75,7 @@ export class ProfileComponent implements OnInit {
         private followService: FollowService,
         private utilsService: UtilsService,
         private activatedRoute: ActivatedRoute,
+        private datasevice: DataService,
         private router: Router,
         public datePipe: DatePipe
 
@@ -88,8 +96,20 @@ export class ProfileComponent implements OnInit {
             response.user.date_of_birth = this.datePipe.transform(response.user.date_of_birth, 'longDate', '', 'en-US')
             this.userAge = this.calculateAge(response.user.date_of_birth)
             this.user = response.user
+
             this.utilsService.setTitle(`${this.user.firstname} ${this.user.lastname}`)
         })
+    }
+
+    Nature(user: User) {
+        const span = document.getElementById('nature') as HTMLSpanElement;
+        if (user.is_public === true) {
+            span.textContent = "Public";
+            this.nature = "Public";
+        } else {
+            span.textContent = "Private"
+            this.nature = "Private";
+        }
     }
     isOnline() {
         this.authService.isLoggedIn().subscribe(response => {
@@ -107,6 +127,20 @@ export class ProfileComponent implements OnInit {
 
     calculateAge(data: Date): number {
         return Math.floor(Math.abs(Date.now() - new Date(data).getTime()) / (1000 * 3600 * 24 * 365))
+    }
+
+    ChangeProfile() {
+        const span = document.getElementById('nature');
+        let nature: boolean = true
+        if (span) {
+            span.textContent = span.textContent === "Public" ? "Private" : "Public";
+            nature = span.textContent === "Public" ? true : false;
+        }
+        this.datasevice.ChangeNatureAccountStatus(this.user.id, nature).subscribe((response: any) => {
+            this.getUser()
+        })
+
+
     }
 
     showSection(section: string) {
@@ -216,7 +250,7 @@ export class ProfileComponent implements OnInit {
             nickname: this.user.nickname
             // avatar: this.user.avatar
         };
-    
+
         this.authService.updateUserProfile(this.id, updatedUser).subscribe(
             (response: any) => {
                 if (response.status === 'success' || response.status === 200) {
@@ -234,7 +268,7 @@ export class ProfileComponent implements OnInit {
     }
     toggleEditMode() {
         this.editMode = !this.editMode;
-      }
+    }
 
 
     ngOnInit(): void {
@@ -243,9 +277,12 @@ export class ProfileComponent implements OnInit {
             alert('You are not logged in')
             return
         }
-
+        this.formGroup = new FormGroup({
+            checked: new FormControl<boolean>(false)
+        });
         this.toggleEditMode()
         this.isOnline()
+        this.getUser()
         this.onUpdateProfile
         this.getFollowers()
         this.getFollowings()
@@ -253,7 +290,7 @@ export class ProfileComponent implements OnInit {
         this.getFollowersCount()
         this.getFollowingsCount()
         this.getFriendsCount()
-        this.getUser()
         this.getPosts()
+        this.Nature(this.user)
     }
 }

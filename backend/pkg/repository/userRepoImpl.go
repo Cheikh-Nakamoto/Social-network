@@ -295,3 +295,18 @@ func (r *UserRepoImpl) GetPostsByUserID(userID uint) ([]*entity.Post, error) {
 
 	return posts, nil
 }
+
+func (r *UserRepoImpl) ChangeNatureProfile(nature bool, userid int) (bool, error) {
+	query := "UPDATE users SET is_public =? WHERE id =?"
+	res, err := r.db.GetDB().Exec(query, nature, userid)
+	if err != nil {
+		fmt.Println("erreur lors de la requettes")
+		return false, err
+	}
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		fmt.Println("affectation de la reponse")
+		return false, err
+	}
+	return rowsAffected > 0, nil
+}

@@ -33,6 +33,8 @@ export class DataService {
   getAll() {
     throw new Error('Method not implemented.');
   }
+
+
   
 
   constructor(private http: HttpClient) { }
@@ -178,6 +180,14 @@ export class DataService {
   postCommentWithImage(postId: number, formData: FormData): Observable<any> {
     return this.http.post(`${this.apiUrl}/comments`, formData);
   }
+
+  ChangeNatureAccountStatus(userid:number,nature : boolean): Observable<any> {
+    let body = {
+      user_id: userid,
+      nature : nature
+    }
+    return this.http.post(`${this.apiUrl}/nature-profil/`,body)
+  } 
   
   
 }

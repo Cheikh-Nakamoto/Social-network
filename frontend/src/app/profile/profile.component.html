@@ -7,9 +7,13 @@
             </a>
         </div>
     </div>
+    
+       
     <div class="row p-3 profile-basic">
         <div class="col-lg-6 picture-infos">
             <img alt="Profile" class="rounded-circle avatar" height="150" [src]="avatar" width="150">
+            <span id="nature"></span>
+            <p-inputSwitch formControlName="checked" id="p/b" (click)="ChangeProfile()"/>
             <div class="info p-3">
                 <span class="name">
                     {{ user.firstname }} {{ user.lastname }}
@@ -86,33 +90,34 @@
     <div class="row">
         <div class="col-md-12 profile-menu">
             <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="false" animationDuration="0ms">
-               <mat-tab>
-    <div class="tab-title">
-        <ng-template mat-tab-label>
-            <span class="material-icons">article</span>
-            <span class="title">Posts</span>
-        </ng-template>
-    </div>
-    <div class="tab-content">
-        <div class="row block">
-            <div class="col-md-12 message" *ngIf="!posts || posts.length === 0">
-                <img src="fail.png" width="64" height="64">
-                <span *ngIf="currentID === id">You have no posts</span>
-                <span *ngIf="currentID !== id">{{ user.firstname }} has no posts</span>
-            </div>
+                <mat-tab>
+                    <div class="tab-title">
+                        <ng-template mat-tab-label>
+                            <span class="material-icons">article</span>
+                            <span class="title">Posts</span>
+                        </ng-template>
+                    </div>
+                    <div class="tab-content">
+                        <div class="row block">
+                            <div class="col-md-12 message" *ngIf="!posts || posts.length === 0">
+                                <img src="fail.png" width="64" height="64">
+                                <span *ngIf="currentID === id">You have no posts</span>
+                                <span *ngIf="currentID !== id">{{ user.firstname }} has no posts</span>
+                            </div>
 
-            <!-- Display posts -->
-            <div class="col-md-12" *ngIf="posts && posts.length > 0">
-                <div *ngFor="let post of posts" class="post-item">
-                    <h3>{{ post.title }}</h3>
-                    <p>{{ post.content }}</p>
-                    <img *ngIf="post.image" [src]="post.image" alt="Post image" width="150" height="150">
-                    <p><strong>Published on:</strong> {{ post.created_at | date:'medium' }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</mat-tab>
+                            <!-- Display posts -->
+                            <div class="col-md-12" *ngIf="posts && posts.length > 0">
+                                <div *ngFor="let post of posts" class="post-item">
+                                    <h3>{{ post.title }}</h3>
+                                    <p>{{ post.content }}</p>
+                                    <img *ngIf="post.image" [src]="post.image" alt="Post image" width="150"
+                                        height="150">
+                                    <p><strong>Published on:</strong> {{ post.created_at | date:'medium' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
 
 
                 <mat-tab>

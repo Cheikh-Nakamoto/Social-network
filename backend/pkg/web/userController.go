@@ -17,6 +17,31 @@ type UserController struct {
 	UserService impl.UserServiceImpl
 }
 
+// route : nature-profil
+
+func (c *UserController) ChangeNatureProfile(w http.ResponseWriter, r *http.Request) {
+	type UserProfile struct {
+		Nature bool `json:"nature"`
+		UserId int  `json:"user_id"`
+	}
+	var natureProfile UserProfile
+	if err := json.NewDecoder(r.Body).Decode(&natureProfile); err != nil {
+		fmt.Println("error de decodage : ", err, r.Body)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	bools, err := c.UserService.ChangeNatureProfile(natureProfile.Nature, natureProfile.UserId)
+	if err != nil {
+		fmt.Println("error in user service: ", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(bools)
+
+}
+
 // Register Create new user controller
 func (c *UserController) Register(w http.ResponseWriter, r *http.Request) {
 
@@ -730,6 +755,7 @@ func (c *UserController) UsersRoutes(routes *http.ServeMux) *http.ServeMux {
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/friend-count/", c.GetFriendCount)
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/friends/", c.GetFriends)
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/post-profile/", c.GetRecentPosts)
+	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/nature-profil/", c.ChangeNatureProfile)
 
 	return routes
 }
