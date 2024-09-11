@@ -91,13 +91,13 @@ export class CreateGroupComponent implements OnInit {
         );
       }
       const messBody : MessageBody = {
-        senderId:0,
+        senderId:Number(this.userID),
         receiverId: Number(0),
         message:"Nouveau group created successfully"
         
       }
       const message: MessageData = {
-        type: 'new_notification',
+        type: 'new_group',
         datas: messBody,
       };
       const even = new Events(message.type, message.datas);

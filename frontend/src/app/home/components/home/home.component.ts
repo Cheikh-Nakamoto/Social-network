@@ -72,7 +72,7 @@ export class HomeComponent implements OnInit {
         private shared: SharedserviceComponent,
         private websocketService: WebSocketService,
         private userService: GetUserService
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.authService.isOnline();
@@ -87,11 +87,13 @@ export class HomeComponent implements OnInit {
         this.websocketService.connect();
 
         this.messagesSubscription = this.websocketService.messages$.subscribe(
-          (message) => {
-            if (message.type === 'new_message') {
-                // alert('a new message is coming for you');
-            }  
-          
+            (message) => {
+                if (message.type === 'new_post' &&  message.payload.messageId == 0 && Number(message.payload.senderId) != Number(this.id)) {
+                    this.loadUser('users');
+                    this.loadComments();
+                    this.getAllPosts();
+                }
+
             }
         );
         this.shared.sharedData$.subscribe((res: Post) => {

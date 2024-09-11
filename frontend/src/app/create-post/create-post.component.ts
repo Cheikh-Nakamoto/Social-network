@@ -10,9 +10,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../service/auth.service';
 import { ToolbarComponent } from "../nav/toolbar/toolbar.component";
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Post } from '../models/models.compenant';
+import { MessageBody, MessageData, Post } from '../models/models.compenant';
 import { SharedserviceComponent } from '../sharedservice/sharedservice.component';
 import { AlmostPrivateComponent } from './almost-private/almost-private.component';
+import { WebSocketService } from '../chat/services/chat.service';
 
 @Component({
   selector: 'app-create-post',
@@ -55,7 +56,8 @@ export class CreatePostComponent implements OnInit {
     private postFormBuilder: FormBuilder, private apiservice: DataService,
     private router: Router, private authService: AuthService,
     private rout: ActivatedRoute, private shared: SharedserviceComponent,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private websocketService: WebSocketService
   ) { }
 
   ngOnInit(): void {
@@ -151,6 +153,19 @@ export class CreatePostComponent implements OnInit {
           console.error('Erreur lors de l\'envoi du post:', error);
         });
       }
+      const messBody : MessageBody = {
+        senderId:Number(userId),
+        receiverId: Number(0),
+        message:"Nouveau post created successfully"
+        
+      }
+      const message: MessageData = {
+        type: 'new_post',
+        datas: messBody,
+      };
+      const even = new Events(message.type, message.datas);
+      sendEvent(this.websocketService, even);
+
     }
     this.Post.reset();
     this.closeDialog()
@@ -175,3 +190,18 @@ export class CreatePostComponent implements OnInit {
 
 }
 
+
+
+function sendEvent(websocketService: WebSocketService, datas: any) {
+  websocketService.sendMessage(datas);
+}
+
+class Events {
+  type: string;
+  payload: any;
+
+  constructor(type: string, payload: any) {
+    this.type = type;
+    this.payload = payload;
+  }
+}

@@ -30,6 +30,7 @@ export class GroupeComponent implements OnInit {
   groupeForm!: FormGroup;
   id !: string;
   clear!: any;
+  messagesSubscription: any;
 
 
   constructor(private fb: FormBuilder, private groupService: DataService, private router: Router, private authService: AuthService, private websocketService: WebSocketService) { }
@@ -42,6 +43,18 @@ export class GroupeComponent implements OnInit {
       this.loadGroups()
 
     this.websocketService.connect()
+
+        this.messagesSubscription = this.websocketService.messages$
+            .subscribe((message) => {
+                console.log(message)
+                if (
+                    message.type === 'new_group' &&
+                    message.payload.messageId == 0 && Number(message.payload.senderId) != Number(this.id)
+                ) {
+                  this.joinedgroup()
+                  this.loadGroups()
+                }
+            });
   }
   
 
