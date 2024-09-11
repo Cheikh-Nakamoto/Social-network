@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="col-lg-6 buttons-info">
-            <button *ngIf="currentID !== user.id" class="btn btn-primary">
+            <button *ngIf="currentID !== user.id" class="btn btn-primary" (click)="onFollow(user.id)">
                 <span class="material-icons">person_add</span>
                 Follow
             </button>
@@ -251,7 +251,7 @@
                                                 <span class="username">&#64;{{follower.nickname || null}}</span>
                                             </div>
                                         </div>
-                                        <div class="buttons">
+                                        <div class="buttons" *ngIf="currentID == id">
                                             <button class="btn btn-success" (click)="onAccept(follower.id)">
                                                 <span class="material-icons text-white">check_circle</span>
                                                 Accept

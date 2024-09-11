@@ -21,6 +21,7 @@ import { FormControl, FormGroup, FormsModule } from '@angular/forms';
 import { HomeComponent } from '../home/components/home/home.component';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { ReactiveFormsModule } from '@angular/forms';
+import { UtilService } from '../service/util.service';
 
 
 
@@ -87,7 +88,9 @@ export class ProfileComponent implements OnInit {
         private activatedRoute: ActivatedRoute,
         private datasevice: DataService,
         private router: Router,
-        public datePipe: DatePipe
+        public datePipe: DatePipe,
+        private utilService: UtilService
+        // private listComponent: ListComponent
 
     ) {
     }
@@ -205,11 +208,21 @@ export class ProfileComponent implements OnInit {
             console.log(this.friendCount)
         })
     }
+    onFollow(id: number) {
+        const data = {
+            "follower_id": this.currentID,
+            "followee_id": id
+        }
 
+        this.followService.follow(data, "follow").subscribe((response: any) => {
+            this.getFriends()
+            this.getFriendsCount()
+        })
+    }
     onUnfollow(id: any) {
         const data = {
-            follower_id: this.currentID,
-            followed_id: id
+            "follower_id": this.currentID,
+            "followed_id": id
         }
 
         this.followService.unfollow(data).subscribe(() => {
@@ -218,17 +231,41 @@ export class ProfileComponent implements OnInit {
         })
     }
 
-    onAccept(id: any) {
-        this.followService.request(id, 'accept').subscribe(() => {
+    // onAccept(id: any) {
+    //     this.listComponent.onAccept(id)
+    // }
+    onAccept(id: number) {
+        const data = {
+            "follower_id": id,
+            "followee_id": this.currentID
+        }
+
+        this.followService.request(data, "accept").subscribe((response: any) => {
+            this.utilService.onSnackBar(response.message, "info")
             this.getFriends()
             this.getFriendsCount()
+            
+            location.reload
         })
     }
+    // onDecline(id: any) {
+    //     this.followService.request(id, 'decline').subscribe(() => {
+    //         this.getFollowers()
+    //         this.getFollowersCount()
+    //     })
+    // }
+    onDecline(id: number) {
+        const data = {
+            "follower_id": id,
+            "followee_id": this.currentID
+        }
 
-    onDecline(id: any) {
-        this.followService.request(id, 'decline').subscribe(() => {
+        this.followService.request(data, "decline").subscribe((response: any) => {
+            console.log("requeeeee");
+            this.utilService.onSnackBar(response.message, "info")
             this.getFollowers()
             this.getFollowersCount()
+            location.reload
         })
     }
 
