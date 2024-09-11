@@ -11,8 +11,9 @@
     <div class="row p-3 profile-basic">
         <div class="col-lg-6 picture-infos">
             <img alt="Profile" class="rounded-circle avatar" height="150" [src]="avatar" width="150">
-            <div class="opt" *ngIf="currentID == user.id">
+            <div class="opt" *ngIf="currentID == user.id" [formGroup]="formGroup">
                 <span id="nature"></span>
+              
                 <p-inputSwitch formControlName="checked" id="p/b" (click)="ChangeProfile()" />
             </div>
             <div class="info p-3">

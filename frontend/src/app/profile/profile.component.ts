@@ -116,6 +116,9 @@ export class ProfileComponent implements OnInit {
 
     Nature(user: User) {
         const span = document.getElementById('nature') as HTMLSpanElement;
+        if (span == null){
+            return
+        }
         if (user.is_public === true) {
             span.textContent = "Public";
             this.nature = "Public";
@@ -337,7 +340,9 @@ export class ProfileComponent implements OnInit {
         this.getFollowingsCount()
         this.getFriendsCount()
         this.getPosts()
-        this.Nature(this.user)
+        if (this.user != null) {
+            this.Nature(this.user)
+        }
     }
     timeAgo(date: Date | string): string {
         const now = new Date();
