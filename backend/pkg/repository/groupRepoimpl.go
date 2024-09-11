@@ -318,42 +318,47 @@ func (repo *GroupRepoImpl) GetNotificationsByUserID(userID int) ([]dto.Notificat
 
 // / AddMemberBasedOnNotification vérifie la notification et ajoute le membre au groupe si l'utilisateur accepte, puis supprime la notification
 func (repo *GroupRepoImpl) AddMemberBasedOnNotification(notif dto.Notification) error {
-	var data dto.Notification
-	fmt.Println("Les donne avant acceptation : ", notif)
-	// Requête SQL pour vérifier l'existence de la notification
-	query := `SELECT group_id, user_id FROM notifications WHERE id = ? AND group_id = ? AND user_id = ?`
-	err := repo.db.GetDB().QueryRow(query, notif.ID, notif.GroupID, notif.UserID).Scan(&data.GroupID, &data.UserID)
+    var data dto.Notification
+   
+    // Requête SQL pour vérifier l'existence de la notification
+    query := `SELECT group_id, user_id FROM notifications WHERE id = ? AND group_id = ? AND user_id = ?`
+    err := repo.db.GetDB().QueryRow(query, notif.ID, notif.GroupID, notif.UserID).Scan(&data.GroupID, &data.UserID)
 
-	if err != nil {
-		if err == sql.ErrNoRows {
-			fmt.Println("Notification non trouvée :", notif.ID, notif.GroupID, notif.UserID) // Affichage pour le débogage
-			return errors.New("notification non trouvée")
-		}
-		return err
-	}
-	var targetid int
-	if notif.Role == "member" {
-		targetid = notif.UserID
-	} else if notif.Role == "admin" {
-		targetid = notif.TargetID
-	}
-	fmt.Println("target id  : ", notif.TargetID)
-	// Insérer l'utilisateur dans la table group_members
-	insertQuery := `INSERT INTO group_members (group_id, user_id, role, joined_at) VALUES (?, ?, ?, ?)`
-	if targetid != 0{_, err = repo.db.GetDB().Exec(insertQuery, notif.GroupID, targetid, "member", time.Now())
-	if err != nil {
-		return err
-	}}
+    if err != nil {
+        if err == sql.ErrNoRows {
+            fmt.Println("Notification non trouvée :", notif.ID, notif.GroupID, notif.UserID) // Affichage pour le débogage
+            return errors.New("notification non trouvée")
+        }
+        return err
+    }
 
-	// Supprimer la notification après avoir ajouté l'utilisateur au groupe
-	deleteQuery := `DELETE FROM notifications WHERE id = ?`
-	_, err = repo.db.GetDB().Exec(deleteQuery, notif.ID)
-	if err != nil {
-		return err
-	}
+    var insertQuery string
+    if notif.Role == "member" {
+        // Utiliser UserID si le rôle est "member"
+		fmt.Println("Les données avant acceptation :", notif)
+        insertQuery = `INSERT INTO group_members (group_id, user_id, role, joined_at) VALUES (?, ?, ?, ?)`
+        _, err = repo.db.GetDB().Exec(insertQuery, notif.GroupID, notif.UserID, "member", time.Now())
+    } else if notif.Role == "admin" {
+		fmt.Println("Les données avant acceptation :", notif)
+        // Utiliser TargetID si le rôle est "admin"
+        insertQuery = `INSERT INTO group_members (group_id, user_id, role, joined_at) VALUES (?, ?, ?, ?)`
+        _, err = repo.db.GetDB().Exec(insertQuery, notif.GroupID, notif.TargetID, "admin", time.Now())
+    }
 
-	return nil
+    if err != nil {
+        return err
+    }
+
+    // Supprimer la notification après avoir ajouté l'utilisateur au groupe
+    deleteQuery := `DELETE FROM notifications WHERE id = ?`
+    _, err = repo.db.GetDB().Exec(deleteQuery, notif.ID)
+    if err != nil {
+        return err
+    }
+
+    return nil
 }
+
 
 func (repo *GroupRepoImpl) DeclineNotification(notif dto.Notification) error {
 	var data dto.Notification

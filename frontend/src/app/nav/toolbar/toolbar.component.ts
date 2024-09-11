@@ -128,12 +128,13 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         });
     }
 
-    InviteAccept(Id: number, groupID: number, userid: number,targetid :number) {
+    InviteAccept(Id: number, groupID: number, userid: number,targetid :number,role :string) {
         let body = {
             id: Id,
             user_id: userid,
             group_id: groupID,
-            target_id : targetid
+            target_id : targetid,
+            role: role
         };
         console.log(body);
         this.dataService
@@ -147,7 +148,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
                 }
             });
     }
-    InviteDecline(Id: number, groupID: number, userid: number,targetid :number) {
+    InviteDecline(Id: number, groupID: number, userid: number,targetid :number,role :string) {
         let body = {
             id: Id,
             user_id: userid,

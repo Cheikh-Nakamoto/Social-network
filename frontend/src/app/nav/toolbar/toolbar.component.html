@@ -31,11 +31,11 @@
           <div class="notif" mat-menu-item>
             <p>{{ notif.message }}  </p>
             <div class="buttons">
-              <button class="btn btn-success" (click)="InviteAccept(notif.id,notif.group_id,notif.user_id,notif.target_id)">
+              <button class="btn btn-success" (click)="InviteAccept(notif.id,notif.group_id,notif.user_id,notif.target_id,notif.role)">
                 <span class="material-icons text-white">check_circle</span>
                 Accept
               </button>
-              <button class="btn btn-danger"  (click)="InviteDecline(notif.id,notif.group_id,notif.user_id,notif.target_id)">
+              <button class="btn btn-danger"  (click)="InviteDecline(notif.id,notif.group_id,notif.user_id,notif.target_id,notif.role)">
                 <span class="material-icons text-white">cancel</span>
                 Decline
               </button>

@@ -113,6 +113,7 @@ export interface Notification {
   group_id: number;    // ID of the group (optional, can be NULL)
   message: string;     // The message content of the notification
   is_read: boolean;     // Flag indicating whether the notification has been read
+  role : string; //
   created_at: string;   // Timestamp of when the notification was created (ISO 8601 string)
 }
 
