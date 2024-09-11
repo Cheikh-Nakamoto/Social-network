@@ -42,19 +42,37 @@ func (c *FollowController) FollowUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if follow.FollowerID == follow.FolloweeID {
-		http.Error(w, "Cannot follow yourself", http.StatusBadRequest)
+		err = json.NewEncoder(w).Encode(map[string]interface{}{
+			"status":  http.StatusNoContent,
+			"message": "You cannot follow yourself",
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 		return
 	}
 
 	err = c.FollowService.FollowUser(follow.FollowerID, follow.FolloweeID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		err = json.NewEncoder(w).Encode(map[string]interface{}{
+			"status":  http.StatusNoContent,
+			"message": err.Error(),
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
-	_, err = w.Write([]byte("Follow request sent"))
+	err = json.NewEncoder(w).Encode(map[string]interface{}{
+		"status":  http.StatusOK,
+		"message": err.Error(),
+	})
 	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 }
@@ -87,19 +105,37 @@ func (c *FollowController) UnfollowUser(w http.ResponseWriter, r *http.Request) 
 	}
 
 	if follow.FollowerID == follow.FolloweeID {
-		http.Error(w, "Cannot unfollow yourself", http.StatusBadRequest)
+		err = json.NewEncoder(w).Encode(map[string]interface{}{
+			"status":  http.StatusNoContent,
+			"message": "Cannot unfollow yourself",
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 		return
 	}
 
 	err = c.FollowService.UnfollowUser(follow.FollowerID, follow.FolloweeID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		err = json.NewEncoder(w).Encode(map[string]interface{}{
+			"status":  http.StatusNoContent,
+			"message": err.Error(),
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
-	_, err = w.Write([]byte("Unfollow request sent"))
+	err = json.NewEncoder(w).Encode(map[string]interface{}{
+		"status":  http.StatusOK,
+		"message": "Unfollow request sent",
+	})
 	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 }
@@ -141,13 +177,24 @@ func (c *FollowController) AcceptFollowRequest(w http.ResponseWriter, r *http.Re
 	//err = c.FollowService.AcceptFollowRequest(follow.ID)
 	err = c.FollowService.AcceptFollowRequest(id)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		err = json.NewEncoder(w).Encode(map[string]interface{}{
+			"status":  http.StatusNoContent,
+			"message": err.Error(),
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
-	_, err = w.Write([]byte("Follow request accepted"))
+	err = json.NewEncoder(w).Encode(map[string]interface{}{
+		"status":  http.StatusOK,
+		"message": "Follow request accepted",
+	})
 	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 }
@@ -188,13 +235,24 @@ func (c *FollowController) DeclineFollowRequest(w http.ResponseWriter, r *http.R
 
 	err = c.FollowService.DeclineFollowRequest(id)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		err = json.NewEncoder(w).Encode(map[string]interface{}{
+			"status":  http.StatusNoContent,
+			"message": err.Error(),
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
-	_, err = w.Write([]byte("Follow request declined"))
+	err = json.NewEncoder(w).Encode(map[string]interface{}{
+		"status":  http.StatusOK,
+		"message": "Follow request declined",
+	})
 	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 }
