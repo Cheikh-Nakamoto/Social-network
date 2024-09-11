@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
-import {AuthService} from "../service/auth.service";
+import { Component } from '@angular/core';
+import { AuthService } from "../service/auth.service";
 import { ToolbarComponent } from '../nav/toolbar/toolbar.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
@@ -10,21 +10,21 @@ import { NgForOf, NgIf } from '@angular/common';
 import { FollowService } from '../service/follow.service';
 
 @Component({
-  selector: 'app-list',
-  standalone: true,
-  imports: [
-    ToolbarComponent,
-    HttpClientModule,
-    MatCardModule,
-    RouterLink,
-    MatDividerModule,
-    NgForOf,
-    NgIf
+    selector: 'app-list',
+    standalone: true,
+    imports: [
+        ToolbarComponent,
+        HttpClientModule,
+        MatCardModule,
+        RouterLink,
+        MatDividerModule,
+        NgForOf,
+        NgIf
 
-],
-  templateUrl: './list.component.html',
-  styleUrl: './list.component.scss',
-  providers: [AuthService, FollowService]
+    ],
+    templateUrl: './list.component.html',
+    styleUrl: './list.component.scss',
+    providers: [AuthService, FollowService]
 })
 export class ListComponent {
     suggestions: User[] = []
@@ -36,9 +36,9 @@ export class ListComponent {
     constructor(
         private authService: AuthService,
         private followService: FollowService
-    ) {}
+    ) { }
 
-    listUsers(): void {
+    /* listUsers(): void {
         this.listFollowers()
         this.authService.getAll().subscribe((data: any) => {
             this.size = data.users.length
@@ -52,12 +52,19 @@ export class ListComponent {
                 }
             }
         })
+    } */
+
+    listUsers(): void {
+        this.authService.getAll().subscribe((data: any) => {
+            this.suggestions = data.users.filter((user:any) => user.id !== this.currentID)
+        })
     }
 
     listFollowers(): void {
         this.followService.getList(this.currentID, "friends").subscribe((data: any) => {
             if (data.status !== 200) {
                 this.messages = "No Followers"
+                console.log("Follower's list is empty")
                 return
             }
             console.log("Follower's list:", data)
@@ -65,16 +72,16 @@ export class ListComponent {
         })
     }
 
-    onFollow(id:number) {
+    onFollow(id: number) {
         const data = {
             "follower_id": this.currentID,
             "followee_id": id
         }
-        
+
         console.log(this.currentID, "Follows", id)
         console.log(data)
 
-        this.followService.follow(data, "follow").subscribe((response:any) => {
+        this.followService.follow(data, "follow").subscribe((response: any) => {
             console.log(response)
         })
     }
@@ -82,5 +89,6 @@ export class ListComponent {
     ngOnInit(): void {
         this.authService.isOnline
         this.listUsers()
+        this.listFollowers()
     }
 }

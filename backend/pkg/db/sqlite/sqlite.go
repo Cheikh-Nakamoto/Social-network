@@ -62,43 +62,42 @@ func Migrate(db *sql.DB) error {
 	fmt.Println("migration ditrectory :", os.Getenv("DB_MIGRATION_PATH"))
 	m, err := migrate.NewWithDatabaseInstance("file://"+os.Getenv("DB_MIGRATION_PATH"), "sqlite3", driver)
 	if err != nil {
-		fmt.Println("error migration",err)
+		fmt.Println("error migration", err)
 		return err
 	}
 
-	_,err = db.Exec("PRAGMA journal_mode=WAL")
+	_, err = db.Exec("PRAGMA journal_mode=WAL")
 	if err != nil {
 		return err
 	}
-
 
 	if err := m.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
 		return err
 	}
 
 	// log.Println("Database migrated")
-	AddFollow(db,1,2,"accepted")
-	AddFollow(db,3,2,"accepted")
-	AddFollow(db,2,1,"accepted")
+	// AddFollow(db,1,2,"accepted")
+	// AddFollow(db,3,2,"accepted")
+	// AddFollow(db,2,1,"accepted")
 	return nil
 }
 
 func AddFollow(db *sql.DB, followerID, followeeID int, status string) error {
-    query := `
+	query := `
     INSERT INTO follows (follower_id, followee_id, status)
     VALUES (?, ?, ?)
     `
 
-    // Si aucun statut n'est spécifié, définir à "pending"
-    if status == "" {
-        status = "pending"
-    }
+	// Si aucun statut n'est spécifié, définir à "pending"
+	if status == "" {
+		status = "pending"
+	}
 
-    // Exécute la requête d'insertion
-    _, err := db.Exec(query, followerID, followeeID, status)
-    if err != nil {
-        return fmt.Errorf("erreur lors de l'ajout du suivi : %v", err)
-    }
+	// Exécute la requête d'insertion
+	_, err := db.Exec(query, followerID, followeeID, status)
+	if err != nil {
+		return fmt.Errorf("erreur lors de l'ajout du suivi : %v", err)
+	}
 
-    return nil
+	return nil
 }

@@ -69,7 +69,7 @@ func (c *FollowController) FollowUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(w).Encode(map[string]interface{}{
 		"status":  http.StatusOK,
-		"message": err.Error(),
+		"message": "Follow request sent",
 	})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

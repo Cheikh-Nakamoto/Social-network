@@ -34,3 +34,95 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; height: 100
 .container{
   height: 100%;
 }
+
+.custom-snackbar {
+  .mat-mdc-snack-bar-container .mdc-snackbar__surface {
+      border-radius: 8px !important;
+      z-index: 2 !important;
+  }
+
+  .mdc-snackbar__label {
+      font-size: 14px !important;
+  }
+
+}
+
+.snackbar-primary {
+  .mdc-snackbar__surface {
+      background-color: $bgPrimary !important;
+      border: 1px solid $borderPrimary !important;
+  }
+
+  .mdc-snackbar__label {
+      color: $textPrimary !important;
+  }
+
+  .mat-mdc-button.mat-mdc-snack-bar-action {
+      background-color: $textPrimary !important;
+      color: $bgPrimary !important;
+  }
+}
+
+.snackbar-info {
+  .mdc-snackbar__surface {
+      background-color: $bgInfo !important;
+      border: 1px solid $borderInfo !important;
+  }
+
+  .mdc-snackbar__label {
+      color: $textInfo !important;
+  }
+
+  .mat-mdc-button.mat-mdc-snack-bar-action {
+      background-color: $textInfo !important;
+      color: $bgInfo !important;
+  }
+}
+
+.snackbar-warning {
+  .mdc-snackbar__surface {
+      background-color: $bgWarning !important;
+      border: 1px solid $borderWarning !important;
+  }
+
+  .mdc-snackbar__label {
+      color: $textWarning !important;
+  }
+
+  .mat-mdc-button.mat-mdc-snack-bar-action {
+      background-color: $textWarning !important;
+      color: $bgWarning !important;
+  }
+}
+
+.snackbar-success {
+  .mdc-snackbar__surface {
+      background-color: $bgSuccess !important;
+      border: 1px solid $borderSuccess !important;
+  }
+
+  .mdc-snackbar__label {
+      color: $textSuccess !important;
+  }
+
+  .mat-mdc-button.mat-mdc-snack-bar-action {
+      background-color: $textSuccess !important;
+      color: $bgSuccess !important;
+  }
+}
+
+.snackbar-error {
+  .mdc-snackbar__surface {
+      background-color: $bgDanger !important;
+      border: 1px solid $borderDanger !important;
+  }
+
+  .mdc-snackbar__label {
+      color: $textDanger !important;
+  }
+
+  .mat-mdc-button.mat-mdc-snack-bar-action {
+      background-color: $textDanger !important;
+      color: $bgDanger !important;
+  }
+}
