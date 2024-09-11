@@ -87,7 +87,9 @@ export class SidenavComponent implements OnInit {
         this.apiservice.getData('allusers').subscribe(
             (response: model.UserDTO[]) => {
                 // Typage de la réponse comme un tleau de Post
+                console.log(response)
                 this.users = response.filter(
+                
                     (user) => user !== null && user.id !== Number(iduser)
                 );
             },
