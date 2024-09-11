@@ -37,11 +37,9 @@ export class FollowService {
     }
 
     request(data: any, nature: string): Observable<any> {
-        console.log("declll");
         switch (nature) {
-            
             case "decline":
-                return this.http.delete(`${this.api}/decline`, data)
+                return this.http.put(`${this.api}/decline`, data)
             default:
                 return this.http.put(`${this.api}/accept`, data)
         }

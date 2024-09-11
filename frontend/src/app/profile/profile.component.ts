@@ -265,10 +265,9 @@ export class ProfileComponent implements OnInit {
 
         this.followService.request(data, "decline").subscribe((response: any) => {
             console.log("requeeeee");
-            this.utilService.onSnackBar(response.message, "info")
             this.getFollowers()
             this.getFollowersCount()
-            location.reload
+           
         })
     }
 
