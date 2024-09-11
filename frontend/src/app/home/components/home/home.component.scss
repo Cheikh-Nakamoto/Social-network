@@ -50,7 +50,9 @@ mat-card-actions {
     align-items: center;
     gap: 12px;
 }
-
+mat-card-actions button:hover svg {
+    stroke: white;
+}
 button:not(.send) {
     display: flex;
     justify-content: center;
