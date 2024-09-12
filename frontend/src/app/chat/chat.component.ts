@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MatDialogRef } from '@angular/material/dialog';
+import { PickerModule } from '@ctrl/ngx-emoji-mart'
 // import { Event } from './services/events';
 import { ActivatedRoute } from '@angular/router';
 import * as model from '../models/models.compenant';
@@ -18,184 +19,202 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 
 @Component({
-    selector: 'chat-app',
-    standalone: true,
-    imports: [
-        CommonModule,
-        FormsModule,
-        RouterOutlet,
-        HttpClientModule,
-        ToolbarComponent,
-        SidenavComponent,
-    ], // Ajouter CommonModule ici
-    templateUrl: 'chat.component.html',
-    styleUrls: ['chat.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    providers: [DataService],
+  selector: 'chat-app',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterOutlet,
+    HttpClientModule,
+    ToolbarComponent,
+    SidenavComponent,
+    PickerModule
+  ], // Ajouter CommonModule ici
+  templateUrl: 'chat.component.html',
+  styleUrls: ['chat.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  providers: [DataService],
 })
 export class ChatComponent implements OnInit, OnDestroy {
-    private messagesSubscription!: Subscription;
-    public messages: any[] = [];
-    user!: model.UserDTO;
-    private id!: number;
-    sender!: number;
-    amount = 10;
-    scrollEnd = false;
-    scrolling = false;
-    scrollHeightBeforeLoad = 0;
+  private messagesSubscription!: Subscription;
+  public messages: any[] = [];
+  user!: model.UserDTO;
+  private id!: number;
+  sender!: number;
+  amount = 10;
+  scrollEnd = false;
+  scrolling = false;
+  scrollHeightBeforeLoad = 0;
 
-    constructor(
-        private websocketService: WebSocketService,
-        private dialogRef: MatDialogRef<ChatComponent>,
-        private route: ActivatedRoute,
-        private apiservice: DataService,
-        private userService: GetUserService,
-        @Inject(MAT_DIALOG_DATA) public data: any
-    ) {
-        // route.queryParams.subscribe((params) => {
-        //   this.id = params['userid'];
-        // });
-        this.id = Number(data.userId);
-    }
-    ngOnInit(): void {
-        this.userService.user.subscribe((user) => {
-            this.sender = user;
-        });
-      this.getUserById(this.id);
-        this.websocketService.connect();
+  showEmojiPicker = false;
 
-        this.messagesSubscription = this.websocketService.messages$.subscribe(
-            (message) => {
-                this.messages.push(message);
+  constructor(
+    private websocketService: WebSocketService,
+    private dialogRef: MatDialogRef<ChatComponent>,
+    private route: ActivatedRoute,
+    private apiservice: DataService,
+    private userService: GetUserService,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+    // route.queryParams.subscribe((params) => {
+    //   this.id = params['userid'];
+    // });
+    this.id = Number(data.userId);
+  }
+  ngOnInit(): void {
+    this.userService.user.subscribe((user) => {
+      this.sender = user;
+    });
+    this.getUserById(this.id);
+    this.websocketService.connect();
 
-                if (message.type === 'get_messages') {
-                  
-                    updateMessages(message.payload.messages, Number(this.id));
-                }
+    this.messagesSubscription = this.websocketService.messages$.subscribe(
+      (message) => {
+        this.messages.push(message);
 
-                if (message.type === 'new_message') {
-                    const payload = {
-                        currentChatterId: this.sender,
-                        otherChatterId: Number(this.id),
-                        amount: this.amount,
-                    };
+        if (message.type === 'get_messages') {
 
-                    const evenget = new Event('get_messages', payload);
-                    sendEvent(this.websocketService, evenget);
-                }
-            }
-        );
-
-        this.loadAdditionalMessages();
-    }
-
-    ngOnDestroy(): void {
-        this.messagesSubscription.unsubscribe();
-        this.websocketService.close();
-    }
-
-    sendMessage(msg: string): void {
-        this.websocketService.sendMessage({ content: msg });
-    }
-
-    getUserById(id: number): void {
-        const userId = JSON.parse(localStorage.getItem('userId') || '{}');
-
-        // Vérifiez si l'ID utilisateur existe dans localStorage
-        if (!userId) {
-            console.error('No user ID found in localStorage.');
-            return;
+          updateMessages(message.payload.messages, Number(this.id));
         }
 
-        this.apiservice.getData('allusers').subscribe(
-          (response: any) => {
-                // Utilisez `find` pour rechercher directement l'utilisateur avec l'ID correspondant
-                const foundUser = response.users.find(
-                    (user: any) => user != null && user.id === Number(id)
-                );
-
-                if (foundUser) {
-                    this.user = foundUser;
-                } else {
-                    console.warn('Utilisateur non trouvé avec ID:', id);
-                    // Gérez le cas où l'utilisateur n'est pas trouvé
-                    this.user = {} as model.UserDTO; // Assigner une valeur par défaut vide ou gérer autrement
-                }
-            },
-            (error) => {
-                console.error(
-                    'Erreur lors de la récupération des utilisateurs:',
-                    error
-                );
-            }
-        );
-    }
-    closeDialog() {
-      this.dialogRef.close();
-    }
-
-    onSubmit(event: SubmitEvent) {
-        event.preventDefault(); // Empêche le rechargement de la page
-        const messagetag = (event.target as HTMLFormElement).querySelector(
-            '#msgContent'
-        ) as HTMLTextAreaElement;
-        const messageContent = messagetag.value;
-        if (messageContent.trim() === '') {
-            return;
-        }
-
-        const messBody: model.MessageBody = {
-            senderId: this.sender,
-            receiverId: Number(this.id),
-            message: messageContent,
-        };
-
-        const message: model.MessageData = {
-            type: 'send_message',
-            datas: messBody,
-        };
-
-        const even = new Event(message.type, message.datas);
-
-        sendEvent(this.websocketService, even);
-        const updateEve = new Event('get_chatbar_data', this.sender);
-        sendEvent(this.websocketService, updateEve);
-        const payload = {
+        if (message.type === 'new_message') {
+          const payload = {
             currentChatterId: this.sender,
             otherChatterId: Number(this.id),
             amount: this.amount,
-        };
+          };
 
-        const evenget = new Event('get_messages', payload);
-        sendEvent(this.websocketService, evenget);
-
-        // Réinitialiser le champ de texte après l'envoi
-        messagetag.value = '';
-    }
-
-    loadAdditionalMessages() {
-        const chatBox = document.getElementById('chatBox');
-
-        if (
-            chatBox &&
-            chatBox.scrollTop === 0 &&
-            !this.scrollEnd &&
-            !this.scrolling
-        ) {
-            this.amount += 10;
-            this.scrollHeightBeforeLoad = chatBox.scrollHeight;
-
-            this.scrolling = true;
-            const payload = {
-                currentChatterId: this.sender,
-                otherChatterId: Number(this.id),
-                amount: this.amount,
-            };
-
-            const even = new Event('get_messages', payload);
-            sendEvent(this.websocketService, even);
+          const evenget = new Event('get_messages', payload);
+          sendEvent(this.websocketService, evenget);
         }
+      }
+    );
+
+    this.loadAdditionalMessages();
+  }
+
+  ngOnDestroy(): void {
+    this.messagesSubscription.unsubscribe();
+    this.websocketService.close();
+  }
+
+  sendMessage(msg: string): void {
+    this.websocketService.sendMessage({ content: msg });
+  }
+
+  getUserById(id: number): void {
+    const userId = JSON.parse(localStorage.getItem('userId') || '{}');
+
+    // Vérifiez si l'ID utilisateur existe dans localStorage
+    if (!userId) {
+      console.error('No user ID found in localStorage.');
+      return;
     }
+
+    this.apiservice.getData('allusers').subscribe(
+      (response: any) => {
+        // Utilisez `find` pour rechercher directement l'utilisateur avec l'ID correspondant
+        const foundUser = response.users.find(
+          (user: any) => user != null && user.id === Number(id)
+        );
+
+        if (foundUser) {
+          this.user = foundUser;
+        } else {
+          console.warn('Utilisateur non trouvé avec ID:', id);
+          // Gérez le cas où l'utilisateur n'est pas trouvé
+          this.user = {} as model.UserDTO; // Assigner une valeur par défaut vide ou gérer autrement
+        }
+      },
+      (error) => {
+        console.error(
+          'Erreur lors de la récupération des utilisateurs:',
+          error
+        );
+      }
+    );
+  }
+  closeDialog() {
+    this.dialogRef.close();
+  }
+  toggleEmojiPicker(): void {
+    // Affiche ou masque le picker d'emojis
+    this.showEmojiPicker = !this.showEmojiPicker;
+  }
+
+  addEmoji(event: any): void {
+    // Ajoute l'emoji au textarea
+    const textarea = document.getElementById('msgContent') as HTMLTextAreaElement;
+    if (textarea) {
+      textarea.value += event.emoji.native;
+    }
+    this.showEmojiPicker = false; // Masque le picker après sélection
+  }
+
+
+
+  onSubmit(event: SubmitEvent) {
+    event.preventDefault(); // Empêche le rechargement de la page
+    const messagetag = (event.target as HTMLFormElement).querySelector(
+      '#msgContent'
+    ) as HTMLTextAreaElement;
+    const messageContent = messagetag.value;
+    if (messageContent.trim() === '') {
+      return;
+    }
+
+    const messBody: model.MessageBody = {
+      senderId: this.sender,
+      receiverId: Number(this.id),
+      message: messageContent,
+    };
+
+    const message: model.MessageData = {
+      type: 'send_message',
+      datas: messBody,
+    };
+
+    const even = new Event(message.type, message.datas);
+
+    sendEvent(this.websocketService, even);
+    const updateEve = new Event('get_chatbar_data', this.sender);
+    sendEvent(this.websocketService, updateEve);
+    const payload = {
+      currentChatterId: this.sender,
+      otherChatterId: Number(this.id),
+      amount: this.amount,
+    };
+
+    const evenget = new Event('get_messages', payload);
+    sendEvent(this.websocketService, evenget);
+
+    // Réinitialiser le champ de texte après l'envoi
+    messagetag.value = '';
+  }
+
+  loadAdditionalMessages() {
+    const chatBox = document.getElementById('chatBox');
+
+    if (
+      chatBox &&
+      chatBox.scrollTop === 0 &&
+      !this.scrollEnd &&
+      !this.scrolling
+    ) {
+      this.amount += 10;
+      this.scrollHeightBeforeLoad = chatBox.scrollHeight;
+
+      this.scrolling = true;
+      const payload = {
+        currentChatterId: this.sender,
+        otherChatterId: Number(this.id),
+        amount: this.amount,
+      };
+
+      const even = new Event('get_messages', payload);
+      sendEvent(this.websocketService, even);
+    }
+  }
 }
 
 
@@ -237,17 +256,14 @@ const updateMessages = (messages: any, receiverId: number) => {
       }
 
       chatBox.innerHTML += `
-                <div class="messageContainer ${
-                  msgType === 'Received' ? 'received' : 'sent'
-                }">
-                    <div id="msgBox" class="msgBox${msgType}" data-linked="${
-        message.messageId
-      }">
+                <div class="messageContainer ${msgType === 'Received' ? 'received' : 'sent'
+        }">
+                    <div id="msgBox" class="msgBox${msgType}" data-linked="${message.messageId
+        }">
                         <a style="font-size: 15px; white-space: pre-wrap;">${message.message.trim()}</a>
                     </div>
-                    <div id="timeBox" class="timeBox${msgType}" data-link="${
-        message.messageId
-      }">
+                    <div id="timeBox" class="timeBox${msgType}" data-link="${message.messageId
+        }">
                         <a>${message.sentDate}</a>
                     </div>
                 </div>
