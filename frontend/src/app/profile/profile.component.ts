@@ -58,6 +58,7 @@ import { UtilService } from '../service/util.service';
 export class ProfileComponent implements OnInit {
     title: string = 'Profile'
     id!: number
+    isExist!: boolean
     user: User = new User()
     avatar = "";
     currentID: number = this.authService.getUserID()!
@@ -181,16 +182,56 @@ export class ProfileComponent implements OnInit {
     getFollowers() {
         this.id = this.activatedRoute.snapshot.params['id']
         this.followService.getList(this.id, "followers").subscribe((response: any) => {
+            if (response.status !== 200) {
+                console.log(response.message)
+                return
+            }
             this.followers = response.followers
+            if (this.exist(this.followers, this.currentID)) {
+                this.isExist = true
+                console.log(this.isExist)
+            } else {
+                this.isExist = false
+                console.log(this.isExist)
+            }
+            // this.followers.forEach((value:any) => {
+            //     if (value.id === this.currentID) {
+            //         this.isExist = true
+            //         //console.log(this.isExist)
+            //         return
+            //     } else {
+            //         this.isExist = false
+            //         //console.log(this.isExist)
+            //         return
+            //     }
+            // })
         })
+    }
+
+    exist(list:User[], id: any): boolean {
+        return list.some((user:User) => user.id === id)
     }
 
     getFollowings() {
         this.id = this.activatedRoute.snapshot.params['id']
         this.followService.getList(this.id, "followings").subscribe((response: any) => {
             this.followings = response.followings
+            if (this.exist(this.followings, this.currentID)) {
+                this.isExist = true
+                console.log(this.isExist)
+            } else {
+                this.isExist = false
+                console.log(this.isExist)
+            }
         })
     }
+
+    // iCanSee(): boolean {
+    //     return this.id === this.currentID || this.isExist || this.isPublic
+    // }
+    iCanSee(): boolean {
+        return this.id !== this.currentID && (this.isExist || this.isPublic);
+      }
 
     getFriends() {
         this.id = this.activatedRoute.snapshot.params['id']
@@ -217,7 +258,6 @@ export class ProfileComponent implements OnInit {
         this.id = this.activatedRoute.snapshot.params['id']
         this.followService.getCount(this.id, "friends").subscribe((response: any) => {
             this.friendCount = this.followService.calculate(response.count)
-            console.log(this.friendCount)
         })
     }
     onFollow(id: number) {
@@ -327,6 +367,9 @@ export class ProfileComponent implements OnInit {
         this.editMode = !this.editMode;
     }
 
+    
+
+    
 
     ngOnInit(): void {
         if (!(this.authService.getToken() as string)) {

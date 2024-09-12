@@ -129,6 +129,8 @@ export class ListComponent {
         this.listFriends()
     }
 
+
+
     ngOnInit(): void {
         this.authService.isOnline
         this.listUsers()

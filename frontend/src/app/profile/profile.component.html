@@ -8,7 +8,8 @@
         </div>
     </div>
 
-    <div class="row p-3 profile-basic">
+    <div class="row p-3 profile-basic" *ngIf="iCanSee()">
+        <!-- <div class="col-md-12" *ngIf=""></div> -->
         <div class="col-lg-6 picture-infos">
             <img alt="Profile" class="rounded-circle avatar" height="150" [src]="avatar" width="150">
             <div class="opt" *ngIf="currentID == user.id" [formGroup]="formGroup">
@@ -84,13 +85,13 @@
         </div>
     </div>
 
-    <div class="row divider">
+    <div class="row divider"  *ngIf="iCanSee()">
         <div class="col-md-12">
             <hr>
         </div>
     </div>
 
-    <div class="row">
+    <div class="row"  *ngIf="iCanSee()">
         <div class="col-md-12 profile-menu">
             <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="false" animationDuration="0ms">
                 <mat-tab>
@@ -346,4 +347,11 @@
             </mat-tab-group>
         </div>
     </div>
+
+    <div class="row tab-content" *ngIf="!iCanSee()">
+        <div class="block">
+            This prodile is private {{id}} {{currentID}}
+        </div>
+    </div>
+    {{isPublic}} {{iCanSee()}}
 </div>

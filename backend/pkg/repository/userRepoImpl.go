@@ -184,7 +184,7 @@ func (u *UserRepoImpl) GetFollowers(userID uint) ([]*entity.User, error) {
 }
 
 func (u *UserRepoImpl) GetFollowings(userID uint) ([]*entity.User, error) {
-	query := `SELECT u.id, u.email, u.password, u.firstname, u.lastname, u.date_of_birth, u.avatar, u.nickname, u.about_me, u.is_public, u.created_at, u.updated_at FROM users u JOIN follows f ON u.id = f.followee_id WHERE f.follower_id = ? AND f.status = 'pending' order by f.created_at desc`
+	query := `SELECT u.id, u.email, u.password, u.firstname, u.lastname, u.date_of_birth, u.avatar, u.nickname, u.about_me, u.is_public, u.created_at, u.updated_at FROM users u JOIN follows f ON u.id = f.followee_id WHERE f.follower_id = ? order by f.created_at desc`
 	rows, err := u.db.GetDB().Query(query, userID)
 	if err != nil {
 		return nil, err
