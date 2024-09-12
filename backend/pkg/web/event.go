@@ -57,5 +57,6 @@ const (
 	EventGroup="new_group"
 	EventPost="new_post"
 	EventInvite="new_invitation"
+	EventNewFollowBack="new_follow"
 
 )

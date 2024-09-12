@@ -51,7 +51,11 @@ export class InviteComponent {
     this.groupId = (JSON.parse(localStorage.getItem('groupid') as string))
     this.groupMember()
     this.followservice.getList(this.id, "friends").subscribe((friends: { friends: UserDTO[], status: number }) => {
-      this.toppingList = friends.friends
+        if (friends.status==204){
+          alert("No followers found !")
+          return
+        }
+        this.toppingList = friends.friends
     })
     this.messagesSubscription = this.websocketService.messages$
     .subscribe((message) => {
