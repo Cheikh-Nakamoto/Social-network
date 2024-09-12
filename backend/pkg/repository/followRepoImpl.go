@@ -35,8 +35,8 @@ func (f *FollowRepoImpl) DeleteFollow(followerID, followeeID uint) error {
 }
 
 func (f *FollowRepoImpl) GetPendingFollowRequest(id uint) ([]*entity.Follow, error) {
-	query := `SELECT id, follower_id, followee_id, status, created_at FROM follows WHERE followee_id = ? AND status = 'pending'`
-	rows, err := f.db.GetDB().Query(query, id)
+	query := `SELECT id, follower_id, followee_id, status, created_at FROM follows WHERE (followee_id = ? OR follower_id = ?) AND status = 'pending'`
+	rows, err := f.db.GetDB().Query(query, id, id)
 	if err != nil {
 		return nil, err
 	}

@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
-import {environment} from "../../environments/environment.development";
-import {HttpClient} from "@angular/common/http";
-import {AuthService} from "./auth.service";
-import {Observable} from "rxjs";
+import { environment } from "../../environments/environment.development";
+import { HttpClient } from "@angular/common/http";
+import { AuthService } from "./auth.service";
+import { Observable } from "rxjs";
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class FollowService {
     api: string = environment.api
     id!: number
 
-    constructor(private http: HttpClient, private authService: AuthService) {}
+    constructor(private http: HttpClient, private authService: AuthService) { }
 
     follow(data: any, nature: string): Observable<any> {
         switch (nature) {
@@ -44,12 +44,14 @@ export class FollowService {
         }
     }
 
-    getList(id: any, nature: string) : Observable<any> {
+    getList(id: any, nature: string): Observable<any> {
         switch (nature) {
             case 'followings':
                 return this.http.get(`${this.api}/followings/${id}`)
             case 'friends':
                 return this.http.get(`${this.api}/friends/${id}`)
+            case 'pendings':
+                return this.http.get(`${this.api}/pending/${id}`)
             default:
                 return this.http.get(`${this.api}/followers/${id}`)
         }
