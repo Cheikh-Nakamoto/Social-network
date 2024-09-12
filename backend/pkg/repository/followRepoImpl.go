@@ -17,8 +17,8 @@ func NewFollowRepoImpl(db sqlite.Database) *FollowRepoImpl {
 }
 
 func (f *FollowRepoImpl) CreateFollow(follow *entity.Follow) error {
-	query := `INSERT INTO follows (follower_id, followee_id) VALUES (?, ?)`
-	_, err := f.db.GetDB().Exec(query, follow.FollowerID, follow.FolloweeID)
+	query := `INSERT INTO follows (follower_id, followee_id, status) VALUES (?, ?, ?)`
+	_, err := f.db.GetDB().Exec(query, follow.FollowerID, follow.FolloweeID, follow.Status)
 	return err
 }
 
@@ -99,7 +99,7 @@ func (f *FollowRepoImpl) FindByID(id uint) (*entity.Follow, error) {
 }
 
 func (f *FollowRepoImpl) AreFollowing(followerID, followeeID uint) (bool, error) {
-	query := `SELECT COUNT(*) FROM follows WHERE follower_id = ? AND followee_id = ? AND status = 'pending'`
+	query := `SELECT COUNT(*) FROM follows WHERE follower_id = ? AND followee_id = ? AND status = 'accepted'`
 	row := f.db.GetDB().QueryRow(query, followerID, followeeID)
 
 	var count uint

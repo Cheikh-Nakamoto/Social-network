@@ -2,6 +2,8 @@ package impl
 
 import (
 	"backend/pkg/entity"
+	"backend/pkg/global"
+	"backend/pkg/repository"
 	"backend/pkg/repository/interfaces"
 	"errors"
 )
@@ -27,9 +29,28 @@ func (f *FollowServiceImpl) FollowUser(followerID, followeeID uint) error {
 		return errors.New("you already followed this user")
 	}
 
+	userRepo := repository.NewUserRepoImpl(*global.DBGlobal)
+	userService := UserServiceImpl{Repository: userRepo}
+
+	followee, err := userService.GetUserById(followeeID)
+	if err != nil {
+		return errors.New("error occurred while getting followee")
+	}
+
+	if followee == nil {
+		return errors.New("followee not found")
+	}
+
+	status := "pending"
+
+	if followee.IsPublic {
+		status = "accepted"
+	}
+
 	follow := &entity.Follow{
 		FollowerID: followerID,
 		FolloweeID: followeeID,
+		Status:     status,
 	}
 	return f.Repository.CreateFollow(follow)
 }
@@ -78,10 +99,6 @@ func (f *FollowServiceImpl) DeclineFollowRequest(id uint) error {
 
 	if isExists == nil {
 		return errors.New("follow request not found")
-	}
-
-	if isExists.Status == "rejected" {
-		return errors.New("follow request already rejected")
 	}
 
 	err = f.Repository.DeleteFollow(isExists.FollowerID, isExists.FolloweeID)

@@ -2,6 +2,7 @@ package main
 
 import (
 	"backend/pkg/db/sqlite"
+	"backend/pkg/global"
 	"backend/pkg/middleware"
 	"backend/pkg/repository"
 	"backend/pkg/service/impl"
@@ -41,13 +42,13 @@ func StartServer(tab []string) error {
 		return err
 	}
 
-	db, err := sqlite.Connect()
+	global.DBGlobal, err = sqlite.Connect()
 	if err != nil {
 		return err
 	}
-	defer db.Close()
+	defer global.DBGlobal.Close()
 
-	if err := sqlite.Migrate(db.GetDB()); err != nil {
+	if err := sqlite.Migrate(global.DBGlobal.GetDB()); err != nil {
 		return err
 	}
 
@@ -55,13 +56,13 @@ func StartServer(tab []string) error {
 	mux := http.NewServeMux()
 
 	// Initializing repositories
-	userRepo := repository.NewUserRepoImpl(*db)
-	// followRepo := repository.NewFollowRepoImpl(*db)
-	groupRepo := repository.NewGroupRepoImpl(*db)
-	postRepo := repository.NewPostRepoImpl(*db)
-	commentRepo := repository.NewCommentRepoImpl(*db)
-	likeDislikeRepo := repository.NewLikeDislikeRepoImpl(*db)
-	followRepo := repository.NewFollowRepoImpl(*db)
+	userRepo := repository.NewUserRepoImpl(*global.DBGlobal)
+	// followRepo := repository.NewFollowRepoImpl(*global.DBGlobal)
+	groupRepo := repository.NewGroupRepoImpl(*global.DBGlobal)
+	postRepo := repository.NewPostRepoImpl(*global.DBGlobal)
+	commentRepo := repository.NewCommentRepoImpl(*global.DBGlobal)
+	likeDislikeRepo := repository.NewLikeDislikeRepoImpl(*global.DBGlobal)
+	followRepo := repository.NewFollowRepoImpl(*global.DBGlobal)
 
 	// Initializing services
 	userService := impl.UserServiceImpl{

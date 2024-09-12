@@ -4,11 +4,24 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6fff26ff-9a6d-4e35-a3a7-6d41c1bc767c" name="Changes" comment="" />
+    <list default="true" id="6fff26ff-9a6d-4e35-a3a7-6d41c1bc767c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/backend/pkg/global/global.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/pkg/repository/followRepoImpl.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pkg/repository/followRepoImpl.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/pkg/service/impl/followServiceImpl.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pkg/service/impl/followServiceImpl.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/server.go" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
   </component>
   <component name="GOROOT" url="file://$USER_HOME$/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23rc1.linux-amd64" />
   <component name="Git.Settings">
@@ -24,6 +37,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "DefaultGoTemplateProperty": "Go File",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
@@ -43,8 +57,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-gosdk-5df93f7ad4aa-df9ad98b711f-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-242.21829.165" />
-        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-GO-242.21829.165" />
+        <option value="bundled-gosdk-5df93f7ad4aa-df9ad98b711f-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-242.21829.220" />
+        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-GO-242.21829.220" />
       </set>
     </attachedChunks>
   </component>
