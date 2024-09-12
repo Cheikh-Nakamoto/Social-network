@@ -269,7 +269,9 @@ export class ProfileComponent implements OnInit {
         this.followService.follow(data, "follow").subscribe((response: any) => {
             this.getFriends()
             this.getFriendsCount()
+            
         })
+        location.reload
     }
     onUnfollow(id: any) {
         const data = {
@@ -280,7 +282,9 @@ export class ProfileComponent implements OnInit {
         this.followService.unfollow(data).subscribe(() => {
             this.getFriends()
             this.getFriendsCount()
+            
         })
+        location.reload
     }
 
     // onAccept(id: any) {
@@ -297,8 +301,9 @@ export class ProfileComponent implements OnInit {
             this.getFriends()
             this.getFriendsCount()
             
-            location.reload
+            
         })
+        location.reload
     }
     // onDecline(id: any) {
     //     this.followService.request(id, 'decline').subscribe(() => {
@@ -318,6 +323,7 @@ export class ProfileComponent implements OnInit {
             this.getFollowersCount()
            
         })
+        location.reload
     }
 
     getPosts() {

@@ -25,16 +25,16 @@
                     <span *ngIf="!user.is_public" class="material-icons text-danger">lock</span>
                 </span>
                 <span class="username">&#64;{{ user.nickname || "No nickname" }}</span>
-                <div class="firends">
+                <!-- <div class="firends">
                     <span><strong>{{followersCount}}</strong>Followers</span>&#10072;
                     <span><strong>{{followingCount}}</strong>Followings</span>&#10072;
                     <span><strong>{{friendCount}}</strong>Friends</span>
-                </div>
-                <div class="last-friends">
+                </div> -->
+                <!-- <div class="last-friends">
                     <span class="firend-avatar"><img alt="avatar-0" src="profile.png"></span>
                     <span class="firend-avatar"><img alt="avatar-1" src="profile.png"></span>
                     <span class="firend-avatar"><img alt="avatar-2" src="profile.png"></span>
-                </div>
+                </div> -->
             </div>
         </div>
         <div class="col-lg-6 buttons-info">
@@ -207,17 +207,21 @@
                                             </div>
                                         </div>
                                         <div class="buttons">
-                                            <button class="btn btn-secondary dropdown rounded-pill"
-                                                data-bs-toggle="dropdown">
-                                                <span class="material-icons">how_to_reg</span>
-                                                Friends
+                                            <button *ngIf="currentID !== user.id" class="btn btn-primary" (click)="onFollow(user.id)">
+                                                <span class="material-icons">unfollow</span>
+                                                unFollow
+                                            </button>
+                                            <!-- <button class="btn btn-secondary dropdown rounded-pill"
+                                                data-bs-toggle="dropdown"> -->
+                                                <!-- <span class="material-icons">how_to_reg</span> -->
+                                                <!-- Friends
                                                 <ul class="dropdown-menu">
                                                     <li><a class="dropdown-item"
                                                             routerLink="/profile/{{friend.id}}">Profile</a></li>
                                                     <li><a class="dropdown-item text-danger"
                                                             routerLink="/unfollow">Unfollow</a></li>
-                                                </ul>
-                                            </button>
+                                                </ul> -->
+                                            
                                         </div>
                                     </li>
                                 </ul>
@@ -300,7 +304,7 @@
                                             </div>
                                         </div>
                                         <div class="buttons">
-                                            <button class="btn btn-danger" routerLink="r/decline/">
+                                            <button class="btn btn-danger" (click)="onFollow(following.id)" >
                                                 <span class="material-icons text-white">cancel</span>
                                                 Cancel
                                             </button>
@@ -313,12 +317,12 @@
                 </mat-tab>
 
                 <mat-tab>
-                    <div class="tab-title">
+                    <!-- <div class="tab-title">
                         <ng-template mat-tab-label>
                             <span class="material-icons">groups</span>
                             <span class="title">Groups</span>
                         </ng-template>
-                    </div>
+                    </div> -->
                     <div class="tab-content">
                         <div class="row block">
                             <div class="col-md.12 message" *ngIf="groups === undefined">
