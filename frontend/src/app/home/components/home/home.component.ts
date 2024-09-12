@@ -64,6 +64,8 @@ export class HomeComponent implements OnInit {
     postAndButton!: Posts;
     comlength: length = {};
     storage!: Post;
+    avatar: string = "";
+    
    
     constructor(
         private apiService: DataService,

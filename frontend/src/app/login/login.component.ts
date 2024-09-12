@@ -84,6 +84,7 @@ export class LoginComponent implements OnInit {
         localStorage.setItem("userID", res.user.id)
         localStorage.setItem("firstname", res.user.firstname)
         localStorage.setItem("lastname", res.user.lastname)
+        localStorage.setItem("avatar", res.user.avatar)
 
       })
     )

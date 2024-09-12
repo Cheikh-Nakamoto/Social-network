@@ -91,6 +91,9 @@ func (s *UserServiceImpl) GetAllUsers() (map[string]*entity.User, error) {
 	var userDTOs = make(map[string]*entity.User)
 	for _, user := range users {
 		user.Password = ""
+		if user.Avatar == "" {
+			user.Avatar = "female.svg"
+		}
 		userDTOs[strconv.Itoa(int(user.ID))] = user
 	}
 

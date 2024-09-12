@@ -231,7 +231,7 @@ export class ProfileComponent implements OnInit {
     // }
     iCanSee(): boolean {
         return this.id !== this.currentID && (this.isExist || this.isPublic);
-      }
+    }
 
     getFriends() {
         this.id = this.activatedRoute.snapshot.params['id']
@@ -271,7 +271,7 @@ export class ProfileComponent implements OnInit {
             this.getFriendsCount()
             
         })
-        location.reload
+        location.reload()
     }
     onUnfollow(id: any) {
         const data = {
@@ -284,7 +284,7 @@ export class ProfileComponent implements OnInit {
             this.getFriendsCount()
             
         })
-        location.reload
+        location.reload()
     }
 
     // onAccept(id: any) {
@@ -386,6 +386,7 @@ export class ProfileComponent implements OnInit {
         this.formGroup = new FormGroup({
             checked: new FormControl<boolean>(false)
         });
+        this.currentID= Number(localStorage.getItem('userID')as  string);
         this.toggleEditMode()
         this.isOnline()
         this.getUser()
@@ -393,9 +394,6 @@ export class ProfileComponent implements OnInit {
         this.getFollowers()
         this.getFollowings()
         this.getFriends()
-        this.getFollowersCount()
-        this.getFollowingsCount()
-        this.getFriendsCount()
         this.getPosts()
         if (this.user != null) {
             this.Nature(this.user)
