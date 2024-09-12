@@ -230,7 +230,7 @@ export class ProfileComponent implements OnInit {
     //     return this.id === this.currentID || this.isExist || this.isPublic
     // }
     iCanSee(): boolean {
-        return this.id !== this.currentID && (this.isExist || this.isPublic);
+        return this.id == this.currentID || (this.isExist || this.isPublic);
     }
 
     getFriends() {
