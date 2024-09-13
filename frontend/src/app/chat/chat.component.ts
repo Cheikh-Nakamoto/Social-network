@@ -1,11 +1,5 @@
 // my-component.component.ts
-import {
-    Component,
-    OnInit,
-    OnDestroy,
-    ViewEncapsulation,
-    Inject,
-} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewEncapsulation, Inject} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WebSocketService } from './services/chat.service';
 import { FormsModule } from '@angular/forms';
@@ -15,8 +9,9 @@ import { MatDialogRef } from '@angular/material/dialog';
 // import { Event } from './services/events';
 import { ActivatedRoute } from '@angular/router';
 import * as model from '../models/models.compenant';
-import { DataService } from '../data.service';
 import { HttpClientModule } from '@angular/common/http';
+import { DataService } from '../data.service';
+import { PickerModule } from '@ctrl/ngx-emoji-mart'
 import { GetUserService } from '../data.service';
 import { ToolbarComponent } from '../nav/toolbar/toolbar.component';
 import { SidenavComponent } from '../nav/sidenav/sidenav.component';
@@ -32,6 +27,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
         HttpClientModule,
         ToolbarComponent,
         SidenavComponent,
+        PickerModule
     ], // Ajouter CommonModule ici
     templateUrl: 'chat.component.html',
     styleUrls: ['chat.component.scss'],
@@ -41,6 +37,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class ChatComponent implements OnInit, OnDestroy {
     private messagesSubscription!: Subscription;
     public messages: any[] = [];
+    private processedMessages = new Set<string>();
     user!: model.UserDTO;
     private id!: number;
     sender!: number;
@@ -48,7 +45,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     scrollEnd = false;
     scrolling = false;
     scrollHeightBeforeLoad = 0;
-    private processedMessages = new Set<string>();
+    showEmojiPicker = false;
 
     // private processedMessages = new Set<string>();
 
@@ -156,6 +153,19 @@ export class ChatComponent implements OnInit, OnDestroy {
     closeDialog() {
         this.dialogRef.close();
     }
+    toggleEmojiPicker(): void {
+        // Affiche ou masque le picker d'emojis
+        this.showEmojiPicker = !this.showEmojiPicker;
+      }
+    
+      addEmoji(event: any): void {
+        // Ajoute l'emoji au textarea
+        const textarea = document.getElementById('msgContent') as HTMLTextAreaElement;
+        if (textarea) {
+          textarea.value += event.emoji.native;
+        }
+        this.showEmojiPicker = false; // Masque le picker après sélection
+      }
 
     onSubmit(event: SubmitEvent) {
         event.preventDefault(); // Empêche le rechargement de la page
