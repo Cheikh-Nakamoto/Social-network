@@ -124,6 +124,12 @@ func SendMessageHandler(event Event, c *Client) error {
 	returnMsg.ReceiverId = chatEvent.ReceiverId
 	returnMsg.SenderId = chatEvent.SenderId
 	returnMsg.Status = chatEvent.Status
+	idmsg,err:=getLastMessageId()
+	if err!=nil{
+		log.Print("error lors de la recuperation de l'id du dernier message")
+		return err
+	}
+	returnMsg.MessageId=idmsg
 
 	// Ajouter le message à une table ou base de données
 	addMessageToTable(returnMsg)
@@ -209,9 +215,7 @@ func SendNewFollowHandler(event Event, c *Client) error {
 
 	// Envoyer le message au client destinataire
 	for client := range c.manager.clients {
-		if client.userId == returnMsg.ReceiverId {
-			client.egress <- outgoingEvent
-		}
+		client.egress <- outgoingEvent
 	}
 	return nil
 }
@@ -325,6 +329,12 @@ func SendMessageGrouopHandler(event Event, c *Client) error {
 	returnMsg.Message = chatEvent.Message
 	returnMsg.ReceiverId = chatEvent.ReceiverId
 	returnMsg.SenderId = chatEvent.SenderId
+	idmsg,err:=getLastGrMessageId()
+	if err!=nil{
+		log.Print("error lors de la recuperation de l'id du dernier message")
+		return err
+	}
+	returnMsg.MessageId=idmsg
 
 	// Ajouter le message à une table ou base de données
 	addGrMessageToTable(returnMsg)
@@ -821,4 +831,54 @@ func CheckNotificationChats(receiverId int)(bool, error){
 	fmt.Println("count: ", count)
 	return count > 0, nil
 
+}
+
+
+func getLastGrMessageId() (int, error) {
+	var messageId int
+	db, err := sqlite.Connect()
+	if err != nil {
+		panic(err)
+	}
+
+	// Requête SQL pour récupérer le dernier messageId
+	query := `SELECT messageId FROM groupmessages ORDER BY messageId DESC LIMIT 1`
+
+	// Exécuter la requête et scanner le résultat dans la variable messageId
+	err = db.GetDB().QueryRow(query).Scan(&messageId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			// Si aucune ligne n'est trouvée
+			return 0, nil
+		}
+		// Autres erreurs
+		return 0, err
+	}
+
+	// Retourner le dernier messageId
+	return messageId, nil
+}
+func getLastMessageId() (int, error) {
+	var messageId int
+	db, err := sqlite.Connect()
+	if err != nil {
+		panic(err)
+	}
+
+	// Requête SQL pour récupérer le dernier messageId
+	query := `SELECT messageId FROM messages ORDER BY messageId DESC LIMIT 1`
+
+	// Exécuter la requête et scanner le résultat dans la variable messageId
+	err = db.GetDB().QueryRow(query).Scan(&messageId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			// Si aucune ligne n'est trouvée
+			return 0, nil
+		}
+		// Autres erreurs
+		return 0, err
+	}
+
+	// Retourner le dernier messageId
+	return messageId, nil
 }

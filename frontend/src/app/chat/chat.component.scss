@@ -110,38 +110,6 @@ body {
 .message-container {
     display: flex;
     width: 100%;
-
-    .post-tooltip {
-        position: absolute;
-        top: 327px;
-        background: #1d2327;
-        padding: 10px;
-        color: #fff;
-        font-size: 13px;
-        left: 83%;
-        transform: translateX(-50%) translateY(10px);
-        border-radius: 5px;
-        transition: all 0.4s ease;
-        visibility: hidden;
-        opacity: 0;
-    }
-
-    .has-tooltip:hover .post-tooltip {
-        visibility: visible;
-        opacity: 1;
-        transform: translateX(-50%) translateY(-5px);
-    }
-
-    .post-tooltip:after {
-        position: absolute;
-        content: "";
-        background: #1d2327;
-        width: 7px;
-        height: 7px;
-        left: 50%;
-        top: 34%;
-        transform: rotate(45deg) translateX(-4px);
-    }
 }
 
 .message-input {
@@ -160,8 +128,7 @@ body {
 }
 
 .send-button {
-    margin-left: 6px;
-    margin-top: -12px;
+    margin-left: 10px;
 }
 .send-button svg {
     width: 27px;
@@ -196,19 +163,19 @@ button {
 }
 
 .msgBoxSent {
-    background-color: #07a1bd; 
-    border: none; 
-    border-radius: 18px; 
-    width: fit-content; 
-    max-width: 80%; 
-    padding: 10px 15px; 
-    margin: 5px 10px 7px auto; 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    background-color: #07a1bd; /* Couleur de fond bleu éclatant pour les messages envoyés */
+    border: none; /* Supprimez la bordure pour un look plus net */
+    border-radius: 18px; /* Coins plus arrondis */
+    width: fit-content; /* Adapte la largeur au contenu */
+    max-width: 80%; /* Limite la largeur maximale */
+    padding: 10px 15px; /* Espacement interne pour plus de confort */
+    margin: 5px 10px 7px auto; /* Espacement autour du message, `auto` pour aligner à droite */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ajoute une légère ombre pour de la profondeur */
     text-align: left;
-    overflow-wrap: break-word; 
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; 
-    font-size: 14px; 
-    color: white; 
+    overflow-wrap: break-word; /* Pour gérer le texte qui dépasse */
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Une police lisible et moderne */
+    font-size: 14px; /* Taille de police standard */
+    color: white; /* Couleur du texte pour contraster avec le fond bleu */
 }
 
 .msgBoxReceived {
@@ -218,13 +185,13 @@ button {
     width: fit-content; /* Adapte la largeur au contenu */
     max-width: 80%; /* Limite la largeur maximale */
     padding: 10px 15px; /* Espacement interne pour plus de confort */
-    margin: 5px 10px 7px 10px; 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    margin: 5px 10px 7px 10px; /* Espacement autour du message */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ajoute une légère ombre pour de la profondeur */
     text-align: left;
-    overflow-wrap: break-word; 
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; 
-    font-size: 14px; 
-    color: #333; 
+    overflow-wrap: break-word; /* Pour gérer le texte qui dépasse */
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Une police lisible et moderne */
+    font-size: 14px; /* Taille de police standard */
+    color: #333; /* Couleur du texte */
 }
 
 .messageContainer {

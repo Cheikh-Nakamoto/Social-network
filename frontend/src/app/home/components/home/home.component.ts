@@ -85,7 +85,7 @@ export class HomeComponent implements OnInit {
         this.loadUser('users');
         this.loadComments();
         this.getAllPosts();
-        this.websocketService.connect();
+         this.websocketService.connect();
 
         this.messagesSubscription = this.websocketService.messages$.subscribe(
             (message) => {

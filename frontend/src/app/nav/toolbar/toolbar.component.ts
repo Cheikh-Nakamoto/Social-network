@@ -115,6 +115,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
                         .message,"succes")
                 }
                 if (message.type === 'new_message') {
+
+                    console.log("MMMMMMMMMMM")
                     this.newMessage = message; // Stocker le message reçu
                     this.notificationVisible = true; // Afficher la notification
 
