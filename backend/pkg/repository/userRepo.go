@@ -12,7 +12,7 @@ type UserRepo interface {
 	StoreSession(token string, userID uint)
 	GetUserID(token string) (uint, bool)
 	ClearSession(token string)
-	GetAllUsers()([]*entity.User, error)
+	GetAllUsers() ([]*entity.User, error)
 	GetFollowers(userID uint) ([]*entity.User, error)
 	GetFollowings(userID uint) ([]*entity.User, error)
 	GetFriends(userID uint) ([]*entity.User, error)
@@ -20,5 +20,6 @@ type UserRepo interface {
 	GetFollowerCount(userID uint) (uint, error)
 	GetFollowingCount(userID uint) (uint, error)
 	GetPostsByUserID(id uint) ([]*entity.Post, error)
-	ChangeNatureProfile (nature bool, userid int) (bool,error)
+	ChangeNatureProfile(nature bool, userid int) (bool, error)
+	GetPendingRequest(userID uint) ([]*entity.User, error)
 }

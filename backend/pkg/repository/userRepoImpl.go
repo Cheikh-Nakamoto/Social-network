@@ -156,7 +156,7 @@ func (s *UserRepoImpl) GetAllUsers() ([]*entity.User, error) {
 }
 
 func (u *UserRepoImpl) GetFollowers(userID uint) ([]*entity.User, error) {
-	query := `SELECT u.id, u.email, u.password, u.firstname, u.lastname, u.date_of_birth, u.avatar, u.nickname, u.about_me, u.is_public, u.created_at, u.updated_at FROM users u JOIN follows f ON u.id = f.follower_id WHERE f.followee_id = ? AND f.status = 'pending' order by f.created_at desc`
+	query := `SELECT u.id, u.email, u.password, u.firstname, u.lastname, u.date_of_birth, u.avatar, u.nickname, u.about_me, u.is_public, u.created_at, u.updated_at FROM users u JOIN follows f ON u.id = f.follower_id WHERE f.followee_id = ? AND f.status = 'accepted' order by f.created_at desc`
 	rows, err := u.db.GetDB().Query(query, userID)
 	if err != nil {
 		return nil, err
@@ -186,6 +186,34 @@ func (u *UserRepoImpl) GetFollowers(userID uint) ([]*entity.User, error) {
 func (u *UserRepoImpl) GetFollowings(userID uint) ([]*entity.User, error) {
 	query := `SELECT u.id, u.email, u.password, u.firstname, u.lastname, u.date_of_birth, u.avatar, u.nickname, u.about_me, u.is_public, u.created_at, u.updated_at FROM users u JOIN follows f ON u.id = f.followee_id WHERE f.follower_id = ? order by f.created_at desc`
 	rows, err := u.db.GetDB().Query(query, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		if err != nil {
+			utils.LoggerError.Println(err, utils.Reset)
+			return
+		}
+	}(rows)
+
+	var users []*entity.User
+	for rows.Next() {
+		user := new(entity.User)
+		err := rows.Scan(&user.ID, &user.Email, &user.Password, &user.Firstname, &user.Lastname, &user.DateOfBirth, &user.Avatar, &user.Nickname, &user.AboutMe, &user.IsPublic, &user.CreatedAt, &user.UpdatedAt)
+		if err != nil {
+			return nil, err
+		}
+		user.Password = ""
+		users = append(users, user)
+	}
+
+	return users, nil
+}
+
+func (u *UserRepoImpl) GetPendingRequest(userID uint) ([]*entity.User, error) {
+	query := `SELECT u.id, u.email, u.password, u.firstname, u.lastname, u.date_of_birth, u.avatar, u.nickname, u.about_me, u.is_public, u.created_at, u.updated_at FROM users u JOIN follows f ON u.id = f.follower_id WHERE (f.followee_id = ?) AND f.status = 'pending'`
+	rows, err := u.db.GetDB().Query(query, userID, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -277,6 +305,7 @@ func (u *UserRepoImpl) GetFollowingCount(userID uint) (uint, error) {
 
 	return count, nil
 }
+
 func (r *UserRepoImpl) GetPostsByUserID(userID uint) ([]*entity.Post, error) {
 	rows, err := r.db.GetDB().Query("SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC LIMIT 10", userID)
 	if err != nil {
