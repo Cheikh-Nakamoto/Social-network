@@ -134,3 +134,15 @@ a {
     }
   }
 }
+.notifications {
+  position: fixed;
+  bottom: 12px;
+  right: 6px;
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  z-index: 1000;  /* Assure que la notification est au-dessus des autres éléments */
+  cursor: pointer;  /* Indique que l'élément est cliquable */
+}

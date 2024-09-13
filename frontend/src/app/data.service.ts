@@ -4,6 +4,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders , HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { ChatComponent } from './chat/chat.component';
 
 @Injectable({
   providedIn: 'root'
@@ -244,3 +246,4 @@ export class VisibilityService {
         this.visibilitySubject.next(!this.visibilitySubject.value); // Inverse l'état
     }
 }
+

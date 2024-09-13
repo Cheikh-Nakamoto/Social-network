@@ -23,6 +23,7 @@ import { WebSocketService } from '../../chat/services/chat.service';
 
 
 
+
 @Component({
     selector: 'app-toolbar',
     standalone: true,
@@ -62,8 +63,11 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     notifylength: string = '0';
     chatCount: number = 0;
     private chatCountSubscription!: Subscription;
+    newMessages: any[] = []; // Pour stocker les nouveaux messages reçus
 
     messagesSubscription: any;
+    newMessage: any;
+    notificationVisible = false;
     constructor(
         private dataService: DataService,
         private authService: AuthService,
@@ -71,8 +75,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         private websocketService: WebSocketService,
         private userservice: GetUserService,
         private visibilityService: VisibilityService
-    ) {
-    }
+    ) {}
 
     IsNotify: NotificationVerification = { notif: [] };
 
@@ -97,15 +100,43 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
         this.websocketService.connect();
 
-        this.messagesSubscription = this.websocketService.messages$
-            .subscribe((message) => {
+        this.messagesSubscription = this.websocketService.messages$.subscribe(
+            (message) => {
                 if (
                     message.type === 'new_notification' &&
                     message.payload.messageId == 0
                 ) {
                     this.notify();
                 }
-            });
+                if (message.type === 'new_message') {
+                    this.newMessage = message; // Stocker le message reçu
+                    this.notificationVisible = true; // Afficher la notification
+
+                    // Cacher la notification après 10 secondes
+                    setTimeout(() => {
+                        this.notificationVisible = false;
+                        this.newMessage = null; // Réinitialiser le message
+                    }, 10000);
+                }
+                if (message.type === 'new_message_group') {
+                    this.newMessage = message; // Stocker le message reçu
+                    this.notificationVisible = true; // Afficher la notification
+
+                    // Cacher la notification après 10 secondes
+                    setTimeout(() => {
+                        this.notificationVisible = false;
+                        this.newMessage = null; // Réinitialiser le message
+                    }, 10000);
+                }
+            }
+        );
+    }
+
+    openChatFromNotification(message: any): void {
+        // Logique pour ouvrir le chat associé au message
+        console.log('Ouvrir le chat pour le message', message);
+        this.notificationVisible = false; // Masquer la notification après ouverture du chat
+        this.newMessage = null; // Réinitialiser le message
     }
     onToggleVisibility(): void {
         this.visibilityService.toggleVisibility(); // Change l'état de visibilité
@@ -126,13 +157,19 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         });
     }
 
-    InviteAccept(Id: number, groupID: number, userid: number, targetid: number, role: string) {
+    InviteAccept(
+        Id: number,
+        groupID: number,
+        userid: number,
+        targetid: number,
+        role: string
+    ) {
         let body = {
             id: Id,
             user_id: userid,
             group_id: groupID,
             target_id: targetid,
-            role: role
+            role: role,
         };
         this.dataService
             .accept_decline('accept-request', body)
@@ -145,20 +182,20 @@ export class ToolbarComponent implements OnInit, OnDestroy {
                     let messBody: MessageBody = {
                         senderId: Number(0),
                         receiverId: Number(0),
-                        message: "Nouveau group created successfully"
-                    }
+                        message: 'Nouveau group created successfully',
+                    };
                     let message: MessageData = {
                         type: 'new_group',
                         datas: messBody,
                     };
                     let even = new Events(message.type, message.datas);
                     sendEvent(this.websocketService, even);
-                    if (role == "admin") {
+                    if (role == 'admin') {
                         messBody = {
                             senderId: Number(targetid),
                             receiverId: Number(userid),
-                            message: ""
-                        }
+                            message: '',
+                        };
                         message = {
                             type: 'new_invitation',
                             datas: messBody,
@@ -169,12 +206,18 @@ export class ToolbarComponent implements OnInit, OnDestroy {
                 }
             });
     }
-    InviteDecline(Id: number, groupID: number, userid: number, targetid: number, role: string) {
+    InviteDecline(
+        Id: number,
+        groupID: number,
+        userid: number,
+        targetid: number,
+        role: string
+    ) {
         let body = {
             id: Id,
             user_id: userid,
             group_id: groupID,
-            target_id: targetid
+            target_id: targetid,
         };
         this.dataService
             .accept_decline('decline-request', body)
@@ -186,7 +229,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
             });
     }
     handleLogout() {
-        this.websocketService.close()
+        this.websocketService.close();
         this.authService.logout().subscribe({
             next: () => {
                 this.router.navigateByUrl('/login');
@@ -195,7 +238,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
                 console.error('Erreur lors de la déconnexion :', err);
             },
         });
-
     }
 
     visibilityNotif() {

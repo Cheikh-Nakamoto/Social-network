@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { WebSocketSubject } from 'rxjs/webSocket';
 import { Observable, Subject } from 'rxjs';
 import { routeEvent } from './events';
+import { MatDialog } from '@angular/material/dialog';
+import { ChatComponent } from '../chat.component';
 
 
 export class Event {
@@ -87,4 +89,42 @@ export class WebSocketService {
       this.socket$.complete();
     }
   }
+}
+
+
+
+
+@Injectable({
+    providedIn: 'root',
+})
+export class ChatService {
+    constructor(private dialog: MatDialog) {}
+
+    // Ouvrir un dialogue si non déjà ouvert
+    openCreatePostDialog(id: number): void {
+        const isDialogOpen = this.isDialogAlreadyOpen(id);
+
+        if (!isDialogOpen) {
+            this.dialog.open(ChatComponent, {
+                width: '400px',
+                data: { userId: id }, // Envoi de paramètres au composant de la boîte de dialogue
+                position: {
+                    bottom: '12px',
+                    right: '6px',
+                },
+            });
+        } else {
+            console.log('Le dialogue est déjà ouvert');
+        }
+    }
+
+    // Vérifier si le dialogue est déjà ouvert pour cet utilisateur
+    isDialogAlreadyOpen(userId: number): boolean {
+        const openDialogs = this.dialog.openDialogs;
+
+        return openDialogs.some((dialog) => {
+            const data = dialog.componentInstance.data;
+            return data && data.userId === userId;
+        });
+    }
 }
