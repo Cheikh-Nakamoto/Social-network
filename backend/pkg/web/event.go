@@ -13,14 +13,14 @@ type SendMessageEvent struct {
 	Message    string `json:"message"`
 	SenderId   int    `json:"senderId"`
 	ReceiverId int    `json:"receiverId"`
-	Status	bool 	`json:status`
+	Status     bool   `json:"status"`
 }
 
 type ReturnMessageEvent struct {
 	MessageId int `json:"messageId"`
 	SendMessageEvent
 	SentDate string `json:"sentDate"`
-	Status bool	`json:status`
+	Status   bool   `json:"status"`
 }
 
 type ReturnChatDataEvent struct {
@@ -43,21 +43,20 @@ type UserDataEvent struct {
 }
 
 const (
-	EventSendMessage       = "send_message"
-	EventNewMessage        = "new_message"
+	EventSendMessage         = "send_message"
+	EventNewMessage          = "new_message"
 	EventGrNewMessage        = "new_message_group"
-	EventGetMessages       = "get_messages"
-	EventGetChatbarData    = "get_chatbar_data"
-	EventUpdateChatbarData = "update_chatbar_data"
-	EventTypingStart = "typing_start"
-	EventTypingStop  = "typing_stop"
-	EventGetMessagesGroup="get_messages_groupes"
-	EventSendMessageGroup="send_message_groupes"
-	EventGetNotification="new_notification"
-	EventGetNotificationChat="new_notification_chat"
-	EventGroup="new_group"
-	EventPost="new_post"
-	EventInvite="new_invitation"
-	EventNewFollowBack="new_follow"
-
+	EventGetMessages         = "get_messages"
+	EventGetChatbarData      = "get_chatbar_data"
+	EventUpdateChatbarData   = "update_chatbar_data"
+	EventTypingStart         = "typing_start"
+	EventTypingStop          = "typing_stop"
+	EventGetMessagesGroup    = "get_messages_groupes"
+	EventSendMessageGroup    = "send_message_groupes"
+	EventGetNotification     = "new_notification"
+	EventGetNotificationChat = "new_notification_chat"
+	EventGroup               = "new_group"
+	EventPost                = "new_post"
+	EventInvite              = "new_invitation"
+	EventNewFollowBack       = "new_follow"
 )

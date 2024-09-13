@@ -58,11 +58,12 @@ export class ListComponent {
 
         this.authService.getAll().subscribe((data: any) => {
             const users = data.users.filter((user: any) => user.id !== this.currentID);
-            const existingFollowers = this.followers.map(follower => follower.id);
-            const existingFollowings = this.followings.map(following => following.id);
-            const existingPendings = this.pendings.map(pending => pending.id);
+            //const existingFollowers = this.followers.map(follower => follower.id);
+            //const existingFollowings = this.followings.map(following => following.id);
+            //const existingPendings = this.pendings.map(pending => pending.id);
 
-            this.suggestions = users.filter((user: any) => !existingFollowers.includes(user.id) && !existingFollowings.includes(user.id) && !existingPendings.includes(user.id));
+            //this.suggestions = users.filter((user: any) => !existingFollowings.includes(user.id) && !existingPendings.includes(user.id));
+            this.suggestions = users
             this.cdr.detectChanges()
         });
     }

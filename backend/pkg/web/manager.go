@@ -74,13 +74,8 @@ func (m *Manager) setupEventHandlers() {
 	m.handlers[EventPost] = SendPostHandler
 	m.handlers[EventInvite] = SendInviteHandler
 	m.handlers[EventNewFollowBack] = SendNewFollowHandler
-<<<<<<< Updated upstream
-	m.handlers[EventGetNotificationChat]= SendNotificationChatHandler
-
-
-=======
 	m.handlers[EventGetNotificationChat] = SendNotificationChatHandler
->>>>>>> Stashed changes
+	m.handlers[EventGetNotificationChat] = SendNotificationChatHandler
 }
 
 func TypingStartHandler(event Event, c *Client) error {
@@ -128,12 +123,12 @@ func SendMessageHandler(event Event, c *Client) error {
 	returnMsg.ReceiverId = chatEvent.ReceiverId
 	returnMsg.SenderId = chatEvent.SenderId
 	returnMsg.Status = chatEvent.Status
-	idmsg,err:=getLastMessageId()
-	if err!=nil{
+	idmsg, err := getLastMessageId()
+	if err != nil {
 		log.Print("error lors de la recuperation de l'id du dernier message")
 		return err
 	}
-	returnMsg.MessageId=idmsg
+	returnMsg.MessageId = idmsg
 
 	// Ajouter le message à une table ou base de données
 	addMessageToTable(returnMsg)
@@ -333,12 +328,12 @@ func SendMessageGrouopHandler(event Event, c *Client) error {
 	returnMsg.Message = chatEvent.Message
 	returnMsg.ReceiverId = chatEvent.ReceiverId
 	returnMsg.SenderId = chatEvent.SenderId
-	idmsg,err:=getLastGrMessageId()
-	if err!=nil{
+	idmsg, err := getLastGrMessageId()
+	if err != nil {
 		log.Print("error lors de la recuperation de l'id du dernier message")
 		return err
 	}
-	returnMsg.MessageId=idmsg
+	returnMsg.MessageId = idmsg
 
 	// Ajouter le message à une table ou base de données
 	addGrMessageToTable(returnMsg)
@@ -828,9 +823,6 @@ func CheckNotificationChats(receiverId int) (bool, error) {
 	return count > 0, nil
 
 }
-<<<<<<< Updated upstream
-
-
 func getLastGrMessageId() (int, error) {
 	var messageId int
 	db, err := sqlite.Connect()
@@ -855,6 +847,7 @@ func getLastGrMessageId() (int, error) {
 	// Retourner le dernier messageId
 	return messageId, nil
 }
+
 func getLastMessageId() (int, error) {
 	var messageId int
 	db, err := sqlite.Connect()
@@ -879,5 +872,3 @@ func getLastMessageId() (int, error) {
 	// Retourner le dernier messageId
 	return messageId, nil
 }
-=======
->>>>>>> Stashed changes
