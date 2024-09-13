@@ -20,6 +20,7 @@ import { MatInputModule } from '@angular/material/input';
 import { DataService } from '../../data.service';
 import { CommonModule } from '@angular/common';
 import { WebSocketService } from '../../chat/services/chat.service';
+import { UtilService } from '../../service/util.service';
 
 
 
@@ -74,7 +75,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         private router: Router,
         private websocketService: WebSocketService,
         private userservice: GetUserService,
-        private visibilityService: VisibilityService
+        private visibilityService: VisibilityService,
+        private utilService : UtilService
     ) {}
 
     IsNotify: NotificationVerification = { notif: [] };
@@ -107,6 +109,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
                     message.payload.messageId == 0
                 ) {
                     this.notify();
+                }else if  (message.type === 'new_follow') {
+                    console.log(message)
+                    this.utilService.onSnackBar(message.payload
+                        .message,"succes")
                 }
                 if (message.type === 'new_message') {
                     this.newMessage = message; // Stocker le message reçu
@@ -127,6 +133,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
                         this.notificationVisible = false;
                         this.newMessage = null; // Réinitialiser le message
                     }, 10000);
+
                 }
             }
         );
