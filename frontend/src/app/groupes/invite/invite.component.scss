@@ -1,0 +1,41 @@
+.invite{
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #1da1f2;
+
+}
+
+
+.userlist {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    overflow: hidden;
+
+    .close {
+        position: absolute;
+        float: right;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+    a {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+        background: none;
+        border: none;
+        box-shadow: none;
+        padding: 10px 24px;
+        border-radius: 10px;
+        font-weight: bold;
+        color: #000;
+        text-decoration: none;
+    }
+}

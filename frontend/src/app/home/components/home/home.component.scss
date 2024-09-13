@@ -1,0 +1,132 @@
+$lightBlue: #b8daff;
+$danger: #f44336;
+$primaryColor: #005cbb;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+mat-card {
+    margin-bottom: 32px;
+    border: none;
+    box-shadow: 2px 2px 2px 2px $lightBlue;
+    background: #fff;
+
+    mat-card-header img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 8px;
+        cursor: pointer;
+    }
+    mat-card-content {
+        max-height: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        word-break: break-word;
+    }
+
+    mat-card-title {
+        font-size: 18px;
+        text-transform: capitalize;
+        font-weight: 600;
+        margin-top: 3px;
+    }
+
+    mat-card-subtitle {
+        font-size: 14px;
+    }
+}
+
+mat-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+mat-card-actions button:hover svg {
+    stroke: white;
+}
+button:not(.send) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+    font-size: 16px;
+    font-weight: bold;
+
+    mat-icon {
+        font-size: 20px;
+    }
+    &:hover {
+        background-color: $lightBlue;
+        color: white;
+    }
+}
+
+.comments-media-icons {
+    position: absolute;
+    bottom: 15px;
+    right: 20%;
+}
+.comments-media-icons p {
+    display: inline-block;
+    margin: 0 4px;
+    cursor: pointer;
+}
+.comments-media-icons svg {
+    width: 24px;
+}
+
+label {
+    color: #252525;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+}
+.comments-media-icons p.comments-image-uploader input {
+    display: none;
+}
+.comment-form {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 48px;
+    margin-bottom: 18px;
+
+    form {
+        display: flex;
+        width: 100%;
+        margin-left: 48px;
+
+        input {
+            width: 100%;
+            border: 1px solid #ddd;
+            height: 36px;
+            border-radius: 10px;
+            padding: 2px 8px;
+
+            &:focus {
+                border: 1px solid #ddd;
+                outline: none;
+            }
+        }
+    }
+}
+
+.post-image {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+}
+
+mat-card-actions button {
+    width: 90px;
+}

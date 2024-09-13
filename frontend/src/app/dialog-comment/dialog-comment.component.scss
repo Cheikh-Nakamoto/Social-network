@@ -1,0 +1,48 @@
+.container {
+    margin-bottom: 1rem;
+  }
+  
+  .user-comment {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e0e0e0;
+    padding: 1rem;
+    border-radius: 12px;  // Bordures arrondies
+    background-color: #ffffff;  // Couleur de fond des commentaires
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  // Ombre légère pour le commentaire
+    margin-bottom: 1rem;  // Espacement entre les commentaires
+  }
+  
+  .user {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;  // Taille de la police du nom d'utilisateur
+  }
+  
+  .comment {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;  // Taille de la police du contenu du commentaire
+    line-height: 1.4;  // Hauteur de ligne pour améliorer la lisibilité
+    color: #333;  // Couleur du texte du commentaire
+  }
+  
+  .date {
+    font-size: 0.75rem;  // Taille de la police de la date
+    color: #757575;  // Couleur du texte de la date
+  }
+  
+  mat-dialog-content {
+    max-height: 60vh; // Ajustez la hauteur si nécessaire
+    overflow: auto;
+  }
+  
+  mat-dialog-actions {
+    padding: 0.5rem;
+  }
+  .comment-image img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+    border-radius: 8px;
+  }
+  

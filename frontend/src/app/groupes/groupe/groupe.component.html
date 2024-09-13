@@ -1,0 +1,46 @@
+<app-toolbar></app-toolbar>
+<div class="group-container">
+  <h1>Groupes de Discussion</h1>
+  <!-- Liste des groupes existants -->
+  <div class="group-list" *ngIf="groups.length > 0; else noGroups">
+    <div class="container" *ngFor="let group of groups" class="group-card">
+      <mat-card class="example-card">
+        <div class="img" *ngIf="group.image!= '' ; else noimg">
+          <img mat-card-image [src]="group.image" alt="Photo of {{ group.name }}">
+        </div>
+        <mat-card-header class="mat-card-header">
+          <mat-card-title>Name {{ group.name }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <h6>Description </h6>
+          <span>
+            <p> {{ group.description }}</p>
+          </span>
+        </mat-card-content>
+        <mat-card-actions *ngIf="group.owner != id && !IsIn[group.id]; else voir">
+          <button mat-button color="primary" (click)="addMember(group.id,id,group.owner,'member')">JOIN</button>
+        </mat-card-actions>
+        <ng-template #voir>
+          <button mat-button color="primary" (click)="handleClick('/groups',$event,group.id)">VOIR</button>
+        </ng-template>
+      </mat-card>
+    </div>
+  </div>
+  <ng-template #noGroups>
+    <p>Loading...</p>
+  </ng-template>
+
+
+  
+
+  <ng-template #noimg>
+    <img  src="https://www.imagesgroup.in/images/blog-p-img-1.jpg" >
+  </ng-template>
+
+  <!-- Bouton pour créer un nouveau groupe -->
+  <div class="create-group">
+    <button mat-raised-button color="primary" (click)="handleClick('/CreateGroup', $event)">
+      Créer un Nouveau Groupe
+    </button>
+  </div>
+</div>

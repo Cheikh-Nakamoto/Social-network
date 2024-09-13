@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS likes_dislikes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    target_id INTEGER NOT NULL,
+    target_type TEXT NOT NULL,
+    like BOOLEAN NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);

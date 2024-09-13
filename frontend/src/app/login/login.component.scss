@@ -1,0 +1,251 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
+@font-face {
+  font-family: "Smith";
+  src: url("../../assets/font/l_c_smith_5_typewriter/L.C. Smith 5 typewriter.ttf");
+}
+@font-face {
+  font-family: "Punkbabe";
+  src: url("../../assets/font/punkbabe/PUNKBABE TRIAL.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "UncleType";
+  src: url("../../assets/font/uncle_typewriter/UNCLETYP.TTF");
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  height: 100vh;
+}
+
+/* Définir l'animation */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Appliquer l'animation à l'élément h1 */
+.animated-text {
+  animation: slideIn 3s ease-in-out;
+}
+
+.container {
+  display: flex;
+  flex: 1;
+}
+
+.left-panel {
+  background-color: #b8daff;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  padding: 20px;
+  font-family: "smith";
+  width: 370px;
+}
+
+.left-panel .left-image {
+  width: 100%;
+  max-width: 300px;
+}
+
+.left-panel h1 {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.left-panel p {
+  text-align: center;
+}
+
+.right-panel {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  padding: 20px;
+}
+
+.title {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.title h1 {
+  font-family: "smith";
+}
+.barre {
+  width: 100%;
+  height: 3px;
+  background-color: #008cba;
+  transition: all 0.5s ease;
+}
+
+.container-auth {
+  position: relative;
+  width: 370px;
+  height: 570px;
+  border-radius: 12px;
+  padding: 20px 30px 120px;
+  background: #b8daff;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.login-section header,
+.signup-section header {
+  font-size: 30px;
+  text-align: center;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: "smith";
+}
+
+.container-auth form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 30px;
+}
+form input,
+form textarea {
+  border: 0;
+  border-bottom: 2px solid #fff;
+  outline: 0;
+  padding: 6px 8px;
+  font-weight: 400;
+  border-radius: 6px;
+  background: transparent;
+  color: #000;
+  font-size: 12px;
+}
+form input::placeholder,
+form textarea::placeholder {
+  color: #000;
+}
+form input[type="date"] {
+  color: #000;
+}
+form input[type="file"] {
+  display: none;
+}
+.file-input--.container-auth {
+  position: relative;
+  width: 100%;
+  height: 40px;
+}
+.file-input-label {
+  display: inline-block;
+  width: 100%;
+  color: #000;
+  cursor: pointer;
+  font-size: 12px;
+  border-bottom: 2px solid #fff;
+  border-radius: 6px;
+  padding: 6px 8px;
+}
+form textarea {
+  resize: none;
+  height: 60px;
+ 
+}
+.login-section input {
+  border-bottom: 2px solid fff;
+  color: #000;
+}
+form a {
+  color: #000;
+  font-size: 12px;
+}
+.signup-section form a {
+  color: #000;
+}
+form .btn {
+  margin-top: 20px;
+  border: none;
+  padding: 5px 5px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  background: #005cbb;
+  color: #fff;
+}
+.name-container {
+  display: flex;
+  gap: 12px;
+}
+.name-container input {
+  flex: 1;
+  max-width: calc(50% - 8px);
+}
+.container.active .login-section {
+  bottom: -12%;
+  border-radius: 220px;
+  box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.1);
+}
+.container.active .login-section header {
+  opacity: 1;
+}
+.container.active .signup-section header {
+  opacity: 0.6;
+}
+.number-input-container {
+  position: relative;
+  display: inline-block;
+}
+.number-input-container:before,
+.number-input-container:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 2px;
+  background-color: #000;
+  pointer-events: none;
+}
+.number-input-container:before {
+  left: -20px;
+  transform: rotate(45deg);
+}
+.number-input-container:after {
+  right: -20px;
+  transform: rotate(-45deg);
+}
+.input-group {
+  display: flex;
+}
+.input-group input {
+  flex: 1;
+}
+.input-group svg {
+  width: 13px;
+  position: absolute;
+  right: 39px;
+  top: 134px;
+}
+
+:host ::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: white;
+  border: none;
+}

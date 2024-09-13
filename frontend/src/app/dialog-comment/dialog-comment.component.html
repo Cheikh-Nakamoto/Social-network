@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>Comments</h2>
+<mat-dialog-content class="mat-typography">
+  <div class="container" *ngFor="let comment of comments">
+    <div class="user-comment">
+      <div class="user">
+        <span>{{ user[comment.user_id].firstname }}</span>
+      </div>
+      <div class="comment">
+        {{ comment.content }}
+      </div>
+      <div class="image" *ngIf="getImageUrl(comment)">
+        <img [src]="getImageUrl(comment)" alt="Comment image" />
+      </div>
+      <div class="date">
+        <span>{{ comment.created_at | date:'short' }}</span>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

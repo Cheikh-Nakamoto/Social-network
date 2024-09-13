@@ -1,0 +1,8 @@
+./backend
+./test
+.png
+.jpg
+.idea
+*.db
+*.db-shm
+*.db-wal

@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "ngx-timepicker": "^0.0.5",
+    "rxjs": "^7.8.1"
+  }
+}

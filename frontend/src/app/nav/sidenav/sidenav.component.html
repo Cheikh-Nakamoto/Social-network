@@ -1,0 +1,37 @@
+<app-toolbar></app-toolbar>
+<mat-drawer-container class="example-container">
+  <mat-drawer mode="side" opened>
+    <mat-list *ngFor="let item of menuItems" role="list">
+      <mat-list-item role="listitem">
+        <a matListItemTitle routerLink="{{ item.route }}" (click)="handleMenuItemClick(item, $event)">
+          <div class="menu">
+            <i class="icofont {{ item.icon }}"></i>
+            {{ item.name }}
+          </div>
+        </a>
+      </mat-list-item>
+    </mat-list>
+  </mat-drawer>
+  <mat-drawer-content>
+    <div class="content-wrapper">
+      <app-home></app-home>
+    </div>
+  </mat-drawer-content >
+  <mat-drawer mode="side" opened position="end">
+    <mat-list *ngFor="let user of users" role="list">
+      <mat-list-item role="listitem">
+        <a matListItemTitle href="javascript:void(0)" (click)="openCreatePostDialog(user.id)">
+          <mat-icon>
+            <div class="status" [ngClass]="{ online: user.isOnline, offline: !user.isOnline }"></div>
+          </mat-icon>
+          <span>{{ user.nickname }}</span>
+          <mat-icon class="message-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#4B77D1">
+              <path
+                d="M280-240q-17 0-28.5-11.5T240-280v-80h520v-360h80q17 0 28.5 11.5T880-680v600L720-240H280ZM80-280v-560q0-17 11.5-28.5T120-880h520q17 0 28.5 11.5T680-840v360q0 17-11.5 28.5T640-440H240L80-280Zm520-240v-280H160v280h440Zm-440 0v-280 280Z" />
+            </svg></mat-icon>
+        </a>
+      </mat-list-item>
+    </mat-list>
+  </mat-drawer>
+</mat-drawer-container>

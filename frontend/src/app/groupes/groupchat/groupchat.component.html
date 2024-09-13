@@ -1,0 +1,58 @@
+
+<div id="chat-container" class="chat-container">
+    <div class="chat-header">
+        <h5 id="header" *ngIf="user">Group: {{groupId}} 
+            <span>
+                <h6 id="typingMessage" class="typing-message"></h6>
+            </span>
+        </h5>
+        <div class="typing-indicator" id="typingIndicator">
+            <div class="inner-container">
+                <div class="dots-container">
+                    <span class="point"></span>
+                    <span class="point"></span>
+                    <span class="point"></span>
+                </div>
+            </div>
+        </div>
+        <span class="close" (click)="closeDialog()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x"
+                viewBox="0 0 16 16">
+                <path
+                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z">
+                </path>
+            </svg>
+        </span>
+    </div>
+    <div class="chat-box" id="chatBox"></div>
+    <form id="sendMsg" class="message-form" (submit)="onSubmit($event)">
+        <div class="message-container">
+            <textarea name="message" id="msgContent" class="message-input" placeholder="Message"></textarea>
+            <p class="emoji has-tooltip" (click)="toggleEmojiPicker()">
+                <span class="post-tooltip">Emoji</span>
+                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M14.4 19.8C14.4 19.8 15.75 21.6 18 21.6C20.25 21.6 21.6 19.8 21.6 19.8M20.7 15.3H20.709M15.3 15.3H15.309M27 18C27 22.9706 22.9706 27 18 27C13.0294 27 9 22.9706 9 18C9 13.0294 13.0294 9 18 9C22.9706 9 27 13.0294 27 18ZM21.15 15.3C21.15 15.5485 20.9485 15.75 20.7 15.75C20.4515 15.75 20.25 15.5485 20.25 15.3C20.25 15.0515 20.4515 14.85 20.7 14.85C20.9485 14.85 21.15 15.0515 21.15 15.3ZM15.75 15.3C15.75 15.5485 15.5485 15.75 15.3 15.75C15.0515 15.75 14.85 15.5485 14.85 15.3C14.85 15.0515 15.0515 14.85 15.3 14.85C15.5485 14.85 15.75 15.0515 15.75 15.3Z"
+                        stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    </path>
+                </svg>
+            </p>
+            <emoji-mart *ngIf="showEmojiPicker" set="apple" (emojiClick)="addEmoji($event)"
+                [style.position]="'absolute'" [style.bottom]="'50px'" [style.right]="'0px'">
+            </emoji-mart>
+
+            <button id="submitBtn" class="send-button" type="submit">
+                <svg fill="#000000" width="40px" height="40px" viewBox="0 0 24 24" id="send" data-name="Flat Color"
+                    xmlns="http://www.w3.org/2000/svg" class="icon flat-color">
+                    <path id="primary"
+                        d="M21.66,12a2,2,0,0,1-1.14,1.81L5.87,20.75A2.08,2.08,0,0,1,5,21a2,2,0,0,1-1.82-2.82L5.46,13l.45-1-.45-1L3.18,5.87A2,2,0,0,1,5.87,3.25l14.65,6.94A2,2,0,0,1,21.66,12Z"
+                        style="fill: rgb(0, 0, 0);"></path>
+                    <path id="secondary" d="M12,12a1,1,0,0,1-1,1H5.46l.45-1-.45-1H11A1,1,0,0,1,12,12Z"
+                        style="fill: rgb(0,0,0);"></path>
+                </svg>
+            </button>
+        </div>
+    </form>
+</div>
+
+

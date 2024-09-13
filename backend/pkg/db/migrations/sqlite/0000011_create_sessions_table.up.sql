@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS sessions (
+	sessionId VARCHAR(255) NOT NULL UNIQUE, 
+	userId INTEGER NOT NULL, 
+	FOREIGN KEY (userId) REFERENCES users (id)
+);  

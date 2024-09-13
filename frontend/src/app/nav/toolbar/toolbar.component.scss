@@ -1,0 +1,148 @@
+$lightBlue: #b8daff;
+$danger: #f44336;
+$primaryColor: #005cbb;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.app-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  width: 100%;
+  box-shadow: 0 2px 2px -2px gray;
+  background-color: white;
+  padding: 0 16px; // Ajoute un padding pour espacer les bords
+
+  .logo {
+    display: flex;
+    align-items: center;
+  }
+}
+
+a {
+  text-decoration: none;
+  color: #005cbb;
+  font-weight: 500;
+}
+
+.toolbar-left {
+  display: flex;
+  align-items: center;
+
+  .title {
+    margin-left: 5px;
+    font-size: 14px;
+  }
+}
+
+.toolbar-center {
+  border: 1px solid #1a1b1f;
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 16px;
+  width: 40%;
+  background: #f2f2f2;
+
+  mat-label {
+    margin-left: 12px;
+  }
+
+  input {
+    border: none;
+    outline: none;
+    background: #f2f2f2;
+    border-radius: 15px;
+    color: #005cbb;
+    font-weight: bold;
+    font-size: 12px;
+    letter-spacing: 2px;
+    padding: 5px 10px;
+    width: 100%;
+  }
+}
+
+.toolbar-right {
+  display: flex;
+  align-items: center;
+
+  button {
+    margin-right: 10px;
+
+    mat-icon {
+      font-size: 24px;
+      color: #005cbb;
+    }
+  }
+  img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+  }
+
+  .profile-pic {
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+  }
+  .user-menu-button {
+    border: none;
+    cursor: pointer;
+    background: none;
+
+    .username {
+      font-size: 14px;
+      color: #005cbb;
+      margin-left: 4px;
+    }
+  }
+}
+
+.name {
+  margin-left: 4px;
+}
+
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.demo-section + .demo-section {
+  margin-top: 16px;
+}
+
+.buttons {
+  display: flex;
+  gap: 7px;
+
+  button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    span {
+      font-size: 18px;
+    }
+  }
+}
+.notifications {
+  position: fixed;
+  bottom: 12px;
+  right: 6px;
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  z-index: 1000;  /* Assure que la notification est au-dessus des autres éléments */
+  cursor: pointer;  /* Indique que l'élément est cliquable */
+}

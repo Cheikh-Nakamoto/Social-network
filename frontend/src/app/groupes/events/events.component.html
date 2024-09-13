@@ -1,0 +1,56 @@
+<app-toolbar></app-toolbar>
+<div class="groupe-form-container">
+  <h2>Créer un nouvel événement</h2>
+
+  <form [formGroup]="groupeForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="groupName">Nom de l'événement</label>
+      <input id="groupName" formControlName="name" type="text" class="form-control" />
+      <div *ngIf="groupeForm.get('name')?.invalid && groupeForm.get('name')?.touched" class="error-message">
+        Le nom de l'événement est requis et ne doit pas dépasser 50 caractères.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" formControlName="description" class="form-control"></textarea>
+      <div *ngIf="groupeForm.get('description')?.invalid && groupeForm.get('description')?.touched"
+        class="error-message">
+        La description est requise et ne doit pas dépasser 250 caractères.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="form-group">
+        <!-- Date de début -->
+        <label for="start">Start date:</label>
+
+        <input type="date" id="start" formControlName="date_start" value="{{today}}" min="{{today}}" f />
+
+
+        <!-- Heure de début -->
+        <label for="appt">Choose a time for your meeting:</label>
+
+        <input type="time" id="appt" formControlName="hour_start" min="09:00" max="18:00" required />
+
+        <small>Office hours are 9am to 6pm</small>
+      </div>
+
+      <div class="form-group">
+        <!-- Date de fin -->
+        <label for="start">Start date:</label>
+
+        <input type="date" id="start" formControlName="date_end" value="{{today}}" min="{{today}}" />
+
+
+        <!-- Heure de fin -->
+        <label for="time">Choose a time for your meeting:</label>
+
+        <input type="time" id="time" formControlName="hour_end" min="09:00" max="18:00" required />
+
+        <small>Office hours are 9am to 6pm</small>
+      </div>
+    </div>
+    <button type="submit" [disabled]="groupeForm.invalid" class="btn btn-primary">Créer l'événement</button>
+  </form>
+</div>
