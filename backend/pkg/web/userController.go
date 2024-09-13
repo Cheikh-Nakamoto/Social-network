@@ -766,7 +766,6 @@ func (c *UserController) GetPendingRequest(w http.ResponseWriter, r *http.Reques
 
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set(os.Getenv("CONTENT_TYPE"), os.Getenv("APPLICATION_JSON"))
-	w.WriteHeader(http.StatusOK)
 	if requests != nil {
 		err = json.NewEncoder(w).Encode(map[string]interface{}{
 			"status":   http.StatusOK,
