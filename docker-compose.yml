@@ -1,23 +1,18 @@
-version: '3.8'
+version: '3'
 services:
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    build: ./backend
     ports:
-      - "1111:1111"
-    networks:
-      - app-network
+      - "8080:8080"
+    volumes:
+      - ./backend:/app
+      - ./backend/pkg/db/mydb.db:/app/pkg/db/mydb.db
+    environment:
+      - DB_PATH=/app/pkg/db/mydb.db
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    build: ./frontend
     ports:
-      - "1112:1112"
-    networks:
-      - app-network
-
-networks:
-  app-network:
-      driver: bridge
+      - "4200:4200"
+    volumes:
+      - ./frontend:/app
