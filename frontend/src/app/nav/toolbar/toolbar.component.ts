@@ -186,6 +186,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
             });
     }
     handleLogout() {
+        this.websocketService.close()
         this.authService.logout().subscribe({
             next: () => {
                 this.router.navigateByUrl('/login');
@@ -194,6 +195,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
                 console.error('Erreur lors de la déconnexion :', err);
             },
         });
+
     }
 
     visibilityNotif() {

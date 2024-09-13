@@ -83,7 +83,7 @@ export class WebSocketService {
   }
 
   close(): void {
-    if (this.socket$) {
+    if (this.socket$) { 
       this.socket$.complete();
     }
   }

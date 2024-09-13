@@ -89,7 +89,7 @@ export class SidenavComponent implements OnInit {
                 // Typage de la réponse comme un tleau de Post
 
                 this.users = response.users.filter(
-                    (user: any) => user !== null && user.id !== Number(iduser)
+                    (user: any) => user !== null && user.id !== Number(iduser) && user.is_public
                 );
             },
             (error) => {

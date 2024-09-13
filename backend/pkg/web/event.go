@@ -54,6 +54,7 @@ const (
 	EventGetMessagesGroup="get_messages_groupes"
 	EventSendMessageGroup="send_message_groupes"
 	EventGetNotification="new_notification"
+	EventGetNotificationChat="new_notification_chat"
 	EventGroup="new_group"
 	EventPost="new_post"
 	EventInvite="new_invitation"
