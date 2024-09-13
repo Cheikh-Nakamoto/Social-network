@@ -135,6 +135,16 @@ export class ToolbarComponent implements OnInit, OnDestroy {
                     }, 10000);
 
                 }
+                if (message.type === 'new_notification_chat') {
+                    this.newMessage = message; // Stocker le message reçu
+                    this.notificationVisible = true; // Afficher la notification
+
+                    // Cacher la notification après 10 secondes
+                    setTimeout(() => {
+                        this.notificationVisible = false;
+                        this.newMessage = null; // Réinitialiser le message
+                    }, 10000);
+                }
             }
         );
     }
