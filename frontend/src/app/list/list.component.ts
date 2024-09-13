@@ -37,7 +37,7 @@ export class ListComponent {
     followers: User[] = []
     followings: User[] = []
     friends: User[] = []
-    pendings: Follow[] = []
+    pendings: User[] = []
     messages!: string
     size!: number
     currentID: number = this.authService.getUserID()!
@@ -53,21 +53,27 @@ export class ListComponent {
 
     listUsers(): void {
         this.listFollowers()
-        this.listFriends()
+        this.listFollowings()
+        this.listPendings()
 
         this.authService.getAll().subscribe((data: any) => {
             const users = data.users.filter((user: any) => user.id !== this.currentID);
             const existingFollowers = this.followers.map(follower => follower.id);
-            const existingFriends = this.friends.map(friend => friend.id)
+            const existingFollowings = this.followings.map(following => following.id);
+            const existingPendings = this.pendings.map(pending => pending.id);
 
-            this.suggestions = users.filter((user: any) => !existingFollowers.includes(user.id) && !existingFriends.includes(user.id));
+            this.suggestions = users.filter((user: any) => !existingFollowers.includes(user.id) && !existingFollowings.includes(user.id) && !existingPendings.includes(user.id));
             this.cdr.detectChanges()
         });
     }
 
     listPendings(): void {
         this.followService.getList(this.currentID, "pendings").subscribe((data: any) => {
-            console.log("Pendings:", data)
+            if (data.status !== 200) {
+                this.messages = "No Pendings"
+                return
+            }
+            this.pendings = data.pendings
         })
     }
 
@@ -150,7 +156,6 @@ export class ListComponent {
             sendEvent(this.websocketService, even);
 
         })  
-
     }
 
     onDecline(id: number) {

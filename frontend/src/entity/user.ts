@@ -12,4 +12,5 @@ export class User {
     created_at!: string
     updated_at!: string
     isOnline!: boolean
+    isFollowed!: boolean
 }
