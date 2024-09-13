@@ -1,6 +1,21 @@
 <app-toolbar></app-toolbar>
+<div class="row">
+  <div class="col-md-12">									
+      <div class="my_connections_list mb-30">
+          <div class="pp1_title">
+              <h4>Groups</h4>
+          </div>
+      </div>
+
+      <div class="btn-8585 mb-20">
+          <div  class="afltr-btn afltr-active" (click)="openCreatePostDialog()">Create Group</div>
+          <div class="afltr-btn">Suggested Groups</div>
+          <div class="afltr-btn">Joined Groups</div>
+      </div>
+  </div>			
+</div>
+
 <div class="group-container">
-  <h1>Groupes de Discussion</h1>
   <!-- Liste des groupes existants -->
   <div class="group-list" *ngIf="groups.length > 0">
     <div class="container" *ngFor="let group of groups" class="group-card">
@@ -27,13 +42,6 @@
     </div>
   </div>
   <ng-template #noimg>
-    <img  src="https://www.imagesgroup.in/images/blog-p-img-1.jpg" >
+    <img src="https://www.imagesgroup.in/images/blog-p-img-1.jpg">
   </ng-template>
-
-  <!-- Bouton pour créer un nouveau groupe -->
-  <div class="create-group">
-    <button mat-raised-button color="primary" (click)="openCreatePostDialog()">
-      Add Group
-    </button>
-  </div>
 </div>
