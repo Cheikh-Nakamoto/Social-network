@@ -5,18 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6fff26ff-9a6d-4e35-a3a7-6d41c1bc767c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/pkg/repository/followRepoImpl.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pkg/repository/followRepoImpl.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/pkg/repository/interfaces/followRepo.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pkg/repository/interfaces/followRepo.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/pkg/repository/userRepo.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pkg/repository/userRepo.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/pkg/repository/userRepoImpl.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pkg/repository/userRepoImpl.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/pkg/service/followService.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pkg/service/followService.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/pkg/service/impl/followServiceImpl.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pkg/service/impl/followServiceImpl.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/pkg/service/impl/userServiceImpl.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pkg/service/impl/userServiceImpl.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/pkg/service/userService.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pkg/service/userService.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/pkg/web/followController.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pkg/web/followController.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/pkg/web/userController.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pkg/web/userController.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -47,14 +47,6 @@ func (f *FollowServiceImpl) FollowUser(followerID, followeeID uint) error {
 		status = "accepted"
 	}
 
-	if status == "accepted" {
-		f.Repository.CreateFollow(&entity.Follow{
-			FollowerID: followeeID,
-			FolloweeID: followerID,
-			Status:     status,
-		})
-	}
-
 	follow := &entity.Follow{
 		FollowerID: followerID,
 		FolloweeID: followeeID,
