@@ -8,6 +8,7 @@ import { AuthService } from '../../service/auth.service';
 import { ToolbarComponent } from "../../nav/toolbar/toolbar.component";
 import { MessageBody, MessageData } from '../../models/models.compenant';
 import { WebSocketService } from '../../chat/services/chat.service';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-create-group',
@@ -24,7 +25,14 @@ export class CreateGroupComponent implements OnInit {
   userID!: string 
 
 
-  constructor(private fb: FormBuilder, private apiService: DataService, private router: Router, private authService: AuthService, private websocketService: WebSocketService) { }
+  constructor(
+    private fb: FormBuilder, 
+    private apiService: DataService, 
+    private router: Router, 
+    private authService: AuthService, 
+    private websocketService: WebSocketService,
+    private dialogRef: MatDialogRef<CreateGroupComponent>
+  ) { }
 
   ngOnInit(): void {
     this.authService.isOnline();
@@ -46,6 +54,9 @@ export class CreateGroupComponent implements OnInit {
       this.selectedFile = file;
       this.selectedFileName = file.name;
     }
+  }
+  closeDialog() {
+    this.dialogRef.close();
   }
   onSubmit(): void {
     if (this.groupeForm.valid) {
@@ -100,9 +111,9 @@ export class CreateGroupComponent implements OnInit {
       const even = new Events(message.type, message.datas);
       sendEvent(this.websocketService, even);
 
-    } else {
-      alert("Erreur lors de la creation dee group !")
-    }
+    } 
+    this.groupeForm.reset()
+    this.closeDialog()
 
   }
 }

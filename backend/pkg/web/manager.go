@@ -76,6 +76,7 @@ func (m *Manager) setupEventHandlers() {
 	m.handlers[EventNewFollowBack] = SendNewFollowHandler
 	m.handlers[EventGetNotificationChat]= SendNotificationChatHandler
 
+
 }
 
 func TypingStartHandler(event Event, c *Client) error {
