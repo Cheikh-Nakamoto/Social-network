@@ -74,8 +74,11 @@ func (m *Manager) setupEventHandlers() {
 	m.handlers[EventPost] = SendPostHandler
 	m.handlers[EventInvite] = SendInviteHandler
 	m.handlers[EventNewFollowBack] = SendNewFollowHandler
+<<<<<<< Updated upstream
 	m.handlers[EventGetNotificationChat]= SendNotificationChatHandler
 
+=======
+>>>>>>> Stashed changes
 }
 
 func TypingStartHandler(event Event, c *Client) error {
@@ -208,7 +211,9 @@ func SendNewFollowHandler(event Event, c *Client) error {
 
 	// Envoyer le message au client destinataire
 	for client := range c.manager.clients {
-		client.egress <- outgoingEvent
+		if client.userId == returnMsg.ReceiverId {
+			client.egress <- outgoingEvent
+		}
 	}
 	return nil
 }

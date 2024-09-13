@@ -110,7 +110,20 @@ export class ListComponent {
         this.followService.follow(data, "follow").subscribe((response: any) => {
             this.utilService.onSnackBar(response.message, "info")
             this.getSuggestionsData()
+            const messBody: MessageBody = {
+                senderId: Number(this.currentID),
+                receiverId: Number(id),
+                message: `${localStorage.getItem("firstname")} ${localStorage.getItem("lastname")} follow you !`
+
+            }
+            const message: MessageData = {
+                type: 'new_follow',
+                datas: messBody,
+            };
+            const even = new Events(message.type, message.datas);
+            sendEvent(this.websocketService, even);
         })
+       
     }
 
     onAccept(id: number) {
@@ -125,8 +138,8 @@ export class ListComponent {
             this.listUsers()
             const messBody: MessageBody = {
                 senderId: Number(this.currentID),
-                receiverId: Number(0),
-                message: "Nouveau follow created successfully"
+                receiverId: Number(id),
+                message: `${localStorage.getItem("firstname")} ${localStorage.getItem("lastname")} was accept your request`
 
             }
             const message: MessageData = {
@@ -136,8 +149,7 @@ export class ListComponent {
             const even = new Events(message.type, message.datas);
             sendEvent(this.websocketService, even);
 
-        })
-        this.cdr.detectChanges();
+        })  
 
     }
 
@@ -150,7 +162,21 @@ export class ListComponent {
         this.followService.request(data, "decline").subscribe((response: any) => {
             this.utilService.onSnackBar(response.message, "info")
             this.listFollowers()
+             const messBody: MessageBody = {
+                senderId: Number(this.currentID),
+                receiverId: Number(id),
+                message: "Your reaquest was Declined"
+
+            }
+            const message: MessageData = {
+                type: 'new_follow',
+                datas: messBody,
+            };
+            const even = new Events(message.type, message.datas);
+            sendEvent(this.websocketService, even);
+
         })
+        location.reload()
     }
 
     getSuggestionsData(): void {
@@ -167,16 +193,13 @@ export class ListComponent {
         this.authService.isOnline
         this.listUsers()
         this.getSuggestionsData()
-        this.messagesSubscription = this.websocketService.messages$.subscribe(
-            (message) => {
-               
-                if (message.type === 'new_follow') {
-                    location.reload()
-
-                }
-
+        this.messagesSubscription = this.websocketService.messages$
+        .subscribe((message) => {
+           if  (message.type === 'new_follow') {
+            this.listUsers()
+            this.getSuggestionsData()
             }
-        );
+        });
     }
 }
 
