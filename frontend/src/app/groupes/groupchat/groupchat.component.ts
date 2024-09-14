@@ -258,9 +258,11 @@ export class GroupchatComponent {
         }
 
         const messBody: model.MessageBody = {
+            
             senderId: this.sender,
             receiverId: Number(this.groupId),
             message: messageContent,
+            
         };
 
         const message: model.MessageData = {
@@ -272,14 +274,28 @@ export class GroupchatComponent {
         sendEvent(this.websocketService, even);
         // const updateEve = new Event('get_chatbar_data', this.sender);
         // sendEvent(this.websocketService, updateEve);
-        const payload = {
-            currentChatterId: this.sender,
-            otherChatterId: Number(this.groupId),
-            amount: this.amount,
-        };
+        if (this.processedMessages instanceof Set) {
+            // Convertir en tableau et récupérer le dernier élément
+            const lastMessageId = Array.from(this.processedMessages).pop();
 
-        const evenget = new Event('get_messages_groupes', payload);
-        sendEvent(this.websocketService, evenget);
+            if (lastMessageId) {
+
+                if (!this.processedMessages.has(lastMessageId+1)) {
+                    
+                    this.NewupdateMessages(messBody, this.sender);
+                } else {
+                    console.log('Message déjà traité, ignoré');
+                }
+                
+                // console.log('Dernier messageId traité :', lastMessageId+1);
+            }
+
+        }
+
+
+         
+
+
 
         // Réinitialiser le champ de texte après l'envoi
         messagetag.value = '';

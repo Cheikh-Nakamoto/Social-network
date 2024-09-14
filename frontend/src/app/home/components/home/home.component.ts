@@ -89,7 +89,11 @@ export class HomeComponent implements OnInit {
 
         this.messagesSubscription = this.websocketService.messages$.subscribe(
             (message) => {
-                if (message.type === 'new_post' &&  message.payload.messageId == 0 && Number(message.payload.senderId) != Number(this.id)) {
+                if (
+                    message.type === 'new_post' &&
+                    message.payload.messageId == 0 &&
+                    Number(message.payload.senderId) != Number(this.id)
+                ) {
                     this.loadUser('users');
                     this.loadComments();
                     this.getAllPosts();
