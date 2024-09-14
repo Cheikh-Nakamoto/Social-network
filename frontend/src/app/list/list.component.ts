@@ -62,7 +62,7 @@ export class ListComponent {
             const existingFollowings = this.followings.map(following => following.id);
             const existingPendings = this.pendings.map(pending => pending.id);
 
-            this.suggestions = users.filter((user: any) => !existingFollowers.includes(user.id) && !existingPendings.includes(user.id));
+            this.suggestions = users.filter((user: any) => !existingFollowings.includes(user.id) && !existingPendings.includes(user.id));
             // this.cdr.detectChanges()
             // this.suggestions = users
         });
