@@ -63,8 +63,6 @@ export class ListComponent {
             const existingPendings = this.pendings.map(pending => pending.id);
 
             this.suggestions = users.filter((user: any) => !existingFollowings.includes(user.id) && !existingPendings.includes(user.id));
-            // this.cdr.detectChanges()
-            // this.suggestions = users
         });
     }
 
@@ -75,7 +73,6 @@ export class ListComponent {
                 return
             }
             this.pendings = data.pendings
-            console.log(this.pendings)
         })
     }
 
@@ -116,8 +113,6 @@ export class ListComponent {
         }
 
         this.followService.follow(data, "follow").subscribe((response: any) => {
-            this.utilService.onSnackBar(response.message, "info")
-            this.getSuggestionsData()
             const messBody: MessageBody = {
                 senderId: Number(this.currentID),
                 receiverId: Number(id),
@@ -130,6 +125,9 @@ export class ListComponent {
             };
             const even = new Events(message.type, message.datas);
             sendEvent(this.websocketService, even);
+            this.utilService.onSnackBar(response.message, "info")
+            this.getSuggestionsData()
+            window.location.reload()
         })
        
     }
@@ -141,9 +139,6 @@ export class ListComponent {
         }
 
         this.followService.request(data, "accept").subscribe((response: any) => {
-            this.utilService.onSnackBar(response.message, "info")
-            this.listFollowers()
-            this.listUsers()
             const messBody: MessageBody = {
                 senderId: Number(this.currentID),
                 receiverId: Number(id),
@@ -156,7 +151,10 @@ export class ListComponent {
             };
             const even = new Events(message.type, message.datas);
             sendEvent(this.websocketService, even);
-
+            this.utilService.onSnackBar(response.message, "info")
+            this.listFollowers()
+            this.listUsers()
+            window.location.reload()
         })  
     }
 
@@ -167,8 +165,6 @@ export class ListComponent {
         }
 
         this.followService.request(data, "decline").subscribe((response: any) => {
-            this.utilService.onSnackBar(response.message, "info")
-            this.listFollowers()
              const messBody: MessageBody = {
                 senderId: Number(this.currentID),
                 receiverId: Number(id),
@@ -181,7 +177,9 @@ export class ListComponent {
             };
             const even = new Events(message.type, message.datas);
             sendEvent(this.websocketService, even);
-
+            this.utilService.onSnackBar(response.message, "info")
+            this.listFollowers()
+            window.location.reload()
         })
         location.reload()
     }
