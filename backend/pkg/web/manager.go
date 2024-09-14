@@ -74,9 +74,8 @@ func (m *Manager) setupEventHandlers() {
 	m.handlers[EventPost] = SendPostHandler
 	m.handlers[EventInvite] = SendInviteHandler
 	m.handlers[EventNewFollowBack] = SendNewFollowHandler
-	m.handlers[EventGetNotificationChat]= SendNotificationChatHandler
-
-
+	m.handlers[EventGetNotificationChat] = SendNotificationChatHandler
+	m.handlers[EventGetNotificationChat] = SendNotificationChatHandler
 }
 
 func TypingStartHandler(event Event, c *Client) error {
@@ -124,12 +123,12 @@ func SendMessageHandler(event Event, c *Client) error {
 	returnMsg.ReceiverId = chatEvent.ReceiverId
 	returnMsg.SenderId = chatEvent.SenderId
 	returnMsg.Status = chatEvent.Status
-	idmsg,err:=getLastMessageId()
-	if err!=nil{
+	idmsg, err := getLastMessageId()
+	if err != nil {
 		log.Print("error lors de la recuperation de l'id du dernier message")
 		return err
 	}
-	returnMsg.MessageId=idmsg
+	returnMsg.MessageId = idmsg
 
 	// Ajouter le message à une table ou base de données
 	addMessageToTable(returnMsg)
@@ -215,7 +214,9 @@ func SendNewFollowHandler(event Event, c *Client) error {
 
 	// Envoyer le message au client destinataire
 	for client := range c.manager.clients {
-		client.egress <- outgoingEvent
+		if client.userId == returnMsg.ReceiverId {
+			client.egress <- outgoingEvent
+		}
 	}
 	return nil
 }
@@ -329,12 +330,12 @@ func SendMessageGrouopHandler(event Event, c *Client) error {
 	returnMsg.Message = chatEvent.Message
 	returnMsg.ReceiverId = chatEvent.ReceiverId
 	returnMsg.SenderId = chatEvent.SenderId
-	idmsg,err:=getLastGrMessageId()
-	if err!=nil{
+	idmsg, err := getLastGrMessageId()
+	if err != nil {
 		log.Print("error lors de la recuperation de l'id du dernier message")
 		return err
 	}
-	returnMsg.MessageId=idmsg
+	returnMsg.MessageId = idmsg
 
 	// Ajouter le message à une table ou base de données
 	addGrMessageToTable(returnMsg)
@@ -628,21 +629,20 @@ func (m *Manager) addClient(client *Client) {
 
 	m.clients[client] = true
 
-	test, error:=CheckNotificationChats(client.userId)
-	if error !=nil{
+	test, error := CheckNotificationChats(client.userId)
+	if error != nil {
 
 		log.Fatal("error checking")
 		return
 	}
 
-	if test{
+	if test {
 
 		messages, err := getUnreadMessages(client.userId)
 		if err != nil {
 			log.Fatal(err)
 		}
-	
-	
+
 		SendNotificationChatHandler(messages, client)
 	}
 
@@ -683,10 +683,9 @@ func hasSession(userId int) bool {
 
 // removeClient supprime un client de la liste des clients gérés par le Manager.
 func (m *Manager) removeClient(client *Client) {
-	fmt.Println("hp call",m.isClientOnline(client.userId))
+	fmt.Println("hp call", m.isClientOnline(client.userId))
 	m.Lock()
 	defer m.Unlock()
-	
 
 	if _, ok := m.clients[client]; ok {
 		// Créer un timer pour vérifier l'état en ligne du client après 3 secondes
@@ -699,8 +698,6 @@ func (m *Manager) removeClient(client *Client) {
 				broadcastUpdate(client)
 			}
 		}()
-
-		
 
 		// Supprimer le client de la liste des clients gérés par le Manager
 		delete(m.clients, client)
@@ -720,7 +717,6 @@ func (m *Manager) isClientOnline(userId int) bool {
 
 	return false
 }
-
 
 func SendNotificationChatHandler(event Event, c *Client) error {
 	var chatEvent SendMessageEvent
@@ -756,7 +752,6 @@ func SendNotificationChatHandler(event Event, c *Client) error {
 	return nil
 }
 
-
 type Message struct {
 	MessageID  int
 	SenderID   int
@@ -772,7 +767,6 @@ func getUnreadMessages(receiverID int) (Event, error) {
 	if err != nil {
 		panic(err)
 	}
-
 
 	query := `
 		SELECT messageId, senderId, receiverId, sentDate, message, status
@@ -815,16 +809,15 @@ func getUnreadMessages(receiverID int) (Event, error) {
 	return event, nil
 }
 
-
-func CheckNotificationChats(receiverId int)(bool, error){
+func CheckNotificationChats(receiverId int) (bool, error) {
 	db, err := sqlite.Connect()
 	if err != nil {
 		panic(err)
 	}
-	
+
 	query := `SELECT COUNT(*) FROM messages WHERE receiverId = ? AND status = ?`
 	var count int
-	err =db.GetDB().QueryRow(query,receiverId,0).Scan(&count)
+	err = db.GetDB().QueryRow(query, receiverId, 0).Scan(&count)
 	if err != nil {
 		return false, fmt.Errorf("CheckNotificationExists: %v", err)
 	}
@@ -832,8 +825,6 @@ func CheckNotificationChats(receiverId int)(bool, error){
 	return count > 0, nil
 
 }
-
-
 func getLastGrMessageId() (int, error) {
 	var messageId int
 	db, err := sqlite.Connect()
@@ -858,6 +849,7 @@ func getLastGrMessageId() (int, error) {
 	// Retourner le dernier messageId
 	return messageId, nil
 }
+
 func getLastMessageId() (int, error) {
 	var messageId int
 	db, err := sqlite.Connect()

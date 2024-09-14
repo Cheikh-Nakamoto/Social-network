@@ -690,6 +690,7 @@ func (c *UserController) GetFriendCount(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 }
+
 func (c *UserController) GetRecentPosts(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("postProfil")
 	err := utils.Environment()
@@ -733,6 +734,55 @@ func (c *UserController) GetRecentPosts(w http.ResponseWriter, r *http.Request) 
 	}
 }
 
+func (c *UserController) GetPendingRequest(w http.ResponseWriter, r *http.Request) {
+	err := utils.Environment()
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if r.Method != http.MethodGet {
+		http.Error(w, os.Getenv("METHOD_NOT_ALLOWED"), http.StatusMethodNotAllowed)
+		return
+	}
+
+	if !strings.HasPrefix(r.URL.Path, os.Getenv("DEFAULT_API_LINK")+"/pending/") {
+		http.Error(w, os.Getenv("NOT_FOUND"), http.StatusNotFound)
+		return
+	}
+
+	id, err := utils.ExtractIDFromRequest(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	requests, err := c.UserService.GetPendingRequest(id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set(os.Getenv("CONTENT_TYPE"), os.Getenv("APPLICATION_JSON"))
+	if requests != nil {
+		err = json.NewEncoder(w).Encode(map[string]interface{}{
+			"status":   http.StatusOK,
+			"pendings": requests,
+		})
+	} else {
+		err = json.NewEncoder(w).Encode(map[string]interface{}{
+			"status":  http.StatusNoContent,
+			"message": "No requests",
+		})
+	}
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
 // UsersRoutes Register routes
 func (c *UserController) UsersRoutes(routes *http.ServeMux) *http.ServeMux {
 	err := utils.Environment()
@@ -756,6 +806,7 @@ func (c *UserController) UsersRoutes(routes *http.ServeMux) *http.ServeMux {
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/friends/", c.GetFriends)
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/post-profile/", c.GetRecentPosts)
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/nature-profil/", c.ChangeNatureProfile)
+	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/pending/", c.GetPendingRequest)
 
 	return routes
 }

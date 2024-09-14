@@ -109,18 +109,6 @@ func (f *FollowServiceImpl) DeclineFollowRequest(id uint) error {
 	return f.Repository.UpdateFollowStatus(id, "rejected")
 }
 
-func (f *FollowServiceImpl) GetPendingFollowRequest(userID uint) ([]*entity.Follow, error) {
-	follows, err := f.Repository.GetPendingFollowRequest(userID)
-	if err != nil {
-		return nil, err
-	}
-	var followDTOs []*entity.Follow
-	for _, follow := range follows {
-		followDTOs = append(followDTOs, follow)
-	}
-	return followDTOs, nil
-}
-
 func (f *FollowServiceImpl) CountAllFollows() (uint, error) {
 	return f.Repository.CountAllFollows()
 }

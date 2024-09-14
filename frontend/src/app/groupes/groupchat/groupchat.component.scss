@@ -131,6 +131,9 @@ body {
         opacity: 1;
         transform: translateX(-50%) translateY(-5px);
     }
+    .has-tooltip {
+        cursor: pointer;
+    }
 
     .post-tooltip:after {
         position: absolute;

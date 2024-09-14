@@ -1,8 +1,8 @@
 <app-toolbar></app-toolbar>
 <div class="group-container">
-  <h1>Groupes de Discussion</h1>
+  <h1>Groups</h1>
   <!-- Liste des groupes existants -->
-  <div class="group-list" *ngIf="groups.length > 0">
+  <div class="group-list" *ngIf="groups.length > 0;">
     <div class="container" *ngFor="let group of groups" class="group-card">
       <mat-card class="example-card">
         <div class="img" *ngIf="group.image!= '' ; else noimg">
@@ -32,8 +32,8 @@
 
   <!-- Bouton pour créer un nouveau groupe -->
   <div class="create-group">
-    <button mat-raised-button color="primary" (click)="openCreatePostDialog()">
-      Add Group
+    <button mat-raised-button color="primary" (click)="handleClick('/CreateGroup', $event)">
+      Créer un Nouveau Groupe
     </button>
   </div>
 </div>
