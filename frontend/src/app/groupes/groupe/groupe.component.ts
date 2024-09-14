@@ -41,6 +41,7 @@ export class GroupeComponent implements OnInit {
   id !: string;
   clear!: any;
   messagesSubscription: any;
+  owner !: string
 
 
   constructor(
@@ -125,11 +126,13 @@ export class GroupeComponent implements OnInit {
     }, (error) => console.error('Error fetching ', error))
   }
 
-  handleClick(route: string, event: Event, id?: number): void {
+  handleClick(route: string, event: Event, id?: number,owner?:string): void {
     event.preventDefault();
     if (id) {
       this.router.navigate([route, id]);
       localStorage.setItem('groupid', id.toString());
+      localStorage.setItem('owner', owner as string);
+
     } else {
       this.router.navigateByUrl(route);
     }

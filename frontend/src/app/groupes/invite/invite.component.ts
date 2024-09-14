@@ -46,8 +46,10 @@ export class InviteComponent {
   id !: string
   groupId!: number
   IsIn: StatusMap = {};
+  owner!:number
   ngOnInit(): void {
     this.id = (JSON.parse(localStorage.getItem('userID') as string));
+    this.owner = Number(JSON.parse(localStorage.getItem('owner') as string));
     this.groupId = (JSON.parse(localStorage.getItem('groupid') as string))
     this.groupMember()
     this.followservice.getList(this.id, "friends").subscribe((friends: { friends: UserDTO[], status: number }) => {
@@ -89,5 +91,4 @@ export class InviteComponent {
     this.groupService.addMember(groupId, userId, target_id.toString(), role)
     this.closeDialog()
   }
-
 }

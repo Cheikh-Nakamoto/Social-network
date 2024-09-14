@@ -21,7 +21,7 @@
           <button mat-button color="primary" (click)="addMember(group.id,id,group.owner,'member')">JOIN</button>
         </mat-card-actions>
         <ng-template #voir>
-          <button mat-button color="primary" (click)="handleClick('/groups',$event,group.id)">VOIR</button>
+          <button mat-button color="primary" (click)="handleClick('/groups',$event,group.id,group.owner)">VOIR</button>
         </ng-template>
       </mat-card>
     </div>

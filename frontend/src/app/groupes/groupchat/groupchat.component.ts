@@ -51,6 +51,7 @@ export class GroupchatComponent {
     amount: number = 10;
     showEmojiPicker = false;
     private processedMessages = new Set<string>();
+     Id : number =  0
 
     constructor(
         private websocketService: WebSocketService,
@@ -71,11 +72,11 @@ export class GroupchatComponent {
             this.sender = user;
         });
         this.websocketService.connect();
-        let id = 0
+      
 
         this.messagesSubscription = this.websocketService.messages$.subscribe(
             (message) => {
-                console.log(message.payload.senderId != id);
+               
                 if (message.type === 'get_messages_groupes') {
 
                     this.throttleUpdateMessages(
@@ -84,8 +85,8 @@ export class GroupchatComponent {
                         this.sender
                     );
                 }
-                if (message.type === 'new_message_group' && message.payload.messageId != id) {
-
+                if (message.type === 'new_message_group' && message.payload.messageId != this.Id) {
+                    this.Id = message.payload.messageId
                     const messageId = message.payload.messageId;
 
                     if (!this.processedMessages.has(messageId)) {
