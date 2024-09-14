@@ -373,10 +373,14 @@ export class ProfileComponent implements OnInit {
         this.editMode = !this.editMode;
     }
 
-    
+    getUserData() {
+        this.getUser()
+        this.currentID = this.authService.getUserID()!
 
+        this.getFollowers()
+        this.getFollowings()
+    }
     
-
     ngOnInit(): void {
         if (!(this.authService.getToken() as string)) {
             this.router.navigate(['/login']).then()
@@ -389,16 +393,18 @@ export class ProfileComponent implements OnInit {
         this.currentID= Number(localStorage.getItem('userID')as  string);
         this.toggleEditMode()
         this.isOnline()
-        this.getUser()
         this.onUpdateProfile
-        this.getFollowers()
-        this.getFollowings()
-        this.getFriends()
         this.getPosts()
         if (this.user != null) {
             this.Nature(this.user)
         }
+
+        this.activatedRoute.params.subscribe((params) => {
+            this.id = params['id']
+            this.getUserData()
+        })
     }
+
     timeAgo(date: Date | string): string {
         const now = new Date();
         const pastDate = new Date(date);
