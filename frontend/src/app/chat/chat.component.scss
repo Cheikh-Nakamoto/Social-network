@@ -110,7 +110,6 @@ body {
 .message-container {
     display: flex;
     width: 100%;
-
     .post-tooltip {
         position: absolute;
         top: 327px;
@@ -124,6 +123,9 @@ body {
         transition: all 0.4s ease;
         visibility: hidden;
         opacity: 0;
+    }
+    .has-tooltip {
+        cursor: pointer;
     }
 
     .has-tooltip:hover .post-tooltip {
@@ -196,35 +198,35 @@ button {
 }
 
 .msgBoxSent {
-    background-color: #07a1bd; 
-    border: none; 
-    border-radius: 18px; 
-    width: fit-content; 
-    max-width: 80%; 
-    padding: 10px 15px; 
-    margin: 5px 10px 7px auto; 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    background-color: #07a1bd;
+    border: none;
+    border-radius: 18px;
+    width: fit-content;
+    max-width: 80%;
+    padding: 10px 15px;
+    margin: 5px 10px 7px auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: left;
-    overflow-wrap: break-word; 
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; 
-    font-size: 14px; 
-    color: white; 
+    overflow-wrap: break-word;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    color: white;
 }
 
 .msgBoxReceived {
-    background-color: #f0f0f0; /* Une couleur de fond douce et claire */
-    border: none; /* Supprimez la bordure pour un look plus moderne */
-    border-radius: 18px; /* Coins plus arrondis */
-    width: fit-content; /* Adapte la largeur au contenu */
-    max-width: 80%; /* Limite la largeur maximale */
-    padding: 10px 15px; /* Espacement interne pour plus de confort */
-    margin: 5px 10px 7px 10px; 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 18px;
+    width: fit-content;
+    max-width: 80%;
+    padding: 10px 15px;
+    margin: 5px 10px 7px 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: left;
-    overflow-wrap: break-word; 
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; 
-    font-size: 14px; 
-    color: #333; 
+    overflow-wrap: break-word;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    color: #333;
 }
 
 .messageContainer {

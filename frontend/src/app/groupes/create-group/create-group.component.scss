@@ -1,51 +1,427 @@
-.groupe-form-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  
-    h2 {
-      margin-bottom: 20px;
-      text-align: center;
-    }
-  
-    .form-group {
-      margin-bottom: 15px;
-  
-      label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-      }
-  
-      .form-control {
-        width: 100%;
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-      }
-  
-      .error-message {
-        color: red;
-        font-size: 0.875em;
-      }
-    }
-  
-    .btn {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-  
-      &:disabled {
-        background-color: #ccc;
-      }
-    }
-  }
-  
+$lightBlue: #b8daff;
+$danger: #f44336;
+$primaryColor: #005cbb;
+
+#postForm {
+    position: relative;
+    display: block;
+    width: 500px;
+    background: #fff;
+    height: auto;
+    padding: 10px 0px;
+    border: 1px solid rgba(151, 157, 172, 0.28);
+    border-radius: 10px;
+    box-shadow: 1px 1px 1px 1px rgba(96, 96, 96, 0);
+    margin-bottom: 0px;
+}
+
+.header {
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    border-bottom: 1px solid #eee;
+}
+
+.header h2 {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 18px;
+    color: #555;
+    font-weight: 600;
+}
+
+.hidden {
+    display: none;
+}
+
+h2 {
+    clear: none;
+}
+
+.content-header {
+    display: none;
+    font-size: 21px;
+    font-weight: 400;
+}
+
+.modern-input {
+    padding: 8px;
+    font-size: 16px;
+    margin-left: 16px;
+    border: none;
+    background-color: transparent;
+    color: #000;
+    transition: border-color 0.3s ease;
+}
+
+.modern-input:focus {
+    outline: none;
+}
+
+.modern-input::placeholder,
+#content-textarea textarea::placeholder {
+    color: #000;
+}
+
+#content-textarea {
+    padding: 10px;
+    border: none;
+}
+#content-textarea textarea {
+    border: none;
+    resize: none;
+    font-size: 15px;
+    overflow: hidden;
+}
+
+.close {
+    float: right;
+    background: #eee !important;
+    color: #555 !important;
+    margin: 0px 5px;
+    position: absolute;
+    right: 6px;
+    top: 0;
+    border-radius: 50%;
+    padding: 4px;
+}
+
+.close svg {
+    width: 25px;
+    height: 25px;
+    background: #eee;
+    border-radius: 50%;
+    color: #000;
+    cursor: pointer;
+}
+
+svg:not(:root) {
+    vertical-align: middle;
+    overflow: hidden;
+}
+
+.avatar-name {
+    position: absolute;
+    display: block;
+    top: 70px;
+    left: 80px;
+    margin-bottom: 0px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.avatar-name > input {
+    display: none;
+}
+
+.avatar-name img {
+    width: 80px;
+    cursor: pointer;
+}
+
+#privacy {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    padding: 0px 8px;
+    text-transform: capitalize;
+    border-radius: 5px !important;
+    margin-top: 3px;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 22px;
+}
+
+#privacy > svg,
+.group-ac-vi-active > svg {
+    width: 13px;
+    margin-right: 3px;
+}
+
+#privacy > span,
+.group-ac-vi-active > span {
+    margin-top: 2px;
+}
+#privacy select {
+    appearance: none;
+    border: none;
+    background: #fff;
+    padding: 0;
+    font-size: 14px;
+    color: #000;
+    margin-left: 6px;
+    cursor: pointer;
+}
+
+#privacy select:focus {
+    outline: none;
+}
+
+.content-form {
+    top: 0px;
+    height: 140px;
+    outline: none;
+    overflow: scroll;
+    position: relative;
+    margin-left: 14px;
+    font-size: 17px;
+    color: #666;
+    margin-bottom: 12px;
+    left: 0px;
+    font-weight: normal;
+    padding-bottom: 0px;
+    padding-top: 5px;
+}
+
+.privacy-container {
+    display: none;
+    position: absolute;
+    top: 38px;
+    left: 68px;
+}
+
+#user-avatar {
+    padding: 0 15px;
+    display: block;
+    width: 100%;
+    float: none;
+    height: 40px;
+    margin: 60px 0 18px;
+}
+
+#user-avatar img {
+    float: left;
+    width: 50px;
+    border-radius: 50%;
+}
+
+#content {
+    padding-bottom: 0px;
+    margin: 20px 0 0 0;
+}
+
+.advanced-th-bp-activity-form {
+    top: 0px;
+    height: 140px;
+    outline: none;
+    overflow: scroll;
+    position: relative;
+    margin-left: 0px;
+    font-size: 17px;
+    color: #666;
+    margin-bottom: 12px;
+    left: 0px;
+    font-weight: normal;
+    padding-bottom: 0px;
+    padding-top: 5px;
+}
+
+.advanced-th-bp-activity-form:empty:before {
+    content: attr(data-placeholder);
+    color: #888;
+    font-size: 15px;
+}
+
+.comments-text:empty:before {
+    content: attr(data-placeholder);
+    color: #888;
+}
+
+#attachments {
+    display: flex;
+    padding: 5px 2px;
+    position: absolute;
+    bottom: 8px;
+    line-height: 8px;
+    background: #fff;
+    left: 17px;
+    border: none !important;
+    z-index: 5;
+}
+
+#attachments > p {
+    padding: 2px 2px;
+    margin: 0 10px 0 0;
+    position: relative;
+}
+
+#attachments > p:hover {
+    background: $lightBlue;
+    border-radius: 100%;
+    width: 40px;
+    height: 40px;
+}
+
+#attachments > p svg {
+    cursor: pointer;
+}
+
+#attachments > p input.file-input {
+    display: none;
+}
+
+.previewer {
+    position: relative;
+    bottom: 1px;
+    margin: 0px 25px 40px;
+    height: 0;
+    transition: all 0.4s ease;
+    display: none;
+}
+
+.previewer p {
+    margin-right: 5px;
+    display: inline;
+}
+
+.previewer p:first-of-type {
+    margin-left: 0px;
+    font-size: 13px;
+}
+
+.previewer .previewer-toggle {
+    position: relative;
+    bottom: -1px;
+    margin: 0px 15px 15px;
+    height: auto;
+    display: block;
+}
+
+.previewer .previewer-uploader {
+    display: inline-block;
+    margin: 0;
+    border: 1px dashed #ddd;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.previewer .media-uploading {
+    display: inline-block;
+    width: 61px;
+    height: 61px;
+    margin-right: 5px;
+    margin-bottom: 0px;
+    border-radius: 3px;
+    vertical-align: bottom;
+    position: relative;
+    overflow: hidden;
+}
+.previewer.visible {
+    display: block;
+}
+.previewer .previewer-uploader label {
+    padding: 18px 25px;
+    margin: 0;
+    cursor: pointer;
+    font-size: 20px;
+    color: #999;
+    font-weight: 300;
+    width: 60px;
+    height: 60px;
+}
+
+.previewer .previewer-uploader input {
+    display: none;
+}
+
+.post-tooltip {
+    position: absolute;
+    top: -30px;
+    background: #1d2327;
+    padding: 10px;
+    color: #fff;
+    font-size: 13px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    border-radius: 5px;
+    transition: all 0.4s ease;
+    visibility: hidden;
+    opacity: 0;
+}
+
+.has-tooltip:hover .post-tooltip {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(-5px);
+}
+
+.post-tooltip:after {
+    position: absolute;
+    content: "";
+    background: #1d2327;
+    width: 7px;
+    height: 7px;
+    left: 50%;
+    top: 94%;
+    transform: rotate(45deg) translateX(-4px);
+}
+
+
+#options {
+    padding: 0px 10px 0px 5px;
+    position: relative;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid #ebe9e6;
+    border-bottom-width: 0 !important;
+    border-left-width: 0 !important;
+    border-right-width: 0 !important;
+    border-radius: 0px !important;
+    margin-top: 15px;
+}
+
+#options > div:not(:last-child) {
+    margin-right: 20px;
+}
+
+.privacy-container select {
+    position: relative;
+    color: #878f9d;
+    border: 1 solid rgba(151, 157, 172, 0.28);
+    border-radius: 10px;
+    box-shadow: 0px 0px 0px 0px rgba(96, 96, 96, 0);
+}
+
+#submit {
+    display: flex;
+    justify-content: end;
+    margin-left: auto;
+    margin: 10px 0 0px;
+}
+
+#submit input {
+    line-height: inherit;
+    text-align: center;
+    width: 8em;
+}
+
+#options #submit #post-submit {
+    border: none;
+    border-radius: 10px;
+    min-height: 10px;
+    font-size: 13px;
+    height: 40px;
+    font-weight: 600 !important;
+    flex: 0 0 16%;
+    margin: 0px 5px;
+    padding: 0 10px;
+    cursor: pointer;
+    background: $lightBlue;
+}
+
+#options #submit #post-submit:hover {
+    background-color: #3875d7;
+}
+
+button {
+    background-clip: border-box;
+    color: #fff;
+    text-transform: uppercase;
+}
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-left: 8px;
+}

@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { MatTabGroup, MatTab } from '@angular/material/tabs';
 
 import { AllUsersDTO, CommentContent, CommentDTO, Eventtype, Group, Post, Posts, length } from '../../models/models.compenant';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -20,8 +21,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { GroupchatComponent } from '../groupchat/groupchat.component';
 import { AlmostPrivateComponent } from '../../create-post/almost-private/almost-private.component';
 import { InviteComponent } from '../invite/invite.component';
-import { ChatComponent } from '../../chat/chat.component';
-
+import { CreatePostComponent } from '../../create-post/create-post.component';
+import { EventsComponent } from '../events/events.component';
 @Component({
     selector: 'app-by-id',
     standalone: true,
@@ -30,6 +31,8 @@ import { ChatComponent } from '../../chat/chat.component';
         RouterLink,
         CommonModule,
         MatCardModule,
+        MatTabGroup,
+        MatTab,
         HttpClientModule,
         ReactiveFormsModule,
         MatIconModule,
@@ -60,6 +63,7 @@ export class ByIdComponent implements OnInit {
     storage!: Post;
     comlength: length = {};
     goingmap = [];
+    avatar = '';
     notgoingmap = [];
     UserSelected: number[] = [];
 
@@ -78,6 +82,7 @@ export class ByIdComponent implements OnInit {
         this.authSrvice.isOnline();
 
         this.id = JSON.parse(localStorage.getItem('userID') as string);
+        this.avatar = localStorage.getItem('avatar') as string
         this.groupId = this.rout.snapshot.params['id'];
         this.loadUser('users');
 
@@ -331,24 +336,26 @@ export class ByIdComponent implements OnInit {
             this.router.navigateByUrl(route);
         }
     }
-
     openCreatePostDialog() {
-        //  this.router.navigate(['/groupchat'], {
-        //      queryParams: { groupId: this.groupId },
-        //  });
+        this.dialog.open(CreatePostComponent, {
+          width: "auto"
+        });
+      }
+    openCreateChatDialog() {
         this.dialog.open(GroupchatComponent, {
             width: '400px', // Largeur de la boîte de dialogue
             data: { groupId: this.groupId }, // Envoi de paramètres au composant de la boîte de dialogue
-            // hasBackdrop: true,
-            // backdropClass: 'custom-backdrop',
-            // // Désactiver la fermeture en cliquant en dehors si vous voulez forcer la fermeture via bouton
-            // disableClose: true,
             position: {
                 top: '0',
                 right: '0',
             },
         });
+    }
 
+    openCreateEventDialog() {
+        this.dialog.open(EventsComponent, {
+            width: 'auto'
+        })
     }
 
 

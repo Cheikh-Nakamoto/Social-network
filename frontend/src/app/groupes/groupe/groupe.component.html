@@ -1,8 +1,8 @@
 <app-toolbar></app-toolbar>
 <div class="group-container">
-  <h1>Groupes de Discussion</h1>
+  <h1>Groups</h1>
   <!-- Liste des groupes existants -->
-  <div class="group-list" *ngIf="groups.length > 0; else noGroups">
+  <div class="group-list" *ngIf="groups.length > 0;">
     <div class="container" *ngFor="let group of groups" class="group-card">
       <mat-card class="example-card">
         <div class="img" *ngIf="group.image!= '' ; else noimg">
@@ -26,20 +26,13 @@
       </mat-card>
     </div>
   </div>
-  <ng-template #noGroups>
-    <p>Loading...</p>
-  </ng-template>
-
-
-  
-
   <ng-template #noimg>
     <img  src="https://www.imagesgroup.in/images/blog-p-img-1.jpg" >
   </ng-template>
 
   <!-- Bouton pour créer un nouveau groupe -->
   <div class="create-group">
-    <button mat-raised-button color="primary" (click)="handleClick('/CreateGroup', $event)">
+    <button mat-raised-button color="primary" (click)="openCreatePostDialog()">
       Créer un Nouveau Groupe
     </button>
   </div>

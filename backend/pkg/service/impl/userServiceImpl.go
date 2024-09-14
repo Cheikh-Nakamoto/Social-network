@@ -179,6 +179,18 @@ func (s *UserServiceImpl) GetFollowings(userID uint) ([]*dto.UserDTO, error) {
 	return userDTOs, nil
 }
 
+func (s *UserServiceImpl) GetPendingRequest(userID uint) ([]*dto.UserDTO, error) {
+	users, err := s.Repository.GetPendingRequest(userID)
+	if err != nil {
+		return nil, err
+	}
+	var userDTOs []*dto.UserDTO
+	for _, user := range users {
+		userDTOs = append(userDTOs, mapper.UserToDTO(user))
+	}
+	return userDTOs, nil
+}
+
 func (s *UserServiceImpl) GetFriends(userID uint) ([]*dto.UserDTO, error) {
 	users, err := s.Repository.GetFriends(userID)
 	if err != nil {
@@ -202,6 +214,7 @@ func (s *UserServiceImpl) GetFollowerCount(userID uint) (uint, error) {
 func (s *UserServiceImpl) GetFollowingCount(userID uint) (uint, error) {
 	return s.Repository.GetFollowingCount(userID)
 }
+
 func (s *UserServiceImpl) GetRecentPosts(userID uint) ([]dto.PostDTO, error) {
 	// Utilisation du repository pour obtenir les publications récentes
 	posts, err := s.Repository.GetPostsByUserID(userID)

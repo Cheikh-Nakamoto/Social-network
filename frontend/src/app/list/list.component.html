@@ -2,30 +2,26 @@
 <div class="container">
     <h5 class="mt-3 title">Pending request</h5>
     <div class="row">
-        <div class="col-md-12 list" *ngFor="let user of followers">
+        <div class="col-md-12 list" *ngFor="let user of pendings">
             <mat-divider></mat-divider>
             <div class="user">
                 <div class="info-img">
                     <div class="img" style="width: 50px; height: 50px;">
-                        <img src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="user" style="width: 100%; height: 100%;">
+                        <img src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="user"
+                            style="width: 100%; height: 100%;">
                     </div>
                     <div class="info">
                         <span class="name">{{user.firstname}}&nbsp;{{user.lastname}}</span>
-                        <!--<div class="state">
-                            <span>Friends: <b>10.3k</b></span>|
-                            <span>Followers: <b>10.3k</b></span>|
-                            <span>Followings: <b>10.3k</b></span>
-                        </div>-->
                     </div>
                 </div>
                 <div class="buttons">
-                    <button class="btn btn-success" (click)="onAccept(user.id)">Follow back</button>
+                    <button class="btn btn-success" (click)="onAccept(user.id)">Accept</button>
                     <button class="btn btn-danger" (click)="onDecline(user.id)">Decline</button>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-12 no-user" *ngIf="followers.length === 0">
+        <div class="col-md-12 no-user" *ngIf="pendings.length === 0">
             <mat-divider></mat-divider>
             <span>{{messages}}</span>
         </div>
@@ -37,15 +33,11 @@
             <div class="user">
                 <div class="info-img">
                     <div class="img" style="width: 50px; height: 50px;">
-                        <img src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="user" style="width: 100%; height: 100%;">
+                        <img src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="user"
+                            style="width: 100%; height: 100%;">
                     </div>
                     <div class="info">
                         <span class="name">{{user.firstname}}&nbsp;{{user.lastname}}</span>
-                        <!--<div class="state">
-                            <span>Friends: <b>10.3k</b></span>|
-                            <span>Followers: <b>10.3k</b></span>|
-                            <span>Followings: <b>10.3k</b></span>
-                        </div>-->
                     </div>
                 </div>
                 <div class="buttons">
@@ -56,7 +48,7 @@
             <mat-divider></mat-divider>
         </div>
 
-        <div class="col-md-12 no-user" *ngIf="size === 1">
+        <div class="col-md-12 no-user" *ngIf="suggestions.length === 0">
             <mat-divider></mat-divider>
             <span>No Suggestion</span>
         </div>

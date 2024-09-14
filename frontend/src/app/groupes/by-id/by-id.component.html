@@ -4,124 +4,117 @@
         <div class="container" *ngFor="let group of groups" class="group-card">
             <div class="onegroup">
                 <div class="header-group">
-                    <div class="img" *ngIf="group.image!= '' ; else noimg">
+                    <div class="img" *ngIf="group.image!= ''; else noimg">
                         <img mat-card-image [src]="group.image" alt="Photo of {{ group.name }}">
+                    </div>
+                    <div class="links">
+                        <button mat-button color="primary" (click)="InviterYourFollowers()">Add Member</button>
+                        <button mat-button color="primary" (click)="openCreateEventDialog()">Add Event</button>
+                        <button mat-button color="primary" (click)="openCreatePostDialog()">Messages</button>
                     </div>
                     <h3> <strong>Name</strong> :{{group.name}}</h3>
                     <p><strong>Description :</strong>{{group.description}}</p>
-                    <div class="admin-actions">
-
-                        <button mat-button color="primary" (click)="InviterYourFollowers()">Inviter un
-                            Membre</button>
-
-                        <button mat-button color="primary" (click)="handleClick('/event/create', $event)">Ajouter un
-                            évènement</button>
-                        <button mat-button color="primary" (click)="openCreatePostDialog()">hub
-                        </button>
-                        <!-- <div class="dialog-component" (click)="openCreatePostDialog()">
-
-                            <!-- <a matListItemTitle [routerLink]="['/groupchat']" [queryParams]="{groupId}">discussion</a> -->
-                        <!-- </div>  -->
-                    </div>
                 </div>
-                <div class="event-group">
-                    <div class="post">
-                        <h4>Posts</h4>
-                        <app-main-page></app-main-page>
-                        <div class="posts" *ngFor="let post of posts">
-                            <mat-card class="example-card" appearance="outlined">
-                                <mat-card-header>
-                                    <img routerLink="/profile/{{post.user_id}}" mat-card-avatar src="logo.png"
-                                        width="64" height="64" alt="profile">
-                                    <mat-card-title routerLink="/profile/{{post.user_id}}">
-                                        {{ AllUser[post.user_id] && AllUser[post.user_id].firstname }}
-                                    </mat-card-title>
-                                    <mat-card-subtitle routerLink="/profile/{{post.user_id}}">
-                                        {{ AllUser[post.user_id].created_at | date:'mediumDate' }}
-                                    </mat-card-subtitle>
-                                </mat-card-header>
-                                <div class="img" *ngIf="post.image.length != 0">
-                                    <img class="post-image" mat-card-image [src]="post.image" alt="Post image">
-                                </div>
 
-                                <mat-card-content>
-                                    <p>{{ post.content }}</p>
-                                </mat-card-content>
-                                <mat-card-actions>
-                                    <button mat-icon-button (click)="onLike(post.id, 'post')">
-                                        <span>{{ likemap[post.id] || 0 }}</span>
-                                        <mat-icon>thumb_up_outline</mat-icon>
-                                    </button>
-                                    <button mat-icon-button (click)="onDislike(post.id, 'post')">
-                                        <span>{{ dislikemap[post.id] || 0 }}</span>
-                                        <mat-icon>thumb_down</mat-icon>
-                                    </button>
-                                    <button mat-icon-button
-                                        (click)="comments.comments_by_post[post.id] ? openDialog(post.id) : null">
-                                        <span>{{ !comlength[post.id] ? 0 : comlength[post.id]}}</span>
-                                        <mat-icon>forum</mat-icon>
-                                    </button>
-
-                                    <span class="comment-form">
-                                        <form (submit)="onComment(post.id, 'comment', $event)">
-                                            <input matInput placeholder="Comment" name="comment">
-                                            <input type="file" name="image" accept="image/*"
-                                                (change)="onFileSelected($event)">
-                                            <button class="send" mat-icon-button type="submit">
-                                                <mat-icon>send</mat-icon>
+                <!-- Ajout de la barre de navigation -->
+                <mat-tab-group>
+                    <mat-tab label="Posts">
+                        <div class="event-group">
+                            <div class="post">
+                                <h4>Posts</h4>
+                                <app-main-page></app-main-page>
+                                <div class="posts" *ngFor="let post of posts">
+                                    <mat-card class="example-card" appearance="outlined">
+                                        <mat-card-header>
+                                            <img routerLink="/profile/{{post.user_id}}" mat-card-avatar src="logo.png"
+                                                width="64" height="64" alt="profile">
+                                            <mat-card-title routerLink="/profile/{{post.user_id}}">
+                                                {{ AllUser[post.user_id] && AllUser[post.user_id].firstname }}
+                                            </mat-card-title>
+                                            <mat-card-subtitle routerLink="/profile/{{post.user_id}}">
+                                                {{ AllUser[post.user_id].created_at | date:'mediumDate' }}
+                                            </mat-card-subtitle>
+                                        </mat-card-header>
+                                        <div class="img" *ngIf="post.image.length != 0">
+                                            <!-- Image transformée en bannière -->
+                                            <img class="post-image banner-image" mat-card-image [src]="post.image" alt="Post image">
+                                        </div>
+                                        <mat-card-content>
+                                            <p>{{ post.content }}</p>
+                                        </mat-card-content>
+                                        <mat-card-actions>
+                                            <button mat-icon-button (click)="onLike(post.id, 'post')">
+                                                <span>{{ likemap[post.id] || 0 }}</span>
+                                                <mat-icon>thumb_up_outline</mat-icon>
                                             </button>
-                                        </form>
-                                    </span>
-                                    <span class="spacer"></span>
-                                </mat-card-actions>
-                            </mat-card>
+                                            <button mat-icon-button (click)="onDislike(post.id, 'post')">
+                                                <span>{{ dislikemap[post.id] || 0 }}</span>
+                                                <mat-icon>thumb_down</mat-icon>
+                                            </button>
+                                            <button mat-icon-button
+                                                (click)="comments.comments_by_post[post.id] ? openDialog(post.id) : null">
+                                                <span>{{ !comlength[post.id] ? 0 : comlength[post.id]}}</span>
+                                                <mat-icon>forum</mat-icon>
+                                            </button>
+                                            <span class="comment-form">
+                                                <form (submit)="onComment(post.id, 'comment', $event)">
+                                                    <input matInput placeholder="Comment" name="comment">
+                                                    <input type="file" name="image" accept="image/*"
+                                                        (change)="onFileSelected($event)">
+                                                    <button class="send" mat-icon-button type="submit">
+                                                        <mat-icon>send</mat-icon>
+                                                    </button>
+                                                </form>
+                                            </span>
+                                            <span class="spacer"></span>
+                                        </mat-card-actions>
+                                    </mat-card>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="events">
-                        <h4>Events</h4>
-                        <div class="events" *ngFor="let event of Events">
-                            <mat-card class="example-card" appearance="outlined">
-                                <mat-card-header>
-                                    <img routerLink="/profile/{{event.user_id}}" mat-card-avatar src="logo.png"
-                                        alt="profile">
-                                    <mat-card-title routerLink="/profile/{{event.user_id}}">
-                                        {{ AllUser[event.user_id] && AllUser[event.user_id].firstname }}
-                                    </mat-card-title>
-                                    <mat-card-subtitle routerLink="/profile/{{event.user_id}}">
-                                        {{AllUser[event.user_id] && AllUser[event.user_id].created_at |
-                                        date:'mediumDate' }}
-                                    </mat-card-subtitle>
-                                </mat-card-header>
-
-                                <mat-card-content>
-                                    <p><strong>Description : </strong>{{event.description}}</p>
-                                </mat-card-content>
-                                <mat-card-content>
-                                    <p><strong>Debut :</strong> {{event.hour_start | date:'mediumDate' }} a {{
-                                        event.hour_start | date : "hh:mm:ss"}}</p>
-
-                                </mat-card-content>
-                                <mat-card-content>
-                                    <p> <strong>Fin : </strong> {{event.hour_end | date:'mediumDate' }} a
-                                        {{event.hour_end | date : "hh:mm:ss"}}</p>
-                                </mat-card-content>
-
-                                <mat-card-actions>
-                                    <button mat-icon-button (click)="onGoing(event.id,'event')">
-                                        <span>{{goingmap[event.id] || 0}}</span>
-                                        <lucide-icon name="calendar-check"></lucide-icon>
-                                    </button>
-                                    <button mat-icon-button (click)="notGoing(event.id,'event')">
-                                        <span>{{notgoingmap[event.id] || 0}}</span>
-                                        <lucide-icon name="calendar-x-2"></lucide-icon>
-                                    </button>
-                                    <span class="spacer"></span>
-                                </mat-card-actions>
-                            </mat-card>
+                    </mat-tab>
+                    <mat-tab label="Events">
+                        <div class="events">
+                            <h4>Events</h4>
+                            <div class="events" *ngFor="let event of Events">
+                                <mat-card class="example-card" appearance="outlined">
+                                    <mat-card-header>
+                                        <img routerLink="/profile/{{event.user_id}}" mat-card-avatar src="logo.png" alt="profile">
+                                        <mat-card-title routerLink="/profile/{{event.user_id}}">
+                                            {{ AllUser[event.user_id] && AllUser[event.user_id].firstname }}
+                                        </mat-card-title>
+                                        <mat-card-subtitle routerLink="/profile/{{event.user_id}}">
+                                            {{AllUser[event.user_id] && AllUser[event.user_id].created_at |
+                                            date:'mediumDate' }}
+                                        </mat-card-subtitle>
+                                    </mat-card-header>
+                                    <mat-card-content>
+                                        <p><strong>Description : </strong>{{event.description}}</p>
+                                    </mat-card-content>
+                                    <mat-card-content>
+                                        <p><strong>Debut :</strong> {{event.hour_start | date:'mediumDate' }} a {{
+                                            event.hour_start | date : "hh:mm:ss"}}</p>
+                                    </mat-card-content>
+                                    <mat-card-content>
+                                        <p> <strong>Fin : </strong> {{event.hour_end | date:'mediumDate' }} a
+                                            {{event.hour_end | date : "hh:mm:ss"}}</p>
+                                    </mat-card-content>
+                                    <mat-card-actions>
+                                        <button mat-icon-button (click)="onGoing(event.id,'event')">
+                                            <span>{{goingmap[event.id] || 0}}</span>
+                                            <lucide-icon name="calendar-check"></lucide-icon>
+                                        </button>
+                                        <button mat-icon-button (click)="notGoing(event.id,'event')">
+                                            <span>{{notgoingmap[event.id] || 0}}</span>
+                                            <lucide-icon name="calendar-x-2"></lucide-icon>
+                                        </button>
+                                        <span class="spacer"></span>
+                                    </mat-card-actions>
+                                </mat-card>
+                            </div>
                         </div>
-                    </div>
-                </div>
-
+                    </mat-tab>
+                </mat-tab-group>
             </div>
         </div>
     </div>

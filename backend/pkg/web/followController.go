@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strings"
 )
 
 type FollowController struct {
@@ -303,54 +302,6 @@ func (c *FollowController) DeclineFollowRequest(w http.ResponseWriter, r *http.R
 	}
 }
 
-func (c *FollowController) GetPendingFollowRequest(w http.ResponseWriter, r *http.Request) {
-	err := utils.Environment()
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	if r.Method != http.MethodGet {
-		http.Error(w, os.Getenv("METHOD_NOT_ALLOWED"), http.StatusMethodNotAllowed)
-		return
-	}
-
-	if !strings.HasPrefix(r.URL.Path, os.Getenv("DEFAULT_API_LINK")+"/pending/") {
-		http.Error(w, os.Getenv("NOT_FOUND"), http.StatusNotFound)
-		return
-	}
-
-	userID, err := utils.ExtractIDFromRequest(r)
-	if err != nil {
-		http.Error(w, os.Getenv("USER_ID_REQUIRED"), http.StatusBadRequest)
-		return
-	}
-
-	follows, err := c.FollowService.GetPendingFollowRequest(userID)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set(os.Getenv("CONTENT_TYPE"), os.Getenv("APPLICATION_JSON"))
-	w.WriteHeader(http.StatusOK)
-	if follows != nil {
-		err = json.NewEncoder(w).Encode(map[string]interface{}{
-			"status":  http.StatusOK,
-			"follows": follows,
-		})
-	} else {
-		err = json.NewEncoder(w).Encode(map[string]interface{}{
-			"status":  http.StatusNoContent,
-			"message": "No follow requests",
-		})
-	}
-
-	if err != nil {
-		return
-	}
-}
-
 func (c *FollowController) CountAllFollows(w http.ResponseWriter, r *http.Request) {
 	err := utils.Environment()
 	if err != nil {
@@ -503,7 +454,6 @@ func (c *FollowController) FollowsRoutes(routes *http.ServeMux) *http.ServeMux {
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/unfollow", c.UnfollowUser)
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/accept", c.AcceptFollowRequest)
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/decline", c.DeclineFollowRequest)
-	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/pending/", c.GetPendingFollowRequest)
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/follow-count", c.CountAllFollows)
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/are-following", c.AreFollowing)
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/are-we-friends", c.AreWeFriends)

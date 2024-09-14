@@ -12,7 +12,7 @@ import { FollowService } from '../../service/follow.service';
 import { UtilsService } from '../../service/utils.service';
 import { User } from '../../entity/user';
 import { Post } from '../../entity/post';
-import { CommentContent, length } from '../models/models.compenant';
+import { CommentContent, length, MessageBody, MessageData } from '../models/models.compenant';
 import { Group } from '../../entity/group';
 import { HttpClientModule } from '@angular/common/http';
 import { DataService } from '../data.service';
@@ -22,6 +22,7 @@ import { HomeComponent } from '../home/components/home/home.component';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { ReactiveFormsModule } from '@angular/forms';
 import { UtilService } from '../service/util.service';
+import { WebSocketService } from '../chat/services/chat.service';
 
 
 
@@ -48,40 +49,44 @@ import { UtilService } from '../service/util.service';
         ToolbarComponent,
         HomeComponent,
         ReactiveFormsModule,
-        InputSwitchModule
+        InputSwitchModule,
     ],
     templateUrl: './profile.component.html',
     styleUrl: './profile.component.scss',
-    providers: [DatePipe, DataService, AuthService, FollowService, UtilsService]
-
+    providers: [
+        DatePipe,
+        DataService,
+        AuthService,
+        FollowService,
+        UtilsService,
+    ],
 })
 export class ProfileComponent implements OnInit {
-    title: string = 'Profile'
-    id!: number
-    isExist!: boolean
-    user: User = new User()
-    avatar = "";
-    currentID: number = this.authService.getUserID()!
-    userAge: number = 0
-    followers!: User[]
-    followings!: User[]
-    friends!: User[]
-    posts!: Post[]
-    groups!: Group[]
-    followersCount!: any
-    followingCount!: any
-    friendCount!: any
-    message!: string
+    title: string = 'Profile';
+    id!: number;
+    isExist!: boolean;
+    user: User = new User();
+    avatar = '';
+    currentID: number = this.authService.getUserID()!;
+    userAge: number = 0;
+    followers!: User[];
+    followings!: User[];
+    friends!: User[];
+    posts!: Post[];
+    groups!: Group[];
+    followersCount!: any;
+    followingCount!: any;
+    friendCount!: any;
+    message!: string;
     editMode: boolean = true;
-    check!: any
+    check!: any;
     formGroup: any;
-    nature !: string
+    nature!: string;
     comments: CommentContent = { comments_by_post: {} };
     likemap = [];
     dislikemap = [];
     comlength: length = {};
-    isPublic: boolean = false; 
-
+    isPublic: boolean = false;
 
     constructor(
         private authService: AuthService,
@@ -91,55 +96,69 @@ export class ProfileComponent implements OnInit {
         private datasevice: DataService,
         private router: Router,
         public datePipe: DatePipe,
-        private utilService: UtilService
-        // private listComponent: ListComponent
+        private utilService: UtilService,
+        private websocketService: WebSocketService
+    ) // private listComponent: ListComponent
 
-    ) {
-    }
+    {}
 
     getUser() {
-        this.id = this.activatedRoute.snapshot.params['id']
-        this.avatar = localStorage.getItem("avatar") as string == "" ? "female.svg" : localStorage.getItem("avatar") as string
+        this.id = this.activatedRoute.snapshot.params['id'];
+        this.avatar =
+            (localStorage.getItem('avatar') as string) == ''
+                ? 'female.svg'
+                : (localStorage.getItem('avatar') as string);
 
         this.authService.getUser(this.id).subscribe((response: any) => {
-            if (response.status !== "success" && response.status !== 200) {
-                alert(response.message)
-                this.message = response.message
-                this.router.navigate(['/']).then()
+            if (response.status !== 'success' && response.status !== 200) {
+                alert(response.message);
+                this.message = response.message;
+                this.router.navigate(['/']).then();
             }
-            response.user.created_at = this.datePipe.transform(response.user.created_at, 'longDate', '', 'en-US')
-            response.user.date_of_birth = this.datePipe.transform(response.user.date_of_birth, 'longDate', '', 'en-US')
-            this.userAge = this.calculateAge(response.user.date_of_birth)
-            this.user = response.user
-            
+            response.user.created_at = this.datePipe.transform(
+                response.user.created_at,
+                'longDate',
+                '',
+                'en-US'
+            );
+            response.user.date_of_birth = this.datePipe.transform(
+                response.user.date_of_birth,
+                'longDate',
+                '',
+                'en-US'
+            );
+            this.userAge = this.calculateAge(response.user.date_of_birth);
+            this.user = response.user;
+
             // Mettre à jour la variable isPublic
             this.isPublic = this.user.is_public;
-            
-            // Optionnel : Si vous souhaitez afficher cette information directement
-            this.nature = this.isPublic ? "Public" : "Private";
-            console.log(this.nature);
-            
 
-            this.utilsService.setTitle(`${this.user.firstname} ${this.user.lastname}`)
-        })
+            // Optionnel : Si vous souhaitez afficher cette information directement
+            this.nature = this.isPublic ? 'Public' : 'Private';
+            console.log(this.nature);
+
+            this.utilsService.setTitle(
+                `${this.user.firstname} ${this.user.lastname}`
+            );
+        });
     }
 
     Nature(user: User) {
         const span = document.getElementById('nature') as HTMLSpanElement;
-        if (span == null){
-            return
+        if (span == null) {
+            return;
         }
         if (user.is_public === true) {
-            span.textContent = "Public";
-            this.nature = "Public";
+            span.textContent = 'Public';
+            this.nature = 'Public';
         } else {
-            span.textContent = "Private"
-            this.nature = "Private";
+            span.textContent = 'Private';
+            this.nature = 'Private';
         }
     }
     isOnline() {
-        this.authService.isLoggedIn().subscribe(response => {
-            console.log(response)
+        this.authService.isLoggedIn().subscribe((response) => {
+            console.log(response);
             // if (response) {
             //     console.log('You are online')
             //     return
@@ -148,143 +167,175 @@ export class ProfileComponent implements OnInit {
             //     // this.authService.removeSession()
             //     // this.router.navigate(['/login']).then()
             // }
-        })
+        });
     }
 
     calculateAge(data: Date): number {
-        return Math.floor(Math.abs(Date.now() - new Date(data).getTime()) / (1000 * 3600 * 24 * 365))
+        return Math.floor(
+            Math.abs(Date.now() - new Date(data).getTime()) /
+                (1000 * 3600 * 24 * 365)
+        );
     }
-
 
     ChangeProfile() {
         const span = document.getElementById('nature');
-        let nature: boolean = true
+        let nature: boolean = true;
         if (span) {
-            span.textContent = span.textContent === "Public" ? "Private" : "Public";
-            nature = span.textContent === "Public" ? true : false;
+            span.textContent =
+                span.textContent === 'Public' ? 'Private' : 'Public';
+            nature = span.textContent === 'Public' ? true : false;
         }
-        this.datasevice.ChangeNatureAccountStatus(this.user.id, nature).subscribe((response: any) => {
-            this.getUser()
-        })
+        this.datasevice
+            .ChangeNatureAccountStatus(this.user.id, nature)
+            .subscribe((response: any) => {
+                this.getUser();
+                 const messBody: MessageBody = {
+                     senderId: Number(0),
+                     receiverId: Number(0),
+                     message: `${localStorage.getItem(
+                         'firstname'
+                     )} ${localStorage.getItem('lastname')} switch nature of profile !`,
+                 };
+                 const message: MessageData = {
+                     type: 'new_switch',
+                     datas: messBody,
+                 };
+                 const even = new Events(message.type, message.datas);
+                 sendEvent(this.websocketService, even);
+            });
     }
 
     showSection(section: string) {
-        let contents = document.querySelectorAll('.content')
+        let contents = document.querySelectorAll('.content');
         contents.forEach((content) => {
-            content.classList.remove('active')
-            content.classList.remove('show')
-        })
+            content.classList.remove('active');
+            content.classList.remove('show');
+        });
 
-        let selectedContent = document.querySelector(`#${section}`)
-        selectedContent?.classList.add('active')
+        let selectedContent = document.querySelector(`#${section}`);
+        selectedContent?.classList.add('active');
     }
 
     getFollowers() {
-        this.id = this.activatedRoute.snapshot.params['id']
-        this.followService.getList(this.id, "followers").subscribe((response: any) => {
-            if (response.status !== 200) {
-                console.log(response.message)
-                return
-            }
-            this.followers = response.followers
-            if (this.exist(this.followers, this.currentID)) {
-                this.isExist = true
-                console.log(this.isExist)
-            } else {
-                this.isExist = false
-                console.log(this.isExist)
-            }
-            // this.followers.forEach((value:any) => {
-            //     if (value.id === this.currentID) {
-            //         this.isExist = true
-            //         //console.log(this.isExist)
-            //         return
-            //     } else {
-            //         this.isExist = false
-            //         //console.log(this.isExist)
-            //         return
-            //     }
-            // })
-        })
+        this.id = this.activatedRoute.snapshot.params['id'];
+        this.followService
+            .getList(this.id, 'followers')
+            .subscribe((response: any) => {
+                if (response.status !== 200) {
+                    console.log(response.message);
+                    return;
+                }
+                this.followers = response.followers;
+                if (this.exist(this.followers, this.currentID)) {
+                    this.isExist = true;
+                    console.log(this.isExist);
+                } else {
+                    this.isExist = false;
+                    console.log(this.isExist);
+                }
+                // this.followers.forEach((value:any) => {
+                //     if (value.id === this.currentID) {
+                //         this.isExist = true
+                //         //console.log(this.isExist)
+                //         return
+                //     } else {
+                //         this.isExist = false
+                //         //console.log(this.isExist)
+                //         return
+                //     }
+                // })
+            });
     }
 
-    exist(list:User[], id: any): boolean {
-        return list.some((user:User) => user.id === id)
+    exist(list: User[], id: any): boolean {
+        return list.some((user: User) => user.id === id);
     }
 
     getFollowings() {
-        this.id = this.activatedRoute.snapshot.params['id']
-        this.followService.getList(this.id, "followings").subscribe((response: any) => {
-            this.followings = response.followings
-            if (this.exist(this.followings, this.currentID)) {
-                this.isExist = true
-                console.log(this.isExist)
-            } else {
-                this.isExist = false
-                console.log(this.isExist)
-            }
-        })
+        this.id = this.activatedRoute.snapshot.params['id'];
+        this.followService
+            .getList(this.id, 'followings')
+            .subscribe((response: any) => {
+                this.followings = response.followings;
+                if (this.exist(this.followings, this.currentID)) {
+                    this.isExist = true;
+                    console.log(this.isExist);
+                } else {
+                    this.isExist = false;
+                    console.log(this.isExist);
+                }
+            });
     }
 
     // iCanSee(): boolean {
     //     return this.id === this.currentID || this.isExist || this.isPublic
     // }
     iCanSee(): boolean {
-        return this.id == this.currentID || (this.isExist || this.isPublic);
+        return this.id == this.currentID || this.isExist || this.isPublic;
     }
 
     getFriends() {
-        this.id = this.activatedRoute.snapshot.params['id']
-        this.followService.getList(this.id, "friends").subscribe((response: any) => {
-            this.friends = response.friends
-        })
+        this.id = this.activatedRoute.snapshot.params['id'];
+        this.followService
+            .getList(this.id, 'friends')
+            .subscribe((response: any) => {
+                this.friends = response.friends;
+            });
     }
 
     getFollowersCount() {
-        this.id = this.activatedRoute.snapshot.params['id']
-        this.followService.getCount(this.id, "followers").subscribe((response: any) => {
-            this.followersCount = this.followService.calculate(response.count)
-        })
+        this.id = this.activatedRoute.snapshot.params['id'];
+        this.followService
+            .getCount(this.id, 'followers')
+            .subscribe((response: any) => {
+                this.followersCount = this.followService.calculate(
+                    response.count
+                );
+            });
     }
 
     getFollowingsCount() {
-        this.id = this.activatedRoute.snapshot.params['id']
-        this.followService.getCount(this.id, "followings").subscribe((response: any) => {
-            this.followingCount = this.followService.calculate(response.count)
-        })
+        this.id = this.activatedRoute.snapshot.params['id'];
+        this.followService
+            .getCount(this.id, 'followings')
+            .subscribe((response: any) => {
+                this.followingCount = this.followService.calculate(
+                    response.count
+                );
+            });
     }
 
     getFriendsCount() {
-        this.id = this.activatedRoute.snapshot.params['id']
-        this.followService.getCount(this.id, "friends").subscribe((response: any) => {
-            this.friendCount = this.followService.calculate(response.count)
-        })
+        this.id = this.activatedRoute.snapshot.params['id'];
+        this.followService
+            .getCount(this.id, 'friends')
+            .subscribe((response: any) => {
+                this.friendCount = this.followService.calculate(response.count);
+            });
     }
     onFollow(id: number) {
         const data = {
-            "follower_id": this.currentID,
-            "followee_id": id
-        }
+            follower_id: this.currentID,
+            followee_id: id,
+        };
 
-        this.followService.follow(data, "follow").subscribe((response: any) => {
-            this.getFriends()
-            this.getFriendsCount()
-            
-        })
-        location.reload()
+        this.followService.follow(data, 'follow').subscribe((response: any) => {
+            this.getFriends();
+            this.getFriendsCount();
+        });
+        location.reload();
     }
     onUnfollow(id: any) {
         const data = {
-            "follower_id": this.currentID,
-            "followed_id": id
-        }
+            follower_id: this.currentID,
+            followed_id: id,
+        };
 
         this.followService.unfollow(data).subscribe(() => {
-            this.getFriends()
-            this.getFriendsCount()
-            
-        })
-        location.reload()
+            this.getFriends();
+            this.getFriendsCount();
+        });
+        location.reload();
     }
 
     // onAccept(id: any) {
@@ -292,18 +343,18 @@ export class ProfileComponent implements OnInit {
     // }
     onAccept(id: number) {
         const data = {
-            "follower_id": id,
-            "followee_id": this.currentID
-        }
+            follower_id: id,
+            followee_id: this.currentID,
+        };
 
-        this.followService.request(data, "accept").subscribe((response: any) => {
-            this.utilService.onSnackBar(response.message, "info")
-            this.getFriends()
-            this.getFriendsCount()
-            
-            
-        })
-        location.reload
+        this.followService
+            .request(data, 'accept')
+            .subscribe((response: any) => {
+                this.utilService.onSnackBar(response.message, 'info');
+                this.getFriends();
+                this.getFriendsCount();
+            });
+        location.reload;
     }
     // onDecline(id: any) {
     //     this.followService.request(id, 'decline').subscribe(() => {
@@ -313,24 +364,25 @@ export class ProfileComponent implements OnInit {
     // }
     onDecline(id: number) {
         const data = {
-            "follower_id": id,
-            "followee_id": this.currentID
-        }
+            follower_id: id,
+            followee_id: this.currentID,
+        };
 
-        this.followService.request(data, "decline").subscribe((response: any) => {
-            console.log("requeeeee");
-            this.getFollowers()
-            this.getFollowersCount()
-           
-        })
-        location.reload
+        this.followService
+            .request(data, 'decline')
+            .subscribe((response: any) => {
+                console.log('requeeeee');
+                this.getFollowers();
+                this.getFollowersCount();
+            });
+        location.reload;
     }
 
     getPosts() {
         this.id = this.activatedRoute.snapshot.params['id'];
         this.authService.getUserPosts(this.id).subscribe(
             (response: any) => {
-                this.posts = response
+                this.posts = response;
             }
             /*(response: any) => {
                 if (response && response.posts) {  // Vérifie que la réponse contient bien les posts
@@ -345,12 +397,12 @@ export class ProfileComponent implements OnInit {
         );
     }
     onUpdateProfile() {
-        this.id = this.activatedRoute.snapshot.params['id']
+        this.id = this.activatedRoute.snapshot.params['id'];
         const updatedUser = {
             firstname: this.user.firstname,
             lastname: this.user.lastname,
             about_me: this.user.about_me,
-            nickname: this.user.nickname
+            nickname: this.user.nickname,
             // avatar: this.user.avatar
         };
 
@@ -364,8 +416,11 @@ export class ProfileComponent implements OnInit {
                 }
             },
             (error: any) => {
-                console.error('Erreur lors de la mise à jour du profil:', error);
-                alert('Une erreur s\'est produite');
+                console.error(
+                    'Erreur lors de la mise à jour du profil:',
+                    error
+                );
+                alert("Une erreur s'est produite");
             }
         );
     }
@@ -373,32 +428,38 @@ export class ProfileComponent implements OnInit {
         this.editMode = !this.editMode;
     }
 
-    
+    getUserData() {
+        this.getUser()
+        this.currentID = this.authService.getUserID()!
 
+        this.getFollowers()
+        this.getFollowings()
+    }
     
-
     ngOnInit(): void {
         if (!(this.authService.getToken() as string)) {
-            this.router.navigate(['/login']).then()
-            alert('You are not logged in')
-            return
+            this.router.navigate(['/login']).then();
+            alert('You are not logged in');
+            return;
         }
         this.formGroup = new FormGroup({
-            checked: new FormControl<boolean>(false)
+            checked: new FormControl<boolean>(false),
         });
         this.currentID= Number(localStorage.getItem('userID')as  string);
         this.toggleEditMode()
         this.isOnline()
-        this.getUser()
         this.onUpdateProfile
-        this.getFollowers()
-        this.getFollowings()
-        this.getFriends()
         this.getPosts()
         if (this.user != null) {
-            this.Nature(this.user)
+            this.Nature(this.user);
         }
+
+        this.activatedRoute.params.subscribe((params) => {
+            this.id = params['id']
+            this.getUserData()
+        })
     }
+
     timeAgo(date: Date | string): string {
         const now = new Date();
         const pastDate = new Date(date);
@@ -424,5 +485,20 @@ export class ProfileComponent implements OnInit {
         } else {
             return `${seconds} second${seconds > 1 ? 's' : ''} ago`;
         }
+    }
+}
+
+
+function sendEvent(websocketService: WebSocketService, datas: any) {
+    websocketService.sendMessage(datas);
+}
+
+class Events {
+    type: string;
+    payload: any;
+
+    constructor(type: string, payload: any) {
+        this.type = type;
+        this.payload = payload;
     }
 }

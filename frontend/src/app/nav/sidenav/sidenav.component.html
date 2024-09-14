@@ -18,13 +18,13 @@
     </div>
   </mat-drawer-content >
   <mat-drawer mode="side" opened position="end">
-    <mat-list *ngFor="let user of users" role="list">
-      <mat-list-item role="listitem">
+    <mat-list *ngFor="let user of users" role="list" >
+      <mat-list-item  role="listitem">
         <a matListItemTitle href="javascript:void(0)" (click)="openCreatePostDialog(user.id)">
           <mat-icon>
             <div class="status" [ngClass]="{ online: user.isOnline, offline: !user.isOnline }"></div>
           </mat-icon>
-          <span>{{ user.nickname }}</span>
+          <span>{{ user.firstname }}</span>
           <mat-icon class="message-icon">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#4B77D1">
               <path

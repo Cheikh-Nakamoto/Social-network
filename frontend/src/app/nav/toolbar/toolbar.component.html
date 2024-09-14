@@ -1,76 +1,73 @@
 <mat-toolbar class="app-toolbar" *ngIf="username != ''">
-    <div class="toolbar-left">
-      <a routerLink="/" class="logo">
-        <img src="logo.png" height="60" alt="" />
-        <span class="title">{{ title }}</span>
-      </a>
+  <div class="toolbar-left">
+    <a routerLink="/" class="logo">
+      <img src="logo.png" height="60" alt="" />
+      <span class="title">{{ title }}</span>
+    </a>
+  </div>
+
+  <div class="toolbar-center">
+    <mat-label>Search...</mat-label>
+    <input type="text" matInput [(ngModel)]="searchQuery" (input)="onSearchChange(searchQuery)"
+      [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete">
+
+      <mat-option *ngFor="let user of filteredUsers" [value]="user.firstname + ' ' + user.lastname"
+        (click)="goToUserProfile(user)">
+        {{ user.firstname }} {{ user.lastname }} {{ user.nickname }}
+      </mat-option>
+    </mat-autocomplete>
+  </div>
+
+  <div class="toolbar-right">
+    <div *ngIf="notificationVisible" class="notifications">
+      <p (click)="openChatFromNotification(newMessage)">
+        Nouveau message
+      </p>
     </div>
-  
-    <div class="toolbar-center">
-      <mat-label>Search...</mat-label>
-      <input type="text" matInput [(ngModel)]="searchQuery" (input)="onSearchChange(searchQuery)" [matAutocomplete]="auto">
-      <mat-autocomplete #auto="matAutocomplete">
-        
-        <mat-option *ngFor="let user of filteredUsers" [value]="user.firstname + ' ' + user.lastname" (click)="goToUserProfile(user)">
-          {{ user.firstname }} {{ user.lastname }} {{ user.nickname }}
-        </mat-option>
-      </mat-autocomplete>
-    </div>
-  
-    <div class="toolbar-right">
-      <button [matBadgeHidden]="hiddenMessage" aria-label="Example icon-button with heart icon"
-              class="example-icon" mat-icon-button matBadge="{{chatCount}}">
-        <mat-icon>chat</mat-icon>
-        
-      </button>
-     <div *ngIf="notificationVisible" class="notifications">
-  <p (click)="openChatFromNotification(newMessage)">
-    Nouveau message
-  </p>
-</div>
 
 
-      <button  [matMenuTriggerFor]="menu" 
-              aria-label="Example icon-button with heart icon" class="example-icon" mat-icon-button
-              matBadge="{{notifylength}}">
-        <mat-icon>notifications</mat-icon>
-      </button>
-      <mat-menu #menu="matMenu">
-        <div class="notif" *ngFor="let notif of IsNotify.notif">
-          <div class="notif" mat-menu-item>
-            <p>{{ notif.message }}  </p>
-            <div class="buttons">
-              <button class="btn btn-success" (click)="InviteAccept(notif.id,notif.group_id,notif.user_id,notif.target_id,notif.role)">
-                <span class="material-icons text-white">check_circle</span>
-                Accept
-              </button>
-              <button class="btn btn-danger"  (click)="InviteDecline(notif.id,notif.group_id,notif.user_id,notif.target_id,notif.role)">
-                <span class="material-icons text-white">cancel</span>
-                Decline
-              </button>
-            </div>
+    <button [matMenuTriggerFor]="menu" aria-label="Example icon-button with heart icon" class="example-icon"
+      mat-icon-button matBadge="{{notifylength}}">
+      <mat-icon>notifications</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <div class="notif" *ngFor="let notif of IsNotify.notif">
+        <div class="notif" mat-menu-item>
+          <p>{{ notif.message }} </p>
+          <div class="buttons">
+            <button class="btn btn-success"
+              (click)="InviteAccept(notif.id,notif.group_id,notif.user_id,notif.target_id,notif.role)">
+              <span class="material-icons text-white">check_circle</span>
+              Accept
+            </button>
+            <button class="btn btn-danger"
+              (click)="InviteDecline(notif.id,notif.group_id,notif.user_id,notif.target_id,notif.role)">
+              <span class="material-icons text-white">cancel</span>
+              Decline
+            </button>
           </div>
         </div>
-        
-      </mat-menu>
-  
-      <div class="relative">
-        <button [matMenuTriggerFor]="userMenu" class="user-menu-button">
-          <div class="user-info">
-            <img [src]="avatar" width="30" height="30" alt="profile" />
-            <span class="username">{{ username }}</span>
-          </div>
-        </button>
-        <mat-menu #userMenu="matMenu">
-          <button mat-menu-item>
-            <i class="icofont icofont-edit"><span class="name">Edit profile</span></i>
-          </button>
-          <button mat-menu-item (click)="handleLogout()">
-            <i class="icofont icofont-logout"><span class="name">Logout</span></i>
-          </button>
-          
-        </mat-menu>
       </div>
+
+    </mat-menu>
+
+    <div class="relative">
+      <button [matMenuTriggerFor]="userMenu" class="user-menu-button">
+        <div class="user-info">
+          <img [src]="avatar" width="30" height="30" alt="profile" />
+          <span class="username">{{ username }}</span>
+        </div>
+      </button>
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item routerLink="/profile/{{id}}">
+          <i class="icofont icofont-user"><span class="name">My profile</span></i>
+        </button>
+        <button mat-menu-item (click)="handleLogout()">
+          <i class="icofont icofont-logout"><span class="name">Logout</span></i>
+        </button>
+
+      </mat-menu>
     </div>
-  </mat-toolbar>
-  
+  </div>
+</mat-toolbar>

@@ -1,18 +1,29 @@
-version: '3'
+version: '3.8'
 services:
   backend:
-    build: ./backend
+    image: golang:1.22.3
+    working_dir: /app
+    volumes:
+      - ./backend:/app 
+    command: bash -c "go build -o main . && ./main"
     ports:
       - "8080:8080"
-    volumes:
-      - ./backend:/app
-      - ./backend/pkg/db/mydb.db:/app/pkg/db/mydb.db
+    expose:
+      - "8080"
     environment:
-      - DB_PATH=/app/pkg/db/mydb.db
-
+      - GO_ENV=development
+   
   frontend:
-    build: ./frontend
+    image: node:18  
+    working_dir: /app
+    volumes:
+      - ./frontend:/app  
+    command: bash -c "npm install && npm run dockerize"
     ports:
       - "4200:4200"
-    volumes:
-      - ./frontend:/app
+    expose:
+      - "4200"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend 

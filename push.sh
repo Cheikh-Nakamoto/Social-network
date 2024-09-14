@@ -1,9 +1,9 @@
 #!/bin/bash
 
 while true; do
-    git stash
-    git pull
-    git stash apply
+    # git stash
+    # git pull
+    # git stash apply
     git add .
     git commit -m "we can merge"
     git pull

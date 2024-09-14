@@ -28,7 +28,8 @@ export class WebSocketService {
   private userId !: string
 
   constructor() {
-    this.userId = JSON.parse(localStorage.getItem('userID') || '{}');
+      this.userId = JSON.parse(localStorage.getItem('userID') || '{}');
+      // this.connect(); // Connexion lors de l'initialisation du service
   }
 
   connect(): void {
@@ -98,7 +99,9 @@ export class WebSocketService {
     providedIn: 'root',
 })
 export class ChatService {
-    constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog) {
+      
+    }
 
     // Ouvrir un dialogue si non déjà ouvert
     openCreatePostDialog(id: number): void {

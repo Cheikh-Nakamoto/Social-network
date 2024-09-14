@@ -11,6 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-events',
@@ -43,7 +44,8 @@ export class EventsComponent implements OnInit {
     private fb: FormBuilder,
     private apiService: DataService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private dialogRef: MatDialogRef<EventsComponent>
   ) { }
 
   ngOnInit(): void {
@@ -107,6 +109,11 @@ export class EventsComponent implements OnInit {
     this.today = `${year}-${month}-${day}`;
   }
 
+  closeDialog() {
+    this.dialogRef.close();
+  }
+
+
   onSubmit(): void {
     const groupid = parseInt(localStorage.getItem('groupid') as string);
     // Vérifiez qu'il  n'y a pas de chaine vide dans les variable string a envoyer
@@ -141,8 +148,8 @@ export class EventsComponent implements OnInit {
           alert(`Échec de la création de l'événement`);
         }
       );
-
-    } else {
     }
+    this.groupeForm.reset()
+    this.closeDialog()
   }
 }
