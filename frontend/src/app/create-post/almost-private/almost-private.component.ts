@@ -38,6 +38,7 @@ export class AlmostPrivateComponent implements OnInit {
 
   selectuser(){
     this.share.setData({"almost":this.toppings.value})
+    this.closeDialog()
   }
   closeDialog() {
     this.dialogRef.close();

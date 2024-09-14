@@ -156,7 +156,7 @@ export class HomeComponent implements OnInit {
             target.querySelector('input[name="comment"]') as HTMLInputElement
         ).value;
 
-        if (!content) {
+        if (!content || content.trim() == "") {
             return;
         }
 

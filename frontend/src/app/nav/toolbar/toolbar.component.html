@@ -20,11 +20,6 @@
   </div>
 
   <div class="toolbar-right">
-    <button [matBadgeHidden]="hiddenMessage" aria-label="Example icon-button with heart icon" class="example-icon"
-      mat-icon-button matBadge="{{chatCount}}">
-      <mat-icon>chat</mat-icon>
-
-    </button>
     <div *ngIf="notificationVisible" class="notifications">
       <p (click)="openChatFromNotification(newMessage)">
         Nouveau message
@@ -67,9 +62,6 @@
       <mat-menu #userMenu="matMenu">
         <button mat-menu-item routerLink="/profile/{{id}}">
           <i class="icofont icofont-user"><span class="name">My profile</span></i>
-        </button>
-        <button mat-menu-item>
-          <i class="icofont icofont-edit"><span class="name">Edit profile</span></i>
         </button>
         <button mat-menu-item (click)="handleLogout()">
           <i class="icofont icofont-logout"><span class="name">Logout</span></i>

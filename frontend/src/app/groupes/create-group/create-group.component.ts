@@ -60,6 +60,11 @@ export class CreateGroupComponent implements OnInit {
   }
   onSubmit(): void {
     if (this.groupeForm.valid) {
+      const name = this.groupeForm.get('name')?.value
+      const description = this.groupeForm.get('description')?.value
+      if (name.trim() == "" || description.trim() == ""){
+        return
+      }
       const formData = new FormData();
       formData.append('name', this.groupeForm.get('name')?.value);
       formData.append('description', this.groupeForm.get('description')?.value);
