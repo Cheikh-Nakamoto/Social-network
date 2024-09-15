@@ -7,6 +7,7 @@ import { responselogin, UserDTO } from '../models/models.compenant';
 import { Router } from '@angular/router';
 import { AuthService } from '../service/auth.service';
 import { tap } from 'rxjs';
+import { error } from 'jquery';
 
 @Component({
   selector: 'app-login',
@@ -69,7 +70,9 @@ export class LoginComponent implements OnInit {
     this.login(this.loginForm.value).subscribe(() => {
       this.router.navigateByUrl('/home').then();
       // this.router.navigate(['/home']);
-    })
+    },(error)=>{
+      alert("Email ou mot de pass incorrect !")
+    });
   }
 
   login(credentials: { email: string, password: string }) {

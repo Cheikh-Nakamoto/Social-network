@@ -86,6 +86,7 @@ export class GroupchatComponent {
                     );
                 }
                 if (message.type === 'new_message_group' && message.payload.messageId != this.Id) {
+                    console.log( message.payload.messageId ,this.Id)
                     this.Id = message.payload.messageId
                     const messageId = message.payload.messageId;
 
