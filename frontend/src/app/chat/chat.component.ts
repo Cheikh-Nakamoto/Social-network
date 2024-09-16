@@ -37,7 +37,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class ChatComponent implements OnInit, OnDestroy {
     private messagesSubscription!: Subscription;
     public messages: any[] = [];
-    private processedMessages = new Set<number>();
+    private processedMessages = new Set<string>();
     user!: model.UserDTO;
     private id!: number;
     sender!: number;
@@ -182,21 +182,9 @@ export class ChatComponent implements OnInit, OnDestroy {
             amount: this.amount,
         };
 
-         if (this.processedMessages instanceof Set) {
-             // Convertir en tableau et récupérer le dernier élément
-             const lastMessageId = Array.from(this.processedMessages).pop();
+        const evenget = new Event('get_messages', payload);
+        sendEvent(this.websocketService, evenget);
 
-             if (lastMessageId) {
-                 console.log(lastMessageId, 'gggggggggggg');
-                 if (!this.processedMessages.has(lastMessageId)) {
-                     this.NewupdateMessages(messBody, this.sender);
-                 } else {
-                 }
-             } else {
-                 this.NewupdateMessages(messBody, this.sender);
-                 this.processedMessages.add(1);
-             }
-         }
         // Réinitialiser le champ de texte après l'envoi
         messagetag.value = '';
     }
