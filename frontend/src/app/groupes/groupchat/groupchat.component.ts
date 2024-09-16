@@ -86,7 +86,6 @@ export class GroupchatComponent {
                     );
                 }
                 if (message.type === 'new_message_group' && message.payload.messageId != this.Id) {
-                    console.log( message.payload.messageId ,this.Id)
                     this.Id = message.payload.messageId
                     const messageId = message.payload.messageId;
 
@@ -98,7 +97,6 @@ export class GroupchatComponent {
                         // Marque le message comme traité
                         this.processedMessages.add(messageId);
                     } else {
-                        console.log('Message déjà traité, ignoré');
                     }
                 }
             }
@@ -163,13 +161,11 @@ export class GroupchatComponent {
             } else {
                 msgType = 'Received';
             }
-            // console.log("llllllll", msgType)
-            // console.log("bbbb",msgType === 'Received' ? 'received' : 'sent');
+           
 
             let username: string;
             this.getNicknameById(message.senderId, (nickname) => {
                 if (nickname) {
-                    // console.log('Nickname:', nickname);
                     username = nickname;
 
                     const newMessageHTML = `
@@ -193,7 +189,6 @@ export class GroupchatComponent {
             `;
                     chatBox.innerHTML += newMessageHTML;
                 } else {
-                    console.log('Utilisateur non trouvé');
                 }
             });
             // });
@@ -284,13 +279,12 @@ export class GroupchatComponent {
 
                     this.NewupdateMessages(messBody, this.sender);
                 } else {
-                    console.log('Message déjà traité, ignoré');
                 }
 
-                // console.log('Dernier messageId traité :', lastMessageId+1);
             }
 
         }
+        
 
         // Réinitialiser le champ de texte après l'envoi
         messagetag.value = '';
@@ -380,14 +374,6 @@ export class GroupchatComponent {
 function sendEvent(websocketService: WebSocketService, datas: any) {
     websocketService.sendMessage(datas);
 }
-
-
-
-
-
-
-
-
 
 const addHoverListeners = (): void => {
     const hoveredDivs = document.querySelectorAll<HTMLElement>('#msgBox');

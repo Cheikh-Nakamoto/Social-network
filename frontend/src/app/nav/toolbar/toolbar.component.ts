@@ -110,14 +110,12 @@ export class ToolbarComponent implements OnInit, OnDestroy {
                 ) {
                     this.notify();
                 }else if  (message.type === 'new_follow') {
-                    console.log(message)
                     this.utilService.onSnackBar(message.payload
                         .message,"succes")
                 }
                 if (message.type === 'new_message') {
 
-                    console.log("MMMMMMMMMMM")
-                    this.newMessage = message; // Stocker le message reçu
+                    this.newMessage = message; 
                     this.notificationVisible = true; // Afficher la notification
 
                     // Cacher la notification après 10 secondes
@@ -153,7 +151,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
     openChatFromNotification(message: any): void {
         // Logique pour ouvrir le chat associé au message
-        console.log('Ouvrir le chat pour le message', message);
         this.notificationVisible = false; // Masquer la notification après ouverture du chat
         this.newMessage = null; // Réinitialiser le message
     }

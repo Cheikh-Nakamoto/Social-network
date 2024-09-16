@@ -135,7 +135,6 @@ export class ProfileComponent implements OnInit {
 
             // Optionnel : Si vous souhaitez afficher cette information directement
             this.nature = this.isPublic ? 'Public' : 'Private';
-            console.log(this.nature);
 
             this.utilsService.setTitle(
                 `${this.user.firstname} ${this.user.lastname}`
@@ -158,15 +157,6 @@ export class ProfileComponent implements OnInit {
     }
     isOnline() {
         this.authService.isLoggedIn().subscribe((response) => {
-            console.log(response);
-            // if (response) {
-            //     console.log('You are online')
-            //     return
-            // } else {
-            //     console.log('You are offline')
-            //     // this.authService.removeSession()
-            //     // this.router.navigate(['/login']).then()
-            // }
         });
     }
 
@@ -222,25 +212,20 @@ export class ProfileComponent implements OnInit {
             .getList(this.id, 'followers')
             .subscribe((response: any) => {
                 if (response.status !== 200) {
-                    console.log(response.message);
                     return;
                 }
                 this.followers = response.followers;
                 if (this.exist(this.followers, this.currentID)) {
                     this.isExist = true;
-                    console.log(this.isExist);
                 } else {
                     this.isExist = false;
-                    console.log(this.isExist);
                 }
                 // this.followers.forEach((value:any) => {
                 //     if (value.id === this.currentID) {
                 //         this.isExist = true
-                //         //console.log(this.isExist)
                 //         return
                 //     } else {
                 //         this.isExist = false
-                //         //console.log(this.isExist)
                 //         return
                 //     }
                 // })
@@ -259,10 +244,8 @@ export class ProfileComponent implements OnInit {
                 this.followings = response.followings;
                 if (this.exist(this.followings, this.currentID)) {
                     this.isExist = true;
-                    console.log(this.isExist);
                 } else {
                     this.isExist = false;
-                    console.log(this.isExist);
                 }
             });
     }
@@ -371,7 +354,6 @@ export class ProfileComponent implements OnInit {
         this.followService
             .request(data, 'decline')
             .subscribe((response: any) => {
-                console.log('requeeeee');
                 this.getFollowers();
                 this.getFollowersCount();
             });
