@@ -138,8 +138,6 @@
                         </div>
                     </div>
                 </mat-tab>
-
-
                 <mat-tab>
                     <div class="tab-title">
                         <ng-template mat-tab-label>
@@ -166,59 +164,16 @@
                                         }}</span>
                                     <span class="d-flex"><strong>Age:</strong>&nbsp;{{ userAge }}</span>
                                 </div>
-
                                 <div class="content" id="about">
                                     <h5>About me</h5>
                                     <p>{{ user.about_me || "No information" }}</p>
                                 </div>
                             </div>
                         </div>
-
                         <div class="row"></div>
                         <div class="row"></div>
                     </div>
                 </mat-tab>
-
-                <!-- <mat-tab>
-                    <div class="tab-title">
-                        <ng-template mat-tab-label>
-                            <span class="material-icons">diversity_3</span>
-                            <span class="title">Friends</span>
-                        </ng-template>
-                    </div>
-                    <div class="tab-content">
-                        <div class="row block">
-                            <div class="col-md.12 message" *ngIf="friends === undefined">
-                                <img src="fail.png" width="64" height="64">
-                                <span *ngIf="currentID == id">You have no friends</span>
-                                <span *ngIf="currentID != id">{{user.firstname}}&nbsp;has no friends</span>
-                            </div>
-                            <div class="col-md.12" *ngIf="friends">
-                                <ul class="list-group list-group-flush" *ngFor="let friend of friends">
-                                    <li class="list-group-item">
-                                        <div class="info">
-                                            <div class="avatar">
-                                                <img alt="avatar" src="{{friend.avatar || null}}" width="50"
-                                                    height="50">
-                                            </div>
-                                            <div class="info-profile">
-                                                <span class="name">{{friend.firstname}}&nbsp;{{friend.lastname}}</span>
-                                                <span class="username">&#64;{{friend.nickname || null}}</span>
-                                            </div>
-                                        </div>
-                                        <div class="buttons">
-                                            <button *ngIf="currentID !== user.id" class="btn btn-primary" (click)="onFollow(user.id)">
-                                                <span class="material-icons">unfollow</span>
-                                                unFollow
-                                            </button>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </mat-tab> -->
-
                 <mat-tab>
                     <div class="tab-title">
                         <ng-template mat-tab-label>
@@ -248,10 +203,14 @@
                                             </div>
                                         </div>
                                         <div class="buttons" *ngIf="currentID == id">
-                                            <a class="btn btn-info" routerLink="/profile/{{follower.id}}">
-                                                <span class="material-icons text-white">person</span>
-                                                Profile
-                                            </a>
+                                            <button class="btn btn-success" (click)="onAccept(follower.id)">
+                                                <span class="material-icons text-white">check_circle</span>
+                                                Accept
+                                            </button>
+                                            <button class="btn btn-danger" (click)="onDecline(follower.id)">
+                                                <span class="material-icons text-white">cancel</span>
+                                                Decline
+                                            </button>
                                         </div>
                                     </li>
                                 </ul>
@@ -301,13 +260,13 @@
                     </div>
                 </mat-tab>
 
-                <!-- <mat-tab>
-                    <div class="tab-title">
+                <mat-tab>
+                    <!-- <div class="tab-title">
                         <ng-template mat-tab-label>
                             <span class="material-icons">groups</span>
                             <span class="title">Groups</span>
                         </ng-template>
-                    </div>
+                    </div> -->
                     <div class="tab-content">
                         <div class="row block">
                             <div class="col-md.12 message" *ngIf="groups === undefined">
@@ -332,7 +291,7 @@
                             </div>
                         </div>
                     </div>
-                </mat-tab> -->
+                </mat-tab>
             </mat-tab-group>
         </div>
     </div>

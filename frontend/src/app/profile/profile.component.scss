@@ -159,7 +159,7 @@ $white: #fefefe;
     height: auto;
 
     .tab-content {
-        background-color: $background !important;
+        background-color: $white !important;
         padding: 10px;
         display: flex;
         flex-direction: column;
@@ -290,7 +290,6 @@ $white: #fefefe;
                 text-transform: capitalize;
                 font-weight: 600;
                 margin-top: 2px;
-                
             }
             mat-card-subtitle {
                 display: block;
@@ -312,11 +311,8 @@ $white: #fefefe;
                     margin-top: 6px;
                 }
             }
-            
         }
     }
 }
 
-app-home {
-    margin-top: 12px !important;
-}
+
