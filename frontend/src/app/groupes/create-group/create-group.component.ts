@@ -37,7 +37,6 @@ export class CreateGroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.isOnline();
-
     this.userID = localStorage.getItem('userID') as string;
     this.groupeForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(50)]],
@@ -86,12 +85,10 @@ export class CreateGroupComponent implements OnInit {
           (response) => {
             this.groupeForm.patchValue({ image: response.image });
 
-            // Créez le groupe avec les données mises à jour
             this.apiService.createGroup(this.groupeForm.value).subscribe(
               (res) => {
                 this.groupeForm.reset();
                 this.closeDialog();
-                // Recharger la page après la création réussie
                 window.location.reload();
               },
               (error) => {
@@ -108,7 +105,6 @@ export class CreateGroupComponent implements OnInit {
           (res) => {
             this.groupeForm.reset();
             this.closeDialog();
-            // Recharger la page après la création réussie
             window.location.reload();
           },
           (error) => {
