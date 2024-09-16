@@ -38,6 +38,7 @@ export class CreateGroupComponent implements OnInit {
   ngOnInit(): void {
     this.authService.isOnline();
     this.userID = localStorage.getItem('userID') as string;
+    console.log(this.userID)
     this.groupeForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(50)]],
       description: ['', [Validators.required, Validators.maxLength(250)]],
@@ -69,7 +70,7 @@ export class CreateGroupComponent implements OnInit {
     if (this.groupeForm.valid) {
       const name = this.groupeForm.get('name')?.value
       const description = this.groupeForm.get('description')?.value
-      if (name.trim() == "" || description.trim() == "") {
+      if (name.trim() == "" && name != null || description.trim() == "" && description != null) {
         return
       }
 
@@ -78,16 +79,23 @@ export class CreateGroupComponent implements OnInit {
       formData.append('description', this.groupeForm.get('description')?.value);
       formData.append('isPublic', this.groupeForm.get('isPublic')?.value);
       formData.append('owner', this.groupeForm.get('owner')?.value);
-
+      let body = {
+        'name': this.groupeForm.get('name')?.value,
+        'description': this.groupeForm.get('description')?.value,
+        'isPublic': this.groupeForm.get('isPublic')?.value,
+        'owner': this.groupeForm.get('owner')?.value,
+        "image": ""
+      }
       if (this.selectedFile) {
         formData.append('file', this.selectedFile);
         this.apiService.uploadImage(formData).subscribe(
           (response) => {
             this.groupeForm.patchValue({ image: response.image });
-
-            this.apiService.createGroup(this.groupeForm.value).subscribe(
+            body["image"] = response.image
+            console.log(body)
+            this.apiService.createGroup(body).subscribe(
               (res) => {
-                this.groupeForm.reset();
+
                 this.closeDialog();
                 window.location.reload();
               },
@@ -103,7 +111,7 @@ export class CreateGroupComponent implements OnInit {
       } else {
         this.apiService.createGroup(this.groupeForm.value).subscribe(
           (res) => {
-            this.groupeForm.reset();
+
             this.closeDialog();
             window.location.reload();
           },
