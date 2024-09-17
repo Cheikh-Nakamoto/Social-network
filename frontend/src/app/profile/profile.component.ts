@@ -1,28 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
-
-import { AuthService } from "../../service/auth.service";
 import { CommonModule, DatePipe, NgForOf, NgIf } from "@angular/common";
+import { FormControl, FormGroup, FormsModule } from '@angular/forms';
 import { MatTabGroup, MatTabsModule } from "@angular/material/tabs";
 import { MatIconModule } from "@angular/material/icon";
 import { MatCard, MatCardActions, MatCardHeader, MatCardContent } from '@angular/material/card';
-
 import { MatListModule } from "@angular/material/list";
-import { FollowService } from '../../service/follow.service';
-import { UtilsService } from '../../service/utils.service';
+import { HttpClientModule } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
+import { ReactiveFormsModule } from '@angular/forms';
+import { InputSwitchModule } from 'primeng/inputswitch';
+
+import { AllUsersDTO, CommentContent, CommentDTO, length, MessageBody, MessageData } from '../models/models.compenant';
+import { DataService } from '../data.service';
+import { UtilService } from '../service/util.service';
 import { User } from '../../entity/user';
 import { Post } from '../../entity/post';
-import { CommentContent, length, MessageBody, MessageData } from '../models/models.compenant';
 import { Group } from '../../entity/group';
-import { HttpClientModule } from '@angular/common/http';
-import { DataService } from '../data.service';
-import { ToolbarComponent } from '../nav/toolbar/toolbar.component';
-import { FormControl, FormGroup, FormsModule } from '@angular/forms';
-import { HomeComponent } from '../home/components/home/home.component';
-import { InputSwitchModule } from 'primeng/inputswitch';
-import { ReactiveFormsModule } from '@angular/forms';
-import { UtilService } from '../service/util.service';
+import { FollowService } from '../../service/follow.service';
+import { UtilsService } from '../../service/utils.service';
+import { AuthService } from "../../service/auth.service";
 import { WebSocketService } from '../chat/services/chat.service';
+import { ToolbarComponent } from '../nav/toolbar/toolbar.component';
+import { HomeComponent } from '../home/components/home/home.component';
+import { DialogCommentComponent } from '../dialog-comment/dialog-comment.component';
 
 
 
@@ -87,6 +88,7 @@ export class ProfileComponent implements OnInit {
     dislikemap = [];
     comlength: length = {};
     isPublic: boolean = false;
+    AllUser: AllUsersDTO = {};
 
     constructor(
         private authService: AuthService,
@@ -97,10 +99,11 @@ export class ProfileComponent implements OnInit {
         private router: Router,
         public datePipe: DatePipe,
         private utilService: UtilService,
-        private websocketService: WebSocketService
+        private websocketService: WebSocketService,
+        private apiService: DataService,
     ) // private listComponent: ListComponent
 
-    {}
+    { }
 
     getUser() {
         this.id = this.activatedRoute.snapshot.params['id'];
@@ -163,7 +166,7 @@ export class ProfileComponent implements OnInit {
     calculateAge(data: Date): number {
         return Math.floor(
             Math.abs(Date.now() - new Date(data).getTime()) /
-                (1000 * 3600 * 24 * 365)
+            (1000 * 3600 * 24 * 365)
         );
     }
 
@@ -179,19 +182,19 @@ export class ProfileComponent implements OnInit {
             .ChangeNatureAccountStatus(this.user.id, nature)
             .subscribe((response: any) => {
                 this.getUser();
-                 const messBody: MessageBody = {
-                     senderId: Number(0),
-                     receiverId: Number(0),
-                     message: `${localStorage.getItem(
-                         'firstname'
-                     )} ${localStorage.getItem('lastname')} switch nature of profile !`,
-                 };
-                 const message: MessageData = {
-                     type: 'new_switch',
-                     datas: messBody,
-                 };
-                 const even = new Events(message.type, message.datas);
-                 sendEvent(this.websocketService, even);
+                const messBody: MessageBody = {
+                    senderId: Number(0),
+                    receiverId: Number(0),
+                    message: `${localStorage.getItem(
+                        'firstname'
+                    )} ${localStorage.getItem('lastname')} switch nature of profile !`,
+                };
+                const message: MessageData = {
+                    type: 'new_switch',
+                    datas: messBody,
+                };
+                const even = new Events(message.type, message.datas);
+                sendEvent(this.websocketService, even);
             });
     }
 
@@ -220,15 +223,6 @@ export class ProfileComponent implements OnInit {
                 } else {
                     this.isExist = false;
                 }
-                // this.followers.forEach((value:any) => {
-                //     if (value.id === this.currentID) {
-                //         this.isExist = true
-                //         return
-                //     } else {
-                //         this.isExist = false
-                //         return
-                //     }
-                // })
             });
     }
 
@@ -359,6 +353,119 @@ export class ProfileComponent implements OnInit {
             });
         location.reload;
     }
+    private loadLikes(targetType: string) {
+        this.apiService.getTargetLikes(targetType).subscribe((likes) => {
+            this.likemap = likes;
+        });
+    }
+
+    private loadDislikes(targetType: string) {
+        this.apiService.getTargetDislikes(targetType).subscribe((dislikes) => {
+            this.dislikemap = dislikes;
+        });
+    }
+
+    onLike(targetId: number, targetType: string) {
+        this.apiService
+            .likeTarget(0, this.id, targetId, targetType, true)
+            .subscribe((response) => {
+                this.loadLikes(targetType);
+                this.loadDislikes(targetType);
+            });
+    }
+
+    onDislike(targetId: number, targetType: string) {
+        this.apiService
+            .dislikeTarget(0, this.id, targetId, targetType, false)
+            .subscribe(() => {
+                this.loadLikes(targetType);
+                this.loadDislikes(targetType);
+            });
+    }
+    readonly dialog = inject(MatDialog);
+
+    openDialog(postId: number): void {
+        // Récupérer les commentaires pour le post spécifié
+        const comment = this.comments.comments_by_post[postId] || [];
+
+        // Ouvrir le dialogue avec les commentaires pour le post
+        const dialogRef = this.dialog.open(DialogCommentComponent, {
+            data: {
+                postId: postId,
+                user: this.AllUser,
+                comments: comment,
+            },
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+        });
+    }
+    private loadComments(): void {
+        this.apiService.getData('AllComments').subscribe(
+            (comment: {
+                Comments: { [key: number]: CommentDTO[] };
+                CommentsLength: { [key: number]: number };
+            }) => {
+                this.comments.comments_by_post = comment.Comments;
+                this.comlength = comment.CommentsLength;
+            },
+            (error) => {
+                console.error(
+                    'Erreur lors du chargement des commentaires:',
+                    error
+                );
+            }
+        );
+    }
+    selectedFile: File | null = null;
+
+    onFileSelected(event: any): void {
+        const file: File = event.target.files[0];
+        if (file) {
+            this.selectedFile = file;
+        }
+    }
+    onComment(postId: number, targetType: string, event: Event) {
+        event.preventDefault();
+
+        const target = event.target as HTMLFormElement;
+        const content = (
+            target.querySelector('input[name="comment"]') as HTMLInputElement
+        ).value;
+
+        if (!content) {
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('user_id', this.id.toString());
+        formData.append('target_id', postId.toString());
+        formData.append('content', content);
+        formData.append('target_type', targetType);
+
+        if (this.selectedFile) {
+            formData.append('image', this.selectedFile);
+        } else {
+            formData.append('image', '');
+        }
+        formData.forEach((value, key) => {
+        });
+
+        this.apiService.postData('CreateComment', formData).subscribe(
+            () => {
+                (
+                    target.querySelector(
+                        'input[name="comment"]'
+                    ) as HTMLInputElement
+                ).value = '';
+                this.loadComments();
+                this.selectedFile = null;
+            },
+            (error) => {
+                console.error("Erreur lors de l'envoi du commentaire:", error);
+            }
+        );
+    }
 
     getPosts() {
         this.id = this.activatedRoute.snapshot.params['id'];
@@ -417,7 +524,7 @@ export class ProfileComponent implements OnInit {
         this.getFollowers()
         this.getFollowings()
     }
-    
+
     ngOnInit(): void {
         if (!(this.authService.getToken() as string)) {
             this.router.navigate(['/login']).then();
@@ -427,7 +534,7 @@ export class ProfileComponent implements OnInit {
         this.formGroup = new FormGroup({
             checked: new FormControl<boolean>(false),
         });
-        this.currentID= Number(localStorage.getItem('userID')as  string);
+        this.currentID = Number(localStorage.getItem('userID') as string);
         this.toggleEditMode()
         this.isOnline()
         this.onUpdateProfile

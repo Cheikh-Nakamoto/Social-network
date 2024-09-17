@@ -22,11 +22,9 @@
   <div class="toolbar-right">
     <div *ngIf="notificationVisible" class="notifications">
       <p (click)="openChatFromNotification(newMessage)">
-        Nouveau message
+        New message
       </p>
     </div>
-
-
     <button [matMenuTriggerFor]="menu" aria-label="Example icon-button with heart icon" class="example-icon"
       mat-icon-button matBadge="{{notifylength}}">
       <mat-icon>notifications</mat-icon>
