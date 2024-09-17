@@ -118,11 +118,11 @@ export class ToolbarComponent implements OnInit, OnDestroy {
                         this.newMessage = message; 
                         this.notificationVisible = true; // Afficher la notification
     
-                        // Cacher la notification après 10 secondes
+                        // Cacher la notification après 3 secondes
                         setTimeout(() => {
                             this.notificationVisible = false;
                             this.newMessage = null; // Réinitialiser le message
-                        }, 10000);
+                        }, 3000);
                     }
                 }
     

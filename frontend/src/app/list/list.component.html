@@ -1,6 +1,6 @@
 <app-toolbar></app-toolbar>
 <div class="container">
-    <h5 class="mt-3 title">Pending request&nbsp;(~{{pendings.length}}~)</h5>
+    <h5 class="mt-3 title">Pending request&nbsp;({{pendings.length}})</h5>
     <div class="row">
         <div class="col-md-12 list" *ngFor="let user of pendings">
             <mat-divider></mat-divider>
@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    <h5 class="mt-5 title">Suggestion&nbsp;(~{{suggestions.length}}~)</h5>
+    <h5 class="mt-5 title">Suggestion&nbsp;({{suggestions.length}}) </h5>
     <div class="row">
         <div class="col-md-12 list" *ngFor="let user of suggestions">
             <div class="user">
@@ -54,7 +54,7 @@
         </div>
     </div>
 
-    <h5 class="mt-5 title">Followers&nbsp;(~{{followers.length}}~)</h5>
+    <h5 class="mt-5 title">Followers&nbsp;({{followers.length}})</h5>
     <div class="row">
         <div class="col-md-12 list" *ngFor="let user of followers">
             <mat-divider></mat-divider>
@@ -80,7 +80,7 @@
         </div>
     </div>
 
-    <h5 class="mt-5 title">Followings&nbsp;(~{{followings.length}}~)</h5>
+    <h5 class="mt-5 title">Followings&nbsp;({{followings.length}})</h5>
     <div class="row">
         <div class="col-md-12 list" *ngFor="let user of followings">
             <mat-divider></mat-divider>
