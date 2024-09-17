@@ -27,9 +27,14 @@
         </div>
     </div>
 
+<<<<<<< Updated upstream
     <h5 class="mt-5 title">Suggestion&nbsp;({{suggestions.length}}) </h5>
+=======
+    <h5 class="mt-5 title">Suggestion&nbsp;({{suggestions.length}})</h5>
+>>>>>>> Stashed changes
     <div class="row">
         <div class="col-md-12 list" *ngFor="let user of suggestions">
+            <mat-divider></mat-divider>
             <div class="user">
                 <div class="info-img">
                     <div class="img" style="width: 50px; height: 50px;">
@@ -45,7 +50,6 @@
                     <button class="btn btn-info" routerLink="/profile/{{user.id}}">Profile</button>
                 </div>
             </div>
-            <mat-divider></mat-divider>
         </div>
 
         <div class="col-md-12 no-user" *ngIf="suggestions.length === 0">
