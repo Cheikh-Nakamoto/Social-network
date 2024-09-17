@@ -94,7 +94,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         this.username = localStorage.getItem('firstname') as string;
         this.avatar =
             (localStorage.getItem('avatar') as string) == ''
-                ? 'female.svg'
+                ? 'profile.jpg'
                 : (localStorage.getItem('avatar') as string);
     
         this.notify();

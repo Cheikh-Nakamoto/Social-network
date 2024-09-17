@@ -109,7 +109,7 @@ export class ProfileComponent implements OnInit {
         this.id = this.activatedRoute.snapshot.params['id'];
         this.avatar =
             (localStorage.getItem('avatar') as string) == ''
-                ? 'female.svg'
+                ? 'profile.jpg'
                 : (localStorage.getItem('avatar') as string);
 
         this.authService.getUser(this.id).subscribe((response: any) => {
