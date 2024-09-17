@@ -10,8 +10,8 @@ import { MatMenu, MatMenuModule } from "@angular/material/menu";
 import { MatCardAvatar } from "@angular/material/card";
 import { MessageBody, MessageData, NotificationVerification } from '../../models/models.compenant';
 import { AuthService } from '../../service/auth.service';
-import { NgForOf, NumberSymbol } from '@angular/common';
-import { count, distinctUntilChanged, firstValueFrom, Subscription } from 'rxjs';
+import { NgForOf } from '@angular/common';
+import { Subscription } from 'rxjs';
 import { GetUserService, VisibilityService } from '../../data.service';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -21,8 +21,6 @@ import { DataService } from '../../data.service';
 import { CommonModule } from '@angular/common';
 import { WebSocketService } from '../../chat/services/chat.service';
 import { UtilService } from '../../service/util.service';
-
-
 
 
 @Component({
@@ -64,11 +62,12 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     notifylength: string = '0';
     chatCount: number = 0;
     private chatCountSubscription!: Subscription;
-    newMessages: any[] = []; // Pour stocker les nouveaux messages reçus
+    newMessages: any[] = []; 
 
     messagesSubscription: any;
     newMessage: any;
     notificationVisible = false;
+    
     constructor(
         private dataService: DataService,
         private authService: AuthService,
@@ -97,11 +96,11 @@ export class ToolbarComponent implements OnInit, OnDestroy {
             (localStorage.getItem('avatar') as string) == ''
                 ? 'female.svg'
                 : (localStorage.getItem('avatar') as string);
-
+    
         this.notify();
-
+    
         this.websocketService.connect();
-
+    
         this.messagesSubscription = this.websocketService.messages$.subscribe(
             (message) => {
                 if (
@@ -109,45 +108,40 @@ export class ToolbarComponent implements OnInit, OnDestroy {
                     message.payload.messageId == 0
                 ) {
                     this.notify();
-                }else if  (message.type === 'new_follow') {
-                    this.utilService.onSnackBar(message.payload
-                        .message,"succes")
+                } else if (message.type === 'new_follow') {
+                    this.utilService.onSnackBar(message.payload.message, "success");
                 }
-                if (message.type === 'new_message') {
-
-                    this.newMessage = message; 
-                    this.notificationVisible = true; // Afficher la notification
-
-                    // Cacher la notification après 10 secondes
-                    setTimeout(() => {
-                        this.notificationVisible = false;
-                        this.newMessage = null; // Réinitialiser le message
-                    }, 10000);
+    
+                if (message.type === 'new_message' || message.type === 'new_message_group') {
+                    // Vérifier que l'utilisateur connecté n'est pas l'expéditeur
+                    if (message.payload.senderId !== Number(this.id)) {
+                        this.newMessage = message; 
+                        this.notificationVisible = true; // Afficher la notification
+    
+                        // Cacher la notification après 10 secondes
+                        setTimeout(() => {
+                            this.notificationVisible = false;
+                            this.newMessage = null; // Réinitialiser le message
+                        }, 10000);
+                    }
                 }
-                if (message.type === 'new_message_group') {
-                    this.newMessage = message; // Stocker le message reçu
-                    this.notificationVisible = true; // Afficher la notification
-
-                    // Cacher la notification après 10 secondes
-                    setTimeout(() => {
-                        this.notificationVisible = false;
-                        this.newMessage = null; // Réinitialiser le message
-                    }, 10000);
-
-                }
+    
                 if (message.type === 'new_notification_chat') {
-                    this.newMessage = message; // Stocker le message reçu
-                    this.notificationVisible = true; // Afficher la notification
-
-                    // Cacher la notification après 10 secondes
-                    setTimeout(() => {
-                        this.notificationVisible = false;
-                        this.newMessage = null; // Réinitialiser le message
-                    }, 10000);
+                    if (message.payload.senderId !== Number(this.id)) {
+                        this.newMessage = message; // Stocker le message reçu
+                        this.notificationVisible = true; // Afficher la notification
+    
+                        // Cacher la notification après 10 secondes
+                        setTimeout(() => {
+                            this.notificationVisible = false;
+                            this.newMessage = null; // Réinitialiser le message
+                        }, 10000);
+                    }
                 }
             }
         );
     }
+    
 
     openChatFromNotification(message: any): void {
         // Logique pour ouvrir le chat associé au message
