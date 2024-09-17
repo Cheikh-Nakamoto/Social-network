@@ -127,7 +127,7 @@
                                             {{ AllUser[event.user_id] && AllUser[event.user_id].firstname }}
                                         </mat-card-title>
                                         <mat-card-subtitle routerLink="/profile/{{event.user_id}}">
-                                            {{timeAgo(AllUser[event.user_id] && AllUser[event.user_id].created_at)}}
+                                            {{AllUser[event.user_id] && AllUser[event.user_id].created_at | date: 'mediumDate'}}
                                         </mat-card-subtitle>
                                     </mat-card-header>
                                     <mat-card-content>
