@@ -103,6 +103,10 @@ export class GroupchatComponent {
         );
 
         this.loadAdditionalMessages();
+        const chatbox  =  document.getElementById('chatBox') as HTMLElement
+        setTimeout(()=> {
+            chatbox.scrollTop = chatbox.scrollHeight
+        },100)
     }
     closeDialog() {
         this.dialogRef.close();
@@ -224,6 +228,10 @@ export class GroupchatComponent {
                 chatBox.scrollTop = chatBox.scrollHeight;
             }
         }
+        const chatbox  =  document.getElementById('chatBox') as HTMLElement
+        setTimeout(()=> {
+            chatbox.scrollTop = chatbox.scrollHeight
+        },100)
     };
 
     toggleEmojiPicker(): void {
@@ -413,6 +421,10 @@ export class GroupchatComponent {
 
             addHoverListeners();
         }
+        const chatbox  =  document.getElementById('chatBox') as HTMLElement
+        setTimeout(()=> {
+            chatbox.scrollTop = chatbox.scrollHeight
+        },100)
     };
 }
 
