@@ -66,11 +66,6 @@ func (f *FollowServiceImpl) UnfollowUser(followerID, followeeID uint) error {
 		return errors.New("requested follow not found")
 	}
 
-	// Check if the follow is pending
-	if isExists.Status == "pending" {
-		return errors.New("cannot unfollow a pending follow request")
-	}
-
 	return f.Repository.DeleteFollow(followerID, followeeID)
 }
 

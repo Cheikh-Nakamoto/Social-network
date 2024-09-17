@@ -42,6 +42,7 @@ export class ListComponent {
     size!: number
     currentID: number = this.authService.getUserID()!
     messagesSubscription: any;
+    amIFollowingHim!: boolean
 
     constructor(
         private authService: AuthService,
@@ -50,6 +51,19 @@ export class ListComponent {
         private cdr: ChangeDetectorRef,
         private websocketService: WebSocketService
     ) { }
+
+    areFollowing(id: any) {
+        const data = {
+            followerID: id,
+            followingID: this.currentID
+        }
+
+        this.followService.checkFollow(data, 'following').subscribe((data: any) => {
+            if (data.status === 200) {
+                this.amIFollowingHim = data.following
+            }
+        })
+    }
 
     listUsers(): void {
         this.listFollowers()
@@ -182,6 +196,24 @@ export class ListComponent {
             window.location.reload()
         })
         location.reload()
+    }
+
+    onUnfollow(id: number) {
+        const data = {
+            "follower_id": this.currentID,
+            "followee_id": id
+        }
+
+        console.log(data);
+
+        this.followService.follow(data, "unfollow").subscribe((response: any) => {
+            if (response.status != 200) {
+                this.utilService.onSnackBar(response.message, "error")
+                return
+            }
+            this.utilService.onSnackBar(response.message, "warning")
+            window.location.reload()
+        })
     }
 
     getSuggestionsData(): void {
