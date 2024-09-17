@@ -38,26 +38,26 @@
             </div>
         </div>
         <div class="col-lg-6 buttons-info">
-            <button *ngIf="currentID !== user.id" class="btn btn-primary" (click)="onFollow(user.id)">
+            <!--<button *ngIf="currentID !== user.id" class="btn btn-primary" (click)="onFollow(user.id)">
                 <span class="material-icons">person_add</span>
                 Follow
             </button>
             <button *ngIf="currentID !== user.id" class="btn btn-secondary">
                 <span class="material-icons">how_to_reg</span>
                 Friends
-            </button>
+            </button>-->
             <button *ngIf="currentID === user.id" class="btn btn-warning" (click)="toggleEditMode()">
                 <span class="material-icons">edit</span>
                 {{ editMode ? 'Cancel' : 'Edit' }}
             </button>
 
-            <button *ngIf="currentID !== user.id" class="btn btn-info">
+            <!--<button *ngIf="currentID !== user.id" class="btn btn-info">
                 <span class="material-icons">sms</span>
                 Send Message
-            </button>
+            </button>-->
         </div>
         <!-- Formulaire d'édition du profil -->
-        <div *ngIf="editMode">
+        <div *ngIf="editMode && id == currentID">
             <form (ngSubmit)="onUpdateProfile()">
                 <div class="form-group">
                     <label for="firstname">Firstname</label>
@@ -250,7 +250,7 @@
                                                 <span class="username">&#64;{{follower.nickname || null}}</span>
                                             </div>
                                         </div>
-                                        <div class="buttons" *ngIf="currentID == id">
+                                        <div class="buttons">
                                             <a class="btn btn-info" routerLink="/profile/{{follower.id}}">
                                                 <span class="material-icons text-white">person</span>
                                                 Profile
