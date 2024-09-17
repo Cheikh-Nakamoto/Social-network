@@ -1,4 +1,4 @@
-import { Component, Inject, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import * as model from '../../models/models.compenant';
 import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -33,7 +33,7 @@ class Event {
     styleUrl: './groupchat.component.scss',
     providers: [DataService],
 })
-export class GroupchatComponent {
+export class GroupchatComponent implements OnInit, OnDestroy{
     groups: model.Group[] = [];
     groupeForm!: FormGroup;
     id!: string;
@@ -72,17 +72,20 @@ export class GroupchatComponent {
             this.sender = user;
         });
         this.websocketService.connect();
-
+        const chatbox  =  document.getElementById('chatBox') as HTMLElement
+        this.loadAdditionalMessages();
         this.messagesSubscription = this.websocketService.messages$.subscribe(
             (message) => {
                 if (message.type === 'get_messages_groupes') {
-                    this.throttleUpdateMessages(
+                    this.updateMessages(
                         message.payload.messages,
                         Number(this.groupId),
                         this.sender
                     );
+                    message = null
+                    return
                 }
-                if (
+                else  if (
                     message.type === 'new_message_group' &&
                     message.payload.messageId != this.Id
                 ) {
@@ -102,11 +105,15 @@ export class GroupchatComponent {
             }
         );
 
-        this.loadAdditionalMessages();
-        const chatbox  =  document.getElementById('chatBox') as HTMLElement
+        
+       
         setTimeout(()=> {
             chatbox.scrollTop = chatbox.scrollHeight
         },100)
+    }
+
+    ngOnDestroy(): void {
+        this.messagesSubscription.unsubscribe( )
     }
     closeDialog() {
         this.dialogRef.close();
@@ -177,14 +184,14 @@ export class GroupchatComponent {
 
 
            let existingMessage = document.querySelector(
-               `[data-linked="${message.messageId}"]`
+               `[data-linked="${message.messageId+1}"]`
            );
-        //    if (existingMessage) {
-        //        console.log(
-        //            "Message déjà présent, pas besoin de l'ajouter à nouveau."
-        //        );
-        //        return; // Arrêter si le message est déjà présent
-        //    }
+           if (existingMessage) {
+               console.log(
+                   "Message déjà présent, pas besoin de l'ajouter à nouveau."
+               );
+               return; // Arrêter si le message est déjà présent
+           }
 
             let username: string;
             this.getNicknameById(message.senderId, (nickname) => {
@@ -203,7 +210,7 @@ export class GroupchatComponent {
                     msgType === 'Received' ? 'received' : 'sent'
                 }">
                     <div id="msgBox" class="msgBox${msgType}" data-linked="${
-                        message.messageId
+                        message.messageId+1
                     }">
                         <a style="font-size: 15px; white-space: pre-wrap;">${message.message.trim()}</a>
                     </div>
@@ -251,7 +258,8 @@ export class GroupchatComponent {
     }
 
     loadAdditionalMessages() {
-        const chatBox = document.getElementById('chatBox');
+        const chatBox = document.getElementById('chatBox')as HTMLElement;
+      
         if (
             chatBox &&
             chatBox.scrollTop === 0 &&
@@ -308,17 +316,6 @@ export class GroupchatComponent {
         sendEvent(this.websocketService, even);
         // const updateEve = new Event('get_chatbar_data', this.sender);
         // sendEvent(this.websocketService, updateEve);
-
-         const payload = {
-             currentChatterId: this.sender,
-             otherChatterId: Number(this.groupId),
-             amount: this.amount,
-         };
-
-         const even2 = new Event('get_messages_groupes', payload);
-
-         sendEvent(this.websocketService, even2);
-
             // Convertir en tableau et récupérer le dernier élément
            
 
@@ -361,10 +358,11 @@ export class GroupchatComponent {
     updateMessages = (messages: any, receiverId: number, iduser: number) => {
         const chatBox = document.getElementById('chatBox');
         if (chatBox) {
-            chatBox.innerHTML = '';
+            chatBox.innerHTML = "";
+            chatBox.innerText = ""
 
             var prevMsg, prevMsgType;
-
+            console.log(messages)
             messages.forEach((message: any) => {
                 var msgType: string;
                 if (Number(message.senderId) == iduser) {
@@ -411,8 +409,7 @@ export class GroupchatComponent {
                     </div>
                 </div>
             `;
-                    } else {
-                    }
+                    } 
                 });
 
                 prevMsg = message;
