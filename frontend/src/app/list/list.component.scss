@@ -3,6 +3,7 @@ $danger: #F44336;
 $primaryColor: #005CBB;
 $background: #DEF3FF;
 $side: #2388FF;
+
 $textSuccess: #0A3622;
 $bgSuccess: #D1E7DD;
 $borderSuccess: #A3CFBB;
@@ -20,8 +21,15 @@ $bgPrimary: #CFE2FF;
 $borderPrimary: #9EC5FE;
 
 mat-divider {
-    margin: 10px 0 !important;
+    margin: 0 0 10px 0 !important;
     border-color: $primaryColor;
+}
+
+h5 {
+    margin: 15px 0 0 0 !important;
+    background-color: $lightBlue;
+    color: $primaryColor !important;
+    padding: 5px 12px;
 }
 
 .no-user {

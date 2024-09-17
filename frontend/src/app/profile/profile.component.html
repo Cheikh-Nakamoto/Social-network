@@ -38,26 +38,26 @@
             </div>
         </div>
         <div class="col-lg-6 buttons-info">
-            <button *ngIf="currentID !== user.id" class="btn btn-primary" (click)="onFollow(user.id)">
+            <!--<button *ngIf="currentID !== user.id" class="btn btn-primary" (click)="onFollow(user.id)">
                 <span class="material-icons">person_add</span>
                 Follow
             </button>
             <button *ngIf="currentID !== user.id" class="btn btn-secondary">
                 <span class="material-icons">how_to_reg</span>
                 Friends
-            </button>
+            </button>-->
             <button *ngIf="currentID === user.id" class="btn btn-warning" (click)="toggleEditMode()">
                 <span class="material-icons">edit</span>
                 {{ editMode ? 'Cancel' : 'Edit' }}
             </button>
 
-            <button *ngIf="currentID !== user.id" class="btn btn-info">
+            <!--<button *ngIf="currentID !== user.id" class="btn btn-info">
                 <span class="material-icons">sms</span>
                 Send Message
-            </button>
+            </button>-->
         </div>
         <!-- Formulaire d'édition du profil -->
-        <div *ngIf="editMode">
+        <div *ngIf="editMode && id == currentID">
             <form (ngSubmit)="onUpdateProfile()">
                 <div class="form-group">
                     <label for="firstname">Firstname</label>
@@ -104,7 +104,7 @@
                     <div class="tab-content">
                         <div class="row block">
                             <div class="col-md-12 message" *ngIf="!posts || posts.length === 0">
-                                <img src="fail.png" width="64" height="64">
+                                <img src="./fail.png" width="64" height="64">
                                 <span *ngIf="currentID === id">You have no posts</span>
                                 <span *ngIf="currentID !== id">{{ user.firstname }} has no posts</span>
                             </div>
@@ -232,7 +232,7 @@
                     <div class="tab-content">
                         <div class="row block">
                             <div class="col-md.12 message" *ngIf="followers === undefined">
-                                <img src="fail.png" width="64" height="64">
+                                <img src="./fail.png" width="64" height="64">
                                 <span *ngIf="currentID == id">You have no followers</span>
                                 <span *ngIf="currentID != id">{{user.firstname}}&nbsp;has no followers</span>
                             </div>
@@ -250,15 +250,11 @@
                                                 <span class="username">&#64;{{follower.nickname || null}}</span>
                                             </div>
                                         </div>
-                                        <div class="buttons" *ngIf="currentID == id">
-                                            <button class="btn btn-success" (click)="onAccept(follower.id)">
-                                                <span class="material-icons text-white">check_circle</span>
-                                                Accept
-                                            </button>
-                                            <button class="btn btn-danger" (click)="onDecline(follower.id)">
-                                                <span class="material-icons text-white">cancel</span>
-                                                Decline
-                                            </button>
+                                        <div class="buttons">
+                                            <a class="btn btn-info" routerLink="/profile/{{follower.id}}">
+                                                <span class="material-icons text-white">person</span>
+                                                Profile
+                                            </a>
                                         </div>
                                     </li>
                                 </ul>
@@ -277,7 +273,7 @@
                     <div class="tab-content">
                         <div class="row block">
                             <div class="col-md.12 message" *ngIf="followings === undefined">
-                                <img src="fail.png" width="64" height="64">
+                                <img src="./fail.png" width="64" height="64">
                                 <span *ngIf="currentID == id">You follow no one</span>
                                 <span *ngIf="currentID != id">{{user.firstname}}&nbsp;follows no one</span>
                             </div>
@@ -296,46 +292,13 @@
                                             </div>
                                         </div>
                                         <div class="buttons">
-                                            <button class="btn btn-danger" (click)="onFollow(following.id)" >
-                                                <span class="material-icons text-white">cancel</span>
-                                                Cancel
+                                            <button class="btn btn-info" routerLink="/profile/{{following.id}}">
+                                                <span class="material-icons text-white">person</span>
+                                                Profile
                                             </button>
                                         </div>
                                     </li>
                                 </ul>
-                            </div>
-                        </div>
-                    </div>
-                </mat-tab>
-
-                <mat-tab>
-                    <!-- <div class="tab-title">
-                        <ng-template mat-tab-label>
-                            <span class="material-icons">groups</span>
-                            <span class="title">Groups</span>
-                        </ng-template>
-                    </div> -->
-                    <div class="tab-content">
-                        <div class="row block">
-                            <div class="col-md.12 message" *ngIf="groups === undefined">
-                                <img src="fail.png" width="64" height="64">
-                                <span *ngIf="currentID == id">You have not created any groups</span>
-                                <span *ngIf="currentID != id">{{user.firstname}}&nbsp;has not created any groups</span>
-                            </div>
-                            <div class="col-md.12" *ngIf="groups">
-                                The Groups I Created Here
-                            </div>
-                        </div>
-
-                        <div class="row block">
-                            <div class="col-md.12 message" *ngIf="groups === undefined">
-                                <img src="fail.png" width="64" height="64">
-                                <span *ngIf="currentID == id">You do not belong to any group</span>
-                                <span *ngIf="currentID != id">{{user.firstname}}&nbsp;does not belong to any
-                                    group</span>
-                            </div>
-                            <div class="col-md.12" *ngIf="groups">
-                                The Groups I Belong To Here
                             </div>
                         </div>
                     </div>
