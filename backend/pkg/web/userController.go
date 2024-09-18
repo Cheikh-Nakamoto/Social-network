@@ -114,7 +114,14 @@ func (c *UserController) Login(w http.ResponseWriter, r *http.Request) {
 
 	userDTO, err := c.UserService.Connection(credentials.Identifiant, credentials.Password)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		err = json.NewEncoder(w).Encode(map[string]interface{}{
+			"status":  http.StatusBadRequest,
+			"message": "Email or password incorrect",
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 		return
 	}
 
