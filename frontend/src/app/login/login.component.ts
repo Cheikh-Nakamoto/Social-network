@@ -29,18 +29,18 @@ export class LoginComponent implements OnInit {
   selectedFileName: string = "";
 
   loginForm: FormGroup = this.formbuilder.group({
-    email: ["", [Validators.required]],
-    password: ["", [Validators.required, Validators.minLength(6)]]
+    email: [null, [Validators.required]],
+    password: [null, [Validators.required, Validators.minLength(6)]]
   })
 
   registerForm: FormGroup = this.formbuilder.group({
-    email: ["", this.customEmailValidator],
-    password: ["", [Validators.required, Validators.minLength(6)]],
-    firstname: ["", [Validators.required, Validators.minLength(3)]],
-    lastname: ["", [Validators.required, Validators.minLength(2)]],
-    date_of_birth: ["", [Validators.required]],
-    nickname: [""],
-    about_me: [""]
+    email: [null, this.customEmailValidator],
+    password: [null, [Validators.required, Validators.minLength(6)]],
+    firstname: [null, [Validators.required, Validators.minLength(3)]],
+    lastname: [null, [Validators.required, Validators.minLength(2)]],
+    date_of_birth: [null, [Validators.required]],
+    nickname: [null],
+    about_me: [null]
   })
   responselogin!: responselogin;
 
