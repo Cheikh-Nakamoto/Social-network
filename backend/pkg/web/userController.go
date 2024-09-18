@@ -67,11 +67,7 @@ func (c *UserController) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-<<<<<<< Updated upstream
-	if strings.TrimSpace(userDTO.Firstname) == ""  || strings.TrimSpace(userDTO.Lastname)==""{
-=======
-	if strings.TrimSpace(userDTO.Firstname) == "" || strings.TrimSpace(userDTO.Lastname) == "" || strings.TrimSpace(userDTO.Nickname) == "" {
->>>>>>> Stashed changes
+	if strings.TrimSpace(userDTO.Firstname) == "" || strings.TrimSpace(userDTO.Lastname) == "" {
 		// Handle the case where Firstname is empty or only whitespace
 		fmt.Println("Firstname cannot be empty.")
 		// You could return an error, set a default value, etc.
