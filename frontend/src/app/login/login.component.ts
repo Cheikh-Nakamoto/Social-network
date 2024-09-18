@@ -95,6 +95,31 @@ export class LoginComponent implements OnInit {
     return null;
   }
 
+  checkInput(data: any): boolean {
+    let fname = false, lname = false, nick = false, pass = false
+    if (data.firstname.trim() != "") {
+      fname = true
+    }
+
+    if (data.lastname.trim() != "") {
+      lname = true
+    }
+
+    if (data.nickname != null) {
+      if (data.nickname.trim() != "") {
+        nick = true
+      }
+    } else {
+      nick = true
+    }
+
+    if (data.password.trim() != "") {
+      pass = true
+    }
+
+    return fname && lname && nick && pass
+  }
+
   onregister() {
     const data = { ...this.registerForm.value };
     this.age = this.checkAge(data.date_of_birth);
@@ -103,11 +128,17 @@ export class LoginComponent implements OnInit {
       this.utilService.onSnackBar('You must be between 12 and 120 years old to register', "error")
       return;
     }
+    
 
     if (this.registerForm.invalid) {
-      this.utilService.onSnackBar('Please fill all the required fields', "error")
+      this.utilService.onSnackBar('Please fill correctly all the required fields', "error")
       return;
     } else if (this.registerForm.valid) {
+
+      if (!this.checkInput(data)) {
+        this.utilService.onSnackBar('Please fill correctly all the required fields', "error")
+        return
+      }
 
       if (this.selectedFile) {
         data.avatar = this.selectedFile;
