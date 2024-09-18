@@ -206,7 +206,14 @@ func (c *UserController) GetProfile(w http.ResponseWriter, r *http.Request) {
 
 	userDTO, err := c.UserService.GetProfile(id)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		err = json.NewEncoder(w).Encode(map[string]interface{}{
+			"status":  http.StatusNoContent,
+			"message": "This user is not exists",
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 		return
 	}
 

@@ -100,7 +100,7 @@ export class ProfileComponent implements OnInit {
         public datePipe: DatePipe,
         private utilService: UtilService,
         private websocketService: WebSocketService,
-        private apiService: DataService,
+        private apiService: DataService
     ) // private listComponent: ListComponent
 
     { }
@@ -114,9 +114,10 @@ export class ProfileComponent implements OnInit {
 
         this.authService.getUser(this.id).subscribe((response: any) => {
             if (response.status !== 'success' && response.status !== 200) {
-                alert(response.message);
+                this.utilService.onSnackBar(response.message, "warning")
                 this.message = response.message;
                 this.router.navigate(['/']).then();
+                return
             }
             response.user.created_at = this.datePipe.transform(
                 response.user.created_at,
@@ -528,7 +529,7 @@ export class ProfileComponent implements OnInit {
     ngOnInit(): void {
         if (!(this.authService.getToken() as string)) {
             this.router.navigate(['/login']).then();
-            alert('You are not logged in');
+            this.utilService.onSnackBar("You are not logged", "error")
             return;
         }
         this.formGroup = new FormGroup({
@@ -545,6 +546,11 @@ export class ProfileComponent implements OnInit {
 
         this.activatedRoute.params.subscribe((params) => {
             this.id = params['id']
+            const isExists = this.authService.getUser(this.id)
+            if (!isExists) {
+                this.router.navigate(['/Accueil']).then();
+                return
+            }
             this.getUserData()
         })
     }

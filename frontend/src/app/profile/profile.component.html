@@ -309,7 +309,8 @@
 
     <div class="row tab-content" *ngIf="!iCanSee()">
         <div class="block">
-            This profile is private {{id}} {{currentID}}
+            <h5 class="text-primary mt-3 text-center">This profile is private</h5>
+            <a class="btn btn-primary" routerLink="/">Go back home</a>
         </div>
     </div>
 </div>
