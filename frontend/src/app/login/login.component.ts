@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
     email: ["", this.customEmailValidator],
     password: ["", [Validators.required, Validators.minLength(6)]],
     firstname: ["", [Validators.required, Validators.minLength(3)]],
-    lastname: ["", [Validators.required, Validators.minLength(3)]],
+    lastname: ["", [Validators.required, Validators.minLength(2)]],
     date_of_birth: ["", [Validators.required]],
     nickname: [""],
     about_me: [""]
