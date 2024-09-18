@@ -359,7 +359,6 @@ export class GroupchatComponent implements OnInit, OnDestroy{
         const chatBox = document.getElementById('chatBox');
         if (chatBox) {
             chatBox.innerHTML = "";
-            chatBox.innerText = ""
 
             var prevMsg, prevMsgType;
             console.log(messages)

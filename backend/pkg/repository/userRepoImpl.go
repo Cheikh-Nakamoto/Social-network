@@ -253,8 +253,8 @@ func (u *UserRepoImpl) GetFollowerCount(userID uint) (uint, error) {
 }
 
 func (u *UserRepoImpl) GetFriends(userID uint) ([]*entity.User, error) {
-	query := `SELECT u.id, u.email, u.password, u.firstname, u.lastname, u.date_of_birth, u.avatar, u.nickname, u.about_me, u.is_public, u.created_at, u.updated_at, u.online FROM users u JOIN follows f ON u.id = f.follower_id WHERE f.followee_id = ?`
-	rows, err := u.db.GetDB().Query(query, userID)
+	query := `SELECT u.id, u.email, u.password, u.firstname, u.lastname, u.date_of_birth, u.avatar, u.nickname, u.about_me, u.is_public, u.created_at, u.updated_at, u.online FROM users u JOIN follows f ON u.id = f.follower_id WHERE f.followee_id = ? AND f.status = ?`
+	rows, err := u.db.GetDB().Query(query, userID,"accepted")
 	if err != nil {
 		return nil, err
 	}
