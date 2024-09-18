@@ -263,10 +263,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
             const users = data.users
             const validUsers = users.filter((user: any) => user !== null && user !== undefined);
 
-            if (query == "") {
-                return
-            }
-
             this.filteredUsers = validUsers.filter((user: any) =>
                 user.firstname.toLowerCase().includes(query.toLowerCase()) ||
                 user.lastname.toLowerCase().includes(query.toLowerCase()) ||
