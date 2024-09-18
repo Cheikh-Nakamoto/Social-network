@@ -62,12 +62,12 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     notifylength: string = '0';
     chatCount: number = 0;
     private chatCountSubscription!: Subscription;
-    newMessages: any[] = []; 
+    newMessages: any[] = [];
 
     messagesSubscription: any;
     newMessage: any;
     notificationVisible = false;
-    
+
     constructor(
         private dataService: DataService,
         private authService: AuthService,
@@ -75,8 +75,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         private websocketService: WebSocketService,
         private userservice: GetUserService,
         private visibilityService: VisibilityService,
-        private utilService : UtilService
-    ) {}
+        private utilService: UtilService
+    ) { }
 
     IsNotify: NotificationVerification = { notif: [] };
 
@@ -96,11 +96,11 @@ export class ToolbarComponent implements OnInit, OnDestroy {
             (localStorage.getItem('avatar') as string) == ''
                 ? 'profile.jpg'
                 : (localStorage.getItem('avatar') as string);
-    
+
         this.notify();
-    
+
         this.websocketService.connect();
-    
+
         this.messagesSubscription = this.websocketService.messages$.subscribe(
             (message) => {
                 if (
@@ -111,13 +111,13 @@ export class ToolbarComponent implements OnInit, OnDestroy {
                 } else if (message.type === 'new_follow') {
                     this.utilService.onSnackBar(message.payload.message, "success");
                 }
-    
+
                 if (message.type === 'new_message' || message.type === 'new_message_group') {
                     // Vérifier que l'utilisateur connecté n'est pas l'expéditeur
                     if (message.payload.senderId !== Number(this.id)) {
-                        this.newMessage = message; 
+                        this.newMessage = message;
                         this.notificationVisible = true; // Afficher la notification
-    
+
                         // Cacher la notification après 3 secondes
                         setTimeout(() => {
                             this.notificationVisible = false;
@@ -125,12 +125,12 @@ export class ToolbarComponent implements OnInit, OnDestroy {
                         }, 3000);
                     }
                 }
-    
+
                 if (message.type === 'new_notification_chat') {
                     if (message.payload.senderId !== Number(this.id)) {
                         this.newMessage = message; // Stocker le message reçu
                         this.notificationVisible = true; // Afficher la notification
-    
+
                         // Cacher la notification après 10 secondes
                         setTimeout(() => {
                             this.notificationVisible = false;
@@ -141,7 +141,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
             }
         );
     }
-    
+
 
     openChatFromNotification(message: any): void {
         // Logique pour ouvrir le chat associé au message
@@ -258,16 +258,17 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         this.hiddenMessage = !this.hiddenMessage;
     }
 
-    onSearchChange(searchValue: string): void {
-        if (searchValue && searchValue.length > 0) {
-            this.dataService
-                .searchUsers(searchValue)
-                .subscribe((users: any[]) => {
-                    this.filteredUsers = users;
-                });
-        } else {
-            this.filteredUsers = [];
-        }
+    onSearch(query: string) {
+        this.dataService.search().subscribe((data: any) => {
+            const users = data.users
+            const validUsers = users.filter((user:any) => user !== null && user !== undefined);
+
+            this.filteredUsers = validUsers.filter((user:any) =>
+                user.firstname.toLowerCase().includes(query.toLowerCase()) ||
+                user.lastname.toLowerCase().includes(query.toLowerCase()) ||
+                user.nickname.toLowerCase().includes(query.toLowerCase())
+            );
+        })
     }
 
     goToUserProfile(user: any): void {

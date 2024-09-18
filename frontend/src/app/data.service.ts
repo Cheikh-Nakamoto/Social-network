@@ -12,21 +12,9 @@ import { ChatComponent } from './chat/chat.component';
 })
 export class DataService {
   private apiUrl = 'http://localhost:8080/sn/api'; // l'URL de votre API
-  
-  
-  searchUsers(query: string): Observable<any[]> {
-  
-    return this.http.get<any[]>(`${this.apiUrl}/allusers`).pipe(
-      map(users => {
-        const validUsers = users.filter(user => user !== null && user !== undefined);
-        
-        return validUsers.filter(user =>
-          user.firstname.toLowerCase().includes(query.toLowerCase()) ||
-          user.lastname.toLowerCase().includes(query.toLowerCase()) ||
-          user.nickname.toLowerCase().includes(query.toLowerCase())
-        );
-      })
-    );
+
+  search(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/allusers`)
   }
   
   getAll() {
