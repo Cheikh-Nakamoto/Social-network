@@ -67,6 +67,13 @@ func (c *UserController) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if strings.TrimSpace(userDTO.Firstname) == ""  || strings.TrimSpace(userDTO.Lastname)=="" || strings.TrimSpace(userDTO.Nickname)==""{
+		// Handle the case where Firstname is empty or only whitespace
+		fmt.Println("Firstname cannot be empty.")
+		// You could return an error, set a default value, etc.
+		return
+	}
+
 	err = c.UserService.CreateUser(&userDTO)
 	if err != nil {
 		fmt.Println("error :", err)
