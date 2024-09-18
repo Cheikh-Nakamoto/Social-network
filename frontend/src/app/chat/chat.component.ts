@@ -176,14 +176,16 @@ export class ChatComponent implements OnInit, OnDestroy {
         sendEvent(this.websocketService, even);
         const updateEve = new Event('get_chatbar_data', this.sender);
         sendEvent(this.websocketService, updateEve);
-        // const payload = {
-        //     currentChatterId: this.sender,
-        //     otherChatterId: Number(this.id),
-        //     amount: this.amount,
-        // };
 
-        // const evenget = new Event('get_messages', payload);
-        // sendEvent(this.websocketService, evenget);
+        
+        const payload = {
+            currentChatterId: this.sender,
+            otherChatterId: Number(this.id),
+            amount: this.amount,
+        };
+
+        const evenget = new Event('get_messages', payload);
+        sendEvent(this.websocketService, evenget);
 
         // Réinitialiser le champ de texte après l'envoi
         messagetag.value = '';

@@ -91,6 +91,7 @@ export class ByIdComponent implements OnInit {
             this.groups = this.groups.filter(
                 (group) => group.id == this.groupId
             );
+            localStorage.setItem('owner',this.groups[0].owner)
             if (this.groups[0].owner != this.id) {
                 this.ItIsMember();
             }
@@ -208,6 +209,7 @@ export class ByIdComponent implements OnInit {
                 this.posts = response;
                 this.loadLikes('post');
                 this.loadDislikes('post');
+                this.loadComments()
             },
             (error: any) => {
                 console.error('Error fetching posts:', error);

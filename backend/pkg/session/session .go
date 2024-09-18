@@ -109,6 +109,19 @@ func (s *StoreSessions) GetUserID(token string) (uint, bool) {
 	userID, exists := s.session[token]
 	return userID, exists
 }
+func (s *StoreSessions) GetTokenByID(id uint) (string, bool) {
+	fmt.Println("iiiiiiiiiiiiiii",s.session)
+
+
+	// Parcourir la map pour trouver le token correspondant à l'id utilisateur
+	for token, userID := range s.session {
+		if userID == id {
+			fmt.Println("gggggg", token)
+			return token, true
+		}
+	}
+	return "", false // Si aucun token n'est trouvé
+}
 
 func (s *StoreSessions) ClearSession(token string) {
 	s.mu.Lock()

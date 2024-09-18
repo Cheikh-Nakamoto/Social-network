@@ -1,6 +1,7 @@
 package web
 
 import (
+	"backend/pkg/db/sqlite"
 	"backend/pkg/dto"
 	"backend/pkg/service/impl"
 	"backend/pkg/session"
@@ -67,7 +68,7 @@ func (c *UserController) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if strings.TrimSpace(userDTO.Firstname) == ""  || strings.TrimSpace(userDTO.Lastname)==""{
+	if strings.TrimSpace(userDTO.Firstname) == "" || strings.TrimSpace(userDTO.Lastname) == "" {
 		// Handle the case where Firstname is empty or only whitespace
 		fmt.Println("Firstname cannot be empty.")
 		// You could return an error, set a default value, etc.
@@ -119,12 +120,16 @@ func (c *UserController) Login(w http.ResponseWriter, r *http.Request) {
 
 	// I will add the token generation here
 	sessionToken, err := c.UserService.CreateSession(userDTO)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnauthorized)
+	fmt.Println("rrrrrrrrrrrrrrrrr", sessionToken)
+
+	SaveSessionTokenToDB(sessionToken, userDTO.ID)
+
+	errr4 := SetSessionTokenInResponse(w, sessionToken)
+	if errr4 != nil {
+		fmt.Println("ffffffffff")
+		http.Error(w, errr4.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	session.SetSessionCookie(w, sessionToken)
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set(os.Getenv("CONTENT_TYPE"), os.Getenv("APPLICATION_JSON"))
 	// json.NewEncoder(w).Encode(userDTO)
@@ -137,6 +142,21 @@ func (c *UserController) Login(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+}
+
+func SetSessionTokenInResponse(w http.ResponseWriter, token string) error {
+	// Créer un nouveau cookie pour stocker le token
+	cookie := &http.Cookie{
+		Name:     "session_token", // Nom du cookie
+		Value:    token,           // Valeur (le token)
+		Path:     "/",             // Chemin du cookie (disponible sur tout le site)
+		HttpOnly: true,            // Rend le cookie inaccessible via JavaScript (sécurité)
+		Secure:   true,            // Le cookie est seulement transmis via HTTPS
+	}
+
+	// Ajouter le cookie à la réponse HTTP
+	http.SetCookie(w, cookie)
+	return nil
 }
 
 func (c *UserController) UpdateProfile(w http.ResponseWriter, r *http.Request) {
@@ -209,6 +229,19 @@ func (c *UserController) GetProfile(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, "User ID is required", http.StatusBadRequest)
 		return
+	}
+	sessionToken, err := GetSessionTokenByUserID(id)
+
+	if err != nil {
+		fmt.Println("non autorisé")
+		return
+	}
+
+	_, err10 := session.GetSession(sessionToken)
+	if err10 != nil {
+		fmt.Println("denied")
+		return
+
 	}
 
 	userDTO, err := c.UserService.GetProfile(id)
@@ -445,6 +478,19 @@ func (c *UserController) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 
 func (c *UserController) GetFollowers(w http.ResponseWriter, r *http.Request) {
 	err := utils.Environment()
+	// token, error := session.GetSessionTokenFromRequest(r)
+	// fmt.Println("mmmmmmmmmmmmmmmmmmmmmmmmmmmmm", token)
+
+	// if error != nil {
+	// 	http.Error(w, "Unauthorized", http.StatusUnauthorized)
+	// 	return
+	// }
+
+	// _, err = session.GetSession(token)
+	// if err != nil {
+	// 	http.Error(w, "Unauthorized", http.StatusUnauthorized)
+	// 	return
+	// }
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -823,4 +869,23 @@ func (c *UserController) UsersRoutes(routes *http.ServeMux) *http.ServeMux {
 	routes.HandleFunc(os.Getenv("DEFAULT_API_LINK")+"/pending/", c.GetPendingRequest)
 
 	return routes
+}
+
+func SaveSessionTokenToDB(token string, userID uint) error {
+	// Se connecter à la base de données SQLite
+	db, err := sqlite.Connect()
+	if err != nil {
+		// Gérer l'erreur de connexion
+		return fmt.Errorf("unable to connect to the database: %v", err)
+	}
+
+	// Exécuter la requête d'insertion dans la table `sessions`
+	_, err = db.GetDB().Exec("INSERT INTO sessions (sessionId, userId) VALUES (?, ?)", token, int(userID))
+	if err != nil {
+		// Gérer l'erreur d'insertion dans la base de données
+		return fmt.Errorf("unable to insert session token: %v", err)
+	}
+
+	// Si tout est correct, renvoyer nil (pas d'erreur)
+	return nil
 }
