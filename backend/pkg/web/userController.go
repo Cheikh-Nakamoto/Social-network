@@ -67,7 +67,11 @@ func (c *UserController) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+<<<<<<< Updated upstream
 	if strings.TrimSpace(userDTO.Firstname) == ""  || strings.TrimSpace(userDTO.Lastname)==""{
+=======
+	if strings.TrimSpace(userDTO.Firstname) == "" || strings.TrimSpace(userDTO.Lastname) == "" || strings.TrimSpace(userDTO.Nickname) == "" {
+>>>>>>> Stashed changes
 		// Handle the case where Firstname is empty or only whitespace
 		fmt.Println("Firstname cannot be empty.")
 		// You could return an error, set a default value, etc.
@@ -113,7 +117,14 @@ func (c *UserController) Login(w http.ResponseWriter, r *http.Request) {
 
 	userDTO, err := c.UserService.Connection(credentials.Identifiant, credentials.Password)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		err = json.NewEncoder(w).Encode(map[string]interface{}{
+			"status":  http.StatusBadRequest,
+			"message": "Email or password incorrect",
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 		return
 	}
 
