@@ -87,5 +87,6 @@ export class InviteComponent {
     role: string
   ): void {
     this.groupService.addMember(groupId, userId, target_id.toString(), role)
+    this.closeDialog()
   }
 }
