@@ -85,22 +85,21 @@ export class GroupchatComponent implements OnInit, OnDestroy{
                     message = null
                     return
                 }
-                else  if (
-                    message.type === 'new_message_group' &&
-                    message.payload.messageId != this.Id
+                if (
+                    message.type === 'new_message_group' 
                 ) {
+
+                    console.log("figure")
                     this.Id = message.payload.messageId;
                     const messageId = message.payload.messageId;
 
-                    if (!this.processedMessages.has(messageId)) {
-                        // Si le message n'a pas encore été traité
-                        // console.log(message, "hhhhh")
+                    
 
                         this.processedMessages.add(messageId);
                         this.NewupdateMessages(message.payload, this.sender);
 
                         // Marque le message comme traité
-                    }
+                    
                 }
             }
         );
@@ -181,17 +180,6 @@ export class GroupchatComponent implements OnInit, OnDestroy{
             } else {
                 msgType = 'Received';
             }
-
-
-           let existingMessage = document.querySelector(
-               `[data-linked="${message.messageId+1}"]`
-           );
-           if (existingMessage) {
-               console.log(
-                   "Message déjà présent, pas besoin de l'ajouter à nouveau."
-               );
-               return; // Arrêter si le message est déjà présent
-           }
 
             let username: string;
             this.getNicknameById(message.senderId, (nickname) => {
