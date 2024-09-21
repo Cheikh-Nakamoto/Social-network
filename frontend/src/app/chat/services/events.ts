@@ -11,7 +11,6 @@ export interface Event {
 
 export function routeEvent(event: Event): void {
   if (event.type === undefined) {
-    console.log('no type field in the event');
     return;
   }
 
@@ -29,7 +28,6 @@ export function routeEvent(event: Event): void {
       // handleGetChatbarData(event.payload);
       break;
     case 'update_chatbar_data':
-      console.log('updating chatbar data');
       break;
     case 'typing_start':
       handleTypingStart(event.payload);
@@ -47,25 +45,17 @@ export function routeEvent(event: Event): void {
 }
 
 export function handleSendMessage(payload: EventPayload): void {
-  console.log('handleSendMessage', payload);
-  // Implement your logic here
 }
 
 export function handleNewMessage(payload: EventPayload): void {
-  console.log('handleNewMessage', payload);
-  // Implement your logic here
 }
 
 export function handleGetMessages(payload: EventPayload): void {
-  console.log('handleGetMessages', payload);
-  // Implement your logic here
 }
 
 // export function handleGetChatbarData(payload: EventPayload): void {
-//   console.log('handleGetChatbarData', payload);
 //   // Implement your logic here
 //   if (payload instanceof Array) {
-//     console.log('successfully retrieved chatbar data');
 //     payload.sort((a, b) => {
 //       const dateA = new Date(a.lastMsgData.sentDate);
 //       const dateB = new Date(b.lastMsgData.sentDate);
@@ -82,18 +72,14 @@ export function handleGetMessages(payload: EventPayload): void {
 //     //   }
 //     // });
 
-//     // console.log(obj.allusers)
 //   } else {
-//     console.log('retrieving chatbar data');
 //   }
 // }
 
 export function handleTypingStart(payload: EventPayload): void {
-  console.log('handleTypingStart', payload);
   // Implement your logic here
 }
 
 export function handleTypingStop(payload: EventPayload): void {
-  console.log('handleTypingStop', payload);
   // Implement your logic here
 }

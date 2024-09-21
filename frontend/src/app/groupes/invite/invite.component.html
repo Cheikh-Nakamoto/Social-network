@@ -9,15 +9,13 @@
     </span>
     <div class="user-invite" *ngIf="toppingList.length != 0 ;else follower">
         @for (topping of toppingList; track topping) {
-        <div class="invite" *ngIf="!IsIn[topping.id]" >
+        <div class="invite" *ngIf="!IsIn[topping.id] && topping.id != owner" >
             <h6>{{topping.firstname}} {{topping.lastname}}</h6>
-            <button (click)="addMember(groupId,id,topping.id,'admin')">Inviter</button>
+            <button (click)="addMember(groupId,id,topping.id,'admin')">Invite</button>
         </div>
         }
     </div>
-
     <ng-template #follower>
         <p>No followers found !!</p>
     </ng-template>
-
 </div>

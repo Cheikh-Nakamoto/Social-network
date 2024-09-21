@@ -3,6 +3,7 @@ package web
 import (
 	"backend/pkg/dto"
 	"backend/pkg/service"
+	"backend/pkg/session"
 	"backend/pkg/utils"
 	"encoding/json"
 	"fmt"
@@ -61,6 +62,19 @@ func (p *PostController) getAllPostsHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 	fmt.Println("user _id :", id)
+	sessionToken, err := GetSessionTokenByUserID(uint(id))
+
+	if err != nil {
+		fmt.Println("non autorisé")
+		return
+	}
+
+	_, err10 := session.GetSession(sessionToken)
+	if err10 != nil {
+		fmt.Println("denied")
+		return
+
+	}
 	posts, err := p.PostService.GetAllPosts(id)
 	if err != nil {
 		fmt.Println("Erreur lors de la recuperation des post !", err)

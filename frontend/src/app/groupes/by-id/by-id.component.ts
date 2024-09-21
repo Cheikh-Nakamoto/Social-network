@@ -91,6 +91,7 @@ export class ByIdComponent implements OnInit {
             this.groups = this.groups.filter(
                 (group) => group.id == this.groupId
             );
+            localStorage.setItem('owner',this.groups[0].owner)
             if (this.groups[0].owner != this.id) {
                 this.ItIsMember();
             }
@@ -208,6 +209,7 @@ export class ByIdComponent implements OnInit {
                 this.posts = response;
                 this.loadLikes('post');
                 this.loadDislikes('post');
+                this.loadComments()
             },
             (error: any) => {
                 console.error('Error fetching posts:', error);
@@ -357,7 +359,32 @@ export class ByIdComponent implements OnInit {
             width: 'auto'
         })
     }
+    timeAgo(date: Date | string): string {
+        const now = new Date();
+        const pastDate = new Date(date);
+        const difference = now.getTime() - pastDate.getTime();
 
+        const seconds = Math.floor(difference / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+        const months = Math.floor(days / 30); // Approximation
+        const years = Math.floor(days / 365); // Approximation
+
+        if (years > 0) {
+            return `${years} year${years > 1 ? 's' : ''} ago`;
+        } else if (months > 0) {
+            return `${months} month${months > 1 ? 's' : ''} ago`;
+        } else if (days > 0) {
+            return `${days} day${days > 1 ? 's' : ''} ago`;
+        } else if (hours > 0) {
+            return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+        } else if (minutes > 0) {
+            return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+        } else {
+            return `${seconds} second${seconds > 1 ? 's' : ''} ago`;
+        }
+    }
 
 }
 

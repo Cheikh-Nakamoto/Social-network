@@ -80,7 +80,6 @@ export class AuthService {
         
         
         return this.http.put<any>(`${this.api}/profile-update/${userId}`, userData);
-        console.log("updateuserproooo");
       }
     // updateUserProfile(id: number, updatedUser: any) {
     //     return this.http.put(`http://localhost:8080/sn/api/profile-update/${id}`, updatedUser);

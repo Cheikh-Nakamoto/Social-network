@@ -1,6 +1,11 @@
 <app-toolbar></app-toolbar>
 <div class="group-container">
   <h1>Groups</h1>
+  <div class="create-group">
+    <button mat-raised-button color="primary" (click)="openCreateGroupDialog()">
+      Add group
+    </button>
+  </div>
   <!-- Liste des groupes existants -->
   <div class="group-list" *ngIf="groups.length > 0;">
     <div class="container" *ngFor="let group of groups" class="group-card">
@@ -21,19 +26,12 @@
           <button mat-button color="primary" (click)="addMember(group.id,id,group.owner,'member')">JOIN</button>
         </mat-card-actions>
         <ng-template #voir>
-          <button mat-button color="primary" (click)="handleClick('/groups',$event,group.id)">VOIR</button>
+          <button mat-button color="primary" (click)="handleClick('/groups',$event,group.id)">VIEW</button>
         </ng-template>
       </mat-card>
     </div>
   </div>
   <ng-template #noimg>
-    <img  src="https://www.imagesgroup.in/images/blog-p-img-1.jpg" >
+    <img src="https://www.imagesgroup.in/images/blog-p-img-1.jpg">
   </ng-template>
-
-  <!-- Bouton pour créer un nouveau groupe -->
-  <div class="create-group">
-    <button mat-raised-button color="primary" (click)="openCreatePostDialog()">
-      Créer un Nouveau Groupe
-    </button>
-  </div>
 </div>

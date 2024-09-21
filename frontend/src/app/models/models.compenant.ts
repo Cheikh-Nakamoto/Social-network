@@ -100,7 +100,8 @@ export interface Post {
   image: string;
   privacy: string;
   user_id: string;
-  group_id: number
+  group_id: number;
+  created_at: string;
 }
 
 // notification group et message
@@ -158,5 +159,6 @@ export interface Eventtype{
   hour_start: Date;
   hour_end: Date;
   user_id: number;
+  created_at: string;
 }
 

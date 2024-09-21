@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   backend:
     image: golang:1.22.3
@@ -13,6 +14,8 @@ services:
     environment:
       - GO_ENV=development
    
+
+
   frontend:
     image: node:18  
     working_dir: /app

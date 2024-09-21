@@ -7,7 +7,7 @@
         {{ AllUser[post.user_id] && AllUser[post.user_id].firstname }}
       </mat-card-title>
       <mat-card-subtitle routerLink="/profile/{{post.user_id}}">
-        {{ AllUser[post.user_id].created_at | date:'mediumDate' }}
+        {{ timeAgo(post.created_at) }}
       </mat-card-subtitle>
     </mat-card-header>
     <div class="img" *ngIf="post.image.length != 0">
@@ -65,7 +65,5 @@
       </form>
     </span>
     <span class="spacer"></span>
-
   </mat-card>
-
 </div>

@@ -37,8 +37,8 @@ export class EventsComponent implements OnInit {
   selectedFile: File | null = null;
   selectedFileName: string = '';
   today!: string;
-  startdate ! :Date
-  enddate!:Date
+  startdate !: Date
+  enddate!: Date
 
   constructor(
     private fb: FormBuilder,
@@ -80,7 +80,7 @@ export class EventsComponent implements OnInit {
     // Vérifiez que toutes les valeurs sont définies
     if (!dateStart || !hourStart || !dateEnd || !hourEnd) {
       return { dateTimeOrder: true }; // ou null si vous voulez que cela soit valide tant que tout n'est pas rempli
-    }    
+    }
 
     // Création des objets Date
     const startDateTime = new Date(`${dateStart}T${hourStart}`);
@@ -116,40 +116,44 @@ export class EventsComponent implements OnInit {
 
   onSubmit(): void {
     const groupid = parseInt(localStorage.getItem('groupid') as string);
-    // Vérifiez qu'il  n'y a pas de chaine vide dans les variable string a envoyer
-   
+
     if (this.groupeForm.valid) {
       const dateStart = this.groupeForm.get('date_start')?.value;
       const hourStart = this.groupeForm.get('hour_start')?.value;
       const dateEnd = this.groupeForm.get('date_end')?.value;
       const hourEnd = this.groupeForm.get('hour_end')?.value;
-       // Création des objets Date
-    const startDateTime = new Date(`${dateStart}T${hourStart}`);
-    const endDateTime = new Date(`${dateEnd}T${hourEnd}`);
+
+      // Création des objets Date
+      const startDateTime = new Date(`${dateStart}T${hourStart}`);
+      const endDateTime = new Date(`${dateEnd}T${hourEnd}`);
+
       let body = {
-        'name':this.groupeForm.get('name')?.value,
-        'description':this.groupeForm.get('description')?.value,
+        'name': this.groupeForm.get('name')?.value,
+        'description': this.groupeForm.get('description')?.value,
         'user_id': this.groupeForm.get('user_id')?.value,
         'group_id': groupid,
         'hour_start': startDateTime,
         'hour_end': endDateTime,
+      };
 
-      }
-      if (body.description.trim() == '' ||  body.name.trim() == '') {
+      if (body.description.trim() === '' || body.name.trim() === '') {
         alert('Les champs description et nom ne doivent pas être vides');
         return;
       }
+
       this.apiService.createEvent(body).subscribe(
         (res) => {
           this.groupeForm.reset();
-          this.router.navigate([`/groups/${groupid}`]);
+          this.closeDialog();
+
+          this.router.navigateByUrl(`/groups/${groupid}`).then(() => {
+            window.location.reload();
+          });
         },
         (error) => {
           alert(`Échec de la création de l'événement`);
         }
       );
     }
-    this.groupeForm.reset()
-    this.closeDialog()
   }
 }

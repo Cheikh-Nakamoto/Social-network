@@ -83,7 +83,7 @@ func (c *FollowController) UnfollowUser(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	if r.Method != http.MethodDelete {
+	if r.Method != http.MethodPut {
 		http.Error(w, os.Getenv("METHOD_NOT_ALLOWED"), http.StatusMethodNotAllowed)
 		return
 	}

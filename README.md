@@ -78,10 +78,6 @@ Our goal is to create a social network that allows users to create private post 
 1. Go to the frontend directory `cd frontend`
 2. Run the server `ng serve` or `npm start`
 
-### Contributors
-- [Franchis Janel MOKOMBA](https://learn.zone01dakar.sn/git/fmokomba)
-- [Cheikh Mounirou Coly DIOUF](https://learn.zone01dakar.sn/git/cheikhmodiouf)
-
 ### Credits
 - [Golang](https://golang.org/)
 - [Angular](https://angular.io/)

@@ -7,13 +7,13 @@
                     <div class="img" *ngIf="group.image!= ''; else noimg">
                         <img mat-card-image [src]="group.image" alt="Photo of {{ group.name }}">
                     </div>
+                    <h3>{{group.name}}</h3>
+                    <p>{{group.description}}</p>
                     <div class="links">
                         <button mat-button color="primary" (click)="InviterYourFollowers()">Add Member</button>
                         <button mat-button color="primary" (click)="openCreateEventDialog()">Add Event</button>
-                        <button mat-button color="primary" (click)="openCreatePostDialog()">Messages</button>
+                        <button mat-button color="primary" (click)="openCreateChatDialog()">Messages</button>
                     </div>
-                    <h3> <strong>Name</strong> :{{group.name}}</h3>
-                    <p><strong>Description :</strong>{{group.description}}</p>
                 </div>
 
                 <!-- Ajout de la barre de navigation -->
@@ -21,23 +21,38 @@
                     <mat-tab label="Posts">
                         <div class="event-group">
                             <div class="post">
-                                <h4>Posts</h4>
-                                <app-main-page></app-main-page>
+                                <div class="ac-post-form-showcase" (click)="openCreatePostDialog()">
+                                    <img alt=" " [src]="avatar" class="avatar" height="96" width="96" />
+                                    <span>What's on your mind?</span>
+                                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="18" cy="18" r="18" fill="#F8F8F8"></circle>
+                                        <path
+                                            d="M9 14.7059C9 14.3925 9 14.2358 9.01316 14.1038C9.14004 12.8306 10.1531 11.8234 11.4338 11.6973C11.5666 11.6842 11.7327 11.6842 12.065 11.6842C12.1931 11.6842 12.2571 11.6842 12.3114 11.6809C13.0055 11.6391 13.6134 11.2036 13.8727 10.5622C13.893 10.512 13.912 10.4554 13.95 10.3421C13.988 10.2289 14.007 10.1722 14.0273 10.122C14.2866 9.48058 14.8945 9.04506 15.5886 9.00327C15.6429 9 15.7029 9 15.823 9H20.177C20.2971 9 20.3571 9 20.4114 9.00327C21.1055 9.04506 21.7134 9.48058 21.9727 10.122C21.993 10.1722 22.012 10.2289 22.05 10.3421C22.088 10.4554 22.107 10.512 22.1273 10.5622C22.3866 11.2036 22.9944 11.6391 23.6886 11.6809C23.7429 11.6842 23.8069 11.6842 23.935 11.6842C24.2673 11.6842 24.4334 11.6842 24.5662 11.6973C25.8469 11.8234 26.86 12.8306 26.9868 14.1038C27 14.2358 27 14.3925 27 14.7059V21.7053C27 23.2086 27 23.9602 26.7057 24.5344C26.4469 25.0395 26.0338 25.4501 25.5258 25.7074C24.9482 26 24.1921 26 22.68 26H13.32C11.8079 26 11.0518 26 10.4742 25.7074C9.96619 25.4501 9.55314 25.0395 9.29428 24.5344C9 23.9602 9 23.2086 9 21.7053V14.7059Z"
+                                            stroke="#C4C4C4" stroke-width="1.5" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                        </path>
+                                        <path
+                                            d="M18 21.9737C19.9882 21.9737 21.6 20.3713 21.6 18.3947C21.6 16.4181 19.9882 14.8158 18 14.8158C16.0118 14.8158 14.4 16.4181 14.4 18.3947C14.4 20.3713 16.0118 21.9737 18 21.9737Z"
+                                            stroke="#C4C4C4" stroke-width="1.5" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                        </path>
+                                    </svg>
+                                </div>
                                 <div class="posts" *ngFor="let post of posts">
                                     <mat-card class="example-card" appearance="outlined">
                                         <mat-card-header>
-                                            <img routerLink="/profile/{{post.user_id}}" mat-card-avatar src="logo.png"
-                                                width="64" height="64" alt="profile">
+                                            <img routerLink="/profile/{{post.user_id}}" mat-card-avatar
+                                                [src]="AllUser[post.user_id].avatar" alt="profile">
                                             <mat-card-title routerLink="/profile/{{post.user_id}}">
                                                 {{ AllUser[post.user_id] && AllUser[post.user_id].firstname }}
                                             </mat-card-title>
                                             <mat-card-subtitle routerLink="/profile/{{post.user_id}}">
-                                                {{ AllUser[post.user_id].created_at | date:'mediumDate' }}
+                                                {{ timeAgo(AllUser[post.user_id].created_at) }}
                                             </mat-card-subtitle>
                                         </mat-card-header>
                                         <div class="img" *ngIf="post.image.length != 0">
-                                            <!-- Image transformée en bannière -->
-                                            <img class="post-image banner-image" mat-card-image [src]="post.image" alt="Post image">
+                                            <img class="post-image" mat-card-image [src]="post.image" alt="Post image">
                                         </div>
                                         <mat-card-content>
                                             <p>{{ post.content }}</p>
@@ -54,50 +69,77 @@
                                             <button mat-icon-button
                                                 (click)="comments.comments_by_post[post.id] ? openDialog(post.id) : null">
                                                 <span>{{ !comlength[post.id] ? 0 : comlength[post.id]}}</span>
-                                                <mat-icon>forum</mat-icon>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path
+                                                        d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                                                    </path>
+                                                </svg>
                                             </button>
-                                            <span class="comment-form">
-                                                <form (submit)="onComment(post.id, 'comment', $event)">
-                                                    <input matInput placeholder="Comment" name="comment">
-                                                    <input type="file" name="image" accept="image/*"
-                                                        (change)="onFileSelected($event)">
-                                                    <button class="send" mat-icon-button type="submit">
-                                                        <mat-icon>send</mat-icon>
-                                                    </button>
-                                                </form>
-                                            </span>
-                                            <span class="spacer"></span>
                                         </mat-card-actions>
+                                        <span class="comment-form">
+                                            <form (submit)="onComment(post.id, 'comment', $event)">
+                                                <input matInput placeholder="Type a comment..." name="comment">
+                                                <div class="comments-media-icons">
+                                                    <p class="comments-image-uploader">
+                                                        <label for="image">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="32"
+                                                                height="32" viewBox="0 0 24 24" fill="none"
+                                                                stroke="#999999" stroke-width="1.8"
+                                                                stroke-linecap="round" stroke-linejoin="round">
+                                                                <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                                                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                                                <path d="M20.4 14.5L16 10 4 20"></path>
+                                                            </svg>
+                                                        </label>
+                                                        <input type="file" class="comment-upload-media" id="image"
+                                                            name="image" (change)="onFileSelected($event)">
+                                                    </p>
+                                                </div>
+                                                <button class="send" mat-icon-button type="submit">
+                                                    <svg fill="#000000" width="40px" height="40px" viewBox="0 0 24 24"
+                                                        id="send" data-name="Flat Color"
+                                                        xmlns="http://www.w3.org/2000/svg" class="icon flat-color">
+                                                        <path id="primary"
+                                                            d="M21.66,12a2,2,0,0,1-1.14,1.81L5.87,20.75A2.08,2.08,0,0,1,5,21a2,2,0,0,1-1.82-2.82L5.46,13l.45-1-.45-1L3.18,5.87A2,2,0,0,1,5.87,3.25l14.65,6.94A2,2,0,0,1,21.66,12Z"
+                                                            style="fill: rgb(0, 0, 0);"></path>
+                                                        <path id="secondary"
+                                                            d="M12,12a1,1,0,0,1-1,1H5.46l.45-1-.45-1H11A1,1,0,0,1,12,12Z"
+                                                            style="fill: rgb(0,0,0);"></path>
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        </span>
                                     </mat-card>
                                 </div>
                             </div>
                         </div>
                     </mat-tab>
                     <mat-tab label="Events">
-                        <div class="events">
-                            <h4>Events</h4>
+                        <div class="event">
                             <div class="events" *ngFor="let event of Events">
                                 <mat-card class="example-card" appearance="outlined">
                                     <mat-card-header>
-                                        <img routerLink="/profile/{{event.user_id}}" mat-card-avatar src="logo.png" alt="profile">
+                                        <img routerLink="/profile/{{event.user_id}}" mat-card-avatar
+                                            src="{{AllUser[event.user_id].avatar}}" alt="profile">
                                         <mat-card-title routerLink="/profile/{{event.user_id}}">
                                             {{ AllUser[event.user_id] && AllUser[event.user_id].firstname }}
                                         </mat-card-title>
                                         <mat-card-subtitle routerLink="/profile/{{event.user_id}}">
-                                            {{AllUser[event.user_id] && AllUser[event.user_id].created_at |
-                                            date:'mediumDate' }}
+                                            {{AllUser[event.user_id] && AllUser[event.user_id].created_at | date: 'mediumDate'}}
                                         </mat-card-subtitle>
                                     </mat-card-header>
                                     <mat-card-content>
-                                        <p><strong>Description : </strong>{{event.description}}</p>
+                                        <p>{{ event.description }}</p>
                                     </mat-card-content>
                                     <mat-card-content>
-                                        <p><strong>Debut :</strong> {{event.hour_start | date:'mediumDate' }} a {{
-                                            event.hour_start | date : "hh:mm:ss"}}</p>
+                                        <p><strong>Star :</strong> {{event.hour_start | date:'mediumDate' }} at {{
+                                            event.hour_start | date : "hh:mm"}}</p>
                                     </mat-card-content>
                                     <mat-card-content>
-                                        <p> <strong>Fin : </strong> {{event.hour_end | date:'mediumDate' }} a
-                                            {{event.hour_end | date : "hh:mm:ss"}}</p>
+                                        <p> <strong>End : </strong> {{event.hour_end | date:'mediumDate' }} at
+                                            {{event.hour_end | date : "hh:mm"}}</p>
                                     </mat-card-content>
                                     <mat-card-actions>
                                         <button mat-icon-button (click)="onGoing(event.id,'event')">

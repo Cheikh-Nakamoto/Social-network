@@ -64,7 +64,7 @@ export class CreatePostComponent implements OnInit {
 
     this.authService.isOnline();
     this.username = localStorage.getItem('firstname') as string
-    this.avatar = localStorage.getItem("avatar") as string == "" ? "female.svg" : localStorage.getItem("avatar") as string
+    this.avatar = localStorage.getItem("avatar") as string == "" ? "profile.jpg" : localStorage.getItem("avatar") as string
 
     let checkhref = location.href.split("/")
     if (checkhref[checkhref.length - 2] == "groups") {

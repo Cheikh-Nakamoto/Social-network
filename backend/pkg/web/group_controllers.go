@@ -3,6 +3,7 @@ package web
 import (
 	"backend/pkg/dto"
 	"backend/pkg/service/impl"
+	"backend/pkg/session"
 	"backend/pkg/utils"
 	"encoding/json"
 	"fmt"
@@ -72,7 +73,7 @@ func (gc *GroupController) AddMemberHandler(w http.ResponseWriter, r *http.Reque
 		UserID   int    `json:"user_id"`
 		TargetID int    `json:"target_id"`
 		Role     string `json:"role"`
-		Username string `json : "username"`
+		Username string `json :"username"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -143,6 +144,19 @@ func (gc *GroupController) GetGroupByIDHandler(w http.ResponseWriter, r *http.Re
 		return
 	}
 
+	sessionToken, err := GetSessionTokenByUserID(uint(id))
+
+	if err != nil {
+		fmt.Println("non autorisé")
+		return
+	}
+
+	_, err10 := session.GetSession(sessionToken)
+	if err10 != nil {
+		fmt.Println("denied")
+		return
+
+	}
 	group, err := gc.GroupService.GetGroupByID(id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -244,7 +258,7 @@ func (gc *GroupController) NotificationExists(w http.ResponseWriter, r *http.Req
 }
 
 func (gc *GroupController) NotificationsByUserID(w http.ResponseWriter, r *http.Request) {
-	Id ,err:= strconv.Atoi(r.URL.Query().Get("user_id"))
+	Id, err := strconv.Atoi(r.URL.Query().Get("user_id"))
 	if err != nil {
 		fmt.Println("error", err)
 		http.Error(w, "Invalid user ID", http.StatusBadRequest)
@@ -266,11 +280,11 @@ func (gc *GroupController) AddMemberBasedOnNotification(w http.ResponseWriter, r
 	var notif dto.Notification
 	if err := json.NewDecoder(r.Body).Decode(&notif); err != nil {
 		fmt.Println("error de decodage: ", err)
-		http.Error(w,  "error de decodage ", http.StatusBadRequest)
+		http.Error(w, "error de decodage ", http.StatusBadRequest)
 		return
 	}
-	fmt.Println("notification   ",notif)
-	err := gc.GroupService.AddMemberBasedOnNotification(notif); 
+	fmt.Println("notification   ", notif)
+	err := gc.GroupService.AddMemberBasedOnNotification(notif)
 	if err != nil {
 		fmt.Println("error", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -282,11 +296,11 @@ func (gc *GroupController) DeclineNotification(w http.ResponseWriter, r *http.Re
 	var notif dto.Notification
 	if err := json.NewDecoder(r.Body).Decode(&notif); err != nil {
 		fmt.Println("error de decodage: ", err)
-		http.Error(w,  "error de decodage ", http.StatusBadRequest)
+		http.Error(w, "error de decodage ", http.StatusBadRequest)
 		return
 	}
-	
-	err := gc.GroupService.DeclineNotification(notif); 
+
+	err := gc.GroupService.DeclineNotification(notif)
 	if err != nil {
 		fmt.Println("error", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -297,10 +311,10 @@ func (gc *GroupController) DeclineNotification(w http.ResponseWriter, r *http.Re
 func (gc *GroupController) ItsGroupMemberhandler(w http.ResponseWriter, r *http.Request) {
 	var inf dto.Data
 	if err := json.NewDecoder(r.Body).Decode(&inf); err != nil {
-		http.Error(w,  "error de decodage ", http.StatusBadRequest)
+		http.Error(w, "error de decodage ", http.StatusBadRequest)
 		return
 	}
-	bools,err := gc.GroupService.ItsGroupMember(inf);
+	bools, err := gc.GroupService.ItsGroupMember(inf)
 	if err != nil {
 		fmt.Println("error", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -311,24 +325,20 @@ func (gc *GroupController) ItsGroupMemberhandler(w http.ResponseWriter, r *http.
 	json.NewEncoder(w).Encode(bools)
 }
 
-
-
-
-
 func (s GroupController) GetUsersInGroup(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("group_id")
-    idInt, err := strconv.Atoi(id)
-    if err!= nil || r.Method!= http.MethodGet {
-        http.Error(w, err.Error(), http.StatusMethodNotAllowed)
-        return
-    }
+	idInt, err := strconv.Atoi(id)
+	if err != nil || r.Method != http.MethodGet {
+		http.Error(w, err.Error(), http.StatusMethodNotAllowed)
+		return
+	}
 
-    users, _ := s.GroupService.GetUsersInGroup(idInt)
-    if err!= nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-        return
-    }
+	users, _ := s.GroupService.GetUsersInGroup(idInt)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-    w.Header().Set("Content-Type", "application/json")
-    json.NewEncoder(w).Encode(users)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(users)
 }

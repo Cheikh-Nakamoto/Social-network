@@ -2,16 +2,6 @@ $lightBlue: #b8daff;
 $danger: #f44336;
 $primaryColor: #005cbb;
 
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f5f8fa;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
 .chat-container {
     width: 100%;
     max-width: 400px;

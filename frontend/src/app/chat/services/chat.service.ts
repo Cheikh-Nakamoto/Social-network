@@ -117,7 +117,6 @@ export class ChatService {
                 },
             });
         } else {
-            console.log('Le dialogue est déjà ouvert');
         }
     }
 

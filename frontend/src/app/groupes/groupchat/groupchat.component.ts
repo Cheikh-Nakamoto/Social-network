@@ -1,4 +1,4 @@
-import { Component, Inject, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import * as model from '../../models/models.compenant';
 import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -33,7 +33,7 @@ class Event {
     styleUrl: './groupchat.component.scss',
     providers: [DataService],
 })
-export class GroupchatComponent {
+export class GroupchatComponent implements OnInit, OnDestroy{
     groups: model.Group[] = [];
     groupeForm!: FormGroup;
     id!: string;
@@ -50,7 +50,8 @@ export class GroupchatComponent {
     scrollHeightBeforeLoad = 0;
     amount: number = 10;
     showEmojiPicker = false;
-    private processedMessages = new Set<string>();
+    private processedMessages = new Set<number>();
+    Id: number = 0;
 
     constructor(
         private websocketService: WebSocketService,
@@ -71,38 +72,47 @@ export class GroupchatComponent {
             this.sender = user;
         });
         this.websocketService.connect();
-        let id = 0
-
+        const chatbox  =  document.getElementById('chatBox') as HTMLElement
+        this.loadAdditionalMessages();
         this.messagesSubscription = this.websocketService.messages$.subscribe(
             (message) => {
-                console.log(message.payload.senderId != id);
                 if (message.type === 'get_messages_groupes') {
-
-                    this.throttleUpdateMessages(
+                    this.updateMessages(
                         message.payload.messages,
                         Number(this.groupId),
                         this.sender
                     );
+                    message = null
+                    return
                 }
-                if (message.type === 'new_message_group' && message.payload.messageId != id) {
+                if (
+                    message.type === 'new_message_group' 
+                ) {
 
+                    console.log("figure")
+                    this.Id = message.payload.messageId;
                     const messageId = message.payload.messageId;
 
-                    if (!this.processedMessages.has(messageId)) {
-                        // Si le message n'a pas encore été traité
+                    
 
+                        this.processedMessages.add(messageId);
                         this.NewupdateMessages(message.payload, this.sender);
 
                         // Marque le message comme traité
-                        this.processedMessages.add(messageId);
-                    } else {
-                        console.log('Message déjà traité, ignoré');
-                    }
+                    
                 }
             }
         );
 
-        this.loadAdditionalMessages();
+        
+       
+        setTimeout(()=> {
+            chatbox.scrollTop = chatbox.scrollHeight
+        },100)
+    }
+
+    ngOnDestroy(): void {
+        this.messagesSubscription.unsubscribe( )
     }
     closeDialog() {
         this.dialogRef.close();
@@ -142,8 +152,17 @@ export class GroupchatComponent {
             this.isThrottled = false;
         }, 50); // Ajuste la durée selon tes besoins
     }
-
+    lastExecutionTime = 0;
     NewupdateMessages = (message: any, iduser: number) => {
+        const currentTime = Date.now();
+
+         if (currentTime - this.lastExecutionTime < 1000) {
+             console.log('Nouvel appel ignoré car trop rapide.');
+             return;
+         }
+
+         // Mettre à jour le temps de la dernière exécution
+         this.lastExecutionTime = currentTime;
         const chatBox = document.getElementById('chatBox');
         if (chatBox) {
             var prevMsg, prevMsgType;
@@ -161,37 +180,37 @@ export class GroupchatComponent {
             } else {
                 msgType = 'Received';
             }
-            // console.log("llllllll", msgType)
-            // console.log("bbbb",msgType === 'Received' ? 'received' : 'sent');
 
             let username: string;
             this.getNicknameById(message.senderId, (nickname) => {
                 if (nickname) {
-                    // console.log('Nickname:', nickname);
                     username = nickname;
 
                     const newMessageHTML = `
-      <div class="messageContainer ${msgType === 'Received' ? 'received' : 'sent'
-                        }">
+      <div class="messageContainer ${
+          msgType === 'Received' ? 'received' : 'sent'
+      }">
       <span><svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#48752C"><path d="M226-262q59-42.33 121.33-65.5 62.34-23.17 132.67-23.17 70.33 0 133 23.17T734.67-262q41-49.67 59.83-103.67T813.33-480q0-141-96.16-237.17Q621-813.33 480-813.33t-237.17 96.16Q146.67-621 146.67-480q0 60.33 19.16 114.33Q185-311.67 226-262Zm253.88-184.67q-58.21 0-98.05-39.95Q342-526.58 342-584.79t39.96-98.04q39.95-39.84 98.16-39.84 58.21 0 98.05 39.96Q618-642.75 618-584.54t-39.96 98.04q-39.95 39.83-98.16 39.83ZM480.31-80q-82.64 0-155.64-31.5-73-31.5-127.34-85.83Q143-251.67 111.5-324.51T80-480.18q0-82.82 31.5-155.49 31.5-72.66 85.83-127Q251.67-817 324.51-848.5T480.18-880q82.82 0 155.49 31.5 72.66 31.5 127 85.83Q817-708.33 848.5-635.65 880-562.96 880-480.31q0 82.64-31.5 155.64-31.5 73-85.83 127.34Q708.33-143 635.65-111.5 562.96-80 480.31-80Zm-.31-66.67q54.33 0 105-15.83t97.67-52.17q-47-33.66-98-51.5Q533.67-284 480-284t-104.67 17.83q-51 17.84-98 51.5 47 36.34 97.67 52.17 50.67 15.83 105 15.83Zm0-366.66q31.33 0 51.33-20t20-51.34q0-31.33-20-51.33T480-656q-31.33 0-51.33 20t-20 51.33q0 31.34 20 51.34 20 20 51.33 20Zm0-71.34Zm0 369.34Z"/></svg>
       ${username}
       </span>
       </div>
-                <div class="messageContainer ${msgType === 'Received' ? 'received' : 'sent'
-                        }">
-                    <div id="msgBox" class="msgBox${msgType}" data-linked="${message.messageId
-                        }">
+                <div class="messageContainer ${
+                    msgType === 'Received' ? 'received' : 'sent'
+                }">
+                    <div id="msgBox" class="msgBox${msgType}" data-linked="${
+                        message.messageId+1
+                    }">
                         <a style="font-size: 15px; white-space: pre-wrap;">${message.message.trim()}</a>
                     </div>
-                    <div id="timeBox" class="timeBox${msgType}" data-link="${message.messageId
-                        }">
+                    <div id="timeBox" class="timeBox${msgType}" data-link="${
+                        message.messageId
+                    }">
                         <a>${message.sentDate}</a>
                     </div>
                 </div>
             `;
                     chatBox.innerHTML += newMessageHTML;
                 } else {
-                    console.log('Utilisateur non trouvé');
                 }
             });
             // });
@@ -204,6 +223,10 @@ export class GroupchatComponent {
                 chatBox.scrollTop = chatBox.scrollHeight;
             }
         }
+        const chatbox  =  document.getElementById('chatBox') as HTMLElement
+        setTimeout(()=> {
+            chatbox.scrollTop = chatbox.scrollHeight
+        },100)
     };
 
     toggleEmojiPicker(): void {
@@ -223,7 +246,8 @@ export class GroupchatComponent {
     }
 
     loadAdditionalMessages() {
-        const chatBox = document.getElementById('chatBox');
+        const chatBox = document.getElementById('chatBox')as HTMLElement;
+      
         if (
             chatBox &&
             chatBox.scrollTop === 0 &&
@@ -241,12 +265,20 @@ export class GroupchatComponent {
             };
 
             const even = new Event('get_messages_groupes', payload);
+            
             sendEvent(this.websocketService, even);
         }
     }
 
+    isSubmitting: boolean = false;
+
     onSubmit(event: SubmitEvent) {
         event.preventDefault(); // Empêche le rechargement de la page
+        if (this.isSubmitting) {
+            return; // Empêche plusieurs soumissions simultanées
+        }
+
+
         const messagetag = (event.target as HTMLFormElement).querySelector(
             '#msgContent'
         ) as HTMLTextAreaElement;
@@ -255,13 +287,13 @@ export class GroupchatComponent {
             return;
         }
 
+        this.isSubmitting = true;
         const messBody: model.MessageBody = {
-
             senderId: this.sender,
             receiverId: Number(this.groupId),
             message: messageContent,
-
         };
+
 
         const message: model.MessageData = {
             type: 'send_message_groupes',
@@ -272,26 +304,15 @@ export class GroupchatComponent {
         sendEvent(this.websocketService, even);
         // const updateEve = new Event('get_chatbar_data', this.sender);
         // sendEvent(this.websocketService, updateEve);
-        if (this.processedMessages instanceof Set) {
             // Convertir en tableau et récupérer le dernier élément
-            const lastMessageId = Array.from(this.processedMessages).pop();
-
-            if (lastMessageId) {
-
-                if (!this.processedMessages.has(lastMessageId + 1)) {
-
-                    this.NewupdateMessages(messBody, this.sender);
-                } else {
-                    console.log('Message déjà traité, ignoré');
-                }
-
-                // console.log('Dernier messageId traité :', lastMessageId+1);
-            }
-
-        }
+           
 
         // Réinitialiser le champ de texte après l'envoi
         messagetag.value = '';
+
+        setTimeout(() => {
+             this.isSubmitting = false; // Autoriser de nouvelles soumissions
+        }, 1000);
     }
 
     getNicknameById(
@@ -325,10 +346,10 @@ export class GroupchatComponent {
     updateMessages = (messages: any, receiverId: number, iduser: number) => {
         const chatBox = document.getElementById('chatBox');
         if (chatBox) {
-            chatBox.innerHTML = '';
+            chatBox.innerHTML = "";
 
             var prevMsg, prevMsgType;
-
+            console.log(messages)
             messages.forEach((message: any) => {
                 var msgType: string;
                 if (Number(message.senderId) == iduser) {
@@ -337,32 +358,45 @@ export class GroupchatComponent {
                     msgType = 'Received';
                 }
 
+                const existingMessage = document.querySelector(
+                    `[data-linked="${message.messageId}"]`
+                );
+                if (existingMessage) {
+                    console.log(
+                        "Message déjà présent, pas besoin de l'ajouter à nouveau."
+                    );
+                    return; // Arrêter si le message est déjà présent
+                }
+
                 let username: string;
                 this.getNicknameById(message.senderId, (nickname) => {
                     if (nickname) {
                         username = nickname;
 
                         chatBox.innerHTML += `
-      <div class="messageContainer ${msgType === 'Received' ? 'received' : 'sent'
-                            }">
+      <div class="messageContainer ${
+          msgType === 'Received' ? 'received' : 'sent'
+      }">
       <span><svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#48752C"><path d="M226-262q59-42.33 121.33-65.5 62.34-23.17 132.67-23.17 70.33 0 133 23.17T734.67-262q41-49.67 59.83-103.67T813.33-480q0-141-96.16-237.17Q621-813.33 480-813.33t-237.17 96.16Q146.67-621 146.67-480q0 60.33 19.16 114.33Q185-311.67 226-262Zm253.88-184.67q-58.21 0-98.05-39.95Q342-526.58 342-584.79t39.96-98.04q39.95-39.84 98.16-39.84 58.21 0 98.05 39.96Q618-642.75 618-584.54t-39.96 98.04q-39.95 39.83-98.16 39.83ZM480.31-80q-82.64 0-155.64-31.5-73-31.5-127.34-85.83Q143-251.67 111.5-324.51T80-480.18q0-82.82 31.5-155.49 31.5-72.66 85.83-127Q251.67-817 324.51-848.5T480.18-880q82.82 0 155.49 31.5 72.66 31.5 127 85.83Q817-708.33 848.5-635.65 880-562.96 880-480.31q0 82.64-31.5 155.64-31.5 73-85.83 127.34Q708.33-143 635.65-111.5 562.96-80 480.31-80Zm-.31-66.67q54.33 0 105-15.83t97.67-52.17q-47-33.66-98-51.5Q533.67-284 480-284t-104.67 17.83q-51 17.84-98 51.5 47 36.34 97.67 52.17 50.67 15.83 105 15.83Zm0-366.66q31.33 0 51.33-20t20-51.34q0-31.33-20-51.33T480-656q-31.33 0-51.33 20t-20 51.33q0 31.34 20 51.34 20 20 51.33 20Zm0-71.34Zm0 369.34Z"/></svg>
       ${username}
       </span>
       </div>
-                <div class="messageContainer ${msgType === 'Received' ? 'received' : 'sent'
-                            }">
-                    <div id="msgBox" class="msgBox${msgType}" data-linked="${message.messageId
-                            }">
+                <div class="messageContainer ${
+                    msgType === 'Received' ? 'received' : 'sent'
+                }">
+                    <div id="msgBox" class="msgBox${msgType}" data-linked="${
+                            message.messageId
+                        }">
                         <a style="font-size: 15px; white-space: pre-wrap;">${message.message.trim()}</a>
                     </div>
-                    <div id="timeBox" class="timeBox${msgType}" data-link="${message.messageId
-                            }">
+                    <div id="timeBox" class="timeBox${msgType}" data-link="${
+                            message.messageId
+                        }">
                         <a>${message.sentDate}</a>
                     </div>
                 </div>
             `;
-                    } else {
-                    }
+                    } 
                 });
 
                 prevMsg = message;
@@ -371,6 +405,10 @@ export class GroupchatComponent {
 
             addHoverListeners();
         }
+        const chatbox  =  document.getElementById('chatBox') as HTMLElement
+        setTimeout(()=> {
+            chatbox.scrollTop = chatbox.scrollHeight
+        },100)
     };
 }
 
@@ -378,14 +416,6 @@ export class GroupchatComponent {
 function sendEvent(websocketService: WebSocketService, datas: any) {
     websocketService.sendMessage(datas);
 }
-
-
-
-
-
-
-
-
 
 const addHoverListeners = (): void => {
     const hoveredDivs = document.querySelectorAll<HTMLElement>('#msgBox');

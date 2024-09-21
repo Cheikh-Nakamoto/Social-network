@@ -23,7 +23,7 @@ export class MainPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.isOnline();
-    this.avatar = localStorage.getItem("avatar") as string == "" ? "female.svg" : localStorage.getItem("avatar") as string
+    this.avatar = localStorage.getItem("avatar") as string == "" ? "profile.jpg" : localStorage.getItem("avatar") as string
   }
   
   openCreatePostDialog() {

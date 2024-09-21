@@ -18,7 +18,7 @@ export class FollowService {
             case 'follow':
                 return this.http.post(`${this.api}/follow`, data)
             default:
-                return this.http.post(`${this.api}/unfollow`, data)
+                return this.http.put(`${this.api}/unfollow`, data)
         }
     }
 

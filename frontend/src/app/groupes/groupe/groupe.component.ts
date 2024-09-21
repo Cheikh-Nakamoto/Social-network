@@ -19,14 +19,14 @@ import { WebSocketService } from '../../chat/services/chat.service';
   selector: 'app-groupe',
   standalone: true,
   imports: [
-    CommonModule,
-    MatCardModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    ToolbarComponent,
-    MatIconModule,
-    MatDividerModule,
-    NgIf,
+    CommonModule, 
+    MatCardModule, 
+    HttpClientModule, 
+    ReactiveFormsModule, 
+    ToolbarComponent, 
+    MatIconModule, 
+    MatDividerModule, 
+    NgIf, 
     NgFor
   ],
   templateUrl: './groupe.component.html',
@@ -70,7 +70,7 @@ export class GroupeComponent implements OnInit {
           this.loadGroups()
         }
       }
-      );
+    );
   }
 
 
@@ -85,7 +85,7 @@ export class GroupeComponent implements OnInit {
       console.error('Error fetching groups:', error);
     }
   }
-  openCreatePostDialog() {
+  openCreateGroupDialog() {
     this.dialog.open(CreateGroupComponent, {
       width: "auto"
     });

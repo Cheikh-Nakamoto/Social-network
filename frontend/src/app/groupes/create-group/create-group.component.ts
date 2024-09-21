@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { DataService } from '../../data.service';
 import { CommonModule } from '@angular/common';
@@ -16,28 +16,29 @@ import { MatDialogRef } from '@angular/material/dialog';
   imports: [CommonModule, ReactiveFormsModule, HttpClientModule, ToolbarComponent],
   templateUrl: './create-group.component.html',
   styleUrl: './create-group.component.scss',
-  providers: [DataService,AuthService] // Ajouter DataService ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son service de données.  // Ajouter ici, pour utiliser son
+  providers: [DataService, AuthService]
 })
 export class CreateGroupComponent implements OnInit {
+  @ViewChild('fileInput') fileInput!: ElementRef;
   groupeForm!: FormGroup;
   selectedFile: File | null = null;
   selectedFileName: string = '';
-  userID!: string 
+  userID!: string
 
 
   constructor(
-    private fb: FormBuilder, 
-    private apiService: DataService, 
-    private router: Router, 
-    private authService: AuthService, 
+    private fb: FormBuilder,
+    private apiService: DataService,
+    private router: Router,
+    private authService: AuthService,
     private websocketService: WebSocketService,
     private dialogRef: MatDialogRef<CreateGroupComponent>
   ) { }
 
   ngOnInit(): void {
     this.authService.isOnline();
-
     this.userID = localStorage.getItem('userID') as string;
+    console.log(this.userID)
     this.groupeForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(50)]],
       description: ['', [Validators.required, Validators.maxLength(250)]],
@@ -46,6 +47,7 @@ export class CreateGroupComponent implements OnInit {
       image: ['', null]
     });
   }
+
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
     if (file) {
@@ -55,33 +57,47 @@ export class CreateGroupComponent implements OnInit {
       this.selectedFileName = file.name;
     }
   }
+
+  triggerFileInput() {
+    this.fileInput.nativeElement.click();
+  }
+
   closeDialog() {
     this.dialogRef.close();
   }
+
   onSubmit(): void {
     if (this.groupeForm.valid) {
       const name = this.groupeForm.get('name')?.value
       const description = this.groupeForm.get('description')?.value
-      if (name.trim() == "" || description.trim() == ""){
+      if (name.trim() == "" && name != null || description.trim() == "" && description != null) {
         return
       }
+
       const formData = new FormData();
       formData.append('name', this.groupeForm.get('name')?.value);
       formData.append('description', this.groupeForm.get('description')?.value);
       formData.append('isPublic', this.groupeForm.get('isPublic')?.value);
       formData.append('owner', this.groupeForm.get('owner')?.value);
+      let body = {
+        'name': this.groupeForm.get('name')?.value,
+        'description': this.groupeForm.get('description')?.value,
+        'isPublic': this.groupeForm.get('isPublic')?.value,
+        'owner': this.groupeForm.get('owner')?.value,
+        "image": ""
+      }
       if (this.selectedFile) {
         formData.append('file', this.selectedFile);
         this.apiService.uploadImage(formData).subscribe(
           (response) => {
-            // Supposons que la réponse de l'upload d'image contienne l'URL ou l'identifiant de l'image sous 'image'
             this.groupeForm.patchValue({ image: response.image });
-  
-            // Créez le groupe avec les données du formulaire mises à jour
-            this.apiService.createGroup(this.groupeForm.value).subscribe(
+            body["image"] = response.image
+            console.log(body)
+            this.apiService.createGroup(body).subscribe(
               (res) => {
-                this.groupeForm.reset();
-                this.router.navigateByUrl('groups');
+
+                this.closeDialog();
+                window.location.reload();
               },
               (error) => {
                 console.error('Group creation failed:', error);
@@ -92,37 +108,38 @@ export class CreateGroupComponent implements OnInit {
             console.error('Image upload failed:', error);
           }
         );
-      }else {
+      } else {
         this.apiService.createGroup(this.groupeForm.value).subscribe(
           (res) => {
-            this.groupeForm.reset();
-            this.router.navigateByUrl('groups');
+
+            this.closeDialog();
+            window.location.reload();
           },
           (error) => {
             console.error('Group creation failed:', error);
           }
         );
       }
-      const messBody : MessageBody = {
-        senderId:Number(this.userID),
+
+      const messBody: MessageBody = {
+        senderId: Number(this.userID),
         receiverId: Number(0),
-        message:"Nouveau group created successfully"
-        
-      }
+        message: "Nouveau groupe créé avec succès"
+      };
+
       const message: MessageData = {
         type: 'new_group',
         datas: messBody,
       };
+
       const even = new Events(message.type, message.datas);
       sendEvent(this.websocketService, even);
+    }
 
-    } 
-    this.groupeForm.reset()
-    this.closeDialog()
-
+    this.groupeForm.reset();
+    this.closeDialog();
   }
 }
-
 
 function sendEvent(websocketService: WebSocketService, datas: any) {
   websocketService.sendMessage(datas);

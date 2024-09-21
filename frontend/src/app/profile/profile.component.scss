@@ -159,7 +159,7 @@ $white: #fefefe;
     height: auto;
 
     .tab-content {
-        background-color: $background !important;
+        background-color: $white !important;
         padding: 10px;
         display: flex;
         flex-direction: column;
@@ -290,7 +290,6 @@ $white: #fefefe;
                 text-transform: capitalize;
                 font-weight: 600;
                 margin-top: 2px;
-                
             }
             mat-card-subtitle {
                 display: block;
@@ -312,11 +311,105 @@ $white: #fefefe;
                     margin-top: 6px;
                 }
             }
+            mat-card-actions {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                button {
+                    background: none;
+                    border: none;
+                }
+
+                button:hover svg {
+                    stroke: white;
+                }
+                button:not(.send) {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 3px;
+                    font-size: 16px;
+                    font-weight: bold;
+
+                    mat-icon {
+                        font-size: 20px;
+                    }
+                    &:hover {
+                        background-color: $lightBlue;
+                        color: white;
+                        border-radius: 50%;
+                    }
+                }
+            }
+            .comment-form {
+                width: 80%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-left: 48px;
+                margin-bottom: 18px;
+
+                form {
+                    display: flex;
+                    width: 100%;
+                    margin-left: 48px;
+
+                    input {
+                        width: 100%;
+                        border: 1px solid #ddd;
+                        height: 36px;
+                        border-radius: 10px;
+                        padding: 2px 8px;
+
+                        &:focus {
+                            border: 1px solid #ddd;
+                            outline: none;
+                        }
+                    }
+                    button {
+                        background: none;
+                        border: none;
+                        font-size: 12px;
+                        font-weight: bold;
+                        margin-left: 3px;
+                    }
+                }
+            }
+
+
+            .comments-media-icons {
+                position: absolute;
+                bottom: 15px;
+                right: 20%;
+            }
+            .comments-media-icons p {
+                display: inline-block;
+                margin: 0 4px;
+                cursor: pointer;
+            }
+            .comments-media-icons svg {
+                width: 24px;
+            }
+
+            label {
+                color: #252525;
+                display: inline-block;
+                margin-bottom: 0.5rem;
+                cursor: pointer;
+            }
+            .comments-media-icons p.comments-image-uploader input {
+                display: none;
+            }
             
+            // .post-image {
+            //     width: 100%;
+            //     height: 400px;
+            //     object-fit: cover;
+            // }
+
+            mat-card-actions button {
+                width: 90px;
+            }
         }
     }
-}
-
-app-home {
-    margin-top: 12px !important;
 }

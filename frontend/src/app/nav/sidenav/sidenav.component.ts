@@ -110,7 +110,6 @@ export class SidenavComponent implements OnInit {
         const iduser = userData;
         this.apiservice.getData('allusers').subscribe(
             (response: any) => {
-                // console.log("oooooooooooo", response.users.is_public===true)
                 this.users = response.users.filter(
                     (user: any) => user !== null && user.id !== Number(iduser)
                 );
@@ -120,7 +119,6 @@ export class SidenavComponent implements OnInit {
             }
         );
 
-        // console.log("pppppppppppppppppp",this.users)
     }
     toggleVisibility(): void {
         this.isVisible = !this.isVisible; // Change l'état de visibilité
@@ -195,31 +193,24 @@ export class SidenavComponent implements OnInit {
         //     } else {
         //     }
         // });
-        console.log(id)
         let isFollowing = this.followings.some((user) => user.id === id);
         let isFrient = this.friends.some((user) => user.id === id)
         let isFollower=this.followers.some((user)=>user.id===id)
-        console.log(isFollower)
-        // console.log('pppppp', this.followings);
 
         if (isFollower || isFrient || isFollowing) {
-            // L'utilisateur fait partie des followers
-            console.log("L'utilisateur est dans la liste des followings");
 
             this.dialog.open(ChatComponent, {
-                width: '400px', // Largeur de la boîte de dialogue
-                data: { userId: id }, // Envoi de paramètres au composant de la boîte de dialogue
+                width: '400px', 
+                data: { userId: id }, 
                 position: {
                     bottom: '12px',
                     right: '6px',
                 },
             });
         } else {
-            // L'utilisateur ne fait pas partie des followers
-            console.log("L'utilisateur n'est pas dans la liste des followers.");
 
             this.snackBar.open('You must follow it before', 'Close', {
-                duration: 5000, // Le message reste visible pendant 5 secondes
+                duration: 5000, 
                 horizontalPosition: 'center',
                 verticalPosition: 'bottom',
             });
@@ -245,7 +236,6 @@ export class SidenavComponent implements OnInit {
                     return;
                 }
                 this.followings = data.followings;
-                console.log('kkkkkkk', this.followings);
             });
     }
 

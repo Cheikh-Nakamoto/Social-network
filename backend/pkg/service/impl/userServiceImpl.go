@@ -92,7 +92,7 @@ func (s *UserServiceImpl) GetAllUsers() (map[string]*entity.User, error) {
 	for _, user := range users {
 		user.Password = ""
 		if user.Avatar == "" {
-			user.Avatar = "female.svg"
+			user.Avatar = "profile.jpg"
 		}
 		userDTOs[strconv.Itoa(int(user.ID))] = user
 	}

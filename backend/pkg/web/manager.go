@@ -494,8 +494,9 @@ func getGroupChatData(currentChatterId, otherChatterId, amount int) ReturnChatDa
 
 	rows, err := db.GetDB().Query(`
 		SELECT messageId, senderId, groupId, message, sentDate 
-		FROM groupmessages 
-		ORDER BY sentDate DESC LIMIT ?`, amount)
+		FROM groupmessages
+		WHERE groupId = ?  
+		ORDER BY sentDate DESC LIMIT ?`, otherChatterId, amount)
 	if err != nil {
 		log.Println(err)
 	}

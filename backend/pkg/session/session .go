@@ -43,14 +43,13 @@ func (s *StoreSessions) StoreSession(token string, userID uint) {
 
 	db, err := sqlite.Connect()
 	if err != nil {
-		panic(err) 
+		panic(err)
 	}
-		_, err = db.GetDB().Exec("INSERT INTO sessions (sessionId, userId) VALUES (?, ?)", token, int(userID))
+	_, err = db.GetDB().Exec("INSERT INTO sessions (sessionId, userId) VALUES (?, ?)", token, int(userID))
 	if err != nil {
 
-		
 		// Gérer l'erreur d'insertion dans la base de données
-		
+
 		panic(err) // Vous pouvez gérer l'erreur différemment selon votre besoin
 	}
 }
@@ -108,6 +107,31 @@ func (s *StoreSessions) GetUserID(token string) (uint, bool) {
 	defer s.mu.Unlock()
 	userID, exists := s.session[token]
 	return userID, exists
+}
+func (s *StoreSessions) GetTokenByID(id uint) (string, bool) {
+	fmt.Println("iiiiiiiiiiiiiii",s.session)
+
+
+	// Parcourir la map pour trouver le token correspondant à l'id utilisateur
+	for token, userID := range s.session {
+		if userID == id {
+			fmt.Println("gggggg", token)
+			return token, true
+		}
+	}
+	return "", false // Si aucun token n'est trouvé
+}
+
+func GetTokenByUserID(userID uint) (string, error) {
+	mutex.Lock()
+	defer mutex.Unlock()
+
+	for token, session := range sessionStore {
+		if session.UserID == userID {
+			return token, nil
+		}
+	}
+	return "", errors.New("session not found")
 }
 
 func (s *StoreSessions) ClearSession(token string) {

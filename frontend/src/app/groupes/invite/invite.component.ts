@@ -45,11 +45,13 @@ export class InviteComponent {
   toppingList: UserDTO[] = []
   id !: string
   groupId!: number
+  owner ! : number
   IsIn: StatusMap = {};
   ngOnInit(): void {
     this.id = (JSON.parse(localStorage.getItem('userID') as string));
     this.groupId = (JSON.parse(localStorage.getItem('groupid') as string))
     this.groupMember()
+    this.owner = Number(localStorage.getItem('owner'));
     this.followservice.getList(this.id, "friends").subscribe((friends: { friends: UserDTO[], status: number }) => {
         if (friends.status==204){
           alert("No followers found !")
@@ -89,5 +91,4 @@ export class InviteComponent {
     this.groupService.addMember(groupId, userId, target_id.toString(), role)
     this.closeDialog()
   }
-
 }

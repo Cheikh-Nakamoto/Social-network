@@ -47,8 +47,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     scrollHeightBeforeLoad = 0;
     showEmojiPicker = false;
 
-    // private processedMessages = new Set<string>();
-
     constructor(
         private websocketService: WebSocketService,
         private dialogRef: MatDialogRef<ChatComponent>,
@@ -57,9 +55,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         private userService: GetUserService,
         @Inject(MAT_DIALOG_DATA) public data: any
     ) {
-        // route.queryParams.subscribe((params) => {
-        //   this.id = params['userid'];
-        // });
+       
         this.id = Number(data.userId);
     }
     ngOnInit(): void {
@@ -67,7 +63,6 @@ export class ChatComponent implements OnInit, OnDestroy {
             this.sender = user;
         });
         this.getUserById(this.id);
-        console.log('ttttttttttttttttt', this.user, this.id);
         this.websocketService.connect();
 
         this.messagesSubscription = this.websocketService.messages$.subscribe(
@@ -75,8 +70,6 @@ export class ChatComponent implements OnInit, OnDestroy {
                 this.messages.push(message);
 
                 if (message.type === 'get_messages') {
-                    console.log('hlllllllllllllllll', message);
-                    // updateMessages(message.payload.messages, Number(this.id));
                     this.throttleUpdateMessages(
                         message.payload.messages,
                         Number(this.id)
@@ -85,22 +78,15 @@ export class ChatComponent implements OnInit, OnDestroy {
 
                 if (message.type === 'new_message') {
                         const messageId = message.payload.messageId;
-                        console.log('sssssssssss');
                         if (!this.processedMessages.has(messageId)) {
-                            // Si le message n'a pas encore été traité
-                            console.log('Nouveau message traité');
                             this.NewupdateMessages(
                                 message.payload,
                                 this.sender
                             );
 
-                            // Marque le message comme traité
                             this.processedMessages.add(messageId);
                         } else {
-                            console.log('Message déjà traité, ignoré');
                         }
-
-                    // this.NewupdateMessages(message.payload, this.sender);
                 }
             }
         );
@@ -190,6 +176,8 @@ export class ChatComponent implements OnInit, OnDestroy {
         sendEvent(this.websocketService, even);
         const updateEve = new Event('get_chatbar_data', this.sender);
         sendEvent(this.websocketService, updateEve);
+
+        
         const payload = {
             currentChatterId: this.sender,
             otherChatterId: Number(this.id),
@@ -228,7 +216,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
 
     NewupdateMessages = (message: any, iduser: number) => {
-        console.log('NewupdateMessages called with message: ', message);
         const chatBox = document.getElementById('chatBox');
         if (chatBox) {
             const isAtBottom =
@@ -241,15 +228,6 @@ export class ChatComponent implements OnInit, OnDestroy {
             } else {
                 msgType = 'Received';
             }
-
-            // // Vérifier si le message existe déjà dans le DOM
-            // const existingMessage = chatBox.querySelector(
-            //     `div[data-linked='${message.messageId}']`
-            // );
-            // if (existingMessage) {
-            //     console.log('Message already exists: ', message.messageId);
-            //     return; // Ne pas ajouter de doublon
-            // }
 
             const newMessageHTML = `
             <div class="messageContainer ${
@@ -274,7 +252,6 @@ export class ChatComponent implements OnInit, OnDestroy {
                 chatBox.scrollTop = chatBox.scrollHeight;
             }
         } else {
-            console.log('Utilisateur non trouvé');
         }
 
         addHoverListeners();

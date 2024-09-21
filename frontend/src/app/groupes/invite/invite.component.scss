@@ -1,12 +1,6 @@
-.invite{
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    padding: 10px;
-    background-color: #1da1f2;
-
-}
-
+$lightBlue : #B8DAFF;
+$danger : #f44336;
+$primaryColor : #005cbb;
 
 .userlist {
     display: flex;
@@ -18,10 +12,29 @@
     overflow: hidden;
 
     .close {
-        position: absolute;
         float: right;
-        font-size: 24px;
+        background: #eee !important;
+        color: #555 !important;
+        margin: 0px 5px;
+        position: absolute;
+        right: 6px;
+        top: 6px;
+        border-radius: 50%;
+        padding: 4px;
+    }
+
+    .close svg {
+        width: 25px;
+        height: 25px;
+        background: #eee;
+        border-radius: 50%;
+        color: #000;
         cursor: pointer;
+    }
+
+    svg:not(:root) {
+        vertical-align: middle;
+        overflow: hidden;
     }
 
     a {
@@ -37,5 +50,31 @@
         font-weight: bold;
         color: #000;
         text-decoration: none;
+    }
+    .invite {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        padding: 10px;
+
+        h6 {
+        font-size: 16px;
+        text-transform: capitalize;
+        }
+
+        button {
+            background-color: $lightBlue;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 4px 12px;
+            font-size: 16px;
+            margin-left: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            &:hover {
+                background-color: $primaryColor;
+            }
+        }
     }
 }
